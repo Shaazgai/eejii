@@ -17,4 +17,10 @@ export const partnerFormSchema = z.object({
   facebook: z.string().url().optional().or(z.literal('')),
   twitter: z.string().url().optional().or(z.literal('')),
   instagram: z.string().url().optional().or(z.literal('')),
+
+});
+export const testFormSchema = z.object({
+  title: z.string()
+
+
 });

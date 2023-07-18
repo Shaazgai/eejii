@@ -1,8 +1,5 @@
 import { authMiddleware } from '@clerk/nextjs';
-
-export default authMiddleware({
-  publicRoutes: ['/', '/sign-in', '/api/webhooks/user', '/register/volunteer'],
-});
+export default authMiddleware({});
 
 export const config = {
   matcher: [
@@ -16,5 +13,8 @@ export const config = {
      */
     '/((?!static|.*\\..*|_next|favicon.ico).*)',
     '/api/webhooks/user',
+    '/((?!.*\\..*|_next).*)',
+    '/',
+    '/(api|trpc)(.*)',
   ],
 };
