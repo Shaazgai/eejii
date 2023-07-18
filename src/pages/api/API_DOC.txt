@@ -1,0 +1,94 @@
+API V1: simple doc
+  -Fundraising #Owner will be Partner
+    @. creating fundraising: POST /api/fundraising
+    @. get list fundraising: GET /api/fundraising 
+      # By Joined supporters Fundraising (supporterId=[id]) 
+      # By Joined partners Fundraising (partnerId=[id]) 
+      # By Owners Fundraising (ownerId=[id])
+    @. editing fundraising: PUT /api/fundraising/[id]
+    @. getting fundraising details : GET /api/fundraising/[id] 
+      # Will have all the details of joined Supporters and Partners or even join request from Partners and Supporters 
+      # Will have the donation info and etc
+
+    @. approving supporter or partner to join with fundraising
+      : GET /api/fundraising/[id]/approve?(partnerId | supporterId)=[id]
+    @. declining supporter or partner to join with fundraising
+     : GET /api/fundraising/[id]/decline?(partnerId | supporterId)=[id]
+    @. send request to join fundraising
+      : POST /api/fundraising/[id]/join?(partnerId | supporterId)=[id]
+
+    @. donate to fundraising
+      : POST /api/fundraising/[id]/donate?(userId)=[id]
+      
+    @. get all join request of Supporters or Partners for fundraising | (same with 3.)
+      : GET /api/fundraising/[id](?supporterRequests=true&partnerRequests=true)
+
+
+
+  -Event #Owner will be Partner  
+    @. creating event: POST /api/events
+    @. get list events: GET /api/events(?status=[status]&ownerId=[id]&partnerId=[id]&supporterId=[id]) 
+      # By Joined supporters Fundraising (supporterId=[id]) 
+      # By Joined partners Fundraising (partnerId=[id]) 
+      # By Joined partners Fundraising (volunteerId=[id])
+      # By Owners Fundraising (ownerId=[id])
+    @. editing event: PUT /api/events/[id]
+    @. getting event details /api/events/[id] 
+      # Will have all the details of joined Partners and Supporters and joined Volunteers
+
+    @. approving Volunteers, Partners, Supporters for specific role they requested to work for
+      : GET /api/events/[id]/approve?(volunteer=[id] | partner=[id] | supporter=[id])
+    @. declining Volunteers, Partners, Supporters for specific role they requested to work for
+      : GET /api/events/[id]/decline?(volunteer=[id] | partner=[id] | supporter=[id])
+    @. send request to join event
+      : POST /api/fundraising/[id]/join?(volunteerId=[id])
+
+  -Grant Fundraising #Owner will be Supporter
+    @. creating grant fundraising: POST /api/grant-fundraising
+    @. get list grant fundraising: GET /api/grant-fundraising 
+      # By Owners grant-Fundraising (ownerId=[id])
+    @. editing grant fundraising: PUT /api/grant-fundraising/[id]
+    @. getting grant fundraising details : GET /api/grant-fundraising/[id] 
+      # Will have all the details of joined Supporters and Partners or even join request from Partners and Supporters 
+      # Will have the donation info and etc
+
+    @. approving supporter or partner to join with grant fundraising
+      : GET /api/grant-fundraising/[id]/approve?(partnerId | supporterId)=[id]
+    @. declining supporter or partner to join with grant fundraising
+     : GET /api/grant-fundraising/[id]/decline?(partnerId | supporterId)=[id]
+    @. send request to join grant fundraising
+      : POST /api/grant-fundraising/[id]/join?(partnerId | supporterId)=[id]
+
+    @. get all join request of Supporters or Partners for grant fundraising | (same with 3.)
+      : GET /api/grant-fundraising/[id](?supporterRequests=true&partnerRequests=true)
+
+  -User
+    @. get profile of user: GET /api/me 
+      # From clerk user backend will perform if statement to check whether user is Volunteer Partner or Supporter and return corresponding data 
+      # In this profile data we will not send Fundraising, Event, or GrantFundraising to help caching and response size optimization. 
+      # Instead we should call /api/events, /api/fundraising, /api/grant-fundraising with additional queries to get desired data 
+      # But small data's like Address, Skills, or Donated donations are will come in Profile api response  
+    
+    * Instead of using params will use these apis to create Volunteer, Partner or Supporter 
+    @. create partner: POST /api/partners
+    @. create supporter: POST /api/supporters
+    @. create volunteer: POSt /api/volunteers
+      # After registering user will have pending status and Super admin will approve if criteria is met
+      # While pending user can be directed to it's Dashboard page but actions will not be performed. (Such as creating or joining event .etc)
+
+    * After user has requested to register as (Volunteer, supporter, or partner) admin will update the status
+    @. get partner detail: GET /api/partners/[id]?status=(approve | decline)
+    @. get supporter detail: GET /api/supporters/[id]?status=(approve | decline)
+    @. get volunteer detail: GET /api/volunteers/[id]?status=(approve | decline)
+
+    @. get partners list: GET /api/partners
+    @. get supporters list: GET /api/supporters
+    @. get volunteers detail: GET /api/volunteers
+
+    * Instead of using /api/profile for joined user's public profiles 
+    @. get partner detail: GET /api/partners/[id]
+    @. get supporter detail: GET /api/supporters/[id]
+    @. get volunteer detail: GET /api/volunteers/[id]
+      # And to save or sanity from if statements and other authentication hell we will make such routes for Pages dir too.
+
+
