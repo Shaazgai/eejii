@@ -9,7 +9,7 @@ import PartnerAddressForm from './partner-address-form';
 const PartnerFormContainer = () => {
   const steps = [<PartnerForm key={0} />, <PartnerAddressForm key={1} />];
   return (
-    <section className="flex justify-center items-center p-10">
+    <section className="flex items-center justify-center p-10">
       <PartnerFormProvider steps={steps} />
     </section>
   );

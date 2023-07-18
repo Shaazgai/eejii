@@ -1,27 +1,30 @@
 import type { ReactElement } from 'react';
 import React, { createContext, useContext, useState } from 'react';
 
-import type { MultiStepFormContextType, VolunteerType } from '@/lib/types';
+import type { MultiStepFormContextType, SupporterType } from '@/lib/types';
 import { api } from '@/utils/api';
 
-export const VolunteerFormContext = createContext<
-  MultiStepFormContextType<VolunteerType> | undefined
+export const SupporterFormContext = createContext<
+  MultiStepFormContextType<SupporterType> | undefined
 >(undefined);
 
-export const initialData: VolunteerType = {
-  firstName: '',
-  lastName: '',
+export const initialData: SupporterType = {
+  organization: '',
+  email: '',
   bio: '',
-  gender: '',
-  birthday: new Date(),
+  primary_phone: '',
+  secondary_phone: '',
+  twitter: '',
+  facebook: '',
+  instagram: '',
   country: '',
   city: '',
   provinceName: '',
   street: '',
 };
 
-export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
-  const [data, setData] = useState<VolunteerType>(initialData);
+export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
+  const [data, setData] = useState<SupporterType>(initialData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
@@ -42,9 +45,9 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
   function goTo(index: number) {
     setCurrentStepIndex(index);
   }
-  const { mutate } = api.volunteer.create.useMutation({
-    onSuccess: newVolunteer => {
-      console.log(newVolunteer);
+  const { mutate } = api.supporter.create.useMutation({
+    onSuccess: newSupporter => {
+      console.log(newSupporter);
       setData(initialData);
     },
   });
@@ -56,10 +59,8 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
     }, 1000);
   }
 
-  console.log(data);
-
   return (
-    <VolunteerFormContext.Provider
+    <SupporterFormContext.Provider
       value={{
         data,
         setData,
@@ -74,15 +75,15 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
       }}
     >
       {steps[currentStepIndex]}
-    </VolunteerFormContext.Provider>
+    </SupporterFormContext.Provider>
   );
 }
 
-export function useVolunteerFormState() {
-  const context = useContext(VolunteerFormContext);
+export function useSupporterFormState() {
+  const context = useContext(SupporterFormContext);
   if (!context) {
     throw new Error(
-      'useVolunteerFormState must be used within the VolunteerFormProvider'
+      'useSupporterFormState must be used within the SupporterFormProvider'
     );
   }
 

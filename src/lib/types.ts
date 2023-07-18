@@ -18,21 +18,23 @@ export type AddressType = {
   street: string;
 };
 
-export type PartnerFormType = {
+export type PartnerType = {
   organization: string;
   email: string;
   primary_phone: string;
   secondary_phone: string;
-  twitter: string | null;
-  facebook: string | null;
-  instagram: string | null;
+  twitter: string | undefined;
+  facebook: string | undefined;
+  instagram: string | undefined;
   bio: string;
 } & AddressType;
 
-export type VolunteerFormType = {
+export type VolunteerType = {
   firstName: string;
   lastName: string;
   bio: string;
   gender: string;
   birthday: Date;
 } & AddressType;
+
+export type SupporterType = PartnerType;

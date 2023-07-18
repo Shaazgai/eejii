@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const volunteerFormSchema = z.object({
+export const volunteerSchema = z.object({
   firstName: z.string().min(2, {
     message: 'Fist name must be at least 2 characters.',
   }),

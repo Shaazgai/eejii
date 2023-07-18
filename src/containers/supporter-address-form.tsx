@@ -1,18 +1,18 @@
 import React from 'react';
 
 import AddressForm from '@/components/form/address-form';
-import { useVolunteerFormState } from '@/context/volunteer-form-context';
-import type { PartnerType, VolunteerType } from '@/lib/types';
+import { useSupporterFormState } from '@/context/supporter-form-context';
+import type { SupporterType, VolunteerType } from '@/lib/types';
 
-const PartnerAddressForm = () => {
+const SupporterAddressForm = () => {
   const { data, setData, isFirstStep, isLastStep, back, next, submit } =
-    useVolunteerFormState();
+    useSupporterFormState();
   return (
     <AddressForm
       data={data}
       setData={
         setData as React.Dispatch<
-          React.SetStateAction<VolunteerType | PartnerType>
+          React.SetStateAction<VolunteerType | SupporterType>
         >
       }
       isFirstStep={isFirstStep}
@@ -24,4 +24,4 @@ const PartnerAddressForm = () => {
   );
 };
 
-export default PartnerAddressForm;
+export default SupporterAddressForm;

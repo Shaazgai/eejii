@@ -30,12 +30,12 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import type { volunteerFormSchema } from '@/lib/validation/volunteer-registration-schema';
+import type { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
 const VolunteerBioFields = ({
   form,
 }: {
-  form: FormProps<z.infer<typeof volunteerFormSchema>>;
+  form: FormProps<z.infer<typeof volunteerSchema>>;
 }) => {
   return (
     <div className="space-y-2">

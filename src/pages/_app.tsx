@@ -8,7 +8,7 @@ import { api } from '@/utils/api';
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </ClerkProvider>
   );
 };
