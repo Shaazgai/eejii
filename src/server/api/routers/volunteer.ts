@@ -1,7 +1,10 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { createTRPCRouter, publicProcedure } from '../trpc';
+import { addressFormSchema } from '@/lib/validation/address-validation-schema';
+import { volunteerFormSchema } from '@/lib/validation/volunteer-registration-schema';
+
+import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const volunteerRouter = createTRPCRouter({
   getById: publicProcedure
@@ -14,12 +17,32 @@ export const volunteerRouter = createTRPCRouter({
 
       return volunteer;
     }),
-  create: publicProcedure
-    .input(z.object({ content: z.string }))
-    .mutation(async ({ input: { content }, ctx }) => {
-      console.log(content);
+  create: privateProcedure
+    .input(volunteerFormSchema.merge(addressFormSchema))
+    .mutation(async ({ input, ctx }) => {
+      console.log(input.firstName);
+      const user = await ctx.prisma.user.findUnique({
+        where: { externalId: ctx.userId },
+      });
+      if (!user) throw new Error('User not found');
+      const address = await ctx.prisma.address.create({
+        data: {
+          country: input.country,
+          city: input.city,
+          street: input.street,
+          provinceName: input.provinceName,
+        },
+      });
       const volunteer = await ctx.prisma.volunteer.create({
-        data: { content },
+        data: {
+          firstName: input?.firstName,
+          lastName: input?.lastName,
+          bio: input?.bio,
+          birthday: input?.birthday,
+          gender: input?.gender,
+          addressId: address.id,
+          userId: user.id,
+        },
       });
       return volunteer;
     }),

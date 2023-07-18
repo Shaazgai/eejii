@@ -73,6 +73,9 @@ API V1: simple doc
     @. create partner: POST /api/partners
     @. create supporter: POST /api/supporters
     @. create volunteer: POSt /api/volunteers
+    /v/dashboard
+    /p/dashboard
+    /s/dashboard
       # After registering user will have pending status and Super admin will approve if criteria is met
       # While pending user can be directed to it's Dashboard page but actions will not be performed. (Such as creating or joining event .etc)
 

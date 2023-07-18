@@ -42,17 +42,21 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
   function goTo(index: number) {
     setCurrentStepIndex(index);
   }
-
   const createVolunteer = api.volunteer.create.useMutation({
     onSuccess: newVolunteer => {
       console.log(newVolunteer);
+      setData(initialData);
     },
   });
-  function submit() {
-    createVolunteer.mutate({ content: data });
+
+  async function submit() {
+    console.log(data);
+    await setTimeout(() => {}, 1000);
+    createVolunteer.mutate(data);
   }
 
   console.log(data);
+
   return (
     <VolunteerFormContext.Provider
       value={{

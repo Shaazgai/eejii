@@ -17,7 +17,6 @@ export const supporterRouter = createTRPCRouter({
   create: publicProcedure
     .input(z.object({ content: z.string() }))
     .mutation(async ({ input: { content }, ctx }) => {
-      console.log(content);
       return ctx.prisma.supporter.create({
         data: { content },
       });

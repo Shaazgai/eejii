@@ -28,15 +28,14 @@ const PartnerForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof partnerFormSchema>) {
-    console.log(values);
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
   }
-  console.log(form.formState.isValid);
+
   return (
     <div className="w-[500px]">
-      <h3 className="mb-5  pb-1 border-b border-gray-200">Info</h3>
+      <h3 className="mb-5  border-b border-gray-200 pb-1">Info</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-4">

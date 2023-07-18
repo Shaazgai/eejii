@@ -37,9 +37,10 @@ const AddressForm = ({
   });
   const [country, setCountry] = useState('Mongolia');
   const [city, setCity] = useState('Ulan Bator');
-  function onSubmit(values: z.infer<typeof addressFormSchema>) {
-    setData({ ...data, ...values });
+  async function onSubmit(values: z.infer<typeof addressFormSchema>) {
     console.log(values);
+    console.log(data);
+    setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
     submit();
@@ -59,6 +60,7 @@ const AddressForm = ({
               setSelectedCity={setCity}
               selectedCity={city}
             />
+
             <FormNavigation
               formState={form.formState}
               isFirstStep={isFirstStep}

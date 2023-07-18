@@ -27,7 +27,6 @@ const VolunteerForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof volunteerFormSchema>) {
-    console.log(values);
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     submit();
