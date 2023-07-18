@@ -6,13 +6,13 @@ import { createContext, useContext, useState } from 'react';
 
 import type * as types from '@/lib/types';
 import { type MultiStepFormContextType } from '@/lib/types';
+import { api } from '@/utils/api';
 
 export const PartnerFormContext = createContext<
-  | MultiStepFormContextType<types.AddressFormType<types.PartnerFormType>>
-  | undefined
+  MultiStepFormContextType<types.PartnerType> | undefined
 >(undefined);
 
-export const initialData: types.PartnerFormType = {
+export const initialData: types.PartnerType = {
   organization: '',
   email: '',
   bio: '',
@@ -28,8 +28,7 @@ export const initialData: types.PartnerFormType = {
 };
 
 export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
-  const [data, setData] =
-    useState<types.AddressFormType<types.PartnerFormType>>(initialData);
+  const [data, setData] = useState<types.PartnerType>(initialData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
@@ -50,6 +49,17 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
   function goTo(index: number) {
     setCurrentStepIndex(index);
   }
+  const { mutate } = api.partner.create.useMutation({
+    onSuccess: newPartner => {
+      console.log(newPartner);
+      setData(initialData);
+    },
+  });
+  async function submit() {
+    await setTimeout(() => {
+      mutate(data);
+    }, 1000);
+  }
 
   return (
     <PartnerFormContext.Provider
@@ -63,6 +73,7 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
         next,
         back,
         goTo,
+        submit,
       }}
     >
       {steps[currentStepIndex]}

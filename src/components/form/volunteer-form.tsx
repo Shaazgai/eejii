@@ -8,15 +8,15 @@ import type { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import { Toaster } from '@/components/ui/toaster';
 import { useVolunteerFormState } from '@/context/volunteer-form-context';
-import { volunteerFormSchema } from '@/lib/validation/volunteer-registration-schema';
+import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
 import FormNavigation from './fields/navigation';
 import VolunteerBioFields from './fields/volunteer-bio-fields';
 const VolunteerForm = () => {
   const { data, setData, isFirstStep, isLastStep, back, next, submit } =
     useVolunteerFormState();
-  const form = useForm<z.infer<typeof volunteerFormSchema>>({
-    resolver: zodResolver(volunteerFormSchema),
+  const form = useForm<z.infer<typeof volunteerSchema>>({
+    resolver: zodResolver(volunteerSchema),
     defaultValues: {
       bio: data.bio || '',
       firstName: data.firstName || '',
@@ -26,7 +26,7 @@ const VolunteerForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof volunteerFormSchema>) {
+  async function onSubmit(values: z.infer<typeof volunteerSchema>) {
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     submit();

@@ -6,10 +6,10 @@ import type { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import type {
   MultiStepFormContextType,
-  PartnerFormType,
-  VolunteerFormType,
+  PartnerType,
+  VolunteerType,
 } from '@/lib/types';
-import { addressFormSchema } from '@/lib/validation/address-validation-schema';
+import { addressSchema } from '@/lib/validation/address-validation-schema';
 
 import AddressFields from './fields/address-fields';
 import FormNavigation from './fields/navigation';
@@ -23,11 +23,11 @@ const AddressForm = ({
   next,
   submit,
 }: Omit<
-  MultiStepFormContextType<VolunteerFormType | PartnerFormType>,
+  MultiStepFormContextType<VolunteerType | PartnerType>,
   'currentStepIndex' | 'setCurrentStepIndex' | 'goTo'
 >) => {
-  const form = useForm<z.infer<typeof addressFormSchema>>({
-    resolver: zodResolver(addressFormSchema),
+  const form = useForm<z.infer<typeof addressSchema>>({
+    resolver: zodResolver(addressSchema),
     defaultValues: {
       country: data.country || '',
       city: data.city || '',
@@ -37,9 +37,7 @@ const AddressForm = ({
   });
   const [country, setCountry] = useState('Mongolia');
   const [city, setCity] = useState('Ulan Bator');
-  async function onSubmit(values: z.infer<typeof addressFormSchema>) {
-    console.log(values);
-    console.log(data);
+  async function onSubmit(values: z.infer<typeof addressSchema>) {
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');

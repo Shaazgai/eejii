@@ -1,8 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { addressFormSchema } from '@/lib/validation/address-validation-schema';
-import { volunteerFormSchema } from '@/lib/validation/volunteer-registration-schema';
+import { addressSchema } from '@/lib/validation/address-validation-schema';
+import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
@@ -17,8 +17,20 @@ export const volunteerRouter = createTRPCRouter({
 
       return volunteer;
     }),
+  getByUserId: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const supporter = await ctx.prisma.volunteer.findUnique({
+        where: {
+          userId: input.id,
+        },
+      });
+      if (!supporter) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      return supporter;
+    }),
   create: privateProcedure
-    .input(volunteerFormSchema.merge(addressFormSchema))
+    .input(volunteerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
       console.log(input.firstName);
       const user = await ctx.prisma.user.findUnique({

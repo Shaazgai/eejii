@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const addressFormSchema = z.object({
+export const addressSchema = z.object({
   country: z.string().min(2, {
     message: 'Country must have at least 2 characters.',
   }),

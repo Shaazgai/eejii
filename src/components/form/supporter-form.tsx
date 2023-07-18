@@ -1,20 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { usePartnerFormState } from 'src/context/partner-form-context';
 import type { z } from 'zod';
 
 import { Form } from '@/components/ui/form';
-import { partnerSchema } from '@/lib/validation/partner-validation-schema';
+import { useSupporterFormState } from '@/context/supporter-form-context';
+import { supporterSchema } from '@/lib/validation/partner-validation-schema';
 
 import FormNavigation from './fields/navigation';
 import PartnerFields from './fields/partner-fields';
 
-const PartnerForm = () => {
+const SupporterForm = () => {
   const { data, setData, isFirstStep, isLastStep, back, next, submit } =
-    usePartnerFormState();
-  const form = useForm<z.infer<typeof partnerSchema>>({
-    resolver: zodResolver(partnerSchema),
+    useSupporterFormState();
+  const form = useForm<z.infer<typeof supporterSchema>>({
+    resolver: zodResolver(supporterSchema),
     defaultValues: {
       organization: data.organization || '',
       email: data.email || '',
@@ -27,7 +27,7 @@ const PartnerForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof partnerSchema>) {
+  function onSubmit(values: z.infer<typeof supporterSchema>) {
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
@@ -54,4 +54,4 @@ const PartnerForm = () => {
   );
 };
 
-export default PartnerForm;
+export default SupporterForm;

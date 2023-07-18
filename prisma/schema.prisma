@@ -78,6 +78,8 @@ model Supporter {
     phoneNumbers              Json
     bio                       String
     socialLinks               Json?
+    Address                   Address?                    @relation(fields: [addressId], references: [id])
+    addressId                 String?                     @unique
     GrantFundraisings         GrantFundraising[]
     EventSupporter            EventSupporter[]
     FundraisingSupporter      FundraisingSupporter[]
@@ -264,13 +266,14 @@ model EmploymentHistory {
 }
 
 model Address {
-    id           String     @id @default(uuid())
+    id           String      @id @default(uuid())
     country      String
     city         String
     provinceName String
     street       String
     Volunteer    Volunteer?
     Partner      Partner?
+    Supporter    Supporter[]
 }
 
 model Donation {
