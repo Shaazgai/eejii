@@ -21,6 +21,7 @@ const AddressForm = ({
   isLastStep,
   back,
   next,
+  submit,
 }: Omit<
   MultiStepFormContextType<VolunteerFormType | PartnerFormType>,
   'currentStepIndex' | 'setCurrentStepIndex' | 'goTo'
@@ -36,16 +37,18 @@ const AddressForm = ({
   });
   const [country, setCountry] = useState('Mongolia');
   const [city, setCity] = useState('Ulan Bator');
-  function onSubmit(values: z.infer<typeof addressFormSchema>) {
-    setData({ ...data, ...values });
+  async function onSubmit(values: z.infer<typeof addressFormSchema>) {
     console.log(values);
+    console.log(data);
+    setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
+    submit();
   }
 
   return (
     <div className="w-[500px]">
-      <h3 className="mb-5  pb-1 border-b border-gray-200">Address</h3>
+      <h3 className="mb-5  border-b border-gray-200 pb-1">Address</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-4">
@@ -57,6 +60,7 @@ const AddressForm = ({
               setSelectedCity={setCity}
               selectedCity={city}
             />
+
             <FormNavigation
               formState={form.formState}
               isFirstStep={isFirstStep}

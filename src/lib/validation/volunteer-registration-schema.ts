@@ -1,10 +1,10 @@
 import * as z from 'zod';
 
 export const volunteerFormSchema = z.object({
-  first_name: z.string().min(2, {
+  firstName: z.string().min(2, {
     message: 'Fist name must be at least 2 characters.',
   }),
-  last_name: z.string().min(2, {
+  lastName: z.string().min(2, {
     message: 'Last name must be at least 2 characters.',
   }),
   birthday: z.date({

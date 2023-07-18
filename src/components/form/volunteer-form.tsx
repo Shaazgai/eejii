@@ -13,27 +13,27 @@ import { volunteerFormSchema } from '@/lib/validation/volunteer-registration-sch
 import FormNavigation from './fields/navigation';
 import VolunteerBioFields from './fields/volunteer-bio-fields';
 const VolunteerForm = () => {
-  const { data, setData, isFirstStep, isLastStep, back, next } =
+  const { data, setData, isFirstStep, isLastStep, back, next, submit } =
     useVolunteerFormState();
   const form = useForm<z.infer<typeof volunteerFormSchema>>({
     resolver: zodResolver(volunteerFormSchema),
     defaultValues: {
-      first_name: data.firstName || '',
-      last_name: data.lastName || '',
+      bio: data.bio || '',
+      firstName: data.firstName || '',
+      lastName: data.lastName || '',
       gender: data.gender || '',
       birthday: data.birthday || new Date(),
     },
   });
 
   async function onSubmit(values: z.infer<typeof volunteerFormSchema>) {
-    console.log(values);
     setData({ ...data, ...values });
     if (!isLastStep) return next();
-    alert('Successful Account Creation');
+    submit();
   }
   return (
     <div className="w-[500px]">
-      <h3 className="mb-5  pb-1 border-b border-gray-200">Info</h3>
+      <h3 className="mb-5  border-b border-gray-200 pb-1">Info</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-8">

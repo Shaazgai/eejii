@@ -42,7 +42,7 @@ const VolunteerBioFields = ({
       <div className="flex gap-5 ">
         <FormField
           control={form.control}
-          name="first_name"
+          name="firstName"
           render={({ field }) => (
             <FormItem className="grow">
               <FormLabel>First name</FormLabel>
@@ -56,7 +56,7 @@ const VolunteerBioFields = ({
         />
         <FormField
           control={form.control}
-          name="last_name"
+          name="lastName"
           render={({ field }) => (
             <FormItem className="grow">
               <FormLabel>Last name</FormLabel>
@@ -118,7 +118,7 @@ const VolunteerBioFields = ({
           control={form.control}
           name="gender"
           render={({ field }) => (
-            <FormItem className="flex flex-col grow">
+            <FormItem className="flex grow flex-col">
               <FormLabel>Gender</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>

@@ -17,26 +17,29 @@ const FormNavigation = ({
   back,
 }: NavigationProps) => {
   return (
-    <div className="flex justify-between float-right ">
+    <div className="flex justify-between ">
       {!isFirstStep && (
         <Button variant={'secondary'} type="button" onClick={back}>
           Back
         </Button>
       )}
-      <Button
-        type="submit"
-        disabled={!formState.isValid || formState.isSubmitting}
-      >
-        {formState.isSubmitting ||
-        formState.isSubmitting ||
-        formState.isSubmitted ? (
-          <Loader2 className="animate-spin" />
-        ) : isLastStep ? (
-          'Finish'
-        ) : (
-          'Next'
-        )}
-      </Button>
+      <div className="w-full">
+        <Button
+          className="float-right"
+          type="submit"
+          disabled={!formState.isValid || formState.isSubmitting}
+        >
+          {formState.isSubmitting ||
+          formState.isSubmitting ||
+          formState.isSubmitted ? (
+            <Loader2 className="animate-spin" />
+          ) : isLastStep ? (
+            'Finish'
+          ) : (
+            'Next'
+          )}
+        </Button>
+      </div>
     </div>
   );
 };

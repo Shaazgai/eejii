@@ -53,7 +53,7 @@ const AddressFields = ({
   }, [selectedCountry]);
   const ubProvinces = provinces.filter(province => province.aimag_id === 22);
   return (
-    <div className="space-y-2 w-[500px]">
+    <div className="w-[500px] space-y-2">
       <div className="flex gap-5">
         <FormField
           control={form.control}
