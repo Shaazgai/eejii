@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import React, { createContext, useContext, useState } from 'react';
 
 import type { MultiStepFormContextType, VolunteerFormType } from '@/lib/types';
+import { api } from '@/utils/api';
 
 export const VolunteerFormContext = createContext<
   MultiStepFormContextType<VolunteerFormType> | undefined
@@ -42,6 +43,16 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
     setCurrentStepIndex(index);
   }
 
+  const createVolunteer = api.volunteer.create.useMutation({
+    onSuccess: newVolunteer => {
+      console.log(newVolunteer);
+    },
+  });
+  function submit() {
+    createVolunteer.mutate({ content: data });
+  }
+
+  console.log(data);
   return (
     <VolunteerFormContext.Provider
       value={{
@@ -54,6 +65,7 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
         next,
         back,
         goTo,
+        submit,
       }}
     >
       {steps[currentStepIndex]}

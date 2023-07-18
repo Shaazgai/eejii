@@ -8,6 +8,7 @@ export type MultiStepFormContextType<Value> = {
   next: () => void;
   back: () => void;
   goTo: (index: number) => void;
+  submit: () => void;
 };
 
 export type AddressType = {
