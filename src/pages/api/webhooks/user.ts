@@ -1,21 +1,28 @@
 import type { IncomingHttpHeaders } from 'http';
-import { headers } from 'next/headers';
+// import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { WebhookRequiredHeaders } from 'svix';
+import { headers } from 'next/headers';
 import { Webhook } from 'svix';
 
 import { prisma } from '@/server/db';
 
 const webhookSecret = process.env.WEBHOOK_SECRET || '';
 
-async function handler(req: Request) {
-  const payload = await req.json();
-  const headersList = headers();
+
+
+export default async function handler(req: Request, res: Response) {
+  const payload = await req.body;
+  // const headersList = headers()
+  // const requestHeaders = new Headers(req.headers);
+  const headersList = req.headers
+
   const heads = {
-    'svix-id': headersList.get('svix-id'),
-    'svix-timestamp': headersList.get('svix-timestamp'),
-    'svix-signature': headersList.get('svix-signature'),
+    'svix-id': headersList['svix-id'],
+    'svix-timestamp': headersList['svix-timestamp'],
+    'svix-signature': headersList['svix-signature'],
   };
+  console.log("🚀 ~ file: user.ts:20 ~ handler ~ heads:", heads)
   const webhook = new Webhook(webhookSecret);
   let evt: Event | null = null;
 
@@ -26,7 +33,7 @@ async function handler(req: Request) {
     ) as Event;
   } catch (err) {
     console.log((err as Error).message);
-    return NextResponse.json({}, { status: 400 });
+    return res.json({}, { status: 400 });
   }
 
   const eventType: EventType = evt.type;
@@ -53,7 +60,7 @@ async function handler(req: Request) {
       },
     });
   }
-  return NextResponse.json({}, { status: 200 });
+  return res.json(heads);
 }
 
 type EventType = 'user.created' | 'user.updated' | '*';
@@ -63,6 +70,6 @@ type Event = {
   type: EventType;
 };
 
-export const GET = handler;
-export const POST = handler;
-export const PUT = handler;
+// export const GET = handler;
+// export const POST = handler;
+// export const PUT = handler;
