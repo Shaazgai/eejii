@@ -1,4 +1,4 @@
-import EventForm from '@/components/form/event-form';
+import FundraisingForm from '@/components/form/fundraising-form';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { api } from '@/utils/api';
 // import { api } from '@/utils/api';
@@ -11,7 +11,8 @@ export default function Home() {
   return (
     <BasicBaseLayout>
       <div className="flex justify-center">
-        <EventForm />
+        {/* <EventForm /> */}
+        <FundraisingForm />
       </div>
     </BasicBaseLayout>
   );

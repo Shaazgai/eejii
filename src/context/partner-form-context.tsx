@@ -1,7 +1,6 @@
 'use client';
 
 import type { ReactElement } from 'react';
-import React from 'react';
 import { createContext, useContext, useState } from 'react';
 
 import type * as types from '@/lib/types';
@@ -55,6 +54,7 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
       setData(initialData);
     },
   });
+
   async function submit() {
     await setTimeout(() => {
       mutate(data);
