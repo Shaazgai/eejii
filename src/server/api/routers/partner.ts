@@ -17,6 +17,7 @@ export const partnerRouter = createTRPCRouter({
 
       return partner;
     }),
+
   getByUserId: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
