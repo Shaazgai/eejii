@@ -1,6 +1,7 @@
 import { supporterRouter } from '@/server/api/routers/supporter';
 import { createTRPCRouter } from '@/server/api/trpc';
 
+import { eventRouter } from './routers/event';
 import { partnerRouter } from './routers/partner';
 import { volunteerRouter } from './routers/volunteer';
 
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   supporter: supporterRouter,
   volunteer: volunteerRouter,
   partner: partnerRouter,
+  event: eventRouter,
 });
 
 // export type definition of API

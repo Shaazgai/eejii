@@ -12,12 +12,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import type { partnerFormSchema } from '@/lib/validation/partner-validation-schema';
+import type { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
 const PartnerFields = ({
   form,
 }: {
-  form: FormProps<z.infer<typeof partnerFormSchema>>;
+  form: FormProps<z.infer<typeof partnerSchema>>;
 }) => {
   return (
     <div className="space-y-2">
