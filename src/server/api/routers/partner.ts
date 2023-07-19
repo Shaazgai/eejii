@@ -33,9 +33,11 @@ export const partnerRouter = createTRPCRouter({
   create: privateProcedure
     .input(partnerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
-      console.log(ctx.userId);
-      const user = await ctx.prisma.user.findUnique({
+      const user = await ctx.prisma.user.update({
         where: { externalId: ctx.userId },
+        data: {
+          type: 'partner',
+        },
       });
       if (!user) throw new Error('User not fouuund');
       const address = await ctx.prisma.address.create({

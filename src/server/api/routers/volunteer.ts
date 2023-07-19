@@ -32,9 +32,11 @@ export const volunteerRouter = createTRPCRouter({
   create: privateProcedure
     .input(volunteerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
-      console.log(input.firstName);
-      const user = await ctx.prisma.user.findUnique({
+      const user = await ctx.prisma.user.update({
         where: { externalId: ctx.userId },
+        data: {
+          type: 'volunteer',
+        },
       });
       if (!user) throw new Error('User not found');
       const address = await ctx.prisma.address.create({
@@ -45,6 +47,7 @@ export const volunteerRouter = createTRPCRouter({
           provinceName: input.provinceName,
         },
       });
+
       const volunteer = await ctx.prisma.volunteer.create({
         data: {
           firstName: input?.firstName,

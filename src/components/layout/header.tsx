@@ -1,12 +1,10 @@
 'use client';
 
-import { SignOutButton } from '@clerk/nextjs';
-import { useUser } from '@clerk/nextjs';
+import { SignOutButton, useUser } from '@clerk/nextjs';
 import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
 
 import {
   DropdownMenu,
@@ -27,7 +25,7 @@ const Header = () => {
   return (
     <header className="flex w-full flex-row items-center justify-between p-3">
       <div>
-        {/* <Image alt="logo" src={'/next.svg'} width={100} height={50} /> */}
+        <Image alt="logo" src={'/eejii.jpeg'} width={200} height={50} />
       </div>
       <nav>
         <ul className="flex flex-row gap-10">

@@ -1,5 +1,6 @@
+import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import type { MultiStepFormContextType, VolunteerType } from '@/lib/types';
 import { api } from '@/utils/api';
@@ -21,6 +22,7 @@ export const initialData: VolunteerType = {
 };
 
 export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
+  const router = useRouter();
   const [data, setData] = useState<VolunteerType>(initialData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
@@ -46,14 +48,14 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
     onSuccess: newVolunteer => {
       console.log(newVolunteer);
       setData(initialData);
+      router.push('/v');
     },
   });
 
   async function submit() {
     console.log(data);
-    await setTimeout(() => {
-      mutate(data);
-    }, 1000);
+    await setTimeout(() => {}, 1000);
+    mutate(data);
   }
 
   console.log(data);

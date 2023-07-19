@@ -24,24 +24,29 @@ export const eventRouter = createTRPCRouter({
   create: privateProcedure
     .input(eventSchema)
     .mutation(async ({ input, ctx }) => {
-      console.log(ctx.userId);
       const user = await ctx.prisma.user.findUnique({
         where: { externalId: ctx.userId },
       });
       if (!user) throw new Error('User not fouuund');
 
-      const roles = input.roles;
-      const rolesArr = roles.split(',');
+      const owner = await ctx.prisma.partner.findUniqueOrThrow({
+        where: { userId: user.id },
+      });
+
       const event = await ctx.prisma.event.create({
         data: {
           title: input.title,
           description: input.description,
           requiredTime: input.requiredTime,
-          contact: input.requiredTime,
+          contact: {
+            primary_phone: input.primary_phone,
+            secondary_phone: input.secondary_phone,
+          },
           location: input.location,
           startTime: input.startTime,
           endTime: input.endTime,
-          roles: rolesArr,
+          roles: Object.assign({}, input.roles),
+          ownerId: owner.id,
         },
       });
       console.log(event);
