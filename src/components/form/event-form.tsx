@@ -35,7 +35,7 @@ const EventForm = () => {
 
   function onSubmit(values: z.infer<typeof eventSchema>) {
     console.log(values);
-    mutate(values);
+    // mutate(values);
   }
   return (
     <div className="w-[500px]">
@@ -48,11 +48,11 @@ const EventForm = () => {
               <Button
                 type="submit"
                 className="float-right"
-                disabled={
-                  form.formState.isLoading ||
-                  form.formState.isSubmitting ||
-                  !form.formState.isValid
-                }
+                // disabled={
+                //   form.formState.isLoading ||
+                //   form.formState.isSubmitting ||
+                //   !form.formState.isValid
+                // }
               >
                 {form.formState.isLoading || form.formState.isSubmitting ? (
                   <LoaderIcon />
