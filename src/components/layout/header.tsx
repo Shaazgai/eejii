@@ -20,14 +20,14 @@ import {
 
 import { Button } from '../ui/button';
 
-const Header: React.FC = () => {
+const Header = () => {
   const { user } = useUser();
   const pathname = usePathname();
 
   return (
     <header className="flex w-full flex-row items-center justify-between p-3">
       <div>
-        <Image alt="logo" src={'/next.svg'} width={100} height={50} />
+        {/* <Image alt="logo" src={'/next.svg'} width={100} height={50} /> */}
       </div>
       <nav>
         <ul className="flex flex-row gap-10">

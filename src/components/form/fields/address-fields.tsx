@@ -20,10 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { addressFormSchema } from '@/lib/validation/address-validation-schema';
+import type { addressSchema } from '@/lib/validation/address-validation-schema';
 
 type AddressFormProps = {
-  form: FormProps<z.infer<typeof addressFormSchema>>;
+  form: FormProps<z.infer<typeof addressSchema>>;
   setSelectedCountry: Dispatch<SetStateAction<string>>;
   selectedCountry: string;
   setSelectedCity: Dispatch<SetStateAction<string>>;
