@@ -92,14 +92,9 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
     });
   }
 
-  const user = ctx.prisma.user.findUnique({
-    where: { externalId: ctx.userId },
-  });
-
   return next({
     ctx: {
       userId: ctx.userId,
-      userType: user.type,
     },
   });
 });

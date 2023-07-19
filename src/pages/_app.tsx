@@ -8,7 +8,9 @@ import { api } from '@/utils/api';
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
+      {/* <SessionContext.Provider value={{ user }}> */}
       <Component {...pageProps} />
+      {/* </SessionContext.Provider> */}
     </ClerkProvider>
   );
 };
