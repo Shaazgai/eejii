@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderIcon } from 'lucide-react';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -10,6 +11,7 @@ import { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
 
 const EventForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof eventSchema>>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
@@ -21,15 +23,18 @@ const EventForm = () => {
       requiredTime: '',
       primary_phone: '',
       secondary_phone: '',
-      roles: '',
+      roles: [],
     },
   });
   const { mutate } = api.event.create.useMutation({
-    onSuccess: newEvent => console.log(newEvent),
+    onSuccess: newEvent => {
+      console.log(newEvent);
+      router.push('/p');
+    },
   });
 
   function onSubmit(values: z.infer<typeof eventSchema>) {
-    // console.log(values);
+    console.log(values);
     mutate(values);
   }
   return (

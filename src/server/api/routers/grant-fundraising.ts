@@ -5,16 +5,16 @@ import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
-export const fundraisingRouter = createTRPCRouter({
+export const grantFundraisingRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
-    const fundraising = await opts.ctx.prisma.fundraising.findMany({});
+    const fundraising = await opts.ctx.prisma.grantFundraising.findMany({});
     return fundraising;
   }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const fundraising = await ctx.prisma.fundraising.findUnique({
+      const fundraising = await ctx.prisma.grantFundraising.findUnique({
         where: { id: input.id },
       });
       if (!fundraising) throw new TRPCError({ code: 'NOT_FOUND' });
@@ -31,14 +31,19 @@ export const fundraisingRouter = createTRPCRouter({
 
       if (!user) throw new Error('User not fouuund');
       let owner = null;
+
       if (user.type === 'partner') {
+        owner = await ctx.prisma.partner.findUniqueOrThrow({
+          where: { userId: user.id },
+        });
+      } else if (user.type === 'supporter') {
         owner = await ctx.prisma.partner.findUniqueOrThrow({
           where: { userId: user.id },
         });
       }
       if (!owner) throw new Error('Owner not found');
 
-      const fundraising = await ctx.prisma.fundraising.create({
+      const fundraising = await ctx.prisma.grantFundraising.create({
         data: {
           title: input.title,
           description: input.description,
@@ -51,7 +56,7 @@ export const fundraisingRouter = createTRPCRouter({
           endTime: input.endTime,
           goalAmount: input.goalAmount,
           currentAmount: input.currentAmount,
-          partnerId: owner.id,
+          ownerId: owner.id,
         },
       });
       console.log(fundraising);

@@ -1,5 +1,6 @@
+import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import type { MultiStepFormContextType, SupporterType } from '@/lib/types';
 import { api } from '@/utils/api';
@@ -24,6 +25,7 @@ export const initialData: SupporterType = {
 };
 
 export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
+  const router = useRouter();
   const [data, setData] = useState<SupporterType>(initialData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
@@ -49,14 +51,14 @@ export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
     onSuccess: newSupporter => {
       console.log(newSupporter);
       setData(initialData);
+      router.push('/s');
     },
   });
 
   async function submit() {
     console.log(data);
-    await setTimeout(() => {
-      mutate(data);
-    }, 1000);
+    await setTimeout(() => {}, 1000);
+    mutate(data);
   }
 
   return (

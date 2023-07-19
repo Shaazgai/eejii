@@ -114,7 +114,12 @@ const FundraisingFields = ({
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Goal amount</FormLabel>
-              <Input placeholder="Goal amount" {...field} type="number" />
+              <Input
+                placeholder="Goal amount"
+                {...field}
+                type="number"
+                onChange={event => field.onChange(+event.target.value)}
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -125,18 +130,23 @@ const FundraisingFields = ({
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Current amount</FormLabel>
-              <Input placeholder="Current Amount" {...field} type="number" />
+              <Input
+                placeholder="Current Amount"
+                {...field}
+                onChange={event => field.onChange(+event.target.value)}
+                type="number"
+              />
               <FormMessage />
             </FormItem>
           )}
         />
       </div>
-      <div className="flex gap-5">
+      <div className="flex flex-row justify-between gap-5">
         <FormField
           name="startTime"
           control={form.control}
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem className="flex w-full flex-col">
               <FormLabel>Start time</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -177,7 +187,7 @@ const FundraisingFields = ({
           name="endTime"
           control={form.control}
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem className="flex w-full flex-col">
               <FormLabel>End Time</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>

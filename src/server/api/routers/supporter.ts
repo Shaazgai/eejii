@@ -32,8 +32,11 @@ export const supporterRouter = createTRPCRouter({
   create: privateProcedure
     .input(supporterSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
-      const user = await ctx.prisma.user.findUniqueOrThrow({
+      const user = await ctx.prisma.user.update({
         where: { externalId: ctx.userId },
+        data: {
+          type: 'supporter',
+        },
       });
       const address = await ctx.prisma.address.create({
         data: {

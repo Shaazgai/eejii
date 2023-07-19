@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { createContext, useContext, useState } from 'react';
 
@@ -27,6 +28,7 @@ export const initialData: types.PartnerType = {
 };
 
 export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
+  const router = useRouter();
   const [data, setData] = useState<types.PartnerType>(initialData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
@@ -52,13 +54,13 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
     onSuccess: newPartner => {
       console.log(newPartner);
       setData(initialData);
+      router.push('/p');
     },
   });
 
   async function submit() {
-    await setTimeout(() => {
-      mutate(data);
-    }, 1000);
+    await setTimeout(() => {}, 1000);
+    mutate(data);
   }
 
   return (

@@ -29,5 +29,5 @@ export const eventSchema = z.object({
   requiredTime: z.string(),
   primary_phone: z.string().regex(phoneRegex).length(8),
   secondary_phone: z.string().regex(phoneRegex).length(8),
-  roles: z.string(),
+  roles: z.array(z.string()).nullish(),
 });

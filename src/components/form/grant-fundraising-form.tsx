@@ -10,7 +10,7 @@ import { Button } from '../ui/button';
 import { Form } from '../ui/form';
 import FundraisingFields from './fields/fundraising-fields';
 
-const FundraisingForm = () => {
+const GrantFundraisingForm = () => {
   const form = useForm<z.infer<typeof fundraisingSchema>>({
     resolver: zodResolver(fundraisingSchema),
     defaultValues: {
@@ -25,8 +25,8 @@ const FundraisingForm = () => {
       currentAmount: 0,
     },
   });
-  const { mutate } = api.fundraising.create.useMutation({
-    onSuccess: newFundraising => console.log(newFundraising),
+  const { mutate } = api.grantFundraising.create.useMutation({
+    onSuccess: newGrantFundraising => console.log(newGrantFundraising),
   });
   function onSubmit(values: z.infer<typeof fundraisingSchema>) {
     console.log(values);
@@ -64,4 +64,4 @@ const FundraisingForm = () => {
   );
 };
 
-export default FundraisingForm;
+export default GrantFundraisingForm;
