@@ -35,7 +35,9 @@ const GrantFundraisingForm = () => {
   console.log(form.formState.isValid);
   return (
     <div className="w-[500px]">
-      <h3 className="mb-5 border-b border-gray-200 pb-1">Create Fundraising</h3>
+      <h3 className="mb-5 border-b border-gray-200 pb-1">
+        Create Grant Fundraising
+      </h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-4">

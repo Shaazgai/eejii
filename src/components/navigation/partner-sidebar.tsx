@@ -22,7 +22,7 @@ const sidebarNav = [
   },
   {
     title: 'Manage Projects',
-    href: '/p/manage-projects',
+    href: '/p/manage',
     icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
     items: [],
     external: '',

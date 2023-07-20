@@ -1,38 +1,26 @@
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-export function SettingsTabs() {
+export function NormalTabs({ tabs, activeIndex, setActiveIndex }) {
   const router = useRouter();
-  const pathname = usePathname();
-
-  const tabs = [
-    {
-      title: 'Profile',
-      href: `/p/settings`,
-    },
-    {
-      title: 'Partner profile',
-      href: `/p/settings/partner-profile`,
-    },
-  ];
 
   return (
     <Tabs
       className={cn('w-full overflow-x-auto')}
-      onValueChange={value => router.push(value)}
+      // onValueChange={value => router.push(value)}
     >
       <TabsList>
         {tabs.map(tab => (
           <TabsTrigger
             key={tab.title}
-            value={tab.href}
+            value={`${tab.index}`}
             className={cn(
-              pathname === `${tab.href}` &&
+              activeIndex === tab.index &&
                 'bg-background text-foreground shadow-sm'
             )}
-            onClick={() => router.push(tab.href)}
+            onClick={() => setActiveIndex(tab.index)}
           >
             {tab.title}
           </TabsTrigger>
