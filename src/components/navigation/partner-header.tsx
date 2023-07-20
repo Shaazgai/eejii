@@ -2,7 +2,6 @@ import { SignOutButton, useUser } from '@clerk/nextjs';
 import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +16,7 @@ import {
 
 const PartnerHeader = () => {
   const { user } = useUser();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   return (
     <header className="flex w-full flex-row items-center justify-between p-3">

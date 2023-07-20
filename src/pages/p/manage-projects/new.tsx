@@ -1,10 +1,7 @@
-import { useRouter } from 'next/router';
-
 import PartnerLayout from '@/components/layout/partner-layout';
 import { Shell } from '@/components/shells/shell';
 
 export default function NewProject() {
-  const router = useRouter();
   return (
     <PartnerLayout>
       <Shell>
