@@ -57,4 +57,45 @@ export const fundraisingRouter = createTRPCRouter({
       console.log(fundraising);
       return fundraising;
     }),
+  sendRequest: privateProcedure
+    .input(z.object({ fundraisingId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUniqueOrThrow({
+        where: { externalId: ctx.userId },
+      });
+      const fundraising = await ctx.prisma.fundraising.findUnique({
+        where: { id: input.fundraisingId },
+      });
+      if (!fundraising) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      if (user.type === 'partner') {
+        const partner = await ctx.prisma.partner.findUniqueOrThrow({
+          where: { userId: user.id },
+        });
+
+        const fundraisingPartner = await ctx.prisma.fundraisingPartner.create({
+          data: {
+            fundraisingId: fundraising.id,
+            partnerId: partner.id,
+            status: 'pending',
+          },
+        });
+        return fundraisingPartner;
+      } else if (user.type === 'supporter') {
+        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+          where: { userId: user.id },
+        });
+
+        const fundraisingSupporter =
+          await ctx.prisma.fundraisingSupporter.create({
+            data: {
+              fundraisingId: fundraising.id,
+              supporterId: supporter.id,
+              status: 'pending',
+            },
+          });
+        return fundraisingSupporter;
+      }
+      return { message: 'User not supporter or partner' };
+    }),
 });
