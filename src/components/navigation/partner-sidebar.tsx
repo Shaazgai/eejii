@@ -1,45 +1,59 @@
+import {
+  CalendarCheck,
+  ChevronRight,
+  Heart,
+  LayoutDashboard,
+  Newspaper,
+  Settings,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 const sidebarNav = [
   {
     title: 'Dashboard',
     href: '/p',
-    icon: 'layoutDashboard',
+    icon: <LayoutDashboard className='"mr-2 w-4" h-4' />,
     items: [],
+    external: '',
   },
   {
     title: 'Manage Projects',
     href: '/p/manage-projects',
-    icon: 'calendarCheck',
+    icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
     items: [],
+    external: '',
   },
   {
     title: 'Volunteers',
     href: '/p/billing',
-    icon: 'users',
+    icon: <Users className='"mr-2 w-4" h-4' />,
     items: [],
+    external: '',
   },
   {
     title: 'Donations',
     href: '/p/purchases',
-    icon: 'heart',
+    icon: <Heart className='"mr-2 w-4" h-4' />,
     items: [],
+    external: '',
   },
   {
     title: 'Media',
     href: '/p/purchases',
-    icon: 'newspaper',
+    icon: <Newspaper className='"mr-2 w-4" h-4' />,
     items: [],
+    external: '',
   },
   {
     title: 'Settings',
     href: '/p/settings',
-    icon: 'settings',
+    icon: <Settings className='"mr-2 w-4" h-4' />,
     items: [],
+    external: '',
   },
 ];
 export default function PartnerSideBar() {
@@ -48,7 +62,7 @@ export default function PartnerSideBar() {
   return (
     <div className="flex w-full flex-col gap-2">
       {sidebarNav.map((item, index) => {
-        const Icon = Icons[item.icon ?? 'chevronLeft'];
+        // const Icon = item.icon ?? <ChevronRight />;
 
         return item.href ? (
           <Link
@@ -66,7 +80,8 @@ export default function PartnerSideBar() {
                 // item.disabled && 'pointer-events-none opacity-60'
               )}
             >
-              <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
+              {/* <Icon className="mr-2 h-4 w-4" aria-hidden="true" /> */}
+              {item.icon ?? <ChevronRight className='"mr-2 w-4" h-4' />}
               <span>{item.title}</span>
             </span>
           </Link>

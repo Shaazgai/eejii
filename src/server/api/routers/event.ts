@@ -52,4 +52,29 @@ export const eventRouter = createTRPCRouter({
       console.log(event);
       return event;
     }),
+  sendRequest: privateProcedure
+    .input(z.object({ eventId: z.string(), role: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUniqueOrThrow({
+        where: { externalId: ctx.userId },
+      });
+      const event = await ctx.prisma.event.findUnique({
+        where: { id: input.eventId },
+      });
+      if (!event) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      const volunteer = await ctx.prisma.volunteer.findUniqueOrThrow({
+        where: { userId: user.id },
+      });
+      const eventVolunteer = ctx.prisma.eventVolunteer.create({
+        data: {
+          eventId: event.id,
+          volunteerId: volunteer.id,
+          status: 'pending',
+          role: input.role,
+        },
+      });
+
+      return eventVolunteer;
+    }),
 });

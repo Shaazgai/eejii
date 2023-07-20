@@ -6,10 +6,6 @@ export const userRouter = createTRPCRouter({
   getById: publicProcedure
     // .input(z.object({ id: z.string() }))
     .query(async ({ ctx }) => {
-      console.log('🚀 ~ file: user.ts:11 ~ .query ~ ctx.userId:', ctx.userId);
-      // const user = await ctx.prisma.user.findUnique({
-      //   where: { externalId: ctx.userId },
-      // });
       if (ctx.userId) {
         const user = await ctx.prisma.user.findUnique({
           where: { externalId: ctx.userId },
@@ -33,7 +29,8 @@ export const userRouter = createTRPCRouter({
             where: { userId: user.id },
           });
         }
-        return { user };
+        return user;
       }
+      return;
     }),
 });

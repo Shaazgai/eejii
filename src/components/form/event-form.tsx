@@ -35,7 +35,7 @@ const EventForm = () => {
 
   function onSubmit(values: z.infer<typeof eventSchema>) {
     console.log(values);
-    // mutate(values);
+    mutate(values);
   }
   return (
     <div className="w-[500px]">
