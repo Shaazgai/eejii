@@ -62,4 +62,47 @@ export const grantFundraisingRouter = createTRPCRouter({
       console.log(fundraising);
       return fundraising;
     }),
+  sendRequest: privateProcedure
+    .input(z.object({ grantFundraisingId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUniqueOrThrow({
+        where: { externalId: ctx.userId },
+      });
+      const grantFundraising = await ctx.prisma.grantFundraising.findUnique({
+        where: { id: input.grantFundraisingId },
+      });
+      if (!grantFundraising) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      if (user.type === 'partner') {
+        const partner = await ctx.prisma.partner.findUniqueOrThrow({
+          where: { userId: user.id },
+        });
+
+        const grantFundraisingPartner =
+          await ctx.prisma.grantFundraisingPartner.create({
+            data: {
+              grantFundraisingId: grantFundraising.id,
+              partnerId: partner.id,
+              status: 'pending',
+            },
+          });
+        return grantFundraisingPartner;
+      } else if (user.type === 'supporter') {
+        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+          where: { userId: user.id },
+        });
+
+        const grantFundraisingSupporter =
+          await ctx.prisma.grantFundraisingSupporter.create({
+            data: {
+              grantFundraisingId: grantFundraising.id,
+              supporterId: supporter.id,
+              status: 'pending',
+            },
+          });
+        return grantFundraisingSupporter;
+      }
+
+      return { message: 'User not supporter or partner' };
+    }),
 });

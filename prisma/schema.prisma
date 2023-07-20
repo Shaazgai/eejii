@@ -176,7 +176,7 @@ model FundraisingPartner {
     id            String       @id @default(uuid())
     Partner       Partner?     @relation(fields: [partnerId], references: [id])
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
-    createdAt     DateTime
+    createdAt     DateTime     @default(now())
     role          String?
     status        String
     partnerId     String?      @unique
