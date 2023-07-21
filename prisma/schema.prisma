@@ -115,6 +115,7 @@ model EventPartner {
     createdAt DateTime @default(now())
     role      String?
     status    String
+    type      String?
     partnerId String   @unique
     eventId   String?  @unique
 }
@@ -126,6 +127,7 @@ model EventSupporter {
     createdAt   DateTime   @default(now())
     role        String?
     status      String
+    type        String?
     supporterId String     @unique
     eventId     String?    @unique
 }
@@ -139,6 +141,7 @@ model EventVolunteer {
     createdAt   DateTime   @default(now())
     role        String?
     status      String
+    type        String?
 }
 
 model Fundraising {
@@ -168,6 +171,7 @@ model FundraisingSupporter {
     createdAt     DateTime     @default(now())
     role          String?
     status        String
+    type          String?
     supporterId   String?      @unique
     fundraisingId String?      @unique
 }
@@ -179,6 +183,7 @@ model FundraisingPartner {
     createdAt     DateTime     @default(now())
     role          String?
     status        String
+    type          String?
     partnerId     String?      @unique
     fundraisingId String?      @unique
 }
@@ -209,6 +214,7 @@ model GrantFundraisingSupporter {
     createdAt          DateTime          @default(now())
     role               String?
     status             String
+    type               String?
     supporterId        String?           @unique
     grantFundraisingId String?           @unique
 }
@@ -220,6 +226,7 @@ model GrantFundraisingPartner {
     createdAt          DateTime          @default(now())
     role               String?
     status             String
+    type               String?
     partnerId          String?           @unique
     grantFundraisingId String?           @unique
 }

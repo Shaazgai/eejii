@@ -70,7 +70,9 @@ export const partnerRouter = createTRPCRouter({
       return partner;
     }),
   getJoinRequests: privateProcedure
-    .input(z.object({ type: z.string(), status: z.string() }))
+    .input(
+      z.object({ type: z.string().nullable(), status: z.string().nullable() })
+    )
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUniqueOrThrow({
         where: { externalId: ctx.userId },
@@ -78,33 +80,121 @@ export const partnerRouter = createTRPCRouter({
       const partner = await ctx.prisma.partner.findUniqueOrThrow({
         where: { userId: user.id },
       });
-      if (input.type === 'event ') {
-        const event = await ctx.prisma.event.findMany({
-          include: {
-            EventPartner: true,
-            EventSupporter: true,
-            EventVolunteer: true,
+
+      if (input.type === 'event') {
+        const eventVolunteer = await ctx.prisma.eventVolunteer.findMany({
+          where: {
+            Event: {
+              ownerId: partner.id,
+            },
           },
-          where: { ownerId: partner.id },
         });
-        // const eventVolunteer = await ctx.prisma.eventVolunteer.findMany({
-        //   where: { eventId: input.projectId },
-        // });
-        return event;
+        console.log(eventVolunteer);
+        return eventVolunteer;
+      } else if (input.type === 'fundraising') {
+        const fundraisingPartner = await ctx.prisma.fundraisingPartner.findMany(
+          {
+            where: {
+              Fundraising: {
+                partnerId: partner.id,
+              },
+            },
+          }
+        );
+        return fundraisingPartner;
+      } else if (input.type === 'grantFundraising') {
+        const grantFundraising =
+          await ctx.prisma.grantFundraisingPartner.findMany({
+            where: {
+              GrantFundraising: {
+                ownerId: partner.id,
+              },
+            },
+          });
+        return grantFundraising;
       }
-      return;
-      //  else if (input.type === 'fundraising') {
-      //   const fundraisingPartner =
-      //     await ctx.prisma.fundraisingPartner.findUniqueOrThrow({
-      //       where: { id: input.projectId },
-      //     });
-      //   return fundraisingPartner;
-      // } else if (input.type === 'grantFundraising') {
-      //   const grantFundraising =
-      //     await ctx.prisma.grantFundraisingPartner.findUniqueOrThrow({
-      //       where: { id: input.projectId },
-      //     });
-      //   return grantFundraising;
-      // }
+      throw new TRPCError({ message: 'Requests not found', code: 'NOT_FOUND' });
+    }),
+
+  handleRequest: privateProcedure
+    .input(z.object({ id: z.string(), type: z.string(), status: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (input.type === 'event') {
+        const eventVolunteer = await ctx.prisma.eventVolunteer.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            status: input.status,
+          },
+        });
+        return eventVolunteer;
+      } else if (input.type === 'fundraising') {
+        const fundraisingPartner = await ctx.prisma.fundraisingPartner.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            status: input.status,
+          },
+        });
+        return fundraisingPartner;
+      } else if (input.type === 'grantFundraising') {
+        const grantFundraising =
+          await ctx.prisma.grantFundraisingPartner.update({
+            where: {
+              id: input.id,
+            },
+            data: {
+              status: input.status,
+            },
+          });
+
+        return grantFundraising;
+      }
+      throw new TRPCError({ message: 'Requests not found', code: 'NOT_FOUND' });
+    }),
+  inviteToFundraising: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        supporters: z.array(z.string()),
+        partners: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      input.supporters.forEach(async supporterId => {
+        const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
+          where: { id: input.id },
+        });
+        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+          where: { id: supporterId },
+        });
+        await ctx.prisma.fundraisingSupporter.create({
+          data: {
+            status: 'pending',
+            supporterId: supporter.id,
+            fundraisingId: fundraising.id,
+          },
+        });
+      });
+
+      input.partners.forEach(async partnerId => {
+        const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
+          where: { id: input.id },
+        });
+        const partner = await ctx.prisma.partner.findUniqueOrThrow({
+          where: { id: partnerId },
+        });
+        await ctx.prisma.fundraisingPartner.create({
+          data: {
+            status: 'pending',
+            partnerId: partner.id,
+            fundraisingId: fundraising.id,
+          },
+        });
+      });
+
+      return { message: 'Success' };
     }),
 });
