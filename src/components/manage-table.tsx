@@ -91,10 +91,7 @@ export const IndexTable = <TData, TValue>({
           <TableBody className="w-full">
             {table?.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
-                <TableRow
-                  className="p my-10 border-b border-gray-600"
-                  key={row.id}
-                >
+                <TableRow className="p my-10 border-b" key={row.id}>
                   {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id} className="font-medium">
                       {flexRender(

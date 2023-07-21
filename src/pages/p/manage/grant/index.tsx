@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import ProjectCard from '@/components/card/project-card';
+import GrantCard from '@/components/card/grant-card';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
@@ -42,12 +42,12 @@ export default function ManageProjects() {
       <Shell>
         <div className="flex justify-between">
           <h2>manage-projects</h2>
-          <Button onClick={() => router.push('manage/new')}>Add</Button>
+          <Button onClick={() => router.push('/p/manage/new')}>Add</Button>
         </div>
         <LinkTabs tabs={tabs} />
 
-        {fundraising?.map((fund, index) => (
-          <ProjectCard key={index} fundraising={fund as FundaisingType} />
+        {grantFundraising?.map((grant, index) => (
+          <GrantCard key={index} fundraising={grant as FundaisingType} />
         ))}
       </Shell>
     </PartnerLayout>
