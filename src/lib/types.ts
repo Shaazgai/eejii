@@ -1,3 +1,6 @@
+import type { Prisma } from '@prisma/client';
+import type { JSONValue } from 'superjson/dist/types';
+
 export type MultiStepFormContextType<Value> = {
   data: Value;
   setData: React.Dispatch<React.SetStateAction<Value>>;
@@ -18,7 +21,7 @@ export type AddressType = {
   street: string;
 };
 
-export type PartnerType = {
+export type PartnerFormType = {
   organization: string;
   email: string;
   primary_phone: string;
@@ -37,7 +40,7 @@ export type VolunteerType = {
   birthday: Date;
 } & AddressType;
 
-export type SupporterType = PartnerType;
+export type SupporterFormType = PartnerFormType;
 
 export interface EventType {
   id: string;
@@ -57,7 +60,7 @@ export interface ContactType {
   email_2: string | undefined;
 }
 
-export interface FundaisingType {
+export interface FundraisingType {
   contact: ContactType;
   currentAmount: number;
   description: string;
@@ -70,7 +73,7 @@ export interface FundaisingType {
   title: string;
 }
 
-export interface GrantfundraisingType {
+export interface GrantFundraisingType {
   id: string;
   name: string;
   createdAt: Date;
@@ -79,4 +82,133 @@ export interface GrantfundraisingType {
   email: string;
   address: string;
   image: string;
+}
+
+export interface PartnerType {
+  id: string;
+  userId: string;
+  organization: string;
+  email: string;
+  phoneNumbers: JSONValue;
+  bio: string | null;
+  socialLinks: JSONValue;
+  addressId: string | null;
+}
+
+export interface PartnerFundraisingType {
+  id: string;
+  createdAt: Date;
+  role: string | null;
+  status: string | null;
+  type: string | null;
+  partnerId: string | null;
+  fundraisingId: string;
+  Fundraising: FundraisingType | null;
+  Partner: PartnerType | null;
+}
+
+export interface JoinRequestTableProps {
+  requestId: string;
+  status: string;
+  createdAt: Date;
+  role: string | null;
+  type: string;
+  projectTitle: string;
+  projectId: string;
+  userEmail: string;
+  userId: string;
+  userName?: string;
+  userType: string;
+  userPhoneNumbers?: Prisma.JsonValue;
+}
+
+export interface JRNFundraisingProps {
+  id: string;
+  title: string;
+  FundraisingPartner: {
+    id: string;
+    status: string;
+    createdAt: Date;
+    role: string | null;
+    type: string | null;
+    Partner: JRNPartnerProps | null;
+  }[];
+  FundraisingSupporter: {
+    id: string;
+    status: string;
+    createdAt: Date;
+    role: string | null;
+    type: string | null;
+    Supporter: JRNSupporterProps | null;
+  }[];
+}
+
+export interface JRNGrantProps {
+  id: string;
+  title: string;
+  GrantFundraisingPartner: {
+    id: string;
+    status: string;
+    createdAt: Date;
+    role: string | null;
+    type: string | null;
+    Partner: JRNPartnerProps | null;
+  }[];
+  GrantFundraisingSupporter: {
+    id: string;
+    status: string;
+    createdAt: Date;
+    role: string | null;
+    type: string | null;
+    Supporter: JRNSupporterProps | null;
+  }[];
+}
+
+export interface JRNEventProps {
+  id: string;
+  title: string;
+  EventPartner: {
+    id: string;
+    status: string;
+    createdAt: Date;
+    role: string | null;
+    type: string | null;
+    Partner: JRNPartnerProps | null;
+  }[];
+  EventSupporter: {
+    id: string;
+    status: string;
+    createdAt: Date;
+    role: string | null;
+    type: string | null;
+    Supporter: JRNSupporterProps | null;
+  }[];
+  EventVolunteer: {
+    id: string;
+    status: string;
+    createdAt: Date;
+    role: string | null;
+    type: string | null;
+    Volunteer: JRNVolunteer | null;
+  }[];
+}
+
+export interface JRNPartnerProps {
+  id: string;
+  email: string;
+  phoneNumbers: Prisma.JsonValue;
+  organization: string;
+}
+export interface JRNSupporterProps {
+  id: string;
+  email: string;
+  phoneNumbers: Prisma.JsonValue;
+  organization: string;
+}
+export interface JRNVolunteer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  phoneNumbers: Prisma.JsonValue;
 }

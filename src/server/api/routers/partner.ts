@@ -4,6 +4,9 @@ import { z } from 'zod';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
+import { normalizeEventJoinRequest } from '../helpers/normalizer/eventJoinRequests';
+import { normalizeFundraisingJoinRequest } from '../helpers/normalizer/fundraisingJoinRequest';
+import { normalizeGrantJoinRequest } from '../helpers/normalizer/grantJoinRequests';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const partnerRouter = createTRPCRouter({
@@ -69,9 +72,13 @@ export const partnerRouter = createTRPCRouter({
       console.log(partner);
       return partner;
     }),
-  getJoinRequests: privateProcedure
+  getMytProjectsJoinRequestsOrInvitations: privateProcedure
     .input(
-      z.object({ type: z.string().nullable(), status: z.string().nullable() })
+      z.object({
+        projectType: z.string().nullable(),
+        status: z.string().nullable(),
+        requestType: z.string().nullable(),
+      })
     )
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUniqueOrThrow({
@@ -81,45 +88,187 @@ export const partnerRouter = createTRPCRouter({
         where: { userId: user.id },
       });
 
-      if (input.type === 'event') {
-        const eventVolunteer = await ctx.prisma.eventVolunteer.findMany({
-          where: {
-            Event: {
-              ownerId: partner.id,
+      if (input.projectType === 'event') {
+        const event = await ctx.prisma.event.findMany({
+          select: {
+            id: true,
+            title: true,
+            EventPartner: {
+              select: {
+                id: true,
+                status: true,
+                createdAt: true,
+                role: true,
+                type: true,
+                Partner: {
+                  select: {
+                    email: true,
+                    phoneNumbers: true,
+                    id: true,
+                    organization: true,
+                  },
+                },
+              },
+            },
+            EventSupporter: {
+              select: {
+                id: true,
+                status: true,
+                createdAt: true,
+                role: true,
+                type: true,
+                Supporter: {
+                  select: {
+                    email: true,
+                    phoneNumbers: true,
+                    id: true,
+                    organization: true,
+                  },
+                },
+              },
+            },
+            EventVolunteer: {
+              select: {
+                id: true,
+                status: true,
+                createdAt: true,
+                role: true,
+                type: true,
+                Volunteer: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                    id: true,
+                    email: true,
+                    phoneNumbers: true,
+                  },
+                },
+              },
             },
           },
+          where: {
+            ownerId: partner.id,
+            OR: [
+              { EventPartner: { some: { type: input.requestType } } },
+              { EventSupporter: { some: { type: input.requestType } } },
+              { EventVolunteer: { some: { type: input.requestType } } },
+            ],
+          },
         });
-        console.log(eventVolunteer);
-        return eventVolunteer;
-      } else if (input.type === 'fundraising') {
-        const fundraisingPartner = await ctx.prisma.fundraisingPartner.findMany(
-          {
-            where: {
-              Fundraising: {
-                partnerId: partner.id,
+        console.log(event);
+        return normalizeEventJoinRequest(event);
+      } else if (input.projectType === 'fundraising') {
+        const fundraising = await ctx.prisma.fundraising.findMany({
+          select: {
+            id: true,
+            title: true,
+            FundraisingPartner: {
+              select: {
+                id: true,
+                status: true,
+                createdAt: true,
+                role: true,
+                type: true,
+                Partner: {
+                  select: {
+                    email: true,
+                    phoneNumbers: true,
+                    id: true,
+                    organization: true,
+                  },
+                },
               },
             },
-          }
-        );
-        return fundraisingPartner;
-      } else if (input.type === 'grantFundraising') {
-        const grantFundraising =
-          await ctx.prisma.grantFundraisingPartner.findMany({
-            where: {
-              GrantFundraising: {
-                ownerId: partner.id,
+            FundraisingSupporter: {
+              select: {
+                id: true,
+                status: true,
+                createdAt: true,
+                role: true,
+                type: true,
+                Supporter: {
+                  select: {
+                    email: true,
+                    phoneNumbers: true,
+                    id: true,
+                    organization: true,
+                  },
+                },
               },
             },
-          });
-        return grantFundraising;
+          },
+          where: {
+            partnerId: partner.id,
+            OR: [
+              { FundraisingPartner: { some: { type: input.requestType } } },
+              { FundraisingSupporter: { some: { type: input.requestType } } },
+            ],
+          },
+        });
+        return normalizeFundraisingJoinRequest(fundraising);
+      } else if (input.projectType === 'grantFundraising') {
+        const grantFundraising = await ctx.prisma.grantFundraising.findMany({
+          select: {
+            id: true,
+            title: true,
+            GrantFundraisingPartner: {
+              select: {
+                id: true,
+                status: true,
+                createdAt: true,
+                role: true,
+                type: true,
+                Partner: {
+                  select: {
+                    email: true,
+                    phoneNumbers: true,
+                    id: true,
+                    organization: true,
+                  },
+                },
+              },
+            },
+            GrantFundraisingSupporter: {
+              select: {
+                id: true,
+                status: true,
+                createdAt: true,
+                role: true,
+                type: true,
+                Supporter: {
+                  select: {
+                    email: true,
+                    phoneNumbers: true,
+                    id: true,
+                    organization: true,
+                  },
+                },
+              },
+            },
+          },
+          where: {
+            ownerId: partner.id,
+            OR: [
+              {
+                GrantFundraisingPartner: { some: { type: input.requestType } },
+              },
+              {
+                GrantFundraisingPartner: { some: { type: input.requestType } },
+              },
+            ],
+          },
+        });
+        return normalizeGrantJoinRequest(grantFundraising);
       }
       throw new TRPCError({ message: 'Requests not found', code: 'NOT_FOUND' });
     }),
 
   handleRequest: privateProcedure
-    .input(z.object({ id: z.string(), type: z.string(), status: z.string() }))
+    .input(
+      z.object({ id: z.string(), projectType: z.string(), status: z.string() })
+    )
     .mutation(async ({ ctx, input }) => {
-      if (input.type === 'event') {
+      if (input.projectType === 'event') {
         const eventVolunteer = await ctx.prisma.eventVolunteer.update({
           where: {
             id: input.id,
@@ -129,7 +278,7 @@ export const partnerRouter = createTRPCRouter({
           },
         });
         return eventVolunteer;
-      } else if (input.type === 'fundraising') {
+      } else if (input.projectType === 'fundraising') {
         const fundraisingPartner = await ctx.prisma.fundraisingPartner.update({
           where: {
             id: input.id,
@@ -139,7 +288,7 @@ export const partnerRouter = createTRPCRouter({
           },
         });
         return fundraisingPartner;
-      } else if (input.type === 'grantFundraising') {
+      } else if (input.projectType === 'grantFundraising') {
         const grantFundraising =
           await ctx.prisma.grantFundraisingPartner.update({
             where: {

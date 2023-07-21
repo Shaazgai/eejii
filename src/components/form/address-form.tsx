@@ -6,7 +6,7 @@ import type { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import type {
   MultiStepFormContextType,
-  PartnerType,
+  PartnerFormType,
   VolunteerType,
 } from '@/lib/types';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
@@ -23,7 +23,7 @@ const AddressForm = ({
   next,
   submit,
 }: Omit<
-  MultiStepFormContextType<VolunteerType | PartnerType>,
+  MultiStepFormContextType<VolunteerType | PartnerFormType>,
   'currentStepIndex' | 'setCurrentStepIndex' | 'goTo'
 >) => {
   const form = useForm<z.infer<typeof addressSchema>>({

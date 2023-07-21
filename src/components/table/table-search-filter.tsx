@@ -15,28 +15,30 @@ export function TableSearchFilter<TData>({
   searchFields,
 }: TableFilterProps<TData>) {
   return (
-    <div className="grid grid-cols-3 gap-4 rounded-md border border-gray-600/80 px-2 ">
+    <div className="grid grid-cols-3 gap-4 rounded-md border  px-2 ">
       {searchFields.length > 1 &&
         searchFields.map((filter, index) => (
           <div className="py-4" key={index}>
-            <div className="flex items-center rounded-md border border-gray-600/80 ">
+            <div className="flex items-center rounded-md border  ">
               <label
-                htmlFor="email"
-                className="flex h-9 items-center justify-center bg-gray-600/50 p-2"
+                htmlFor={filter?.code}
+                className="flex h-9 items-center justify-center p-2"
               >
                 {filter.name}
               </label>
-              <div id="email" className="0 flex gap-2">
+              <div id={filter?.code} className="0 flex gap-2">
                 <input
                   type="text"
-                  className="h-9 w-full bg-transparent px-2	focus:outline-none "
+                  className="h-9 w-full px-2	focus:outline-none "
                   value={
                     (table
                       .getColumn(filter?.code)
                       ?.getFilterValue() as string) ?? ''
                   }
                   onChange={event =>
-                    table.getColumn('email')?.setFilterValue(event.target.value)
+                    table
+                      .getColumn(filter?.code)
+                      ?.setFilterValue(event.target.value)
                   }
                 />
               </div>

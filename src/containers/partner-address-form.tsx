@@ -2,7 +2,7 @@ import React from 'react';
 
 import AddressForm from '@/components/form/address-form';
 import { usePartnerFormState } from '@/context/partner-form-context';
-import type { PartnerType, VolunteerType } from '@/lib/types';
+import type { PartnerFormType, VolunteerType } from '@/lib/types';
 
 const PartnerAddressForm = () => {
   const { data, setData, isFirstStep, isLastStep, back, next, submit } =
@@ -12,7 +12,7 @@ const PartnerAddressForm = () => {
       data={data}
       setData={
         setData as React.Dispatch<
-          React.SetStateAction<VolunteerType | PartnerType>
+          React.SetStateAction<VolunteerType | PartnerFormType>
         >
       }
       isFirstStep={isFirstStep}

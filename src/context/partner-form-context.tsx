@@ -9,10 +9,10 @@ import { type MultiStepFormContextType } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export const PartnerFormContext = createContext<
-  MultiStepFormContextType<types.PartnerType> | undefined
+  MultiStepFormContextType<types.PartnerFormType> | undefined
 >(undefined);
 
-export const initialData: types.PartnerType = {
+export const initialData: types.PartnerFormType = {
   organization: '',
   email: '',
   bio: '',
@@ -29,7 +29,7 @@ export const initialData: types.PartnerType = {
 
 export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
   const router = useRouter();
-  const [data, setData] = useState<types.PartnerType>(initialData);
+  const [data, setData] = useState<types.PartnerFormType>(initialData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
