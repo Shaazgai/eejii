@@ -38,3 +38,45 @@ export type VolunteerType = {
 } & AddressType;
 
 export type SupporterType = PartnerType;
+
+export interface EventType {
+  id: string;
+  name: string;
+  createdAt: Date;
+  description: string;
+  phone: string;
+  email: string;
+  address: string;
+  image: string;
+}
+
+export interface ContactType {
+  primary_phone: string | undefined;
+  secondary_phone: string | undefined;
+  email_1: string | undefined;
+  email_2: string | undefined;
+}
+
+export interface FundaisingType {
+  contact: ContactType;
+  currentAmount: number;
+  description: string;
+  endTime: Date;
+  goalAmount: number;
+  id: string;
+  location: string;
+  partnerId: string | undefined;
+  startTime: Date;
+  title: string;
+}
+
+export interface GrantfundraisingType {
+  id: string;
+  name: string;
+  createdAt: Date;
+  description: string;
+  phone: string;
+  email: string;
+  address: string;
+  image: string;
+}
