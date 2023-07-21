@@ -3,20 +3,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-export function SettingsTabs() {
+export function LinkTabs({ tabs }) {
   const router = useRouter();
   const pathname = usePathname();
-
-  const tabs = [
-    {
-      title: 'Profile',
-      href: `/p/settings`,
-    },
-    {
-      title: 'Partner profile',
-      href: `/p/settings/partner-profile`,
-    },
-  ];
+  console.log('🚀 ~ file: link-tabs.tsx:9 ~ LinkTabs ~ pathname:', pathname);
 
   return (
     <Tabs
