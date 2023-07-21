@@ -36,6 +36,8 @@ model Volunteer {
     id                String              @id @default(uuid())
     firstName         String
     lastName          String
+    phoneNumbers      Json?
+    email             String?
     approved          Boolean             @default(false)
     birthday          DateTime?
     gender            String?

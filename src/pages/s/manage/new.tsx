@@ -3,7 +3,7 @@ import { useState } from 'react';
 import EventForm from '@/components/form/event-form';
 import FundraisingForm from '@/components/form/fundraising-form';
 import GrantFundraisingForm from '@/components/form/grant-fundraising-form';
-import PartnerLayout from '@/components/layout/partner-layout';
+import SupporterLayout from '@/components/layout/supporter-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
 
@@ -25,7 +25,7 @@ export default function NewProject() {
   ];
 
   return (
-    <PartnerLayout>
+    <SupporterLayout>
       <Shell>
         <div className="flex justify-between">
           <h2>New project</h2>
@@ -39,6 +39,6 @@ export default function NewProject() {
         {activeIndex == 1 && <GrantFundraisingForm />}
         {activeIndex == 2 && <EventForm />}
       </Shell>
-    </PartnerLayout>
+    </SupporterLayout>
   );
 }

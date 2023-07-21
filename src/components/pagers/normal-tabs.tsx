@@ -1,10 +1,24 @@
-import { useRouter } from 'next/navigation';
+import type { Dispatch, SetStateAction } from 'react';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-export function NormalTabs({ tabs, activeIndex, setActiveIndex }) {
-  const router = useRouter();
+interface TabProps {
+  tabs: {
+    title: string;
+    index: number;
+  }[];
+  setActiveIndex: Dispatch<SetStateAction<number>>;
+  activeIndex: number;
+}
+
+export function NormalTabs({
+  tabs,
+  activeIndex,
+  setActiveIndex,
+  ...props
+}: TabProps) {
+  // const router = useRouter();
 
   return (
     <Tabs
@@ -21,6 +35,7 @@ export function NormalTabs({ tabs, activeIndex, setActiveIndex }) {
                 'bg-background text-foreground shadow-sm'
             )}
             onClick={() => setActiveIndex(tab.index)}
+            {...props}
           >
             {tab.title}
           </TabsTrigger>

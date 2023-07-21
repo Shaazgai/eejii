@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import PartnerLayout from '@/components/layout/partner-layout';
+import SupporterLayout from '@/components/layout/supporter-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
@@ -38,7 +38,7 @@ export default function ManageProjects() {
   ];
 
   return (
-    <PartnerLayout>
+    <SupporterLayout>
       <Shell>
         <div className="flex justify-between">
           <h2>manage-projects</h2>
@@ -50,6 +50,6 @@ export default function ManageProjects() {
           setActiveIndex={setActiveIndex}
         />
       </Shell>
-    </PartnerLayout>
+    </SupporterLayout>
   );
 }

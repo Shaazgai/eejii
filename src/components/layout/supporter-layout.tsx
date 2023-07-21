@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Newspaper,
   Settings,
+  UserCog,
   Users,
 } from 'lucide-react';
 
@@ -28,6 +29,13 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
       title: 'Manage Projects',
       href: '/s/manage',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
+      items: [],
+      external: '',
+    },
+    {
+      title: 'Join requests',
+      href: '/s/join-requests',
+      icon: <UserCog className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },

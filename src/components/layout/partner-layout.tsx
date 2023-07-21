@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Newspaper,
   Settings,
+  UserCog,
   Users,
 } from 'lucide-react';
 
@@ -35,6 +36,13 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Volunteers',
       href: '/p/billing',
       icon: <Users className='"mr-2 w-4" h-4' />,
+      items: [],
+      external: '',
+    },
+    {
+      title: 'Join requests',
+      href: '/p/join-requests',
+      icon: <UserCog className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
