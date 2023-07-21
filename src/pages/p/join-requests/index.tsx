@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import PartnerLayout from '@/components/layout/partner-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
-import RequestsDataTable from '@/components/table/request/requests-data-table';
+import RequestsDataTable from '@/components/table/request/partner-join-request-table';
 import type { JoinRequestTableProps } from '@/lib/types';
 import { api } from '@/utils/api';
 
