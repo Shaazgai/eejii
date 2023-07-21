@@ -69,9 +69,13 @@ export const partnerRouter = createTRPCRouter({
       console.log(partner);
       return partner;
     }),
-  getJoinRequests: privateProcedure
+  getMytProjectsJoinRequestsOrInvitations: privateProcedure
     .input(
-      z.object({ type: z.string().nullable(), status: z.string().nullable() })
+      z.object({
+        projectType: z.string().nullable(),
+        status: z.string().nullable(),
+        requestType: z.string().nullable(),
+      })
     )
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUniqueOrThrow({
@@ -81,34 +85,37 @@ export const partnerRouter = createTRPCRouter({
         where: { userId: user.id },
       });
 
-      if (input.type === 'event') {
+      if (input.projectType === 'event') {
         const eventVolunteer = await ctx.prisma.eventVolunteer.findMany({
           where: {
             Event: {
               ownerId: partner.id,
             },
+            type: input.requestType,
           },
         });
         console.log(eventVolunteer);
         return eventVolunteer;
-      } else if (input.type === 'fundraising') {
+      } else if (input.projectType === 'fundraising') {
         const fundraisingPartner = await ctx.prisma.fundraisingPartner.findMany(
           {
             where: {
               Fundraising: {
                 partnerId: partner.id,
               },
+              type: input.requestType,
             },
           }
         );
         return fundraisingPartner;
-      } else if (input.type === 'grantFundraising') {
+      } else if (input.projectType === 'grantFundraising') {
         const grantFundraising =
           await ctx.prisma.grantFundraisingPartner.findMany({
             where: {
               GrantFundraising: {
                 ownerId: partner.id,
               },
+              type: input.requestType,
             },
           });
         return grantFundraising;
@@ -117,9 +124,11 @@ export const partnerRouter = createTRPCRouter({
     }),
 
   handleRequest: privateProcedure
-    .input(z.object({ id: z.string(), type: z.string(), status: z.string() }))
+    .input(
+      z.object({ id: z.string(), projectType: z.string(), status: z.string() })
+    )
     .mutation(async ({ ctx, input }) => {
-      if (input.type === 'event') {
+      if (input.projectType === 'event') {
         const eventVolunteer = await ctx.prisma.eventVolunteer.update({
           where: {
             id: input.id,
@@ -129,7 +138,7 @@ export const partnerRouter = createTRPCRouter({
           },
         });
         return eventVolunteer;
-      } else if (input.type === 'fundraising') {
+      } else if (input.projectType === 'fundraising') {
         const fundraisingPartner = await ctx.prisma.fundraisingPartner.update({
           where: {
             id: input.id,
@@ -139,7 +148,7 @@ export const partnerRouter = createTRPCRouter({
           },
         });
         return fundraisingPartner;
-      } else if (input.type === 'grantFundraising') {
+      } else if (input.projectType === 'grantFundraising') {
         const grantFundraising =
           await ctx.prisma.grantFundraisingPartner.update({
             where: {

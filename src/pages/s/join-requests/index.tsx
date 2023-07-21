@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import PartnerLayout from '@/components/layout/partner-layout';
+import SupporterLayout from '@/components/layout/supporter-layout';
 import { Button } from '@/components/ui/button';
 import { api } from '@/utils/api';
 
@@ -13,7 +13,7 @@ const Index = () => {
       {
         projectType: type,
         status: null,
-        requestType: null,
+        requestType: 'request',
       },
       { onSuccess: () => setLoading(false) }
     );
@@ -27,7 +27,7 @@ const Index = () => {
   });
 
   return (
-    <PartnerLayout>
+    <SupporterLayout>
       <div>
         {loading && 'loadiing..'}
         {requests?.map((request, i) => {
@@ -56,7 +56,7 @@ const Index = () => {
           );
         })}
       </div>
-    </PartnerLayout>
+    </SupproterLay>
   );
 };
 
