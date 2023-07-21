@@ -86,7 +86,6 @@ const FundraisingFields = ({
       <div className="flex flex-row justify-between gap-5">
         <FormField
           name="primary_phone"
-          control={form.control}
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Phone 1</FormLabel>
@@ -97,10 +96,31 @@ const FundraisingFields = ({
         />
         <FormField
           name="secondary_phone"
-          control={form.control}
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Phone 2</FormLabel>
+              <Input placeholder="Secondary phone" {...field} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+      <div className="flex flex-row justify-between gap-5">
+        <FormField
+          name="email_1"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Email</FormLabel>
+              <Input placeholder="Primary phone" {...field} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="email_2"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Email</FormLabel>
               <Input placeholder="Secondary phone" {...field} />
               <FormMessage />
             </FormItem>

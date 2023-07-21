@@ -69,4 +69,42 @@ export const partnerRouter = createTRPCRouter({
       console.log(partner);
       return partner;
     }),
+  getJoinRequests: privateProcedure
+    .input(z.object({ type: z.string(), status: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUniqueOrThrow({
+        where: { externalId: ctx.userId },
+      });
+      const partner = await ctx.prisma.partner.findUniqueOrThrow({
+        where: { userId: user.id },
+      });
+      if (input.type === 'event ') {
+        const event = await ctx.prisma.event.findMany({
+          include: {
+            EventPartner: true,
+            EventSupporter: true,
+            EventVolunteer: true,
+          },
+          where: { ownerId: partner.id },
+        });
+        // const eventVolunteer = await ctx.prisma.eventVolunteer.findMany({
+        //   where: { eventId: input.projectId },
+        // });
+        return event;
+      }
+      return;
+      //  else if (input.type === 'fundraising') {
+      //   const fundraisingPartner =
+      //     await ctx.prisma.fundraisingPartner.findUniqueOrThrow({
+      //       where: { id: input.projectId },
+      //     });
+      //   return fundraisingPartner;
+      // } else if (input.type === 'grantFundraising') {
+      //   const grantFundraising =
+      //     await ctx.prisma.grantFundraisingPartner.findUniqueOrThrow({
+      //       where: { id: input.projectId },
+      //     });
+      //   return grantFundraising;
+      // }
+    }),
 });
