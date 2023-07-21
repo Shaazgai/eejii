@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { supporterSchema } from '@/lib/validation/partner-validation-schema';
 
+import { normalizeGrantJoinRequest } from '../helpers/normalizer/grantJoinRequests';
+import { findGrantRequests } from '../helpers/query/supporterQuery';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const supporterRouter = createTRPCRouter({
@@ -67,52 +69,28 @@ export const supporterRouter = createTRPCRouter({
 
       return supporter;
     }),
-  getRequestsOrInvitations: privateProcedure
-    .input(
-      z.object({
-        projectType: z.string(),
-        requestType: z.string(),
-        status: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUniqueOrThrow({
-        where: { externalId: ctx.userId },
-      });
-      const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
-        where: { userId: user.id },
-      });
+  // getRequestsOrInvitations: privateProcedure
+  //   .input(
+  //     z.object({
+  //       projectType: z.string(),
+  //       requestType: z.string(),
+  //       status: z.string(),
+  //     })
+  //   )
+  //   .query(async ({ ctx, input }) => {
+  //     const user = await ctx.prisma.user.findUniqueOrThrow({
+  //       where: { externalId: ctx.userId },
+  //     });
+  //     const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+  //       where: { userId: user.id },
+  //     });
 
-      if (input.projectType === 'event') {
-        const eventSupporter = await ctx.prisma.eventSupporter.findMany({
-          where: {
-            supporterId: supporter.id,
-            type: input.requestType,
-          },
-        });
-        console.log(eventSupporter);
-        return eventSupporter;
-      } else if (input.projectType === 'fundraising') {
-        const fundraisingSupporter =
-          await ctx.prisma.fundraisingSupporter.findMany({
-            where: {
-              supporterId: supporter.id,
-              type: input.requestType,
-            },
-          });
-        return fundraisingSupporter;
-      } else if (input.projectType === 'grantFundraising') {
-        const grantFundraisingSupporter =
-          await ctx.prisma.grantFundraisingSupporter.findMany({
-            where: {
-              supporterId: supporter.id,
-              type: input.requestType,
-            },
-          });
-        return grantFundraisingSupporter;
-      }
-      throw new TRPCError({ message: 'Requests not found', code: 'NOT_FOUND' });
-    }),
+  //     const grantFundraisingSupporter =
+  //       await ctx.prisma.grantFundraising.findMany(
+  //         findGrantRequests(supporter, input)
+  //       );
+  //     return grantFundraisingSupporter;
+  //   }),
   getMytProjectsJoinRequestsOrInvitations: privateProcedure
     .input(
       z.object({
@@ -129,66 +107,25 @@ export const supporterRouter = createTRPCRouter({
         where: { userId: user.id },
       });
 
-      const grantFundraisingPartner =
-        await ctx.prisma.grantFundraisingPartner.findMany({
-          where: {
-            GrantFundraising: {
-              ownerId: supporter.id,
-            },
-            type: input.requestType,
-          },
-        });
       const grantFundraisingSupporter =
-        await ctx.prisma.grantFundraisingSupporter.findMany({
-          where: {
-            GrantFundraising: {
-              ownerId: supporter.id,
-            },
-            type: input.requestType,
-          },
-        });
-      return {
-        partners: grantFundraisingPartner,
-        supporters: grantFundraisingSupporter,
-      };
+        await ctx.prisma.grantFundraising.findMany(
+          findGrantRequests(supporter, input)
+        );
+      return normalizeGrantJoinRequest(grantFundraisingSupporter);
     }),
   handleRequest: privateProcedure
-    .input(z.object({ id: z.string(), type: z.string(), status: z.string() }))
+    .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      if (input.type === 'event') {
-        const eventVolunteer = await ctx.prisma.eventVolunteer.update({
-          where: {
-            id: input.id,
-          },
-          data: {
-            status: input.status,
-          },
-        });
-        return eventVolunteer;
-      } else if (input.type === 'fundraising') {
-        const fundraisingPartner = await ctx.prisma.fundraisingPartner.update({
-          where: {
-            id: input.id,
-          },
-          data: {
-            status: input.status,
-          },
-        });
-        return fundraisingPartner;
-      } else if (input.type === 'grantFundraising') {
-        const grantFundraising =
-          await ctx.prisma.grantFundraisingPartner.update({
-            where: {
-              id: input.id,
-            },
-            data: {
-              status: input.status,
-            },
-          });
+      const grantFundraising = await ctx.prisma.grantFundraisingPartner.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: input.status,
+        },
+      });
 
-        return grantFundraising;
-      }
-      throw new TRPCError({ message: 'Requests not found', code: 'NOT_FOUND' });
+      return grantFundraising;
     }),
   inviteToFundraising: privateProcedure
     .input(
