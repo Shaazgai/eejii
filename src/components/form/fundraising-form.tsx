@@ -23,6 +23,8 @@ const FundraisingForm = () => {
       secondary_phone: '',
       goalAmount: 0,
       currentAmount: 0,
+      email_1: '',
+      email_2: '',
     },
   });
   const { mutate } = api.fundraising.create.useMutation({

@@ -45,6 +45,8 @@ export const fundraisingRouter = createTRPCRouter({
           contact: {
             primary_phone: input.primary_phone,
             secondary_phone: input.secondary_phone,
+            email_1: input.email_1,
+            email_2: input.email_2,
           },
           location: input.location,
           startTime: input.startTime,
