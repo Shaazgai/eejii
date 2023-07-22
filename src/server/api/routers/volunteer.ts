@@ -20,14 +20,38 @@ export const volunteerRouter = createTRPCRouter({
   getByUserId: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const supporter = await ctx.prisma.volunteer.findUnique({
+      const volunteer = await ctx.prisma.volunteer.findUnique({
         where: {
           userId: input.id,
         },
       });
-      if (!supporter) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (!volunteer) throw new TRPCError({ code: 'NOT_FOUND' });
 
-      return supporter;
+      return volunteer;
+    }),
+  findAll: publicProcedure.query(async ({ ctx }) => {
+    const volunteer = await ctx.prisma.volunteer.findMany({});
+
+    return volunteer;
+  }),
+  findAllForEventInvitation: publicProcedure
+    .input(z.object({ eventId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const volunteer = await ctx.prisma.volunteer.findMany({
+        where: {
+          NOT: {
+            OR: [
+              {
+                EventVolunteer: {
+                  some: { eventId: input.eventId },
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      return volunteer;
     }),
   create: privateProcedure
     .input(volunteerSchema.merge(addressSchema))
@@ -57,6 +81,11 @@ export const volunteerRouter = createTRPCRouter({
           gender: input?.gender,
           addressId: address.id,
           userId: user.id,
+          email: input.email,
+          phoneNumbers: {
+            primary_phone: input.primary_phone,
+            secondary_phone: input.secondary_phone,
+          },
         },
       });
       return volunteer;

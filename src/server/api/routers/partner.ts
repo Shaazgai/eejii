@@ -38,6 +38,72 @@ export const partnerRouter = createTRPCRouter({
 
       return partner;
     }),
+  findByName: publicProcedure
+    .input(z.object({ name: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const partners = await ctx.prisma.partner.findMany({
+        select: {
+          id: true,
+          organization: true,
+        },
+        where: { organization: input.name },
+      });
+      return partners;
+    }),
+  findAllForFundInvitation: publicProcedure
+    .input(z.object({ fundId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
+        where: { id: input.fundId },
+      });
+      const partner = await ctx.prisma.partner.findMany({
+        where: {
+          NOT: {
+            OR: [
+              {
+                FundraisingPartner: {
+                  some: { fundraisingId: input.fundId },
+                },
+              },
+              {
+                Fundraisings: {
+                  some: { partnerId: fundraising.partnerId },
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      return partner;
+    }),
+  findAllForEventInvitation: publicProcedure
+    .input(z.object({ eventId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const event = await ctx.prisma.event.findUniqueOrThrow({
+        where: { id: input.eventId },
+      });
+      const partner = await ctx.prisma.partner.findMany({
+        where: {
+          NOT: {
+            OR: [
+              {
+                EventPartner: {
+                  some: { eventId: input.eventId },
+                },
+              },
+              {
+                MyEvents: {
+                  some: { ownerId: event.ownerId },
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      return partner;
+    }),
   create: privateProcedure
     .input(partnerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
@@ -157,43 +223,97 @@ export const partnerRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        supporters: z.array(z.string()),
-        partners: z.array(z.string()),
+        supporterId: z.string().nullable(),
+        partnerId: z.string().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      input.supporters.forEach(async supporterId => {
-        const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
-          where: { id: input.id },
-        });
-        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
-          where: { id: supporterId },
-        });
-        await ctx.prisma.fundraisingSupporter.create({
-          data: {
-            status: 'pending',
-            supporterId: supporter.id,
-            fundraisingId: fundraising.id,
-          },
-        });
+      const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
+        where: { id: input.id },
       });
-
-      input.partners.forEach(async partnerId => {
-        const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
-          where: { id: input.id },
-        });
+      if (input.partnerId) {
         const partner = await ctx.prisma.partner.findUniqueOrThrow({
-          where: { id: partnerId },
+          where: { id: input.partnerId },
         });
         await ctx.prisma.fundraisingPartner.create({
           data: {
             status: 'pending',
             partnerId: partner.id,
             fundraisingId: fundraising.id,
+            type: 'invite',
           },
         });
-      });
+      }
 
+      if (input.supporterId) {
+        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+          where: { id: input.supporterId },
+        });
+        await ctx.prisma.fundraisingSupporter.create({
+          data: {
+            status: 'pending',
+            supporterId: supporter.id,
+            fundraisingId: fundraising.id,
+            type: 'invite',
+          },
+        });
+      }
+      return { message: 'Success' };
+    }),
+  inviteToEvent: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        supporterId: z.string().nullish(),
+        partnerId: z.string().nullish(),
+        volunteerId: z.string().nullish(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const event = await ctx.prisma.event.findUniqueOrThrow({
+        where: { id: input.id },
+      });
+      if (input.partnerId) {
+        const partner = await ctx.prisma.partner.findUniqueOrThrow({
+          where: { id: input.partnerId },
+        });
+        await ctx.prisma.eventPartner.create({
+          data: {
+            status: 'pending',
+            partnerId: partner.id,
+            eventId: event.id,
+            type: 'invite',
+          },
+        });
+      }
+
+      if (input.supporterId) {
+        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+          where: { id: input.supporterId },
+        });
+        await ctx.prisma.eventSupporter.create({
+          data: {
+            status: 'pending',
+            supporterId: supporter.id,
+            eventId: event.id,
+            type: 'invite',
+          },
+        });
+      }
+
+      if (input.volunteerId) {
+        const volunteer = await ctx.prisma.volunteer.findUniqueOrThrow({
+          where: { id: input.volunteerId },
+        });
+        await ctx.prisma.eventVolunteer.create({
+          data: {
+            status: 'pending',
+            volunteerId: volunteer.id,
+            eventId: event.id,
+            type: 'invite',
+          },
+        });
+      }
       return { message: 'Success' };
     }),
 });

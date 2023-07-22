@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -23,6 +22,9 @@ const VolunteerForm = () => {
       lastName: data.lastName || '',
       gender: data.gender || '',
       birthday: data.birthday || new Date(),
+      email: data.email || '',
+      primary_phone: data.primary_phone || '',
+      secondary_phone: data.secondary_phone || '',
     },
   });
 

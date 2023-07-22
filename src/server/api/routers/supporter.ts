@@ -31,6 +31,49 @@ export const supporterRouter = createTRPCRouter({
 
       return supporter;
     }),
+  findAll: publicProcedure.query(async ({ ctx }) => {
+    const supporter = await ctx.prisma.supporter.findMany({});
+
+    return supporter;
+  }),
+  findAllForFundInvitation: publicProcedure
+    .input(z.object({ fundId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const supporter = await ctx.prisma.supporter.findMany({
+        where: {
+          NOT: {
+            OR: [
+              {
+                FundraisingSupporter: {
+                  some: { fundraisingId: input.fundId },
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      return supporter;
+    }),
+  findAllForEventInvitation: publicProcedure
+    .input(z.object({ eventId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const supporter = await ctx.prisma.supporter.findMany({
+        where: {
+          NOT: {
+            OR: [
+              {
+                EventSupporter: {
+                  some: { eventId: input.eventId },
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      return supporter;
+    }),
   create: privateProcedure
     .input(supporterSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
@@ -126,48 +169,5 @@ export const supporterRouter = createTRPCRouter({
       });
 
       return grantFundraising;
-    }),
-  inviteToFundraising: privateProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        supporters: z.array(z.string()),
-        partners: z.array(z.string()),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      input.supporters.forEach(async supporterId => {
-        const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
-          where: { id: input.id },
-        });
-        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
-          where: { id: supporterId },
-        });
-        await ctx.prisma.fundraisingSupporter.create({
-          data: {
-            status: 'pending',
-            supporterId: supporter.id,
-            fundraisingId: fundraising.id,
-          },
-        });
-      });
-
-      input.partners.forEach(async partnerId => {
-        const fundraising = await ctx.prisma.fundraising.findUniqueOrThrow({
-          where: { id: input.id },
-        });
-        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
-          where: { id: partnerId },
-        });
-        await ctx.prisma.fundraisingPartner.create({
-          data: {
-            status: 'pending',
-            partnerId: supporter.id,
-            fundraisingId: fundraising.id,
-          },
-        });
-      });
-
-      return { message: 'Success' };
     }),
 });

@@ -1,15 +1,17 @@
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-import type { MultiStepFormContextType, SupporterType } from '@/lib/types';
+import type { MultiStepFormContextType, SupporterFormType } from '@/lib/types';
+import { addressSchema } from '@/lib/validation/address-validation-schema';
+import { supporterSchema } from '@/lib/validation/partner-validation-schema';
 import { api } from '@/utils/api';
 
 export const SupporterFormContext = createContext<
-  MultiStepFormContextType<SupporterType> | undefined
+  MultiStepFormContextType<SupporterFormType> | undefined
 >(undefined);
 
-export const initialData: SupporterType = {
+export const initialData: SupporterFormType = {
   organization: '',
   email: '',
   bio: '',
@@ -26,7 +28,8 @@ export const initialData: SupporterType = {
 
 export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
   const router = useRouter();
-  const [data, setData] = useState<SupporterType>(initialData);
+  const [data, setData] = useState<SupporterFormType>(initialData);
+  const [isComplete, setIsComplete] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
@@ -47,19 +50,32 @@ export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
   function goTo(index: number) {
     setCurrentStepIndex(index);
   }
-  const { mutate } = api.supporter.create.useMutation({
+  const { mutate, isSuccess } = api.supporter.create.useMutation({
     onSuccess: newSupporter => {
       console.log(newSupporter);
+      console.log(isSuccess);
       setData(initialData);
       router.push('/s');
     },
   });
 
   async function submit() {
-    console.log(data);
-    await setTimeout(() => {}, 1000);
     mutate(data);
   }
+  useEffect(() => {
+    const validation = supporterSchema.merge(addressSchema).safeParse(data);
+    if (isLastStep && validation.success) {
+      setIsComplete(true);
+    } else {
+      setIsComplete(false);
+    }
+  }, [isLastStep, data]);
+
+  useEffect(() => {
+    if (isComplete) {
+      submit();
+    }
+  }, [isComplete]);
 
   return (
     <SupporterFormContext.Provider

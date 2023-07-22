@@ -27,8 +27,8 @@ const SupporterForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof supporterSchema>) {
-    setData({ ...data, ...values });
+  async function onSubmit(values: z.infer<typeof supporterSchema>) {
+    await setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
     submit();

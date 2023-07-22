@@ -23,12 +23,8 @@ const Index = () => {
       index: 0,
     },
     {
-      title: `Grant-fundraising`,
-      index: 1,
-    },
-    {
       title: `Event`,
-      index: 2,
+      index: 1,
     },
   ];
 
@@ -36,8 +32,6 @@ const Index = () => {
     if (activeIndex === 0) {
       setType('fundraising');
     } else if (activeIndex === 1) {
-      setType('grantFundraising');
-    } else if (activeIndex === 2) {
       setType('event');
     }
   }, [activeIndex]);

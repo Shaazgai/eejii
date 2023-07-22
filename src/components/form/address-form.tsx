@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -7,7 +7,7 @@ import { Form } from '@/components/ui/form';
 import type {
   MultiStepFormContextType,
   PartnerFormType,
-  VolunteerType,
+  VolunteerFormType,
 } from '@/lib/types';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 
@@ -21,9 +21,8 @@ const AddressForm = ({
   isLastStep,
   back,
   next,
-  submit,
 }: Omit<
-  MultiStepFormContextType<VolunteerType | PartnerFormType>,
+  MultiStepFormContextType<VolunteerFormType | PartnerFormType>,
   'currentStepIndex' | 'setCurrentStepIndex' | 'goTo'
 >) => {
   const form = useForm<z.infer<typeof addressSchema>>({
@@ -41,7 +40,7 @@ const AddressForm = ({
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
-    submit();
+    // submit();
   }
 
   return (

@@ -118,8 +118,11 @@ model EventPartner {
     role      String?
     status    String
     type      String?
-    partnerId String   @unique
-    eventId   String?  @unique
+    partnerId String
+    eventId   String?
+
+    @@index([eventId])
+    @@index([partnerId])
 }
 
 model EventSupporter {
@@ -130,20 +133,26 @@ model EventSupporter {
     role        String?
     status      String
     type        String?
-    supporterId String     @unique
-    eventId     String?    @unique
+    supporterId String
+    eventId     String?
+
+    @@index([eventId])
+    @@index([supporterId])
 }
 
 model EventVolunteer {
     id          String     @id @default(uuid())
     Event       Event?     @relation(fields: [eventId], references: [id])
     Volunteer   Volunteer? @relation(fields: [volunteerId], references: [id])
-    volunteerId String     @unique
-    eventId     String?    @unique
+    volunteerId String
+    eventId     String?
     createdAt   DateTime   @default(now())
     role        String?
     status      String
     type        String?
+
+    @@index([eventId])
+    @@index([volunteerId])
 }
 
 model Fundraising {
@@ -174,8 +183,11 @@ model FundraisingSupporter {
     role          String?
     status        String
     type          String?
-    supporterId   String?      @unique
-    fundraisingId String?      @unique
+    supporterId   String?
+    fundraisingId String?
+
+    @@index([supporterId])
+    @@index([fundraisingId])
 }
 
 model FundraisingPartner {
@@ -186,8 +198,11 @@ model FundraisingPartner {
     role          String?
     status        String
     type          String?
-    partnerId     String?      @unique
-    fundraisingId String?      @unique
+    partnerId     String?
+    fundraisingId String?
+
+    @@index([fundraisingId])
+    @@index([partnerId])
 }
 
 model GrantFundraising {
@@ -217,8 +232,11 @@ model GrantFundraisingSupporter {
     role               String?
     status             String
     type               String?
-    supporterId        String?           @unique
-    grantFundraisingId String?           @unique
+    supporterId        String?
+    grantFundraisingId String?
+
+    @@index([supporterId])
+    @@index([grantFundraisingId])
 }
 
 model GrantFundraisingPartner {
@@ -229,8 +247,11 @@ model GrantFundraisingPartner {
     role               String?
     status             String
     type               String?
-    partnerId          String?           @unique
-    grantFundraisingId String?           @unique
+    grantFundraisingId String?
+    partnerId          String?
+
+    @@index([partnerId])
+    @@index([grantFundraisingId])
 }
 
 model Certificate {
@@ -290,42 +311,52 @@ model Donation {
     id            String       @id @default(uuid())
     amount        BigInt
     User          User?        @relation(fields: [userId], references: [id])
-    userId        String?      @unique
+    userId        String?
     isPublicName  Boolean      @default(false)
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
-    fundraisingId String?      @unique
+    fundraisingId String?
 
     @@index([userId])
+    @@index([fundraisingId])
 }
 
 model Category {
-    id                       String                    @id @default(uuid())
+    id                       String                     @id @default(uuid())
     name                     String
     CategoryFundraising      CategoryFundraising[]
     CategoryEvent            CategoryEvent[]
-    CategoryGrantFundraising CategoryGrantFundraising?
+    CategoryGrantFundraising CategoryGrantFundraising[]
 }
 
 model CategoryFundraising {
     id            String       @id @default(uuid())
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
-    fundraisingId String?      @unique
+    fundraisingId String?
     Category      Category?    @relation(fields: [categoryId], references: [id])
-    categoryId    String?      @unique
+    categoryId    String?
+
+    @@index([fundraisingId])
+    @@index([categoryId])
 }
 
 model CategoryGrantFundraising {
     id                 String            @id @default(uuid())
     GrantFundraising   GrantFundraising? @relation(fields: [grantFundraisingId], references: [id])
-    grantFundraisingId String?           @unique
+    grantFundraisingId String?
     Category           Category?         @relation(fields: [categoryId], references: [id])
-    categoryId         String?           @unique
+    categoryId         String?
+
+    @@index([grantFundraisingId])
+    @@index([categoryId])
 }
 
 model CategoryEvent {
     id         String    @id @default(uuid())
     Event      Event?    @relation(fields: [eventId], references: [id])
-    eventId    String?   @unique
+    eventId    String?
     Category   Category? @relation(fields: [categoryId], references: [id])
-    categoryId String?   @unique
+    categoryId String?
+
+    @@index([eventId])
+    @@index([categoryId])
 }

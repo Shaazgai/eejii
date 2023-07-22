@@ -1,15 +1,17 @@
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-import type { MultiStepFormContextType, VolunteerType } from '@/lib/types';
+import type { MultiStepFormContextType, VolunteerFormType } from '@/lib/types';
+import { addressSchema } from '@/lib/validation/address-validation-schema';
+import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 import { api } from '@/utils/api';
 
 export const VolunteerFormContext = createContext<
-  MultiStepFormContextType<VolunteerType> | undefined
+  MultiStepFormContextType<VolunteerFormType> | undefined
 >(undefined);
 
-export const initialData: VolunteerType = {
+export const initialData: VolunteerFormType = {
   firstName: '',
   lastName: '',
   bio: '',
@@ -19,11 +21,15 @@ export const initialData: VolunteerType = {
   city: '',
   provinceName: '',
   street: '',
+  email: '',
+  primary_phone: '',
+  secondary_phone: '',
 };
 
 export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
   const router = useRouter();
-  const [data, setData] = useState<VolunteerType>(initialData);
+  const [data, setData] = useState<VolunteerFormType>(initialData);
+  const [isComplete, setIsComplete] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
@@ -53,12 +59,22 @@ export function VolunteerFormProvider({ steps }: { steps: ReactElement[] }) {
   });
 
   async function submit() {
-    console.log(data);
-    await setTimeout(() => {}, 1000);
     mutate(data);
   }
+  useEffect(() => {
+    const validation = volunteerSchema.merge(addressSchema).safeParse(data);
+    if (isLastStep && validation.success) {
+      setIsComplete(true);
+    } else {
+      setIsComplete(false);
+    }
+  }, [isLastStep, data]);
 
-  console.log(data);
+  useEffect(() => {
+    if (isComplete) {
+      submit();
+    }
+  }, [isComplete]);
 
   return (
     <VolunteerFormContext.Provider

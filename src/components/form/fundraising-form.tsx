@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderIcon } from 'lucide-react';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -11,6 +12,7 @@ import { Form } from '../ui/form';
 import FundraisingFields from './fields/fundraising-fields';
 
 const FundraisingForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof fundraisingSchema>>({
     resolver: zodResolver(fundraisingSchema),
     defaultValues: {
@@ -28,7 +30,8 @@ const FundraisingForm = () => {
     },
   });
   const { mutate } = api.fundraising.create.useMutation({
-    onSuccess: newFundraising => console.log(newFundraising),
+    onSuccess: newFundraising =>
+      router.push(`/p/manage/${newFundraising.id}/invite`),
   });
   function onSubmit(values: z.infer<typeof fundraisingSchema>) {
     console.log(values);
