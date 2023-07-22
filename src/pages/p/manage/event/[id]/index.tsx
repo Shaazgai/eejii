@@ -8,6 +8,7 @@ import { Shell } from '@/components/shells/shell';
 import { appRouter } from '@/server/api/root';
 import { prisma } from '@/server/db';
 import { api } from '@/utils/api';
+import Link from 'next/link';
 
 export default function EventViewPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -33,6 +34,7 @@ export default function EventViewPage(
           {/* <Button type="submit" onClick={handleSendRequest}>
           Send join request
         </Button> */}
+          <Link href={`/p/manage/event/${props.id}/invite`}>Invite users</Link>
         </div>
       </Shell>
     </PartnerLayout>
