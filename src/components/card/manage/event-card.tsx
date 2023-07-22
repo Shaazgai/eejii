@@ -1,13 +1,12 @@
 import { ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/router';
 
-import type { FundaisingType } from '@/lib/types';
-
-import { Button } from '../ui/button';
-export default function ProjectCard({
+import { Button } from '@/components/ui/button';
+import type { FundraisingType } from '@/lib/types';
+export default function EventCard({
   fundraising,
 }: {
-  fundraising: FundaisingType;
+  fundraising: FundraisingType;
 }) {
   console.log('🚀 ~ file: project-card.tsx:11 ~ fundraising:', fundraising);
   const router = useRouter();
@@ -27,7 +26,7 @@ export default function ProjectCard({
           variant="outline"
           size="icon"
           className="h-8 w-8"
-          onClick={() => router.push(`/p/manage/${fundraising?.id}`)}
+          onClick={() => router.push(`/p/manage/event/${fundraising?.id}`)}
         >
           <ChevronRight />
         </Button>

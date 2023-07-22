@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 
-import ProjectCard from '@/components/card/project-card';
+import ProjectCard from '@/components/card/manage/fund-card';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
-import type { FundaisingType } from '@/lib/types';
+import type { FundraisingType } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function ManageProjects() {
@@ -47,7 +47,7 @@ export default function ManageProjects() {
         <LinkTabs tabs={tabs} />
 
         {fundraising?.map((fund, index) => (
-          <ProjectCard key={index} fundraising={fund as FundaisingType} />
+          <ProjectCard key={index} fundraising={fund as FundraisingType} />
         ))}
       </Shell>
     </PartnerLayout>

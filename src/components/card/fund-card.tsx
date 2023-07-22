@@ -1,10 +1,11 @@
-import Link from 'next/link';
+import type { FundraisingType } from '@/lib/types';
 
 import { Icons } from '../icons';
+import Link from 'next/link';
 
-export default function EventCardPublic({ event }) {
+export default function FundCardPublic({ fund }: { fund: FundraisingType }) {
   return (
-    <Link href={`/events/${event.id}`}>
+    <Link href={`/fundraising/${fund.id}`}>
       <div className="flex w-96 flex-col rounded-xl  border">
         <div
           aria-label="Product Placeholder"
@@ -18,7 +19,7 @@ export default function EventCardPublic({ event }) {
           />
         </div>
         <div className="p-6">
-          <h2 className="font-bold">{event?.title}</h2>
+          <h2 className="font-bold">{fund?.title}</h2>
           <div className="my-4 flex items-center rounded-full border">
             <div className="mr-2 flex h-full items-center rounded-full bg-slate-400 p-2">
               <Icons.placeholder
