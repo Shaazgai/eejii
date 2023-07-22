@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import React from 'react';
 import type { SelectSingleEventHandler } from 'react-day-picker';
 import type { FormProps } from 'react-hook-form';
 import type { z } from 'zod';
@@ -64,6 +63,40 @@ const VolunteerBioFields = ({
                 <Input placeholder="Last name" {...field} />
               </FormControl>
               <FormDescription>Your last name.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+      <FormField
+        control={form.control}
+        name="email"
+        render={({ field }) => (
+          <FormItem className="w-full">
+            <FormLabel>Email</FormLabel>
+            <Input placeholder="Email" {...field} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <div className="flex flex-row justify-between gap-5">
+        <FormField
+          name="primary_phone"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Phone 1</FormLabel>
+              <Input placeholder="Primary phone" {...field} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="secondary_phone"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Phone 2</FormLabel>
+              <Input placeholder="Secondary phone" {...field} />
               <FormMessage />
             </FormItem>
           )}

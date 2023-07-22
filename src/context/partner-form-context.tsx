@@ -2,10 +2,12 @@
 
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 import type * as types from '@/lib/types';
 import { type MultiStepFormContextType } from '@/lib/types';
+import { addressSchema } from '@/lib/validation/address-validation-schema';
+import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 import { api } from '@/utils/api';
 
 export const PartnerFormContext = createContext<
@@ -30,6 +32,7 @@ export const initialData: types.PartnerFormType = {
 export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
   const router = useRouter();
   const [data, setData] = useState<types.PartnerFormType>(initialData);
+  const [isComplete, setIsComplete] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
@@ -59,9 +62,22 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
   });
 
   async function submit() {
-    await setTimeout(() => {}, 1000);
     mutate(data);
   }
+  useEffect(() => {
+    const validation = partnerSchema.merge(addressSchema).safeParse(data);
+    if (isLastStep && validation.success) {
+      setIsComplete(true);
+    } else {
+      setIsComplete(false);
+    }
+  }, [isLastStep, data]);
+
+  useEffect(() => {
+    if (isComplete) {
+      submit();
+    }
+  }, [isComplete]);
 
   return (
     <PartnerFormContext.Provider

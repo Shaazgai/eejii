@@ -11,7 +11,6 @@ export type MultiStepFormContextType<Value> = {
   next: () => void;
   back: () => void;
   goTo: (index: number) => void;
-  submit: () => void;
 };
 
 export type AddressType = {
@@ -32,12 +31,15 @@ export type PartnerFormType = {
   bio: string;
 } & AddressType;
 
-export type VolunteerType = {
+export type VolunteerFormType = {
   firstName: string;
   lastName: string;
   bio: string;
   gender: string;
   birthday: Date;
+  email: string;
+  primary_phone: string;
+  secondary_phone: string | null;
 } & AddressType;
 
 export type SupporterFormType = PartnerFormType;
@@ -94,6 +96,31 @@ export interface PartnerType {
   socialLinks: JSONValue;
   addressId: string | null;
 }
+export type SupporterType = {
+  id: string;
+  userId: string;
+  organization: string;
+  email: string;
+  phoneNumbers: Prisma.JsonValue;
+  bio: string;
+  socialLinks: Prisma.JsonValue;
+  addressId: string | null;
+};
+
+export type VolunteerType = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumbers: Prisma.JsonValue;
+  email: string | null;
+  approved: boolean;
+  birthday: Date | null;
+  gender: string | null;
+  bio: string | null;
+  userId: string;
+  xp: number | null;
+  addressId: string | null;
+};
 
 export interface PartnerFundraisingType {
   id: string;

@@ -29,7 +29,7 @@ const EventForm = () => {
   const { mutate } = api.event.create.useMutation({
     onSuccess: newEvent => {
       console.log(newEvent);
-      router.push('/p');
+      router.push(`/p/manage/event/${newEvent.id}/invite`);
     },
   });
 
