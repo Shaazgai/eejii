@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 
-import GrantCard from '@/components/card/grant-card';
+import GrantCard from '@/components/card/manage/grant-card';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
-import type { FundaisingType } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function ManageProjects() {

@@ -1,37 +1,35 @@
-import { ChevronRight } from 'lucide-react';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import type { FundaisingType } from '@/lib/types';
+import { Icons } from '../icons';
 
-import { Button } from '../ui/button';
-export default function GrantCard({
-  fundraising,
-}: {
-  fundraising: FundaisingType;
-}) {
-  console.log('🚀 ~ file: project-card.tsx:11 ~ fundraising:', fundraising);
-  const router = useRouter();
+export default function GrantCardPublic({ grant }) {
   return (
-    <div className="flex w-full justify-between rounded-md border ">
-      <div className="flex">
-        <div className="flex items-center justify-center border-r p-4">
-          2022.10.10
-        </div>
-        <div className="flex flex-col p-4">
-          <div>{fundraising?.title}</div>
-          <div>{fundraising?.description}</div>
-        </div>
-      </div>
-      <div className="flex items-center justify-center p-4">
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => router.push(`/p/manage/grant/${fundraising?.id}`)}
+    <Link href={`/grant-fundraising/${grant?.id}`}>
+      <div className="flex w-96 flex-col rounded-xl  border">
+        <div
+          aria-label="Product Placeholder"
+          role="img"
+          aria-roledescription="placeholder"
+          className="flex aspect-video h-full w-full flex-1 items-center justify-center bg-secondary"
         >
-          <ChevronRight />
-        </Button>
+          <Icons.placeholder
+            className="h-9 w-9 text-muted-foreground"
+            aria-hidden="true"
+          />
+        </div>
+        <div className="p-6">
+          <h2 className="font-bold">{grant?.title}</h2>
+          <div className="my-4 flex items-center rounded-full border">
+            <div className="mr-2 flex h-full items-center rounded-full bg-slate-400 p-2">
+              <Icons.placeholder
+                className="h-4 w-4 text-muted-foreground"
+                aria-hidden="true"
+              />
+            </div>
+            Project name
+          </div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

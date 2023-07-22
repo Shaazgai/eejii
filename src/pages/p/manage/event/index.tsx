@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import EventCard from '@/components/card/event-card';
+import EventCard from '@/components/card/manage/event-card';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';

@@ -15,7 +15,6 @@ export default function FundraisingViewPage(
   if (!props) return <div>Loading...</div>;
   const { id } = props;
   const { data } = api.fundraising.getById.useQuery({ id: id as string });
-  if (!data) return <div>404</div>;
 
   const { mutate } = api.fundraising.sendRequest.useMutation({
     onSuccess: newReq => console.log(newReq),
@@ -23,6 +22,7 @@ export default function FundraisingViewPage(
   function handleSendRequest() {
     mutate({ fundraisingId: data?.id as string });
   }
+  if (!data) return <div>404</div>;
   return (
     <BasicBaseLayout>
       <div className="flex justify-center">{data?.title}</div>

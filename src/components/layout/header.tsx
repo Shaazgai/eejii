@@ -37,14 +37,14 @@ const Header = () => {
               <Link href={'/'}>Home</Link>
             </Button>
           </li>
-          <li>
+          {/* <li>
             <Button
               variant={'link'}
               className={`${pathname === '/about' ? 'underline' : ''}`}
             >
               <Link href={'/about'}>About</Link>
             </Button>
-          </li>
+          </li> */}
           <li>
             <Button
               variant={'link'}
@@ -59,6 +59,16 @@ const Header = () => {
               className={`${pathname === '/fundraising' ? 'underline' : ''}`}
             >
               <Link href={'/fundraising'}>Fundraising</Link>
+            </Button>
+          </li>
+          <li>
+            <Button
+              variant={'link'}
+              className={`${
+                pathname === '/grant-fundraising' ? 'underline' : ''
+              }`}
+            >
+              <Link href={'/grant-fundraising'}>Grant fundraising</Link>
             </Button>
           </li>
         </ul>

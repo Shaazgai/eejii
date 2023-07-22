@@ -15,7 +15,6 @@ export default function GrantFundraisingViewPage(
   if (!props) return <>Loading...</>;
   const { id } = props;
   const { data } = api.grantFundraising.getById.useQuery({ id: id as string });
-  if (!data) return <>404</>;
 
   const { mutate } = api.grantFundraising.sendRequest.useMutation({
     onSuccess: newReq => console.log(newReq),
@@ -23,6 +22,7 @@ export default function GrantFundraisingViewPage(
   function handleSendRequest() {
     mutate({ grantFundraisingId: data?.id as string });
   }
+  if (!data) return <>404</>;
 
   return (
     <BasicBaseLayout>

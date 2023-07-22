@@ -15,7 +15,6 @@ export default function EventViewPage(
   if (!props) return <>Loading...</>;
   const { id } = props;
   const { data } = api.event.getById.useQuery({ id: id as string });
-  if (!data) return <>404</>;
 
   const { mutate } = api.event.sendRequest.useMutation({
     onSuccess: newReq => console.log(newReq),
@@ -23,6 +22,7 @@ export default function EventViewPage(
   function handleSendRequest() {
     mutate({ eventId: data?.id as string, role: 'mopper' });
   }
+  if (!data) return <>404</>;
   return (
     <BasicBaseLayout>
       <div className="flex justify-center">{data?.title}</div>
