@@ -8,7 +8,7 @@ import {
   Users,
 } from 'lucide-react';
 
-import PartnerHeader from '../navigation/partner-header';
+import Header from '../navigation/header';
 import Sidebar from '../navigation/sidebar';
 import { ScrollArea } from '../ui/scroll-area';
 
@@ -34,7 +34,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     },
     {
       title: 'Volunteers',
-      href: '/p/billing',
+      href: '/p/volunteers',
       icon: <Users className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
@@ -48,14 +48,14 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     },
     {
       title: 'Donations',
-      href: '/p/purchases',
+      href: '/p/donations',
       icon: <Heart className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
       title: 'Media',
-      href: '/p/purchases',
+      href: '/p/media',
       icon: <Newspaper className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
@@ -70,7 +70,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
   ];
   return (
     <div className="flex min-h-screen flex-col">
-      <PartnerHeader />
+      <Header headerNav={[]} />
       <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
         <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-r md:sticky md:block">
           <ScrollArea className="py-6 pr-6 lg:py-8">

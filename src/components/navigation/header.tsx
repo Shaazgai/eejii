@@ -16,9 +16,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+interface HeaderProps {
+  title: string;
+  href: string;
+  icon: ReactElement;
+  items: string[];
+  external: string;
+}
+
 import { Button } from '../ui/button';
 
-const Header = () => {
+const Header = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
   const { user } = useUser();
   const pathname = usePathname();
 
@@ -29,48 +37,20 @@ const Header = () => {
       </div>
       <nav>
         <ul className="flex flex-row gap-10">
-          <li>
-            <Button
-              variant={'link'}
-              className={`${pathname === '/' ? 'underline' : ''}`}
-            >
-              <Link href={'/'}>Home</Link>
-            </Button>
-          </li>
-          {/* <li>
-            <Button
-              variant={'link'}
-              className={`${pathname === '/about' ? 'underline' : ''}`}
-            >
-              <Link href={'/about'}>About</Link>
-            </Button>
-          </li> */}
-          <li>
-            <Button
-              variant={'link'}
-              className={`${pathname === '/events' ? 'underline' : ''}`}
-            >
-              <Link href={'/events'}>Events</Link>
-            </Button>
-          </li>
-          <li>
-            <Button
-              variant={'link'}
-              className={`${pathname === '/fundraising' ? 'underline' : ''}`}
-            >
-              <Link href={'/fundraising'}>Fundraising</Link>
-            </Button>
-          </li>
-          <li>
-            <Button
-              variant={'link'}
-              className={`${
-                pathname === '/grant-fundraising' ? 'underline' : ''
-              }`}
-            >
-              <Link href={'/grant-fundraising'}>Grant fundraising</Link>
-            </Button>
-          </li>
+          {headerNav && headerNav.length > 0 ? (
+            headerNav.map((item, index) => (
+              <li key={index}>
+                <Button
+                  variant="link"
+                  className={`${pathname === item.href ? 'underline' : ''}`}
+                >
+                  <Link href={item.href}>{item.title}</Link>
+                </Button>
+              </li>
+            ))
+          ) : (
+            <></>
+          )}
         </ul>
       </nav>
       <div>

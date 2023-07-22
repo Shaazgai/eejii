@@ -1,12 +1,12 @@
 import React from 'react';
 
 import Footer from '@/components/layout/footer';
-import Header from '@/components/layout/header';
+import Header from '@/components/navigation/header';
 
 const BasicBaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Header />
+      <Header headerNav={[]} />
       {children}
       <Footer />
     </>
