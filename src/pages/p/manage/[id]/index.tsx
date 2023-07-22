@@ -1,6 +1,7 @@
 import { getAuth } from '@clerk/nextjs/server';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
 import superjson from 'superjson';
 
 import PartnerLayout from '@/components/layout/partner-layout';
@@ -33,6 +34,7 @@ export default function EventViewPage(
           {/* <Button type="submit" onClick={handleSendRequest}>
           Send join request
         </Button> */}
+          <Link href={`/p/manage/${props.id}/invite`}>Invite users</Link>
         </div>
       </Shell>
     </PartnerLayout>
