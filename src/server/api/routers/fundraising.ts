@@ -15,12 +15,18 @@ export const fundraisingRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const fundraising = await ctx.prisma.fundraising.findUnique({
+        include: {
+          Donation: {
+            include: {
+              User: true,
+            },
+          },
+        },
         where: { id: input.id },
       });
       if (!fundraising) throw new TRPCError({ code: 'NOT_FOUND' });
       return fundraising;
     }),
-
   create: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {

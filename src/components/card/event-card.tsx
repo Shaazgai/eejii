@@ -1,8 +1,10 @@
 import Link from 'next/link';
 
+import type { EventType } from '@/lib/types';
+
 import { Icons } from '../icons';
 
-export default function EventCardPublic({ event }) {
+export default function EventCardPublic({ event }: { event: EventType }) {
   return (
     <Link href={`/events/${event.id}`}>
       <div className="flex w-96 flex-col rounded-xl  border">

@@ -5,6 +5,7 @@ import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { ReactElement } from 'react';
 
 import {
   DropdownMenu,
@@ -16,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import { Button } from '../ui/button';
 interface HeaderProps {
   title: string;
   href: string;
@@ -24,8 +26,6 @@ interface HeaderProps {
   external: string;
 }
 
-import { Button } from '../ui/button';
-
 const Header = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
   const { user } = useUser();
   const pathname = usePathname();
@@ -33,7 +33,7 @@ const Header = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
   return (
     <header className="flex w-full flex-row items-center justify-between p-3">
       <div>
-        <Image alt="logo" src={'/eejii.jpeg'} width={200} height={50} />
+        <Image alt="logo" src={'/eejii.jpeg'} width={160} height={50} />
       </div>
       <nav>
         <ul className="flex flex-row gap-10">
