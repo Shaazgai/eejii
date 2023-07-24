@@ -1,7 +1,8 @@
+import Link from 'next/link';
+
 import type { FundraisingType } from '@/lib/types';
 
 import { Icons } from '../icons';
-import Link from 'next/link';
 
 export default function FundCardPublic({ fund }: { fund: FundraisingType }) {
   return (

@@ -3,8 +3,9 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import superjson from 'superjson';
 
+import FundDetail from '@/components/detail/fund-detail';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import { Button } from '@/components/ui/button';
+import type { FundraisingType } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { prisma } from '@/server/db';
 import { api } from '@/utils/api';
@@ -16,21 +17,10 @@ export default function FundraisingViewPage(
   const { id } = props;
   const { data } = api.fundraising.getById.useQuery({ id: id as string });
 
-  const { mutate } = api.fundraising.sendRequest.useMutation({
-    onSuccess: newReq => console.log(newReq),
-  });
-  function handleSendRequest() {
-    mutate({ fundraisingId: data?.id as string });
-  }
   if (!data) return <div>404</div>;
   return (
     <BasicBaseLayout>
-      <div className="flex justify-center">{data?.title}</div>
-      <div className="flex justify-center">
-        <Button type="submit" onClick={handleSendRequest}>
-          Send join request
-        </Button>
-      </div>
+      <FundDetail fund={data as FundraisingType} />
     </BasicBaseLayout>
   );
 }

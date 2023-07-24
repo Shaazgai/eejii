@@ -315,9 +315,19 @@ model Donation {
     isPublicName  Boolean      @default(false)
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
     fundraisingId String?
+    Payment       Payment?
 
     @@index([userId])
     @@index([fundraisingId])
+}
+
+model Payment {
+    id         String   @id @default(uuid())
+    amount     BigInt
+    invoiceId  String
+    status     String
+    Donation   Donation @relation(fields: [donationId], references: [id])
+    donationId String   @unique
 }
 
 model Category {

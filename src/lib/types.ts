@@ -46,13 +46,16 @@ export type SupporterFormType = PartnerFormType;
 
 export interface EventType {
   id: string;
-  name: string;
-  createdAt: Date;
+  title: string;
   description: string;
-  phone: string;
-  email: string;
-  address: string;
-  image: string;
+  location: string;
+  roles: Prisma.JsonValue;
+  createdAt: Date;
+  startTime: Date | null;
+  endTime: Date | null;
+  requiredTime: string | null;
+  contact: Prisma.JsonValue;
+  ownerId: string | null;
 }
 
 export interface ContactType {
@@ -63,18 +66,37 @@ export interface ContactType {
 }
 
 export interface FundraisingType {
-  contact: ContactType;
-  currentAmount: number;
+  contact: Prisma.JsonValue;
+  currentAmount: bigint;
   description: string;
   endTime: Date;
-  goalAmount: number;
+  goalAmount: bigint;
   id: string;
   location: string;
   partnerId: string | undefined;
   startTime: Date;
   title: string;
+  Donation: Donation[];
 }
 
+export type Donation = {
+  id: string;
+  amount: bigint;
+  userId: string | null;
+  isPublicName: boolean;
+  fundraisingId: string | null;
+  User: User | null;
+};
+
+export type User = {
+  id: string;
+  externalId: string;
+  username: string;
+  email: string;
+  createdAt: Date;
+  role: string;
+  type: string | null;
+};
 export interface GrantFundraisingType {
   id: string;
   name: string;

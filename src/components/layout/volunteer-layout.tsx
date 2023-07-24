@@ -10,21 +10,28 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
   const volunteerHeaderNav = [
     {
       title: 'Dashboard',
-      href: '/s',
+      href: '/v',
       icon: <LayoutDashboard className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
-      title: 'Grant fundraising',
-      href: '/s/manage/grant',
+      title: 'Events',
+      href: '/v/events',
+      icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
+      items: [],
+      external: '',
+    },
+    {
+      title: 'Fundraising',
+      href: '/v/fundraising',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
       title: 'Join requests',
-      href: '/s/join-requests',
+      href: '/v/join-requests',
       icon: <UserCog className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',

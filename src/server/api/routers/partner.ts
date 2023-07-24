@@ -12,6 +12,7 @@ import {
   findFundraisingJoinRequests,
   findGrantJoinRequests,
 } from '../helpers/query/partnerQuery';
+import getUser from '../helpers/userHelper';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const partnerRouter = createTRPCRouter({
