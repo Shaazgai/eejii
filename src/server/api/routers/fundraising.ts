@@ -17,6 +17,11 @@ export const fundraisingRouter = createTRPCRouter({
       const fundraising = await ctx.prisma.fundraising.findUnique({
         include: {
           Donation: {
+            where: {
+              Payment: {
+                status: 'PAID',
+              },
+            },
             include: {
               User: true,
             },

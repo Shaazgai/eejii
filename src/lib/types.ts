@@ -54,7 +54,7 @@ export interface EventType {
   startTime: Date | null;
   endTime: Date | null;
   requiredTime: string | null;
-  contact: Prisma.JsonValue;
+  contact: Prisma.JsonValue | ContactType;
   ownerId: string | null;
 }
 
@@ -66,11 +66,11 @@ export interface ContactType {
 }
 
 export interface FundraisingType {
-  contact: Prisma.JsonValue;
-  currentAmount: bigint;
+  contact: ContactType | Prisma.JsonValue;
+  currentAmount: number;
   description: string;
   endTime: Date;
-  goalAmount: bigint;
+  goalAmount: number;
   id: string;
   location: string;
   partnerId: string | undefined;
@@ -81,11 +81,13 @@ export interface FundraisingType {
 
 export type Donation = {
   id: string;
-  amount: bigint;
+  amount: number;
   userId: string | null;
   isPublicName: boolean;
   fundraisingId: string | null;
   User: User | null;
+  createdAt: Date;
+  Payment: PaymentType | null;
 };
 
 export type User = {
@@ -261,3 +263,29 @@ export interface JRNVolunteer {
   email: string | null;
   phoneNumbers: Prisma.JsonValue;
 }
+
+export type PaymentType = {
+  id: string;
+  amount: number;
+  invoiceId: string | null;
+  status: string;
+  donationId: string;
+  details: QpayInvoiceResponse | null;
+  createdAt: Date;
+  updatedAt: Date | null;
+};
+
+export type QpayInvoiceResponse = {
+  invoice_id: string;
+  qr_text: string;
+  qr_image: string;
+  qPay_shortUrl: string;
+  urls: [
+    {
+      name: string;
+      description: string;
+      logo: string;
+      link: string;
+    }
+  ];
+};

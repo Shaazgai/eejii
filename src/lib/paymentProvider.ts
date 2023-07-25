@@ -7,8 +7,6 @@ const BASE_URL = process.env.BASE_URL || '';
 import axios from 'axios';
 import moment from 'moment';
 
-import { prisma } from '@/server/db';
-
 type AuthObjectType = {
   expires_in: Date;
   access_token: string;
@@ -102,14 +100,11 @@ export async function generate(transactionData: TransactionDataType) {
     ...invoiceData,
   };
 }
-export async function verify({ invoiceNo }: { invoiceNo: string }) {
-  const paymentInfo = await prisma.payment.findUniqueOrThrow({
-    where: { id: invoiceNo },
-  });
+export async function verify({ invoiceId }: { invoiceId: string }) {
   const URL = `${QPAY_V2_URL}/payment/check`;
   const body = {
     object_type: 'INVOICE',
-    object_id: paymentInfo.invoiceId,
+    object_id: invoiceId,
     offset: {
       page_number: 1,
       page_limit: 100,
@@ -122,7 +117,7 @@ export async function verify({ invoiceNo }: { invoiceNo: string }) {
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const { count, paid_amount, rows } = paymentData;
-  const isPaid = rows[0].payment_status === 'PAID';
+  const isPaid = rows[0]?.payment_status === 'PAID';
   const payment_status = isPaid ? 'PAID' : 'UNPAID';
 
   const msg = {
@@ -135,7 +130,6 @@ export async function verify({ invoiceNo }: { invoiceNo: string }) {
   if (payment_status === 'PAID') {
     msg.code = 'success';
     msg.desc = '';
-    msg.amount = paid_amount;
     return msg;
   }
 
