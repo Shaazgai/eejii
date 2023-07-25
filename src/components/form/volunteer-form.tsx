@@ -12,7 +12,7 @@ import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema'
 import FormNavigation from './fields/navigation';
 import VolunteerBioFields from './fields/volunteer-bio-fields';
 const VolunteerForm = () => {
-  const { data, setData, isFirstStep, isLastStep, back, next, submit } =
+  const { data, setData, isFirstStep, isLastStep, back, next } =
     useVolunteerFormState();
   const form = useForm<z.infer<typeof volunteerSchema>>({
     resolver: zodResolver(volunteerSchema),
@@ -31,7 +31,6 @@ const VolunteerForm = () => {
   async function onSubmit(values: z.infer<typeof volunteerSchema>) {
     setData({ ...data, ...values });
     if (!isLastStep) return next();
-    submit();
   }
   return (
     <div className="w-[500px]">

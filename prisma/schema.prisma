@@ -159,8 +159,8 @@ model Fundraising {
     id                   String                 @id @default(uuid())
     title                String
     description          String
-    goalAmount           BigInt
-    currentAmount        BigInt
+    goalAmount           Int
+    currentAmount        Int
     contact              Json?
     location             String?
     startTime            DateTime?
@@ -209,8 +209,8 @@ model GrantFundraising {
     id                        String                      @id @default(uuid())
     title                     String
     description               String
-    goalAmount                BigInt
-    currentAmount             BigInt
+    goalAmount                Int
+    currentAmount             Int
     contact                   Json?
     location                  String?
     startTime                 DateTime?
@@ -309,25 +309,29 @@ model Address {
 
 model Donation {
     id            String       @id @default(uuid())
-    amount        BigInt
+    amount        Int
     User          User?        @relation(fields: [userId], references: [id])
     userId        String?
     isPublicName  Boolean      @default(false)
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
     fundraisingId String?
     Payment       Payment?
+    createdAt     DateTime     @default(now())
 
     @@index([userId])
     @@index([fundraisingId])
 }
 
 model Payment {
-    id         String   @id @default(uuid())
-    amount     BigInt
-    invoiceId  String
+    id         String    @id @default(uuid())
+    amount     Int
+    invoiceId  String?
     status     String
-    Donation   Donation @relation(fields: [donationId], references: [id])
-    donationId String   @unique
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime? @updatedAt
+    Donation   Donation  @relation(fields: [donationId], references: [id])
+    donationId String    @unique
+    details    Json?
 }
 
 model Category {

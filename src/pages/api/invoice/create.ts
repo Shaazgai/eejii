@@ -8,20 +8,20 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { userId, fundId } = req.body;
+  const { userId, fundId, amount } = req.body;
   // const user = await prisma.user.findUniqueOrThrow({
   //   where: { externalId: userId },
   // });
+  console.log(amount);
   const donation = await prisma.donation.create({
     data: {
       User: { connect: { externalId: userId } },
       Fundraising: { connect: { id: fundId } },
-      amount: 0,
+      amount: amount,
       Payment: {
         create: {
           status: 'PENDING',
-          amount: 0,
-          invoiceId: 'eeji',
+          amount: amount,
         },
       },
     },
@@ -29,9 +29,18 @@ export default async function handler(
 
   const invoice = await generate({
     invoiceNo: donation.id,
-    amount: 10,
+    amount: amount,
     expireAt: undefined,
   });
-  console.log(JSON.stringify(invoice));
-  return res.status(200).json({ message: invoice });
+  const payment = await prisma.payment.update({
+    where: { donationId: donation.id },
+    data: {
+      invoiceId: invoice.invoice_id,
+      status: 'AWAITING_PAYMENT',
+      details: invoice,
+    },
+  });
+
+  // console.log(JSON.stringify(invoice));
+  return res.status(200).json(payment);
 }
