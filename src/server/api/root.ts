@@ -1,6 +1,7 @@
 import { supporterRouter } from '@/server/api/routers/supporter';
 import { createTRPCRouter } from '@/server/api/trpc';
 
+import { categoryRouter } from './routers/category';
 import { eventRouter } from './routers/event';
 import { fundraisingRouter } from './routers/fundraising';
 import { grantFundraisingRouter } from './routers/grant-fundraising';
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   user: userRouter,
   fundraising: fundraisingRouter,
   grantFundraising: grantFundraisingRouter,
+  category: categoryRouter,
 });
 
 // export type definition of API

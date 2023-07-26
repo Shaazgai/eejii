@@ -20,7 +20,7 @@ const VolunteerSkillForm = () => {
   const form = useForm();
 
   useEffect(() => {
-    setSelectedSkills(Object.values(data.skills));
+    setSelectedSkills(Object.values(data.skills as string[]));
   }, [data]);
 
   async function onSubmit() {

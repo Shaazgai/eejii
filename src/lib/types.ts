@@ -61,10 +61,17 @@ export interface EventType {
   startTime: Date | null;
   endTime: Date | null;
   requiredTime: string | null;
-  contact: Prisma.JsonValue | ContactType;
-  ownerId: string | null;
+  contact: Prisma.JsonValue | ContactType | undefined;
+  ownerId: string;
+  CategoryEvent: {
+    Category: CategoryType | null;
+  }[];
 }
-
+export type CategoryType = {
+  id: string;
+  name: string;
+  type: string | null;
+};
 export interface ContactType {
   primary_phone: string | undefined;
   secondary_phone: string | undefined;
@@ -87,6 +94,9 @@ export interface FundraisingType {
   startTime: Date;
   title: string;
   Donation: Donation[];
+  CategoryFundraising: {
+    Category: CategoryType | null;
+  }[];
 }
 
 export type Donation = {
