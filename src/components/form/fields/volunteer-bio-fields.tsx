@@ -36,6 +36,7 @@ const VolunteerBioFields = ({
 }: {
   form: FormProps<z.infer<typeof volunteerSchema>>;
 }) => {
+  // console.log(form.);
   return (
     <div className="space-y-2">
       <div className="flex gap-5 ">

@@ -6,8 +6,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import type * as types from '@/lib/types';
 import { type MultiStepFormContextType } from '@/lib/types';
-import { addressSchema } from '@/lib/validation/address-validation-schema';
-import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 import { api } from '@/utils/api';
 
 export const PartnerFormContext = createContext<
@@ -36,6 +34,38 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
+
+  const {
+    data: partner,
+    isLoading,
+    error,
+  } = api.partner.getCurrentUsers.useQuery(undefined);
+
+  useEffect(() => {
+    if (partner && !isLoading && !error) {
+      const partnerData = {
+        organization: partner.organization as string,
+        email: partner.email as string,
+        bio: partner.bio as string,
+        primary_phone: (partner.phoneNumbers as unknown as types.ContactType)
+          .primary_phone as string,
+        secondary_phone: (partner.phoneNumbers as unknown as types.ContactType)
+          .secondary_phone as string,
+        twitter: (partner.socialLinks as unknown as types.ContactType)
+          .twitter as string,
+        facebook: (partner.socialLinks as unknown as types.ContactType)
+          .facebook as string,
+        instagram: (partner.socialLinks as unknown as types.ContactType)
+          .instagram as string,
+        country: partner.Address?.country as string,
+        city: partner.Address?.city as string,
+        provinceName: partner.Address?.provinceName as string,
+        street: partner.Address?.street as string,
+      };
+      setData(partnerData);
+    }
+  }, [partner, isLoading, error]);
+  console.log(data);
   function next() {
     setCurrentStepIndex(i => {
       if (i >= steps?.length - 1) return i;
@@ -53,7 +83,7 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
   function goTo(index: number) {
     setCurrentStepIndex(index);
   }
-  const { mutate } = api.partner.create.useMutation({
+  const { mutate } = api.partner.createOrUpdate.useMutation({
     onSuccess: newPartner => {
       console.log(newPartner);
       setData(initialData);
@@ -64,18 +94,11 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
   async function submit() {
     mutate(data);
   }
-  useEffect(() => {
-    const validation = partnerSchema.merge(addressSchema).safeParse(data);
-    if (isLastStep && validation.success) {
-      setIsComplete(true);
-    } else {
-      setIsComplete(false);
-    }
-  }, [isLastStep, data]);
 
   useEffect(() => {
     if (isComplete) {
       submit();
+      setIsComplete(false);
     }
   }, [isComplete]);
 
@@ -88,10 +111,11 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
         isLastStep,
         currentStepIndex,
         setCurrentStepIndex,
+        setIsComplete,
+        isComplete,
         next,
         back,
         goTo,
-        submit,
       }}
     >
       {steps[currentStepIndex]}

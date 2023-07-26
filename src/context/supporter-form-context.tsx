@@ -2,9 +2,11 @@ import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import type { MultiStepFormContextType, SupporterFormType } from '@/lib/types';
-import { addressSchema } from '@/lib/validation/address-validation-schema';
-import { supporterSchema } from '@/lib/validation/partner-validation-schema';
+import type {
+  ContactType,
+  MultiStepFormContextType,
+  SupporterFormType,
+} from '@/lib/types';
 import { api } from '@/utils/api';
 
 export const SupporterFormContext = createContext<
@@ -33,6 +35,38 @@ export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === steps?.length - 1;
+
+  const {
+    data: supporter,
+    isLoading,
+    error,
+  } = api.supporter.getCurrentUsers.useQuery(undefined);
+
+  useEffect(() => {
+    if (supporter && !isLoading && !error) {
+      const partnerData = {
+        organization: supporter.organization as string,
+        email: supporter.email as string,
+        bio: supporter.bio as string,
+        primary_phone: (supporter.phoneNumbers as unknown as ContactType)
+          .primary_phone as string,
+        secondary_phone: (supporter.phoneNumbers as unknown as ContactType)
+          .secondary_phone as string,
+        twitter: (supporter.socialLinks as unknown as ContactType)
+          .twitter as string,
+        facebook: (supporter.socialLinks as unknown as ContactType)
+          .facebook as string,
+        instagram: (supporter.socialLinks as unknown as ContactType)
+          .instagram as string,
+        country: supporter.Address?.country as string,
+        city: supporter.Address?.city as string,
+        provinceName: supporter.Address?.provinceName as string,
+        street: supporter.Address?.street as string,
+      };
+      setData(partnerData);
+    }
+  }, [supporter, isLoading, error]);
+
   function next() {
     setCurrentStepIndex(i => {
       if (i >= steps?.length - 1) return i;
@@ -62,14 +96,6 @@ export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
   async function submit() {
     mutate(data);
   }
-  useEffect(() => {
-    const validation = supporterSchema.merge(addressSchema).safeParse(data);
-    if (isLastStep && validation.success) {
-      setIsComplete(true);
-    } else {
-      setIsComplete(false);
-    }
-  }, [isLastStep, data]);
 
   useEffect(() => {
     if (isComplete) {
@@ -89,7 +115,8 @@ export function SupporterFormProvider({ steps }: { steps: ReactElement[] }) {
         next,
         back,
         goTo,
-        submit,
+        isComplete,
+        setIsComplete,
       }}
     >
       {steps[currentStepIndex]}

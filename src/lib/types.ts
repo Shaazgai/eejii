@@ -11,6 +11,8 @@ export type MultiStepFormContextType<Value> = {
   next: () => void;
   back: () => void;
   goTo: (index: number) => void;
+  isComplete: boolean;
+  setIsComplete: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type AddressType = {
@@ -40,8 +42,13 @@ export type VolunteerFormType = {
   email: string;
   primary_phone: string;
   secondary_phone: string | null;
+  skills: string[] | unknown;
 } & AddressType;
 
+export type Skill = {
+  name: string;
+  description: string;
+};
 export type SupporterFormType = PartnerFormType;
 
 export interface EventType {
@@ -63,6 +70,9 @@ export interface ContactType {
   secondary_phone: string | undefined;
   email_1: string | undefined;
   email_2: string | undefined;
+  twitter: string | undefined;
+  facebook: string | undefined;
+  instagram: string | undefined;
 }
 
 export interface FundraisingType {

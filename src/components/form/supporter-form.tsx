@@ -11,7 +11,7 @@ import FormNavigation from './fields/navigation';
 import PartnerFields from './fields/partner-fields';
 
 const SupporterForm = () => {
-  const { data, setData, isFirstStep, isLastStep, back, next, submit } =
+  const { data, setData, isFirstStep, isLastStep, back, next } =
     useSupporterFormState();
   const form = useForm<z.infer<typeof supporterSchema>>({
     resolver: zodResolver(supporterSchema),
@@ -31,7 +31,6 @@ const SupporterForm = () => {
     await setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
-    submit();
   }
 
   return (

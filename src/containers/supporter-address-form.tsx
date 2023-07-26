@@ -5,8 +5,16 @@ import { useSupporterFormState } from '@/context/supporter-form-context';
 import type { SupporterFormType, VolunteerFormType } from '@/lib/types';
 
 const SupporterAddressForm = () => {
-  const { data, setData, isFirstStep, isLastStep, back, next } =
-    useSupporterFormState();
+  const {
+    data,
+    setData,
+    isFirstStep,
+    isLastStep,
+    back,
+    next,
+    isComplete,
+    setIsComplete,
+  } = useSupporterFormState();
   return (
     <AddressForm
       data={data}
@@ -19,6 +27,8 @@ const SupporterAddressForm = () => {
       isLastStep={isLastStep}
       back={back}
       next={next}
+      setIsComplete={setIsComplete}
+      isComplete={isComplete}
     />
   );
 };

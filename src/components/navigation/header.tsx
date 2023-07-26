@@ -73,11 +73,11 @@ const Header = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <AppWindow className="mr-2 h-4 w-4" />
-                    <Link href={'/dashboard'}>Dashboard</Link>
+                    <Link href={'/v'}>Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
+                    <Link href={'/v/settings'}>Settings</Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

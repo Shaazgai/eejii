@@ -5,8 +5,16 @@ import { useVolunteerFormState } from '@/context/volunteer-form-context';
 import type { PartnerFormType, VolunteerFormType } from '@/lib/types';
 
 const PartnerAddressForm = () => {
-  const { data, setData, isFirstStep, isLastStep, back, next } =
-    useVolunteerFormState();
+  const {
+    data,
+    setData,
+    isFirstStep,
+    isLastStep,
+    back,
+    next,
+    setIsComplete,
+    isComplete,
+  } = useVolunteerFormState();
   return (
     <AddressForm
       data={data}
@@ -19,6 +27,8 @@ const PartnerAddressForm = () => {
       isLastStep={isLastStep}
       back={back}
       next={next}
+      setIsComplete={setIsComplete}
+      isComplete={isComplete}
     />
   );
 };

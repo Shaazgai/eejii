@@ -29,6 +29,20 @@ export const volunteerRouter = createTRPCRouter({
 
       return volunteer;
     }),
+  getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findFirstOrThrow({
+      where: { externalId: ctx.userId },
+    });
+    const volunteer = await ctx.prisma.volunteer.findUnique({
+      include: {
+        Address: true,
+      },
+      where: {
+        userId: user.id,
+      },
+    });
+    return volunteer;
+  }),
   findAll: publicProcedure.query(async ({ ctx }) => {
     const volunteer = await ctx.prisma.volunteer.findMany({});
 
@@ -53,7 +67,7 @@ export const volunteerRouter = createTRPCRouter({
 
       return volunteer;
     }),
-  create: privateProcedure
+  createOrUpdate: privateProcedure
     .input(volunteerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.update({
@@ -71,9 +85,12 @@ export const volunteerRouter = createTRPCRouter({
           provinceName: input.provinceName,
         },
       });
-
-      const volunteer = await ctx.prisma.volunteer.create({
-        data: {
+      console.log(input.skills);
+      const volunteer = await ctx.prisma.volunteer.upsert({
+        where: {
+          userId: user.id,
+        },
+        create: {
           firstName: input?.firstName,
           lastName: input?.lastName,
           bio: input?.bio,
@@ -82,6 +99,21 @@ export const volunteerRouter = createTRPCRouter({
           addressId: address.id,
           userId: user.id,
           email: input.email,
+          skills: Object.assign({}, input.skills as string[]),
+          phoneNumbers: {
+            primary_phone: input.primary_phone,
+            secondary_phone: input.secondary_phone,
+          },
+        },
+        update: {
+          firstName: input?.firstName,
+          lastName: input?.lastName,
+          bio: input?.bio,
+          birthday: input?.birthday,
+          gender: input?.gender,
+          addressId: address.id,
+          email: input.email,
+          skills: Object.assign({}, input.skills as string[]),
           phoneNumbers: {
             primary_phone: input.primary_phone,
             secondary_phone: input.secondary_phone,

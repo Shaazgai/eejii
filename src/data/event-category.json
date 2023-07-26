@@ -1,0 +1,86 @@
+{
+  "categories": [
+    {
+      "name": "Social Events",
+      "subcategories": [
+        "Birthday parties",
+        "Weddings",
+        "Anniversaries",
+        "Family reunions",
+        "Baby showers",
+        "Graduation parties",
+        "Holiday celebrations"
+      ]
+    },
+    {
+      "name": "Community Events",
+      "subcategories": [
+        "Festivals",
+        "Parades",
+        "Block parties",
+        "Cultural events",
+        "Neighborhood gatherings",
+        "Farmer's markets"
+      ]
+    },
+    {
+      "name": "Charity and Fundraising Events",
+      "subcategories": [
+        "Charity galas",
+        "Benefit concerts",
+        "Auctions",
+        "Fundraising dinners",
+        "Walkathons and 5K runs",
+        "Silent auctions",
+        "Crowdfunding campaigns"
+      ]
+    },
+    {
+      "name": "Corporate Events",
+      "subcategories": [
+        "Conferences",
+        "Seminars",
+        "Trade shows",
+        "Product launches",
+        "Team-building events",
+        "Company retreats",
+        "Board meetings"
+      ]
+    },
+    {
+      "name": "Educational Events",
+      "subcategories": [
+        "Workshops",
+        "Seminars",
+        "Webinars",
+        "Training sessions",
+        "Guest lectures",
+        "Panel discussions"
+      ]
+    },
+    {
+      "name": "Arts and Entertainment Events",
+      "subcategories": [
+        "Concerts",
+        "Theater performances",
+        "Film screenings",
+        "Art exhibitions",
+        "Comedy shows",
+        "Dance performances",
+        "Poetry readings"
+      ]
+    },
+    {
+      "name": "Sports and Fitness Events",
+      "subcategories": [
+        "Sports tournaments",
+        "Fitness classes",
+        "Marathons",
+        "Cycling events",
+        "Yoga retreats",
+        "Adventure races",
+        "Golf tournaments"
+      ]
+    }
+  ]
+}
