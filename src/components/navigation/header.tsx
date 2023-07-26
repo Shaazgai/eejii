@@ -5,7 +5,7 @@ import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactElement } from 'react';
+import type { Dispatch, ReactElement, SetStateAction } from 'react';
 
 import {
   DropdownMenu,
@@ -26,12 +26,24 @@ interface HeaderProps {
   external: string;
 }
 
-const Header = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
+const Header = ({
+  headerNav,
+  open,
+  setOpen,
+}: {
+  headerNav: HeaderProps[] | [];
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const { user } = useUser();
   const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-row items-center justify-between p-3">
+    <header
+      className={`fixed left-0 right-0 top-0${
+        open ? ' sm:ms-[300px]' : 'w-full sm:ms-[80px]'
+      } z-10 flex h-[80px] grow items-center justify-between border-b border-gray-200 bg-white`}
+    >
       <div>
         <Image alt="logo" src={'/eejii.jpeg'} width={160} height={50} />
       </div>
