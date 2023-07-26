@@ -12,7 +12,6 @@ import {
   findFundraisingJoinRequests,
   findGrantJoinRequests,
 } from '../helpers/query/partnerQuery';
-import getUser from '../helpers/userHelper';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const partnerRouter = createTRPCRouter({
@@ -39,18 +38,21 @@ export const partnerRouter = createTRPCRouter({
 
       return partner;
     }),
-  findByName: publicProcedure
-    .input(z.object({ name: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const partners = await ctx.prisma.partner.findMany({
-        select: {
-          id: true,
-          organization: true,
-        },
-        where: { organization: input.name },
-      });
-      return partners;
-    }),
+
+  getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findFirstOrThrow({
+      where: { externalId: ctx.userId },
+    });
+    const partner = await ctx.prisma.partner.findUnique({
+      include: {
+        Address: true,
+      },
+      where: {
+        userId: user.id,
+      },
+    });
+    return partner;
+  }),
   findAllForFundInvitation: publicProcedure
     .input(z.object({ fundId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -105,7 +107,7 @@ export const partnerRouter = createTRPCRouter({
 
       return partner;
     }),
-  create: privateProcedure
+  createOrUpdate: privateProcedure
     .input(partnerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.update({
@@ -123,8 +125,27 @@ export const partnerRouter = createTRPCRouter({
           provinceName: input.provinceName,
         },
       });
-      const partner = await ctx.prisma.partner.create({
-        data: {
+      const partner = await ctx.prisma.partner.upsert({
+        where: {
+          userId: user.id,
+        },
+        create: {
+          organization: input.organization,
+          email: input.email,
+          bio: input.email,
+          socialLinks: {
+            twitter: input.twitter,
+            facebook: input.facebook,
+            instagram: input.instagram,
+          },
+          phoneNumbers: {
+            primary_phone: input.primary_phone,
+            secondary_phone: input.secondary_phone,
+          },
+          userId: user.id,
+          addressId: address?.id,
+        },
+        update: {
           organization: input.organization,
           email: input.email,
           bio: input.email,

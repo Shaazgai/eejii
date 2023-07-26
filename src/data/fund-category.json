@@ -1,0 +1,124 @@
+{
+  "categories": [
+    {
+      "name": "Charity and Nonprofit Organizations",
+      "subcategories": [
+        "Poverty alleviation",
+        "Education support",
+        "Healthcare",
+        "Animal welfare",
+        "Environmental conservation",
+        "Disaster relief"
+      ]
+    },
+    {
+      "name": "Medical Expenses and Healthcare",
+      "subcategories": [
+        "Medical bills",
+        "Surgery funding",
+        "Treatment costs",
+        "Medical equipment",
+        "Support for patients"
+      ]
+    },
+    {
+      "name": "Education and Scholarships",
+      "subcategories": [
+        "School funding",
+        "Educational resources",
+        "Scholarship programs",
+        "STEM education",
+        "Vocational training"
+      ]
+    },
+    {
+      "name": "Community and Infrastructure",
+      "subcategories": [
+        "Community centers",
+        "Public parks",
+        "Library funds",
+        "Public transportation",
+        "Sports facilities"
+      ]
+    },
+    {
+      "name": "Arts, Culture, and Creativity",
+      "subcategories": [
+        "Art exhibitions",
+        "Cultural events",
+        "Performing arts",
+        "Support for artists",
+        "Museum funds"
+      ]
+    },
+    {
+      "name": "Environment and Conservation",
+      "subcategories": [
+        "Wildlife protection",
+        "Climate change initiatives",
+        "Sustainable practices",
+        "Reforestation projects",
+        "Clean energy"
+      ]
+    },
+    {
+      "name": "Disability and Special Needs",
+      "subcategories": [
+        "Accessibility projects",
+        "Assistive technology",
+        "Support for special needs individuals",
+        "Inclusive education"
+      ]
+    },
+    {
+      "name": "Human Rights and Advocacy",
+      "subcategories": [
+        "Gender equality",
+        "LGBTQ+ rights",
+        "Civil rights",
+        "Refugee support",
+        "Social justice"
+      ]
+    },
+    {
+      "name": "Youth and Sports",
+      "subcategories": [
+        "Youth development",
+        "Sports team funding",
+        "Recreational activities",
+        "Youth mentorship",
+        "After-school programs"
+      ]
+    },
+    {
+      "name": "Animal Rights and Welfare",
+      "subcategories": [
+        "Animal shelters",
+        "Rescue organizations",
+        "Pet adoption",
+        "Veterinary care",
+        "Animal rights campaigns"
+      ]
+    },
+    {
+      "name": "International Aid and Development",
+      "subcategories": [
+        "Global health",
+        "Education in developing countries",
+        "Clean water projects",
+        "Food security",
+        "Empowerment initiatives"
+      ]
+    },
+    {
+      "name": "Technology and Innovation",
+      "subcategories": [
+        "Tech education",
+        "Startups and entrepreneurship",
+        "Digital literacy programs",
+        "Innovation grants",
+        "Access to technology"
+      ]
+    }
+  ]
+}

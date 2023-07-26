@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -14,23 +15,30 @@ import VolunteerBioFields from './fields/volunteer-bio-fields';
 const VolunteerForm = () => {
   const { data, setData, isFirstStep, isLastStep, back, next } =
     useVolunteerFormState();
+  console.log(data);
   const form = useForm<z.infer<typeof volunteerSchema>>({
     resolver: zodResolver(volunteerSchema),
     defaultValues: {
-      bio: data.bio || '',
-      firstName: data.firstName || '',
-      lastName: data.lastName || '',
-      gender: data.gender || '',
+      bio: data.bio,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      gender: data.gender,
       birthday: data.birthday || new Date(),
-      email: data.email || '',
-      primary_phone: data.primary_phone || '',
-      secondary_phone: data.secondary_phone || '',
+      email: data.email,
+      primary_phone: data.primary_phone,
+      secondary_phone: data.secondary_phone,
     },
   });
+  useEffect(() => {
+    form.reset(data);
+  }, [data]);
 
+  console.log(data.firstName);
   async function onSubmit(values: z.infer<typeof volunteerSchema>) {
     setData({ ...data, ...values });
-    if (!isLastStep) return next();
+    if (!isLastStep) {
+      return next();
+    }
   }
   return (
     <div className="w-[500px]">

@@ -28,4 +28,5 @@ export const volunteerSchema = z.object({
     .max(160, {
       message: 'Bio must not be longer than 30 characters.',
     }),
+  skills: z.unknown(),
 });

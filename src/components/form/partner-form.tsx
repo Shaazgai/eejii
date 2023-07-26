@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { usePartnerFormState } from 'src/context/partner-form-context';
 import type { z } from 'zod';
@@ -11,7 +10,7 @@ import FormNavigation from './fields/navigation';
 import PartnerFields from './fields/partner-fields';
 
 const PartnerForm = () => {
-  const { data, setData, isFirstStep, isLastStep, back, next, submit } =
+  const { data, setData, isFirstStep, isLastStep, back, next } =
     usePartnerFormState();
   const form = useForm<z.infer<typeof partnerSchema>>({
     resolver: zodResolver(partnerSchema),
@@ -31,7 +30,6 @@ const PartnerForm = () => {
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
-    submit();
   }
 
   return (

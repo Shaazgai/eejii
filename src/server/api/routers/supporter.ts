@@ -31,6 +31,20 @@ export const supporterRouter = createTRPCRouter({
 
       return supporter;
     }),
+  getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findFirstOrThrow({
+      where: { externalId: ctx.userId },
+    });
+    const supporter = await ctx.prisma.supporter.findUnique({
+      include: {
+        Address: true,
+      },
+      where: {
+        userId: user.id,
+      },
+    });
+    return supporter;
+  }),
   findAll: publicProcedure.query(async ({ ctx }) => {
     const supporter = await ctx.prisma.supporter.findMany({});
 

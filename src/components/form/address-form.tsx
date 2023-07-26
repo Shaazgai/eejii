@@ -21,6 +21,7 @@ const AddressForm = ({
   isLastStep,
   back,
   next,
+  setIsComplete,
 }: Omit<
   MultiStepFormContextType<VolunteerFormType | PartnerFormType>,
   'currentStepIndex' | 'setCurrentStepIndex' | 'goTo'
@@ -40,7 +41,7 @@ const AddressForm = ({
     setData({ ...data, ...values });
     if (!isLastStep) return next();
     alert('Successful Account Creation');
-    // submit();
+    setIsComplete(true);
   }
 
   return (
