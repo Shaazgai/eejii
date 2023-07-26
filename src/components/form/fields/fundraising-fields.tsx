@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import type { SelectSingleEventHandler } from 'react-day-picker';
 import type { FormProps } from 'react-hook-form';
 import type { z } from 'zod';
@@ -20,14 +20,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import type { CategoryType } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import type { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 const FundraisingFields = ({
   form,
+  categories,
+  isCategoryFetching,
 }: {
   form: FormProps<z.infer<typeof fundraisingSchema>>;
+  categories: CategoryType[];
+  isCategoryFetching: boolean;
 }) => {
   return (
     <div className="space-y-2">
@@ -58,6 +70,50 @@ const FundraisingFields = ({
             <FormDescription>
               You can <span>@mention</span> other users and organizations.
             </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="mainCategory"
+        render={({ field }) => (
+          <FormItem className="w-full">
+            <FormLabel>Category</FormLabel>
+            <Select
+              onValueChange={value => {
+                field.onChange(value);
+              }}
+              value={field.value}
+              defaultValue={field.value}
+            >
+              <FormControl>
+                <SelectTrigger
+                  disabled={!isCategoryFetching && categories ? false : true}
+                >
+                  <SelectValue placeholder="Select Category" />
+                  {!isCategoryFetching && categories ? (
+                    <SelectValue placeholder="Select Category" />
+                  ) : (
+                    <Loader2 className="animate-spin" />
+                  )}
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent className="max-h-[50vh]">
+                {!isCategoryFetching && categories ? (
+                  categories.map(category => {
+                    console.log(isCategoryFetching);
+                    return (
+                      <SelectItem value={category.id} key={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    );
+                  })
+                ) : (
+                  <span>Loading</span>
+                )}
+              </SelectContent>
+            </Select>
             <FormMessage />
           </FormItem>
         )}

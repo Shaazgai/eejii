@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
 
@@ -13,15 +14,32 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import type { CategoryType } from '@/lib/types';
 import type { eventSchema } from '@/lib/validation/event-schema';
-
 const EventFields = ({
   form,
+  categories,
+  isCategoryFetching,
 }: {
   form: UseFormReturn<z.infer<typeof eventSchema>>;
+  categories: CategoryType[] | undefined;
+  isCategoryFetching: boolean;
 }) => {
   const [roleNumber, setRoleNumber] = useState<number>(0);
+
+  useEffect(() => {
+    if (form.getValues('roles')) {
+      setRoleNumber(form.getValues('roles')?.length || 0);
+    }
+  }, [form.getValues('roles')]);
   function handleAddRole(value: number) {
     if (value + roleNumber <= 0) {
       setRoleNumber(0);
@@ -59,6 +77,50 @@ const EventFields = ({
             <FormDescription>
               You can <span>@mention</span> other users and organizations.
             </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="mainCategory"
+        render={({ field }) => (
+          <FormItem className="w-full">
+            <FormLabel>Category</FormLabel>
+            <Select
+              onValueChange={value => {
+                field.onChange(value);
+              }}
+              value={field.value}
+              defaultValue={field.value}
+            >
+              <FormControl>
+                <SelectTrigger
+                  disabled={!isCategoryFetching && categories ? false : true}
+                >
+                  <SelectValue placeholder="Select Category" />
+                  {!isCategoryFetching && categories ? (
+                    <SelectValue placeholder="Select Category" />
+                  ) : (
+                    <Loader2 className="animate-spin" />
+                  )}
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent className="max-h-[50vh]">
+                {!isCategoryFetching && categories ? (
+                  categories.map(category => {
+                    console.log(isCategoryFetching);
+                    return (
+                      <SelectItem value={category.id} key={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    );
+                  })
+                ) : (
+                  <span>Loading</span>
+                )}
+              </SelectContent>
+            </Select>
             <FormMessage />
           </FormItem>
         )}

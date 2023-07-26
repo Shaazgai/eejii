@@ -339,6 +339,7 @@ model Payment {
 model Category {
     id                       String                     @id @default(uuid())
     name                     String
+    type                     String?
     CategoryFundraising      CategoryFundraising[]
     CategoryEvent            CategoryEvent[]
     CategoryGrantFundraising CategoryGrantFundraising[]

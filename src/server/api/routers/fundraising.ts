@@ -26,13 +26,18 @@ export const fundraisingRouter = createTRPCRouter({
               User: true,
             },
           },
+          CategoryFundraising: {
+            include: {
+              Category: true,
+            },
+          },
         },
         where: { id: input.id },
       });
       if (!fundraising) throw new TRPCError({ code: 'NOT_FOUND' });
       return fundraising;
     }),
-  create: privateProcedure
+  createOrUpdate: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {
       console.log(ctx.userId);
@@ -49,8 +54,14 @@ export const fundraisingRouter = createTRPCRouter({
       }
       if (!owner) throw new Error('Owner not found');
 
-      const fundraising = await ctx.prisma.fundraising.create({
-        data: {
+      const category = await ctx.prisma.category.findUniqueOrThrow({
+        where: { id: input.mainCategory },
+      });
+      const fundraising = await ctx.prisma.fundraising.upsert({
+        where: {
+          id: input.id as string,
+        },
+        create: {
           title: input.title,
           description: input.description,
           contact: {
@@ -65,6 +76,34 @@ export const fundraisingRouter = createTRPCRouter({
           goalAmount: input.goalAmount,
           currentAmount: input.currentAmount,
           partnerId: owner.id,
+          CategoryFundraising: {
+            create: {
+              categoryId: category.id,
+            },
+          },
+        },
+        update: {
+          title: input.title,
+          description: input.description,
+          contact: {
+            primary_phone: input.primary_phone,
+            secondary_phone: input.secondary_phone,
+            email_1: input.email_1,
+            email_2: input.email_2,
+          },
+          location: input.location,
+          startTime: input.startTime,
+          endTime: input.endTime,
+          goalAmount: input.goalAmount,
+          currentAmount: input.currentAmount,
+          CategoryFundraising: {
+            deleteMany: {},
+            createMany: {
+              data: {
+                categoryId: category.id,
+              },
+            },
+          },
         },
       });
       console.log(fundraising);

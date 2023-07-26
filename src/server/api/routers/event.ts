@@ -1,8 +1,10 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import type { EventType } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
+import { normalizeEventToForm } from '../helpers/normalizer/normalizeForForm';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const eventRouter = createTRPCRouter({
@@ -15,13 +17,20 @@ export const eventRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const event = await ctx.prisma.event.findUnique({
+        include: {
+          CategoryEvent: {
+            include: {
+              Category: true,
+            },
+          },
+        },
         where: { id: input.id },
       });
       if (!event) throw new TRPCError({ code: 'NOT_FOUND' });
-      return event;
+      return normalizeEventToForm(event as EventType);
     }),
 
-  create: privateProcedure
+  createOrUpdate: privateProcedure
     .input(eventSchema)
     .mutation(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.findUnique({
@@ -32,9 +41,15 @@ export const eventRouter = createTRPCRouter({
       const owner = await ctx.prisma.partner.findUniqueOrThrow({
         where: { userId: user.id },
       });
-
-      const event = await ctx.prisma.event.create({
-        data: {
+      console.log(input.mainCategory);
+      const category = await ctx.prisma.category.findUniqueOrThrow({
+        where: { id: input.mainCategory },
+      });
+      const event = await ctx.prisma.event.upsert({
+        where: {
+          id: input.id as string,
+        },
+        create: {
           title: input.title,
           description: input.description,
           requiredTime: input.requiredTime,
@@ -47,9 +62,35 @@ export const eventRouter = createTRPCRouter({
           endTime: input.endTime,
           roles: Object.assign({}, input.roles),
           ownerId: owner.id,
+          CategoryEvent: {
+            create: {
+              categoryId: category.id,
+            },
+          },
+        },
+        update: {
+          title: input.title,
+          description: input.description,
+          requiredTime: input.requiredTime,
+          contact: {
+            primary_phone: input.primary_phone,
+            secondary_phone: input.secondary_phone,
+          },
+          location: input.location,
+          startTime: input.startTime,
+          endTime: input.endTime,
+          roles: Object.assign({}, input.roles),
+          CategoryEvent: {
+            deleteMany: {},
+            createMany: {
+              data: {
+                categoryId: category.id,
+              },
+            },
+          },
         },
       });
-      console.log(event);
+
       return event;
     }),
   sendRequest: privateProcedure

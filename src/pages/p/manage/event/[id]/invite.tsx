@@ -221,6 +221,15 @@ const Invite = () => {
         {activeIndex == 0 && <PartnerList eventId={eventId} />}
         {activeIndex == 1 && <SupporterList eventId={eventId} />}
         {activeIndex == 2 && <VolunteerList eventId={eventId} />}
+        <div className="flex justify-end">
+          <Button
+            onClick={() => {
+              router.push(`/p/manage/event/${eventId}`);
+            }}
+          >
+            Skip
+          </Button>
+        </div>
       </div>
     </PartnerLayout>
   );

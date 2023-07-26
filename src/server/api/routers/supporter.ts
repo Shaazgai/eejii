@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { supporterSchema } from '@/lib/validation/partner-validation-schema';
 
-import { normalizeGrantJoinRequest } from '../helpers/normalizer/grantJoinRequests';
+import { normalizeGrantJoinRequest } from '../helpers/normalizer/n-grantJoinRequests';
 import { findGrantRequests } from '../helpers/query/supporterQuery';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 

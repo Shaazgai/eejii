@@ -7,6 +7,7 @@ const phoneRegex = new RegExp(
 export const roleSchema = z.string();
 
 export const fundraisingSchema = z.object({
+  id: z.string().nullish(),
   title: z.string().min(2, {
     message: 'Country must have at least 2 characters.',
   }),
@@ -32,4 +33,5 @@ export const fundraisingSchema = z.object({
   currentAmount: z.number(),
   email_1: z.string().email().nullable(),
   email_2: z.string().email().nullable(),
+  mainCategory: z.string(),
 });

@@ -4,9 +4,9 @@ import { z } from 'zod';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
-import { normalizeEventJoinRequest } from '../helpers/normalizer/eventJoinRequests';
-import { normalizeFundraisingJoinRequest } from '../helpers/normalizer/fundraisingJoinRequest';
-import { normalizeGrantJoinRequest } from '../helpers/normalizer/grantJoinRequests';
+import { normalizeEventJoinRequest } from '../helpers/normalizer/n-eventJoinRequests';
+import { normalizeFundraisingJoinRequest } from '../helpers/normalizer/n-fundraisingJoinRequest';
+import { normalizeGrantJoinRequest } from '../helpers/normalizer/n-grantJoinRequests';
 import {
   findEventJoinRequests,
   findFundraisingJoinRequests,
