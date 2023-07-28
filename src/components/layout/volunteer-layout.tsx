@@ -1,6 +1,6 @@
 import { CalendarCheck, LayoutDashboard, UserCog } from 'lucide-react';
 
-import Header from '../navigation/header';
+import HeaderV1 from '../navigation/headerV1';
 
 interface VolunteerLayoutProps {
   children: React.ReactNode;
@@ -9,22 +9,22 @@ interface VolunteerLayoutProps {
 export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
   const volunteerHeaderNav = [
     {
-      title: 'Dashboard',
+      title: 'Home',
       href: '/v',
       icon: <LayoutDashboard className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
-      title: 'Events',
-      href: '/v/events',
+      title: 'Volunteer',
+      href: '/v/volunteer',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
-      title: 'Fundraising',
-      href: '/v/fundraising',
+      title: 'Donate',
+      href: '/v/donate',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
@@ -39,9 +39,9 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
   ];
 
   return (
-    <>
-      <Header headerNav={volunteerHeaderNav} />
+    <div>
+      <HeaderV1 headerNav={volunteerHeaderNav} />
       {children}
-    </>
+    </div>
   );
 }

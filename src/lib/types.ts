@@ -66,6 +66,7 @@ export interface EventType {
   CategoryEvent: {
     Category: CategoryType | null;
   }[];
+  Owner: PartnerType;
 }
 export type CategoryType = {
   id: string;

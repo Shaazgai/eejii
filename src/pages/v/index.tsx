@@ -1,7 +1,11 @@
+import { FallbackImage } from '@/components/common/fallback-image';
 import VolunteerLayout from '@/components/layout/volunteer-layout';
-import EventList from '@/components/list/event-list';
-import FundraisingList from '@/components/list/fund-list';
+import EventSlider from '@/components/list/slider/event-slider';
+import FundSlider from '@/components/list/slider/fund-slider';
 import { Shell } from '@/components/shells/shell';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import type { EventType, FundraisingType } from '@/lib/types';
 import { api } from '@/utils/api';
 
@@ -10,24 +14,45 @@ export default function Index() {
     api.event.getAll.useQuery();
   const { data: fundraisings, isLoading: isFundLoading } =
     api.fundraising.getAll.useQuery();
+
   return (
     <VolunteerLayout>
+      <div className="">
+        <FallbackImage
+          width={1500}
+          height={300}
+          className="aspect-video h-[400px] w-full object-cover object-center"
+          alt="bg"
+          src={'/images/spider.jpg'}
+        />
+      </div>
       <Shell>
-        <div>
-          <EventList
-            events={events?.slice(0, 3) as EventType[]}
-            isLoading={isEventLoading}
+        <div className="m-auto w-[800px] -translate-y-20">
+          <Card className="">
+            <CardHeader className="text-3xl">
+              What kind of impact are you looking to make?
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-5">
+                <span>I want to</span>
+                <Input className="w-48" />
+                <span>with</span>
+                <Input className="w-48" />
+                <Button>Show result</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="-translate-y-10">
+          <EventSlider
+            events={events as EventType[]}
+            isEventLoading={isEventLoading}
+          />
+          <FundSlider
+            fundraisings={fundraisings as FundraisingType[]}
+            isFundLoading={isFundLoading}
           />
         </div>
-        <div>
-          <FundraisingList
-            fundraisings={fundraisings?.slice(0, 3) as FundraisingType[]}
-            isLoading={isFundLoading}
-          />
-        </div>
-        {/* <div>
-          <EventList />
-        </div> */}
       </Shell>
     </VolunteerLayout>
   );
