@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import Header from '../navigation/header';
+import HeaderV2 from '../navigation/headerV2';
 import Sidebar from '../navigation/sidebar';
 
 interface SupporterLayoutProps {
@@ -69,7 +69,7 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
           <Sidebar open={open} setOpen={setOpen} sidebarNav={sidebarNav} />
         </div>
         <div className={`grow  ${open ? 'sm:ms-[300px]' : 'ms-[80px]'} `}>
-          <Header setOpen={setOpen} open={open} headerNav={[]} />
+          <HeaderV2 open={open} headerNav={[]} />
           <div className="p-20">{children}</div>
         </div>
       </div>

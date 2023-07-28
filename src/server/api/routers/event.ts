@@ -9,7 +9,11 @@ import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
-    const events = await opts.ctx.prisma.event.findMany({});
+    const events = await opts.ctx.prisma.event.findMany({
+      include: {
+        Owner: true,
+      },
+    });
     return events;
   }),
 
@@ -23,6 +27,7 @@ export const eventRouter = createTRPCRouter({
               Category: true,
             },
           },
+          Owner: true,
         },
         where: { id: input.id },
       });
