@@ -20,7 +20,7 @@ export default function FundraisingViewPage(
   if (!data) return <div>404</div>;
   return (
     <BasicBaseLayout>
-      <FundDetail fund={data as FundraisingType} />
+      <FundDetail fund={data as unknown as FundraisingType} />
     </BasicBaseLayout>
   );
 }

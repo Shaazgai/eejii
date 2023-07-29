@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 
 import ProjectCard from '@/components/card/manage/fund-card';
+import SectionHeader from '@/components/common/section-header';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
@@ -39,12 +40,22 @@ export default function ManageProjects() {
 
   return (
     <PartnerLayout>
-      <Shell>
+      <Shell className="px-10">
+        <SectionHeader src={'/images/spider.jpg'} variant="dark" className="">
+          <div className="flex w-full items-center justify-between">
+            <h2 className="text-3xl capitalize">Manage projects</h2>
+            <Button
+              className="rounded-full border bg-transparent hover:bg-gray-200 hover:text-gray-950"
+              // variant={'secondary'}
+              onClick={() => router.push('manage/new')}
+            >
+              Add
+            </Button>
+          </div>
+        </SectionHeader>
         <div className="flex justify-between">
-          <h2>manage-projects</h2>
-          <Button onClick={() => router.push('manage/new')}>Add</Button>
+          <LinkTabs tabs={tabs} />
         </div>
-        <LinkTabs tabs={tabs} />
 
         {fundraising?.map((fund, index) => (
           <ProjectCard key={index} fundraising={fund as FundraisingType} />

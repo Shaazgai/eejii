@@ -15,7 +15,7 @@ const EventList = ({
       <div className="mb-5 border-b pb-2 font-bold">
         <h2 className=" text-2xl">Events</h2>
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!isLoading &&
           events?.length > 0 &&
           events.map(event => {

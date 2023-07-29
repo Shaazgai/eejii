@@ -31,6 +31,6 @@ export const userRouter = createTRPCRouter({
         }
         return user;
       }
-      return;
+      throw new Error('User not found');
     }),
 });

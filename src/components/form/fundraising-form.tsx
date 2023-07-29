@@ -17,7 +17,7 @@ import FundraisingFields from './fields/fundraising-fields';
 const FundraisingForm = ({
   data,
 }: {
-  data: z.infer<typeof fundraisingSchema>;
+  data: z.infer<typeof fundraisingSchema> | undefined;
 }) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof fundraisingSchema>>({

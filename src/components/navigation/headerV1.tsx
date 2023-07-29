@@ -31,76 +31,78 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
   const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-row items-center justify-between p-3">
-      <div>
+    <header className="flex w-full flex-row items-center justify-between gap-3 p-3">
+      <div className="min-w-[160px]">
         <Image alt="logo" src={'/eejii.jpeg'} width={160} height={50} />
       </div>
-      <nav>
-        <ul className="flex flex-row gap-10">
-          {headerNav && headerNav.length > 0 ? (
-            headerNav.map((item, index) => (
-              <li key={index}>
-                <Button
-                  variant="link"
-                  className={`${pathname === item.href ? 'underline' : ''}`}
-                >
-                  <Link href={item.href}>{item.title}</Link>
-                </Button>
-              </li>
-            ))
-          ) : (
-            <></>
-          )}
-        </ul>
-      </nav>
-      <div>
-        <span>
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 px-1 focus:outline-none">
-                <Image
-                  alt="avatar"
-                  src={user.imageUrl}
-                  width={30}
-                  height={30}
-                  className="rounded-full"
-                />
-                {user.firstName || user.imageUrl}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
+      <div className="flex w-full flex-row items-center justify-between">
+        <nav>
+          <ul className="flex flex-row gap-10">
+            {headerNav && headerNav.length > 0 ? (
+              headerNav.map((item, index) => (
+                <li key={index}>
+                  <Button
+                    variant="link"
+                    className={`${pathname === item.href ? 'underline' : ''}`}
+                  >
+                    <Link href={item.href}>{item.title}</Link>
+                  </Button>
+                </li>
+              ))
+            ) : (
+              <></>
+            )}
+          </ul>
+        </nav>
+        <div>
+          <span>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2 px-1 focus:outline-none">
+                  <Image
+                    alt="avatar"
+                    src={user.imageUrl}
+                    width={30}
+                    height={30}
+                    className="rounded-full"
+                  />
+                  {user.firstName || user.imageUrl}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <AppWindow className="mr-2 h-4 w-4" />
+                      <Link href={'/v'}>Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Settings className="mr-2 h-4 w-4" />
+                      <Link href={'/v/settings'}>Settings</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <AppWindow className="mr-2 h-4 w-4" />
-                    <Link href={'/v'}>Dashboard</Link>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <SignOutButton />
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <Link href={'/v/settings'}>Settings</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <SignOutButton />
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button
-              asChild
-              variant={'ghost'}
-              size={'default'}
-              className="flex gap-2"
-            >
-              <Link href={'sign-in'}>
-                <User2Icon className="h-5 w-5" />
-                Login
-              </Link>
-            </Button>
-          )}
-        </span>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                asChild
+                variant={'ghost'}
+                size={'default'}
+                className="flex gap-2"
+              >
+                <Link href={'sign-in'}>
+                  <User2Icon className="h-5 w-5" />
+                  Login
+                </Link>
+              </Button>
+            )}
+          </span>
+        </div>
       </div>
     </header>
   );

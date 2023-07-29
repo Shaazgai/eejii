@@ -14,7 +14,11 @@ import { api } from '@/utils/api';
 
 import { Input } from '../ui/input';
 
-const EventForm = ({ data }: { data: z.infer<typeof eventSchema> }) => {
+const EventForm = ({
+  data,
+}: {
+  data: z.infer<typeof eventSchema> | undefined;
+}) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof eventSchema>>({
     resolver: zodResolver(eventSchema),

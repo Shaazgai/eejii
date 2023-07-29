@@ -21,13 +21,13 @@ export default function Index() {
         <FallbackImage
           width={1500}
           height={300}
-          className="aspect-video h-[400px] w-full object-cover object-center"
+          className="aspect-video h-[300px] w-full object-cover object-center"
           alt="bg"
           src={'/images/spider.jpg'}
         />
       </div>
       <Shell>
-        <div className="m-auto w-[800px] -translate-y-20">
+        <div className="m-auto -translate-y-20 md:w-[800px]">
           <Card className="">
             <CardHeader className="text-3xl">
               What kind of impact are you looking to make?

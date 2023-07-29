@@ -72,22 +72,29 @@ const FundDetail = ({ fund }: { fund: FundraisingType }) => {
   }
   console.log(selectedAmount);
   return (
-    <div className="container p-10">
-      <div className="mb-3 flex items-center gap-5 border-b-2 border-dashed pb-2">
-        <Button className="h-12 w-12 rounded-full p-3" variant={'outline'}>
-          <ArrowLeft className="h-12 w-12" />
-        </Button>
-        <div>
-          <h1 className=" text-3xl  font-bold">{fund.title}</h1>
-          <div className="flex gap-3">
-            <span>{format(fund.startTime, 'PPP HH:mm')}</span>---
-            <span>{format(fund.endTime, 'PPP HH:mm')}</span>
+    <div className="">
+      <div className="mb-3 flex items-center justify-between gap-5 border-b-2 border-dashed pb-2">
+        <div className="mb-3 flex items-center gap-5">
+          <Button className="h-12 w-12 rounded-full p-3" variant={'outline'}>
+            <ArrowLeft className="h-12 w-12" />
+          </Button>
+          <div>
+            <h1 className=" text-3xl  font-bold">{fund.title}</h1>
+            <div className="flex gap-3">
+              <span>{format(fund.startTime, 'PPP HH:mm')}</span>---
+              <span>{format(fund.endTime, 'PPP HH:mm')}</span>
+            </div>
           </div>
+        </div>
+        <div className="flex justify-center">
+          <Button type="submit" onClick={handleSendRequest}>
+            Send join request
+          </Button>
         </div>
       </div>
       <div className="flex gap-10">
         <div className="w-[63%]	space-y-5">
-          <div className="h-[500px] overflow-hidden rounded-lg">
+          <div className="overflow-hidden rounded-lg">
             <Image
               className="w-full object-cover object-center"
               src={'/placeholder.webp'}
@@ -337,11 +344,7 @@ const FundDetail = ({ fund }: { fund: FundraisingType }) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center">
-        <Button type="submit" onClick={handleSendRequest}>
-          Send join request
-        </Button>
-      </div>
+
       <Toaster />
     </div>
   );
