@@ -14,7 +14,7 @@ const FundraisingList = ({
         <h2 className=" text-2xl">Fundraisings</h2>
       </div>
       {isLoading && '..Loading'}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!isLoading &&
           fundraisings?.length > 0 &&
           fundraisings.map(fund => {

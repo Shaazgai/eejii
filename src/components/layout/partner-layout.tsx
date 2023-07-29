@@ -1,10 +1,10 @@
 import {
   CalendarCheck,
   Heart,
+  HeartHandshake,
   LayoutDashboard,
   Newspaper,
   Settings,
-  UserCog,
   Users,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -40,9 +40,9 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       external: '',
     },
     {
-      title: 'Join requests',
-      href: '/p/join-requests',
-      icon: <UserCog className="ml-1 mr-1 h-7 w-7" />,
+      title: 'Collaboration',
+      href: '/p/collaboration',
+      icon: <HeartHandshake className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
@@ -90,7 +90,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
         </div>
         <div className={`grow  ${open ? 'sm:ms-[300px]' : 'ms-[80px]'} `}>
           <HeaderV2 open={open} headerNav={[]} />
-          <div className="p-20">{children}</div>
+          <div className="py-20">{children}</div>
         </div>
       </div>
     </div>

@@ -70,7 +70,7 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
         </div>
         <div className={`grow  ${open ? 'sm:ms-[300px]' : 'ms-[80px]'} `}>
           <HeaderV2 open={open} headerNav={[]} />
-          <div className="p-20">{children}</div>
+          <div className="py-20">{children}</div>
         </div>
       </div>
     </div>

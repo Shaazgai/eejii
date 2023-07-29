@@ -106,7 +106,7 @@ export type Donation = {
   userId: string | null;
   isPublicName: boolean;
   fundraisingId: string | null;
-  User: User | null;
+  User: User;
   createdAt: Date;
   Payment: PaymentType | null;
 };

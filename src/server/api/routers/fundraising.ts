@@ -37,6 +37,134 @@ export const fundraisingRouter = createTRPCRouter({
       if (!fundraising) throw new TRPCError({ code: 'NOT_FOUND' });
       return fundraising;
     }),
+  getMyCollaborated: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUniqueOrThrow({
+      where: { externalId: ctx.userId },
+    });
+    if (user.type === 'partner') {
+      const partner = await ctx.prisma.partner.findUniqueOrThrow({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!partner) throw Error('User not found');
+      const fundraising = await ctx.prisma.fundraising.findMany({
+        where: {
+          FundraisingPartner: {
+            some: { partnerId: partner.id, status: 'approved' },
+          },
+        },
+      });
+      console.log(fundraising);
+      return fundraising;
+    } else if (user.type === 'supporter') {
+      const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!supporter) throw Error('User not found');
+      const fundraising = await ctx.prisma.fundraising.findMany({
+        where: {
+          FundraisingSupporter: {
+            some: { supporterId: supporter.id, status: 'approved' },
+          },
+        },
+      });
+      return fundraising;
+    }
+    throw new Error('Access denied');
+  }),
+  getMyPending: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUniqueOrThrow({
+      where: { externalId: ctx.userId },
+    });
+    if (user.type === 'partner') {
+      const partner = await ctx.prisma.partner.findUniqueOrThrow({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!partner) throw Error('User not found');
+      const fundraising = await ctx.prisma.fundraising.findMany({
+        include: {
+          FundraisingPartner: true,
+        },
+        where: {
+          FundraisingPartner: {
+            some: { partnerId: partner.id, status: 'pending' },
+          },
+        },
+      });
+      console.log(fundraising);
+      return fundraising;
+    } else if (user.type === 'supporter') {
+      const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!supporter) throw Error('User not found');
+      const fundraising = await ctx.prisma.fundraising.findMany({
+        where: {
+          FundraisingSupporter: {
+            some: { supporterId: supporter.id, status: 'pending' },
+          },
+        },
+      });
+      return fundraising;
+    }
+    throw new Error('Access denied');
+  }),
+  getNotRelated: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUniqueOrThrow({
+      where: { externalId: ctx.userId },
+    });
+    if (user.type === 'partner') {
+      const partner = await ctx.prisma.partner.findUniqueOrThrow({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!partner) throw Error('User not found');
+      const fundraising = await ctx.prisma.fundraising.findMany({
+        where: {
+          NOT: {
+            partnerId: partner.id,
+            FundraisingPartner: {
+              some: { partnerId: partner.id, status: 'pending' },
+            },
+          },
+        },
+      });
+      console.log(fundraising);
+      return fundraising;
+    } else if (user.type === 'supporter') {
+      const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!supporter) throw Error('User not found');
+      const fundraising = await ctx.prisma.fundraising.findMany({
+        where: {
+          NOT: {
+            FundraisingSupporter: {
+              some: { supporterId: supporter.id, status: 'pending' },
+            },
+          },
+        },
+      });
+      return fundraising;
+    }
+    throw new Error('Access denied');
+  }),
   createOrUpdate: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {

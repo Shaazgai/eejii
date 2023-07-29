@@ -8,7 +8,7 @@ export default function EventCardPublic({ event }: { event: EventType }) {
   console.log(event);
   return (
     <Link href={`/events/${event.id}`}>
-      <div className="flex w-96 flex-col rounded-xl  border">
+      <div className="md:w-70 flex w-full flex-col  rounded-xl border ">
         <div
           aria-label="Product Placeholder"
           role="img"
