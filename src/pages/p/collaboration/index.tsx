@@ -32,7 +32,7 @@ const Index = () => {
 
   return (
     <PartnerLayout>
-      <Shell>
+      <Shell variant="sidebar" className="px-10">
         <div className="space-y-4">
           <div>
             <h1 className="text-3xl font-semibold">Collaborations</h1>

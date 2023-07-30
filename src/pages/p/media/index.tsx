@@ -9,7 +9,7 @@ export default function Media() {
 
   return (
     <PartnerLayout>
-      <Shell>
+      <Shell variant="sidebar" className="px-10">
         <div className="flex justify-between">
           <h2>manage-projects</h2>
           <Button onClick={() => router.push('manage/new')}>Add</Button>

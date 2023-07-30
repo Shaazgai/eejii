@@ -83,7 +83,7 @@ const EventSlider = ({
             </Button>
           </div>
         </div>
-        <div className="embla">
+        <div className="embla" id="event-slider">
           <div className="embla__viewport w-[1300px]" ref={emblaRef}>
             <div className="embla__container">
               {!isEventLoading &&

@@ -48,6 +48,8 @@ export default function Index() {
             events={events as EventType[]}
             isEventLoading={isEventLoading}
           />
+        </div>
+        <div className="-translate-y-10">
           <FundSlider
             fundraisings={fundraisings as FundraisingType[]}
             isFundLoading={isFundLoading}

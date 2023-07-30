@@ -40,7 +40,7 @@ export default function ManageProjects() {
 
   return (
     <PartnerLayout>
-      <Shell className="px-10">
+      <Shell variant="sidebar" className="px-10">
         <SectionHeader src={'/images/spider.jpg'} variant="dark" className="">
           <div className="flex w-full items-center justify-between">
             <h2 className="text-3xl capitalize">Manage projects</h2>
