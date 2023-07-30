@@ -5,6 +5,8 @@ import superjson from 'superjson';
 
 import FundDetail from '@/components/detail/fund-detail';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
+import { Shell } from '@/components/shells/shell';
+import { Button } from '@/components/ui/button';
 import type { FundraisingType } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { prisma } from '@/server/db';
@@ -16,11 +18,26 @@ export default function FundraisingViewPage(
   if (!props) return <div>Loading...</div>;
   const { id } = props;
   const { data } = api.fundraising.getById.useQuery({ id: id as string });
-
   if (!data) return <div>404</div>;
+
+  const { mutate } = api.fundraising.sendRequest.useMutation({
+    onSuccess: newReq => console.log(newReq),
+  });
+  function handleSendRequest() {
+    mutate({ fundraisingId: data?.id as string });
+  }
   return (
     <BasicBaseLayout>
-      <FundDetail fund={data as unknown as FundraisingType} />
+      <Shell>
+        <FundDetail
+          fund={data as unknown as FundraisingType}
+          actionButton={
+            <Button type="submit" onClick={handleSendRequest}>
+              Send join request
+            </Button>
+          }
+        />
+      </Shell>
     </BasicBaseLayout>
   );
 }

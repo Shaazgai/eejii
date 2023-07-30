@@ -3,8 +3,11 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import superjson from 'superjson';
 
+import EventDetail from '@/components/detail/event-detail';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
+import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
+import type { EventType } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { prisma } from '@/server/db';
 import { api } from '@/utils/api';
@@ -25,12 +28,16 @@ export default function EventViewPage(
   if (!data) return <>404</>;
   return (
     <BasicBaseLayout>
-      <div className="flex justify-center">{data?.title}</div>
-      <div className="flex justify-center">
-        <Button type="submit" onClick={handleSendRequest}>
-          Send join request
-        </Button>
-      </div>
+      <Shell>
+        <EventDetail
+          event={data as unknown as EventType}
+          actionButton={
+            <Button type="submit" onClick={handleSendRequest}>
+              Send join request
+            </Button>
+          }
+        />
+      </Shell>
     </BasicBaseLayout>
   );
 }

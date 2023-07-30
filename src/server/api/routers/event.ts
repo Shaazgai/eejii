@@ -1,10 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import type { EventType } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
-import { normalizeEventToForm } from '../helpers/normalizer/normalizeForForm';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const eventRouter = createTRPCRouter({
@@ -28,11 +26,14 @@ export const eventRouter = createTRPCRouter({
             },
           },
           Owner: true,
+          EventVolunteer: true,
+          EventPartner: true,
+          EventSupporter: true,
         },
         where: { id: input.id },
       });
       if (!event) throw new TRPCError({ code: 'NOT_FOUND' });
-      return normalizeEventToForm(event as EventType);
+      return event;
     }),
 
   createOrUpdate: privateProcedure
