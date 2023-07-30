@@ -67,7 +67,38 @@ export interface EventType {
     Category: CategoryType | null;
   }[];
   Owner: PartnerType;
+  EventVolunteer: EventVolunteer[];
+  EventPartner: EventPartner[];
+  EventSupporter: EventSupporter[];
 }
+
+export type EventVolunteer = {
+  id: string;
+  status: string;
+  createdAt: Date;
+  role: string | null;
+  type: string | null;
+  Volunteer: VolunteerType | null;
+};
+
+export type EventPartner = {
+  id: string;
+  status: string;
+  createdAt: Date;
+  role: string | null;
+  type: string | null;
+  Partner: PartnerType | null;
+};
+
+export type EventSupporter = {
+  id: string;
+  status: string;
+  createdAt: Date;
+  role: string | null;
+  type: string | null;
+  Supporter: SupporterType | null;
+};
+
 export type CategoryType = {
   id: string;
   name: string;

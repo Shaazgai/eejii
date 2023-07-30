@@ -3,7 +3,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
 import Image from 'next/image';
-import type { FormEvent } from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { useState } from 'react';
 
 import {
@@ -18,22 +18,22 @@ import { Progress } from '@/components/ui/progress';
 import { Toaster } from '@/components/ui/toaster';
 import type { ContactType, FundraisingType, PaymentType } from '@/lib/types';
 import { priceFormatter } from '@/lib/utils/price';
-import { api } from '@/utils/api';
 
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Input } from '../ui/input';
 import { useToast } from '../ui/use-toast';
-const FundDetail = ({ fund }: { fund: FundraisingType }) => {
+const FundDetail = ({
+  fund,
+  actionButton,
+}: {
+  fund: FundraisingType;
+  actionButton: ReactNode;
+}) => {
   const [selectedAmount, setSelectedAmount] = useState(0);
   const [payment, setPayment] = useState<PaymentType>();
   const { toast } = useToast();
-  const { mutate } = api.fundraising.sendRequest.useMutation({
-    onSuccess: newReq => console.log(newReq),
-  });
-  function handleSendRequest() {
-    mutate({ fundraisingId: fund?.id as string });
-  }
+
   const { userId, isLoaded } = useAuth();
 
   async function handleDonate(event: FormEvent) {
@@ -86,11 +86,7 @@ const FundDetail = ({ fund }: { fund: FundraisingType }) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center">
-          <Button type="submit" onClick={handleSendRequest}>
-            Send join request
-          </Button>
-        </div>
+        <div className="flex justify-center">{actionButton}</div>
       </div>
       <div className="flex gap-10">
         <div className="w-[63%]	space-y-5">

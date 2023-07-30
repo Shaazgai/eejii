@@ -1,13 +1,14 @@
 import { getAuth } from '@clerk/nextjs/server';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import superjson from 'superjson';
 
 import FundDetail from '@/components/detail/fund-detail';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { Shell } from '@/components/shells/shell';
 import RequestsDataTable from '@/components/table/request/partner-join-request-table';
+import { Button } from '@/components/ui/button';
 import type { FundraisingType, JoinRequestTableProps } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { prisma } from '@/server/db';
@@ -16,6 +17,7 @@ import { api } from '@/utils/api';
 export default function EventViewPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+  const router = useRouter();
   if (!props) return <>Loading...</>;
   const { id } = props;
   const { data } = api.fundraising.getById.useQuery({ id: id as string });
@@ -31,12 +33,29 @@ export default function EventViewPage(
   return (
     <PartnerLayout>
       <Shell>
-        <FundDetail fund={data as unknown as FundraisingType} />
+        <FundDetail
+          fund={data as unknown as FundraisingType}
+          actionButton={
+            <Button
+              type="submit"
+              onClick={() => {
+                router.push(`/p/manage/${data.id}/edit`);
+              }}
+            >
+              Edit
+            </Button>
+          }
+        />
         {/* <NormalTabs
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
           tabs={tabs}
         /> */}
+        <div>
+          <Button onClick={() => router.push(`/p/manage/${props.id}/invite`)}>
+            Invite users
+          </Button>
+        </div>
         {requests ? (
           <RequestsDataTable
             data={requests as JoinRequestTableProps[]}
@@ -45,7 +64,6 @@ export default function EventViewPage(
         ) : (
           'loadiing..'
         )}
-        <Link href={`/p/manage/${props.id}/invite`}>Invite users</Link>
       </Shell>
     </PartnerLayout>
   );
