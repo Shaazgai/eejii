@@ -39,7 +39,7 @@ export default function ManageProjects() {
 
   return (
     <PartnerLayout>
-      <Shell>
+      <Shell variant="sidebar" className="px-10">
         <div className="flex justify-between">
           <h2>manage-projects</h2>
           <Button onClick={() => router.push('/p/manage/new')}>Add</Button>
