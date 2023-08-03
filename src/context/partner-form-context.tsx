@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import type { Partner } from '@/lib/db/types';
 import type * as types from '@/lib/types';
 import { type MultiStepFormContextType } from '@/lib/types';
 import { api } from '@/utils/api';

@@ -1,8 +1,10 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import type { Partner } from '@/lib/db/types';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { partnerSchema } from '@/lib/validation/partner-validation-schema';
+import { db } from '@/server/db';
 
 import { normalizeEventJoinRequest } from '../helpers/normalizer/n-eventJoinRequests';
 import { normalizeFundraisingJoinRequest } from '../helpers/normalizer/n-fundraisingJoinRequest';
@@ -40,18 +42,27 @@ export const partnerRouter = createTRPCRouter({
     }),
 
   getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findFirstOrThrow({
-      where: { externalId: ctx.userId },
-    });
-    const partner = await ctx.prisma.partner.findUnique({
-      include: {
-        Address: true,
-      },
-      where: {
-        userId: user.id,
-      },
-    });
-    return partner;
+    // const user = await ctx.prisma.user.findFirstOrThrow({
+    //   where: { externalId: ctx.userId },
+    // });
+    // const partner = await ctx.prisma.partner.findUnique({
+    //   include: {
+    //     Address: true,
+    //   },
+    //   where: {
+    //     userId: user.id,
+    //   },
+    // });
+    const partner = await db
+      .selectFrom('Partner')
+      .leftJoin('User', 'User.id', 'Partner.userId')
+      .rightJoin('Address', 'Address.id', 'Partner.addressId')
+      .where('User.externalId', '=', ctx.userId)
+      .executeTakeFirstOrThrow();
+    console.log(partner);
+    // dont know what but got error
+    //tRPC failed on partner.getCurrentUsers: syntax error at position 12 near 'from'
+    return partner as Partner;
   }),
   findAllForFundInvitation: publicProcedure
     .input(z.object({ fundId: z.string() }))
@@ -180,6 +191,7 @@ export const partnerRouter = createTRPCRouter({
       const partner = await ctx.prisma.partner.findUniqueOrThrow({
         where: { userId: user.id },
       });
+      // const partner =
 
       if (input.projectType === 'event') {
         const event = await ctx.prisma.event.findMany(
