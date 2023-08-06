@@ -7,39 +7,39 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 import type { Role } from './enums';
 
 export type Address = {
-  id: string;
+  id: Generated<string>;
   country: string;
   city: string;
   provinceName: string;
   street: string;
 };
 export type Category = {
-  id: string;
+  id: Generated<string>;
   name: string;
   type: string | null;
 };
 export type CategoryEvent = {
-  id: string;
+  id: Generated<string>;
   eventId: string | null;
   categoryId: string | null;
 };
 export type CategoryFundraising = {
-  id: string;
+  id: Generated<string>;
   fundraisingId: string | null;
   categoryId: string | null;
 };
 export type CategoryGrantFundraising = {
-  id: string;
+  id: Generated<string>;
   grantFundraisingId: string | null;
   categoryId: string | null;
 };
 export type Certificate = {
-  id: string;
+  id: Generated<string>;
   name: string;
   description: string;
 };
 export type Donation = {
-  id: string;
+  id: Generated<string>;
   amount: number;
   userId: string | null;
   isPublicName: Generated<number>;
@@ -47,7 +47,7 @@ export type Donation = {
   createdAt: Generated<Timestamp>;
 };
 export type EducationHistory = {
-  id: string;
+  id: Generated<string>;
   level: string;
   schoolName: string;
   from: Timestamp;
@@ -56,7 +56,7 @@ export type EducationHistory = {
   volunteerId: string | null;
 };
 export type EmploymentHistory = {
-  id: string;
+  id: Generated<string>;
   company: string;
   position: string;
   from: Timestamp;
@@ -65,7 +65,7 @@ export type EmploymentHistory = {
   volunteerId: string | null;
 };
 export type Event = {
-  id: string;
+  id: Generated<string>;
   title: string;
   description: string;
   location: string;
@@ -78,7 +78,7 @@ export type Event = {
   ownerId: string | null;
 };
 export type EventPartner = {
-  id: string;
+  id: Generated<string>;
   createdAt: Generated<Timestamp>;
   role: string | null;
   status: string;
@@ -87,7 +87,7 @@ export type EventPartner = {
   eventId: string | null;
 };
 export type EventSupporter = {
-  id: string;
+  id: Generated<string>;
   createdAt: Generated<Timestamp>;
   role: string | null;
   status: string;
@@ -96,7 +96,7 @@ export type EventSupporter = {
   eventId: string | null;
 };
 export type EventVolunteer = {
-  id: string;
+  id: Generated<string>;
   volunteerId: string;
   eventId: string | null;
   createdAt: Generated<Timestamp>;
@@ -105,7 +105,7 @@ export type EventVolunteer = {
   type: string | null;
 };
 export type Fundraising = {
-  id: string;
+  id: Generated<string>;
   title: string;
   description: string;
   goalAmount: number;
@@ -117,7 +117,7 @@ export type Fundraising = {
   partnerId: string | null;
 };
 export type FundraisingPartner = {
-  id: string;
+  id: Generated<string>;
   createdAt: Generated<Timestamp>;
   role: string | null;
   status: string;
@@ -126,7 +126,7 @@ export type FundraisingPartner = {
   fundraisingId: string | null;
 };
 export type FundraisingSupporter = {
-  id: string;
+  id: Generated<string>;
   createdAt: Generated<Timestamp>;
   role: string | null;
   status: string;
@@ -135,7 +135,7 @@ export type FundraisingSupporter = {
   fundraisingId: string | null;
 };
 export type GrantFundraising = {
-  id: string;
+  id: Generated<string>;
   title: string;
   description: string;
   goalAmount: number;
@@ -147,7 +147,7 @@ export type GrantFundraising = {
   ownerId: string | null;
 };
 export type GrantFundraisingPartner = {
-  id: string;
+  id: Generated<string>;
   createdAt: Generated<Timestamp>;
   role: string | null;
   status: string;
@@ -156,7 +156,7 @@ export type GrantFundraisingPartner = {
   partnerId: string | null;
 };
 export type GrantFundraisingSupporter = {
-  id: string;
+  id: Generated<string>;
   createdAt: Generated<Timestamp>;
   role: string | null;
   status: string;
@@ -165,7 +165,7 @@ export type GrantFundraisingSupporter = {
   grantFundraisingId: string | null;
 };
 export type Partner = {
-  id: string;
+  id: Generated<string>;
   userId: string;
   organization: string;
   email: string;
@@ -175,7 +175,7 @@ export type Partner = {
   addressId: string | null;
 };
 export type Payment = {
-  id: string;
+  id: Generated<string>;
   amount: number;
   invoiceId: string | null;
   status: string;
@@ -185,11 +185,11 @@ export type Payment = {
   details: unknown | null;
 };
 export type Skill = {
-  id: string;
+  id: Generated<string>;
   name: string;
 };
 export type Supporter = {
-  id: string;
+  id: Generated<string>;
   userId: string;
   organization: string;
   email: string;
@@ -199,7 +199,7 @@ export type Supporter = {
   addressId: string | null;
 };
 export type User = {
-  id: string;
+  id: Generated<string>;
   externalId: string;
   username: string;
   email: string;
@@ -208,7 +208,7 @@ export type User = {
   type: string | null;
 };
 export type Volunteer = {
-  id: string;
+  id: Generated<string>;
   firstName: string;
   lastName: string;
   phoneNumbers: unknown | null;

@@ -3,8 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import type { WebhookRequiredHeaders } from 'svix';
 import { Webhook } from 'svix';
 
-import { prisma } from '@/server/db';
-
 const webhookSecret = process.env.WEBHOOK_SECRET || '';
 
 export default async function handler(

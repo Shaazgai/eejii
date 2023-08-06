@@ -1,112 +1,84 @@
-import { TRPCError } from '@trpc/server';
+import { sql } from 'kysely';
 import { z } from 'zod';
 
+import type { Supporter } from '@/lib/db/types';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { supporterSchema } from '@/lib/validation/partner-validation-schema';
 
-import { normalizeGrantJoinRequest } from '../helpers/normalizer/n-grantJoinRequests';
-import { findGrantRequests } from '../helpers/query/supporterQuery';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const supporterRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const supporter = await ctx.prisma.supporter.findUnique({
-        where: { id: input.id },
-      });
-      if (!supporter) throw new TRPCError({ code: 'NOT_FOUND' });
-
-      return supporter;
-    }),
-  getByUserId: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const supporter = await ctx.prisma.supporter.findUnique({
-        where: {
-          userId: input.id,
-        },
-      });
-      if (!supporter) throw new TRPCError({ code: 'NOT_FOUND' });
+      const supporter = await ctx.db
+        .selectFrom('Supporter')
+        .selectAll()
+        .where('id', '=', input.id)
+        .executeTakeFirstOrThrow();
 
       return supporter;
     }),
   getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findFirstOrThrow({
-      where: { externalId: ctx.userId },
-    });
-    const supporter = await ctx.prisma.supporter.findUnique({
-      include: {
-        Address: true,
-      },
-      where: {
-        userId: user.id,
-      },
-    });
+    const supporter = await ctx.db
+      .selectFrom('Supporter')
+      .selectAll()
+      .leftJoin('User', 'User.id', 'Supporter.userId')
+      .rightJoin('Address', 'Address.id', 'Supporter.addressId')
+      .where('User.externalId', '=', ctx.userId)
+      .executeTakeFirstOrThrow();
     return supporter;
   }),
   findAll: publicProcedure.query(async ({ ctx }) => {
-    const supporter = await ctx.prisma.supporter.findMany({});
+    const supporter = await ctx.db
+      .selectFrom('Supporter')
+      .selectAll()
+      .execute();
 
     return supporter;
   }),
   findAllForFundInvitation: publicProcedure
     .input(z.object({ fundId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const supporter = await ctx.prisma.supporter.findMany({
-        where: {
-          NOT: {
-            OR: [
-              {
-                FundraisingSupporter: {
-                  some: { fundraisingId: input.fundId },
-                },
-              },
-            ],
-          },
-        },
-      });
+      const query = await sql`
+        SELECT s.*
+        FROM Supporter AS s 
+        LEFT JOIN FundraisingSupporter AS fs ON fs.supporterId = s.id
+        WHERE fs.fundraisingId != ${input.fundId} OR fs.fundraisingId IS NULL
+      `.execute(ctx.db);
 
-      return supporter;
+      return query.rows as Supporter[];
     }),
   findAllForEventInvitation: publicProcedure
     .input(z.object({ eventId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const supporter = await ctx.prisma.supporter.findMany({
-        where: {
-          NOT: {
-            OR: [
-              {
-                EventSupporter: {
-                  some: { eventId: input.eventId },
-                },
-              },
-            ],
-          },
-        },
-      });
-
-      return supporter;
+      console.log(input.eventId);
+      const query = await sql`
+        SELECT s.*
+        FROM Supporter AS s 
+        LEFT JOIN EventSupporter AS es ON es.supporterId = s.id 
+        WHERE es.eventId != ${input.eventId} OR es.eventId IS NULL
+      `.execute(ctx.db);
+      console.log(query.rows);
+      return query.rows as Supporter[];
     }),
   create: privateProcedure
     .input(supporterSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
-      const user = await ctx.prisma.user.update({
-        where: { externalId: ctx.userId },
-        data: {
-          type: 'supporter',
-        },
-      });
-      const address = await ctx.prisma.address.create({
-        data: {
+      const address = await ctx.db
+        .insertInto('Address')
+        .values({
           country: input.country,
           city: input.city,
           street: input.street,
           provinceName: input.provinceName,
-        },
-      });
-      const supporter = await ctx.prisma.supporter.create({
-        data: {
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      const supporter = await ctx.db
+        .insertInto('Supporter')
+        .values(({ selectFrom }) => ({
           organization: input.organization,
           email: input.email,
           bio: input.email,
@@ -119,69 +91,40 @@ export const supporterRouter = createTRPCRouter({
             primary_phone: input.primary_phone,
             secondary_phone: input.secondary_phone,
           },
-          userId: user.id,
+          userId: selectFrom('User')
+            .where('externalId', '=', ctx.userId)
+            .select('User.id'),
           addressId: address?.id,
-        },
-      });
+        }))
+        .returning('id')
+        .executeTakeFirstOrThrow();
 
       return supporter;
     }),
-  // getRequestsOrInvitations: privateProcedure
-  //   .input(
-  //     z.object({
-  //       projectType: z.string(),
-  //       requestType: z.string(),
-  //       status: z.string(),
-  //     })
-  //   )
-  //   .query(async ({ ctx, input }) => {
-  //     const user = await ctx.prisma.user.findUniqueOrThrow({
-  //       where: { externalId: ctx.userId },
-  //     });
-  //     const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
-  //       where: { userId: user.id },
-  //     });
-
-  //     const grantFundraisingSupporter =
-  //       await ctx.prisma.grantFundraising.findMany(
-  //         findGrantRequests(supporter, input)
-  //       );
-  //     return grantFundraisingSupporter;
-  //   }),
-  getMytProjectsJoinRequestsOrInvitations: privateProcedure
+  handleGrantRequest: privateProcedure
     .input(
-      z.object({
-        projectType: z.string().nullable(),
-        status: z.string().nullable(),
-        requestType: z.string().nullable(),
-      })
+      z.object({ id: z.string(), userType: z.string(), status: z.string() })
     )
-    .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUniqueOrThrow({
-        where: { externalId: ctx.userId },
-      });
-      const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
-        where: { userId: user.id },
-      });
-
-      const grantFundraisingSupporter =
-        await ctx.prisma.grantFundraising.findMany(
-          findGrantRequests(supporter, input)
-        );
-      return normalizeGrantJoinRequest(grantFundraisingSupporter);
-    }),
-  handleRequest: privateProcedure
-    .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const grantFundraising = await ctx.prisma.grantFundraisingPartner.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          status: input.status,
-        },
-      });
-
-      return grantFundraising;
+      if (input.userType === 'partner') {
+        ctx.db
+          .updateTable('GrantFundraisingPartner')
+          .where('id', '=', input.id)
+          .set({
+            status: input.status,
+          })
+          .returning('id')
+          .executeTakeFirstOrThrow();
+      } else if (input.userType === 'supporter') {
+        ctx.db
+          .updateTable('GrantFundraisingPartner')
+          .where('id', '=', input.id)
+          .set({
+            status: input.status,
+          })
+          .returning('id')
+          .executeTakeFirstOrThrow();
+      }
+      return { message: 'Success' };
     }),
 });

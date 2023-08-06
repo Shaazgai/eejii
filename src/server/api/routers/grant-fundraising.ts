@@ -1,4 +1,3 @@
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
@@ -6,100 +5,103 @@ import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const grantFundraisingRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async opts => {
-    const fundraising = await opts.ctx.prisma.grantFundraising.findMany({});
-    return fundraising;
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const grantFundraising = await ctx.db
+      .selectFrom('GrantFundraising')
+      .selectAll()
+      .execute();
+    return grantFundraising;
   }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const fundraising = await ctx.prisma.grantFundraising.findUnique({
-        where: { id: input.id },
-      });
-      if (!fundraising) throw new TRPCError({ code: 'NOT_FOUND' });
-      return fundraising;
+      const grantFundraising = await ctx.db
+        .selectFrom('GrantFundraising')
+        .where('id', '=', input.id)
+        .selectAll()
+        .executeTakeFirstOrThrow();
+      return grantFundraising;
     }),
 
   create: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {
-      console.log(ctx.userId);
-      const user = await ctx.prisma.user.findUnique({
-        where: { externalId: ctx.userId },
-      });
+      const supporter = await ctx.db
+        .selectFrom('Supporter')
+        .selectAll('Supporter')
+        .innerJoin('User', join =>
+          join.onRef('User.id', '=', 'Supporter.userId')
+        )
+        .where('User.externalId', '=', ctx.userId)
+        .executeTakeFirstOrThrow();
 
-      if (!user) throw new Error('User not fouuund');
-      let owner = null;
-
-      if (user.type === 'partner') {
-        owner = await ctx.prisma.partner.findUniqueOrThrow({
-          where: { userId: user.id },
-        });
-      } else if (user.type === 'supporter') {
-        owner = await ctx.prisma.partner.findUniqueOrThrow({
-          where: { userId: user.id },
-        });
-      }
-      if (!owner) throw new Error('Owner not found');
-
-      const fundraising = await ctx.prisma.grantFundraising.create({
-        data: {
+      const fund = await ctx.db
+        .insertInto('GrantFundraising')
+        .values({
           title: input.title,
           description: input.description,
           contact: {
             primary_phone: input.primary_phone,
             secondary_phone: input.secondary_phone,
+            email_1: input.email_1,
+            email_2: input.email_2,
           },
           location: input.location,
           startTime: input.startTime,
           endTime: input.endTime,
           goalAmount: input.goalAmount,
           currentAmount: input.currentAmount,
-          ownerId: owner.id,
-        },
-      });
-      console.log(fundraising);
-      return fundraising;
+          ownerId: supporter.id,
+        })
+        .returning(['id'])
+        .executeTakeFirstOrThrow();
+      // eslint-disable-next-line unused-imports/no-unused-vars
+      const categoryGrantFund = await ctx.db
+        .insertInto('CategoryGrantFundraising')
+        .values(({ selectFrom }) => ({
+          categoryId: selectFrom('Category')
+            .where('Category.id', '=', input.mainCategory)
+            .select('Category.id'),
+          grantFundraisingId: fund.id,
+        }))
+        .execute();
+      return fund;
     }),
   sendRequest: privateProcedure
     .input(z.object({ grantFundraisingId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUniqueOrThrow({
-        where: { externalId: ctx.userId },
-      });
-      const grantFundraising = await ctx.prisma.grantFundraising.findUnique({
-        where: { id: input.grantFundraisingId },
-      });
-      if (!grantFundraising) throw new TRPCError({ code: 'NOT_FOUND' });
+      const grantFundraising = await ctx.db
+        .selectFrom('GrantFundraising')
+        .select('id')
+        .where('id', '=', input.grantFundraisingId)
+        .executeTakeFirstOrThrow();
 
-      if (user.type === 'partner') {
-        const partner = await ctx.prisma.partner.findUniqueOrThrow({
-          where: { userId: user.id },
-        });
-
-        const grantFundraisingPartner =
-          await ctx.prisma.grantFundraisingPartner.create({
-            data: {
-              grantFundraisingId: grantFundraising.id,
-              partnerId: partner.id,
-              status: 'pending',
-            },
-          });
+      if (ctx.userType === 'partner') {
+        const grantFundraisingPartner = await ctx.db
+          .insertInto('GrantFundraisingPartner')
+          .values(({ selectFrom }) => ({
+            grantFundraisingId: grantFundraising.id,
+            partnerId: selectFrom('Partner')
+              .leftJoin('User', 'User.id', 'Partner.userId')
+              .where('User.externalId', '=', ctx.userId),
+            status: 'pending',
+          }))
+          .returningAll()
+          .executeTakeFirstOrThrow();
         return grantFundraisingPartner;
-      } else if (user.type === 'supporter') {
-        const supporter = await ctx.prisma.supporter.findUniqueOrThrow({
-          where: { userId: user.id },
-        });
-
-        const grantFundraisingSupporter =
-          await ctx.prisma.grantFundraisingSupporter.create({
-            data: {
-              grantFundraisingId: grantFundraising.id,
-              supporterId: supporter.id,
-              status: 'pending',
-            },
-          });
+      } else if (ctx.userType === 'supporter') {
+        const grantFundraisingSupporter = await ctx.db
+          .insertInto('GrantFundraisingSupporter')
+          .values(({ selectFrom }) => ({
+            grantFundraisingId: grantFundraising.id,
+            supporterId: selectFrom('Supporter')
+              .leftJoin('User', 'User.id', 'Supporter.userId')
+              .where('User.externalId', '=', ctx.userId),
+            status: 'pending',
+          }))
+          .returningAll()
+          .executeTakeFirstOrThrow();
         return grantFundraisingSupporter;
       }
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Button } from '@/components/ui/button';
-import type { PartnerType, SupporterType } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const PartnerList = ({ fundraisingId }: { fundraisingId: string }) => {
@@ -23,8 +22,8 @@ const PartnerList = ({ fundraisingId }: { fundraisingId: string }) => {
       <h3 className="font-bold">Partners</h3>
       <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
         {partners ? (
-          partners.map((partner: PartnerType) => (
-            <li className="py-3 sm:py-4" key={partner.id}>
+          partners?.map((partner, i) => (
+            <li className="py-3 sm:py-4" key={i}>
               <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0">
                   {/* <img
@@ -32,7 +31,7 @@ const PartnerList = ({ fundraisingId }: { fundraisingId: string }) => {
                     src="/eejii.jpeg"
                     alt="avatar image"
                   /> */}
-                  {partner.id}
+                  {partner?.id as unknown as string}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
@@ -41,6 +40,7 @@ const PartnerList = ({ fundraisingId }: { fundraisingId: string }) => {
                   <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                     {partner.email}
                   </p>
+                  {/* <p>{partner.id}</p> */}
                 </div>
                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                   <Button
@@ -48,7 +48,7 @@ const PartnerList = ({ fundraisingId }: { fundraisingId: string }) => {
                     onClick={() => {
                       mutate({
                         id: fundraisingId,
-                        partnerId: partner.id,
+                        partnerId: partner.id as unknown as string,
                         supporterId: null,
                       });
                     }}
@@ -82,8 +82,8 @@ const SupporterList = ({ fundraisingId }: { fundraisingId: string }) => {
       <h3 className="font-bold">Supporters</h3>
       <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
         {supporters ? (
-          supporters.map((supporter: SupporterType) => (
-            <li className="py-3 sm:py-4" key={supporter.id}>
+          supporters.map((supporter, i) => (
+            <li className="py-3 sm:py-4" key={i}>
               <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0">
                   <img
@@ -107,7 +107,7 @@ const SupporterList = ({ fundraisingId }: { fundraisingId: string }) => {
                       mutate({
                         id: fundraisingId,
                         partnerId: null,
-                        supporterId: supporter.id,
+                        supporterId: supporter.id as unknown as string,
                       });
                     }}
                   >
