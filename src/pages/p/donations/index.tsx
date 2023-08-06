@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import SectionHeader from '@/components/common/section-header';
@@ -8,8 +7,8 @@ import { Shell } from '@/components/shells/shell';
 import { api } from '@/utils/api';
 
 export default function Donations() {
-  const router = useRouter();
-  const [page, setPage] = useState(0);
+  // const router = useRouter();
+  // const [page, setPage] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const tabs = [
@@ -22,31 +21,10 @@ export default function Donations() {
       index: 1,
     },
   ];
-  const { data, fetchNextPage, isFetching } =
-    api.user.getMyDonations.useInfiniteQuery(
-      {
-        limit: 10,
-      },
-      { getNextPageParam: lastPage => lastPage.nextCursor }
-    );
-  const handleFetchNextPage = () => {
-    fetchNextPage();
-    setPage(prev => prev + 1);
-  };
-  const handleFetchPrevPage = () => {
-    fetchNextPage();
-    setPage(prev => prev - 1);
-  };
-  const donations = data?.pages[page]?.donations;
-  const totalDonation = donations
-    ? donations.reduce(
-        (total, donate) =>
-          total + (typeof donate.amount === 'number' ? donate.amount : 0),
-        0
-      )
-    : 0;
-  console.log(data);
-  console.log(donations);
+  const { data: donations, isFetching } = api.user.getMyDonations.useQuery({
+    limit: 10,
+  });
+
   return (
     <PartnerLayout>
       <Shell variant="sidebar" className="px-10">

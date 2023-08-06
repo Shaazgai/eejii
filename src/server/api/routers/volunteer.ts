@@ -1,6 +1,7 @@
-import { TRPCError } from '@trpc/server';
+import { sql } from 'kysely';
 import { z } from 'zod';
 
+import type { Volunteer } from '@/lib/db/types';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
@@ -10,116 +11,78 @@ export const volunteerRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const volunteer = await ctx.prisma.volunteer.findUnique({
-        where: { id: input.id },
-      });
-      if (!volunteer) throw new TRPCError({ code: 'NOT_FOUND' });
-
-      return volunteer;
-    }),
-  getByUserId: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const volunteer = await ctx.prisma.volunteer.findUnique({
-        where: {
-          userId: input.id,
-        },
-      });
-      if (!volunteer) throw new TRPCError({ code: 'NOT_FOUND' });
+      const volunteer = await ctx.db
+        .selectFrom('Volunteer')
+        .selectAll()
+        .where('id', '=', input.id)
+        .executeTakeFirstOrThrow();
 
       return volunteer;
     }),
   getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findFirstOrThrow({
-      where: { externalId: ctx.userId },
-    });
-    const volunteer = await ctx.prisma.volunteer.findUnique({
-      include: {
-        Address: true,
-      },
-      where: {
-        userId: user.id,
-      },
-    });
+    const volunteer = await ctx.db
+      .selectFrom('Volunteer')
+      .selectAll()
+      .leftJoin('User', 'User.id', 'Volunteer.userId')
+      .rightJoin('Address', 'Address.id', 'Volunteer.addressId')
+      .where('User.externalId', '=', ctx.userId)
+      .executeTakeFirstOrThrow();
     return volunteer;
   }),
   findAll: publicProcedure.query(async ({ ctx }) => {
-    const volunteer = await ctx.prisma.volunteer.findMany({});
+    const volunteer = await ctx.db
+      .selectFrom('Volunteer')
+      .selectAll()
+      .execute();
 
     return volunteer;
   }),
   findAllForEventInvitation: publicProcedure
     .input(z.object({ eventId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const volunteer = await ctx.prisma.volunteer.findMany({
-        where: {
-          NOT: {
-            OR: [
-              {
-                EventVolunteer: {
-                  some: { eventId: input.eventId },
-                },
-              },
-            ],
-          },
-        },
-      });
-
-      return volunteer;
+      console.log(input.eventId);
+      const query = await sql`
+        SELECT v.*
+        FROM Volunteer AS s 
+        LEFT JOIN EventVolunteer AS ev ON ev.volunteerId = v.id 
+        WHERE ev.eventId != ${input.eventId} OR ev.eventId IS NULL
+      `.execute(ctx.db);
+      console.log(query.rows);
+      return query.rows as Volunteer[];
     }),
-  createOrUpdate: privateProcedure
+  create: privateProcedure
     .input(volunteerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
-      const user = await ctx.prisma.user.update({
-        where: { externalId: ctx.userId },
-        data: {
-          type: 'volunteer',
-        },
-      });
-      if (!user) throw new Error('User not found');
-      const address = await ctx.prisma.address.create({
-        data: {
+      const address = await ctx.db
+        .insertInto('Address')
+        .values({
           country: input.country,
           city: input.city,
           street: input.street,
           provinceName: input.provinceName,
-        },
-      });
-      console.log(input.skills);
-      const volunteer = await ctx.prisma.volunteer.upsert({
-        where: {
-          userId: user.id,
-        },
-        create: {
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      const volunteer = await ctx.db
+        .insertInto('Volunteer')
+        .values(({ selectFrom }) => ({
           firstName: input?.firstName,
           lastName: input?.lastName,
           bio: input?.bio,
           birthday: input?.birthday,
           gender: input?.gender,
           addressId: address.id,
-          userId: user.id,
+          userId: selectFrom('User')
+            .where('User.externalId', '=', ctx.userId)
+            .select('id'),
           email: input.email,
           skills: Object.assign({}, input.skills as string[]),
           phoneNumbers: {
             primary_phone: input.primary_phone,
             secondary_phone: input.secondary_phone,
           },
-        },
-        update: {
-          firstName: input?.firstName,
-          lastName: input?.lastName,
-          bio: input?.bio,
-          birthday: input?.birthday,
-          gender: input?.gender,
-          addressId: address.id,
-          email: input.email,
-          skills: Object.assign({}, input.skills as string[]),
-          phoneNumbers: {
-            primary_phone: input.primary_phone,
-            secondary_phone: input.secondary_phone,
-          },
-        },
-      });
+        }));
       return volunteer;
     }),
 });

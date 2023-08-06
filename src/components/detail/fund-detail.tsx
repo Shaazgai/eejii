@@ -223,9 +223,9 @@ const FundDetail = ({
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="border-b">
+              {/* <CardHeader className="border-b">
                 <h3 className="text-xl">Donations ({fund.Donation.length})</h3>
-              </CardHeader>
+              </CardHeader> */}
               <CardContent>
                 <ul
                   role="list"

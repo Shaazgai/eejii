@@ -24,7 +24,7 @@ generator kysely {
 }
 
 model User {
-    id         String     @id @default(uuid())
+    id         String     @id @default(dbgenerated("(uuid())"))
     externalId String     @unique
     username   String
     email      String     @unique
@@ -44,7 +44,7 @@ enum Role {
 }
 
 model Volunteer {
-    id                String              @id @default(uuid())
+    id                String              @id @default(dbgenerated("(uuid())"))
     firstName         String
     lastName          String
     phoneNumbers      Json?
@@ -68,7 +68,7 @@ model Volunteer {
 }
 
 model Partner {
-    id                      String                    @id @default(uuid())
+    id                      String                    @id @default(dbgenerated("(uuid())"))
     User                    User                      @relation(fields: [userId], references: [id])
     userId                  String                    @unique
     organization            String
@@ -88,7 +88,7 @@ model Partner {
 }
 
 model Supporter {
-    id                        String                      @id @default(uuid())
+    id                        String                      @id @default(dbgenerated("(uuid())"))
     User                      User                        @relation(fields: [userId], references: [id])
     userId                    String                      @unique
     organization              String
@@ -107,7 +107,7 @@ model Supporter {
 }
 
 model Event {
-    id             String           @id @default(uuid())
+    id             String           @id @default(dbgenerated("(uuid())"))
     title          String
     description    String
     location       String
@@ -128,7 +128,7 @@ model Event {
 }
 
 model EventPartner {
-    id        String   @id @default(uuid())
+    id        String   @id @default(dbgenerated("(uuid())"))
     Event     Event?   @relation(fields: [eventId], references: [id])
     Partner   Partner? @relation(fields: [partnerId], references: [id])
     createdAt DateTime @default(now())
@@ -143,7 +143,7 @@ model EventPartner {
 }
 
 model EventSupporter {
-    id          String     @id @default(uuid())
+    id          String     @id @default(dbgenerated("(uuid())"))
     Event       Event?     @relation(fields: [eventId], references: [id])
     Supporter   Supporter? @relation(fields: [supporterId], references: [id])
     createdAt   DateTime   @default(now())
@@ -158,7 +158,7 @@ model EventSupporter {
 }
 
 model EventVolunteer {
-    id          String     @id @default(uuid())
+    id          String     @id @default(dbgenerated("(uuid())"))
     Event       Event?     @relation(fields: [eventId], references: [id])
     Volunteer   Volunteer? @relation(fields: [volunteerId], references: [id])
     volunteerId String
@@ -173,7 +173,7 @@ model EventVolunteer {
 }
 
 model Fundraising {
-    id                   String                 @id @default(uuid())
+    id                   String                 @id @default(dbgenerated("(uuid())"))
     title                String
     description          String
     goalAmount           Int
@@ -193,7 +193,7 @@ model Fundraising {
 }
 
 model FundraisingSupporter {
-    id            String       @id @default(uuid())
+    id            String       @id @default(dbgenerated("(uuid())"))
     Supporter     Supporter?   @relation(fields: [supporterId], references: [id])
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
     createdAt     DateTime     @default(now())
@@ -208,7 +208,7 @@ model FundraisingSupporter {
 }
 
 model FundraisingPartner {
-    id            String       @id @default(uuid())
+    id            String       @id @default(dbgenerated("(uuid())"))
     Partner       Partner?     @relation(fields: [partnerId], references: [id])
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
     createdAt     DateTime     @default(now())
@@ -223,7 +223,7 @@ model FundraisingPartner {
 }
 
 model GrantFundraising {
-    id                        String                      @id @default(uuid())
+    id                        String                      @id @default(dbgenerated("(uuid())"))
     title                     String
     description               String
     goalAmount                Int
@@ -242,7 +242,7 @@ model GrantFundraising {
 }
 
 model GrantFundraisingSupporter {
-    id                 String            @id @default(uuid())
+    id                 String            @id @default(dbgenerated("(uuid())"))
     Supporter          Supporter?        @relation(fields: [supporterId], references: [id])
     GrantFundraising   GrantFundraising? @relation(fields: [grantFundraisingId], references: [id])
     createdAt          DateTime          @default(now())
@@ -257,7 +257,7 @@ model GrantFundraisingSupporter {
 }
 
 model GrantFundraisingPartner {
-    id                 String            @id @default(uuid())
+    id                 String            @id @default(dbgenerated("(uuid())"))
     Partner            Partner?          @relation(fields: [partnerId], references: [id])
     GrantFundraising   GrantFundraising? @relation(fields: [grantFundraisingId], references: [id])
     createdAt          DateTime          @default(now())
@@ -272,19 +272,19 @@ model GrantFundraisingPartner {
 }
 
 model Certificate {
-    id          String      @id @default(uuid())
+    id          String      @id @default(dbgenerated("(uuid())"))
     name        String
     description String
     Volunteer   Volunteer[]
 }
 
 model Skill {
-    id   String @id @default(uuid())
+    id   String @id @default(dbgenerated("(uuid())"))
     name String
 }
 
 model EducationHistory {
-    id          String     @id @default(uuid())
+    id          String     @id @default(dbgenerated("(uuid())"))
     level       String
     schoolName  String
     from        DateTime
@@ -297,7 +297,7 @@ model EducationHistory {
 }
 
 model EmploymentHistory {
-    id               String     @id @default(uuid())
+    id               String     @id @default(dbgenerated("(uuid())"))
     company          String
     position         String
     from             DateTime
@@ -310,7 +310,7 @@ model EmploymentHistory {
 }
 
 model Address {
-    id           String      @id @default(uuid())
+    id           String      @id @default(dbgenerated("(uuid())"))
     country      String
     city         String
     provinceName String
@@ -321,7 +321,7 @@ model Address {
 }
 
 model Donation {
-    id            String       @id @default(uuid())
+    id            String       @id @default(dbgenerated("(uuid())"))
     amount        Int
     User          User?        @relation(fields: [userId], references: [id])
     userId        String?
@@ -336,7 +336,7 @@ model Donation {
 }
 
 model Payment {
-    id         String    @id @default(uuid())
+    id         String    @id @default(dbgenerated("(uuid())"))
     amount     Int
     invoiceId  String?
     status     String
@@ -348,7 +348,7 @@ model Payment {
 }
 
 model Category {
-    id                       String                     @id @default(uuid())
+    id                       String                     @id @default(dbgenerated("(uuid())"))
     name                     String
     type                     String?
     CategoryFundraising      CategoryFundraising[]
@@ -357,7 +357,7 @@ model Category {
 }
 
 model CategoryFundraising {
-    id            String       @id @default(uuid())
+    id            String       @id @default(dbgenerated("(uuid())"))
     Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
     fundraisingId String?
     Category      Category?    @relation(fields: [categoryId], references: [id])
@@ -368,7 +368,7 @@ model CategoryFundraising {
 }
 
 model CategoryGrantFundraising {
-    id                 String            @id @default(uuid())
+    id                 String            @id @default(dbgenerated("(uuid())"))
     GrantFundraising   GrantFundraising? @relation(fields: [grantFundraisingId], references: [id])
     grantFundraisingId String?
     Category           Category?         @relation(fields: [categoryId], references: [id])
@@ -379,7 +379,7 @@ model CategoryGrantFundraising {
 }
 
 model CategoryEvent {
-    id         String    @id @default(uuid())
+    id         String    @id @default(dbgenerated("(uuid())"))
     Event      Event?    @relation(fields: [eventId], references: [id])
     eventId    String?
     Category   Category? @relation(fields: [categoryId], references: [id])

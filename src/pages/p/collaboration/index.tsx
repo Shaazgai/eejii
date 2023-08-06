@@ -85,10 +85,10 @@ const Index = () => {
             <div className="space-y-4">
               {notRelatedFunds && notRelatedFunds.length > 0 ? (
                 !isExploreLoading && notRelatedFunds ? (
-                  notRelatedFunds.map(collab => (
+                  notRelatedFunds.map((collab, i) => (
                     <FundRequestCard
                       fundraising={collab as FundraisingType}
-                      key={collab.id}
+                      key={i}
                     />
                   ))
                 ) : (

@@ -13,6 +13,7 @@ const FundRequestCard = ({ fundraising }: { fundraising: FundraisingType }) => {
         </div>
       </div>
       <div className="flex items-center justify-center p-4">
+        {fundraising.partnerId}
         {/* <Button
           variant="outline"
           size="icon"

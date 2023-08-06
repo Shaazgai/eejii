@@ -52,7 +52,7 @@ export default function EventViewPage(
           tabs={tabs}
         /> */}
         <div>
-          <Button onClick={() => router.push(`/p/manage/${props.id}/invite`)}>
+          <Button onClick={() => router.push(`/p/manage/${data.id}/invite`)}>
             Invite users
           </Button>
         </div>

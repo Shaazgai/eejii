@@ -1,5 +1,9 @@
-import { prisma } from '@/server/db';
+import { db } from '@/server/db';
 
 export default async function getUser({ userId }: { userId: string }) {
-  return prisma.user.findUniqueOrThrow({ where: { externalId: userId } });
+  return db
+    .selectFrom('User')
+    .selectAll()
+    .where('User.externalId', '=', userId)
+    .execute();
 }

@@ -9,7 +9,7 @@ import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import type { FundraisingType } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
-import { prisma } from '@/server/db';
+import { db } from '@/server/db';
 import { api } from '@/utils/api';
 
 export default function FundraisingViewPage(
@@ -44,12 +44,17 @@ export default function FundraisingViewPage(
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { userId } = getAuth(context.req);
-
+  const user = await db
+    .selectFrom('User')
+    .select('type')
+    .where('externalId', '=', userId)
+    .executeTakeFirst();
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
-      prisma: prisma,
+      db: db,
       userId: userId ? userId : null,
+      userType: user ? (user.type as string) : 'user',
     },
     transformer: superjson, // optional - adds superjson serialization
   });
