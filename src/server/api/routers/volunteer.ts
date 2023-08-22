@@ -1,7 +1,6 @@
 import { sql } from 'kysely';
 import { z } from 'zod';
 
-import type { Volunteer } from '@/lib/db/types';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
@@ -12,26 +11,17 @@ export const volunteerRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const volunteer = await ctx.db
-        .selectFrom('Volunteer')
+        .selectFrom('User')
         .selectAll()
         .where('id', '=', input.id)
         .executeTakeFirstOrThrow();
 
       return volunteer;
     }),
-  getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
-    const volunteer = await ctx.db
-      .selectFrom('Volunteer')
-      .selectAll()
-      .leftJoin('User', 'User.id', 'Volunteer.userId')
-      .rightJoin('Address', 'Address.id', 'Volunteer.addressId')
-      .where('User.externalId', '=', ctx.userId)
-      .executeTakeFirstOrThrow();
-    return volunteer;
-  }),
   findAll: publicProcedure.query(async ({ ctx }) => {
     const volunteer = await ctx.db
-      .selectFrom('Volunteer')
+      .selectFrom('User')
+      .where('User.type', '=', 'volunteer')
       .selectAll()
       .execute();
 
@@ -42,13 +32,14 @@ export const volunteerRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       console.log(input.eventId);
       const query = await sql`
-        SELECT v.*
-        FROM Volunteer AS s 
-        LEFT JOIN EventVolunteer AS ev ON ev.volunteerId = v.id 
-        WHERE ev.eventId != ${input.eventId} OR ev.eventId IS NULL
+        SELECT u.*
+        FROM User AS u 
+        LEFT JOIN EventAssociation AS ea ON ea.userId = u.id 
+        WHERE ea.eventId != ${input.eventId} OR ea.eventId IS NULL
+        AND u.type = "volunteer"
       `.execute(ctx.db);
       console.log(query.rows);
-      return query.rows as Volunteer[];
+      return query.rows;
     }),
   create: privateProcedure
     .input(volunteerSchema.merge(addressSchema))
@@ -65,7 +56,7 @@ export const volunteerRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       const volunteer = await ctx.db
-        .insertInto('Volunteer')
+        .insertInto('User')
         .values(({ selectFrom }) => ({
           firstName: input?.firstName,
           lastName: input?.lastName,
@@ -73,15 +64,13 @@ export const volunteerRouter = createTRPCRouter({
           birthday: input?.birthday,
           gender: input?.gender,
           addressId: address.id,
+          type: 'volunteer',
           userId: selectFrom('User')
-            .where('User.externalId', '=', ctx.userId)
+            .where('User.id', '=', ctx.userId)
             .select('id'),
           email: input.email,
           skills: Object.assign({}, input.skills as string[]),
-          phoneNumbers: {
-            primary_phone: input.primary_phone,
-            secondary_phone: input.secondary_phone,
-          },
+          phoneNumber: input.phoneNumber,
         }));
       return volunteer;
     }),

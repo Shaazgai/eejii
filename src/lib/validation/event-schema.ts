@@ -28,8 +28,10 @@ export const eventSchema = z.object({
   startTime: z.date(),
   endTime: z.date(),
   requiredTime: z.string(),
-  primary_phone: z.string().regex(phoneRegex).length(8),
-  secondary_phone: z.string().regex(phoneRegex).length(8),
   roles: z.array(z.string()).nullish(),
   mainCategory: z.string(),
+  contact: z.object({
+    phone_primary: z.string().regex(phoneRegex).length(8),
+    phone_secondary: z.string().regex(phoneRegex).length(8),
+  }),
 });

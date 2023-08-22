@@ -34,7 +34,7 @@ export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
   const user = await db
     .selectFrom('User')
     .select('type')
-    .where('externalId', '=', userId)
+    .where('id', '=', userId)
     .executeTakeFirstOrThrow();
 
   return {

@@ -1,4 +1,3 @@
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { eventSchema } from '@/lib/validation/event-schema';
@@ -25,30 +24,22 @@ export const eventRouter = createTRPCRouter({
   create: privateProcedure
     .input(eventSchema)
     .mutation(async ({ input, ctx }) => {
-      const owner = await ctx.db
-        .selectFrom('Partner')
-        .select('id')
-        .leftJoin('User', 'User.id', 'Partner.userId')
-        .where('User.externalId', '=', ctx.userId)
-        .executeTakeFirstOrThrow();
-
       const event = await ctx.db.insertInto('Event').values({
         title: input.title,
         description: input.description,
         requiredTime: input.requiredTime,
         contact: {
-          primary_phone: input.primary_phone,
-          secondary_phone: input.secondary_phone,
+          phone_primary: input.contact.phone_primary,
+          phone_secondary: input.contact.phone_secondary,
         },
         location: input.location,
         startTime: input.startTime,
         endTime: input.endTime,
         roles: Object.assign({}, input.roles),
-        ownerId: owner.id,
+        ownerId: ctx.userId,
       });
 
-      // eslint-disable-next-line unused-imports/no-unused-vars
-      const categoryEvent = ctx.db
+      ctx.db
         .insertInto('CategoryEvent')
         .values(({ selectFrom }) => ({
           categoryId: selectFrom('Category')
@@ -67,50 +58,15 @@ export const eventRouter = createTRPCRouter({
         .where('id', '=', input.eventId)
         .executeTakeFirstOrThrow();
 
-      if (ctx.userType === 'partner') {
-        const eventPartner = await ctx.db
-          .insertInto('EventPartner')
-          .values(({ selectFrom }) => ({
-            eventId: event.id,
-            partnerId: selectFrom('Partner')
-              .leftJoin('User', 'User.id', 'Partner.userId')
-              .where('User.externalId', '=', ctx.userId),
-            status: 'pending',
-          }))
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        return eventPartner;
-      } else if (ctx.userType === 'supporter') {
-        const eventSupporter = await ctx.db
-          .insertInto('EventSupporter')
-          .values(({ selectFrom }) => ({
-            eventId: event.id,
-            supporterId: selectFrom('Supporter')
-              .leftJoin('User', 'User.id', 'Supporter.userId')
-              .where('User.externalId', '=', ctx.userId),
-            status: 'pending',
-          }))
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        return eventSupporter;
-      } else if (ctx.userType === 'volunteer') {
-        const eventVolunteer = await ctx.db
-          .insertInto('EventVolunteer')
-          .values(({ selectFrom }) => ({
-            eventId: event.id,
-            volunteerId: selectFrom('Volunteer')
-              .leftJoin('User', 'User.id', 'Volunteer.userId')
-              .where('User.externalId', '=', ctx.userId),
-            status: 'pending',
-            role: input.role,
-          }))
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        return eventVolunteer;
-      }
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'An unexpected error occurred, please try again later.',
-      });
+      const eventPartner = await ctx.db
+        .insertInto('EventAssociation')
+        .values(({ selectFrom }) => ({
+          eventId: event.id,
+          ownerId: selectFrom('User').where('User.', '=', ctx.userId),
+          status: 'pending',
+        }))
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return eventPartner;
     }),
 });

@@ -1,7 +1,6 @@
 import { sql } from 'kysely';
 import { z } from 'zod';
 
-import type { Partner } from '@/lib/db/types';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
@@ -39,16 +38,17 @@ export const partnerRouter = createTRPCRouter({
     .input(z.object({ eventId: z.string() }))
     .query(async ({ ctx, input }) => {
       const query = await sql`
-        SELECT p.*
-        FROM Partner p
-        LEFT JOIN EventPartner as ep ON ep.partnerId = p.id
-        WHERE ep.eventId != ${input.eventId} OR ep.eventId IS NULL
-        AND p.id != ${sql.raw(
+        SELECT u.*
+        FROM User u
+        LEFT JOIN EventAssociation as ea ON ea.userId = u.id
+        WHERE ea.eventId != ${input.eventId} OR ea.eventId IS NULL
+        AND u.id != ${sql.raw(
           `(SELECT e.ownerId FROM Event AS e WHERE e.id = "${input.eventId}")`
         )}
+        AND 
         `.execute(ctx.db);
 
-      return query.rows as Partner[];
+      return query.rows;
     }),
   create: privateProcedure
     .input(partnerSchema.merge(addressSchema))
@@ -65,21 +65,20 @@ export const partnerRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       const partner = await ctx.db
-        .insertInto('Partner')
-        .values(({ selectFrom }) => ({
+        .insertInto('User')
+        .values(() => ({
           organization: input.organization,
           email: input.email,
           bio: input.email,
-          socialLinks: {
-            twitter: input.twitter,
-            facebook: input.facebook,
-            instagram: input.instagram,
+          type: 'partner',
+          contact: {
+            twitter: input.contact.twitter,
+            facebook: input.contact.facebook,
+            instagram: input.contact.instagram,
+            phone_primary: input.contact.phone_secondary,
+            phone_secondary: input.contact.phone_secondary,
           },
-          phoneNumbers: {
-            primary_phone: input.primary_phone,
-            secondary_phone: input.secondary_phone,
-          },
-          userId: selectFrom('User').where('externalId', '=', ctx.userId),
+          phoneNumber: input.phoneNumber,
           addressId: address?.id,
         }))
         .returningAll()
@@ -87,144 +86,83 @@ export const partnerRouter = createTRPCRouter({
 
       return partner;
     }),
-  handleEventRequest: privateProcedure
-    .input(
-      z.object({ id: z.string(), userType: z.string(), status: z.string() })
-    )
+  handleGrantRequest: privateProcedure
+    .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      if (input.userType === 'partner') {
-        ctx.db
-          .updateTable('EventPartner')
-          .where('id', '=', input.id)
-          .set({
-            status: input.status,
-          })
-          .execute();
-      } else if (input.userType === 'supporter') {
-        ctx.db
-          .updateTable('EventSupporter')
-          .where('id', '=', input.id)
-          .set({
-            status: input.status,
-          })
-          .execute();
-      } else {
-        ctx.db
-          .updateTable('EventVolunteer')
-          .where('id', '=', input.id)
-          .set({
-            status: input.status,
-          })
-          .execute();
-      }
+      ctx.db
+        .updateTable('GrantAssociation')
+        .where('id', '=', input.id)
+        .set({
+          status: input.status,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return { message: 'Success' };
+    }),
+  handleEventRequest: privateProcedure
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .updateTable('EventAssociation')
+        .where('id', '=', input.id)
+        .set({
+          status: input.status,
+        })
+        .execute();
       return { message: 'Success' };
     }),
   handleFundRequest: privateProcedure
-    .input(
-      z.object({ id: z.string(), userType: z.string(), status: z.string() })
-    )
+    .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      if (input.userType === 'partner') {
-        ctx.db
-          .updateTable('FundraisingPartner')
-          .where('id', '=', input.id)
-          .set({
-            status: input.status,
-          })
-          .returning('id')
-          .execute();
-        return { message: 'Success' };
-      } else if (input.userType === 'supporter') {
-        ctx.db
-          .updateTable('FundraisingSupporter')
-          .where('id', '=', input.id)
-          .set({
-            status: input.status,
-          })
-          .returning('id')
-          .execute();
-        return { message: 'Success' };
-      }
+      ctx.db
+        .updateTable('FundAssociation')
+        .where('id', '=', input.id)
+        .set({
+          status: input.status,
+        })
+        .returning('id')
+        .execute();
+      return { message: 'Success' };
     }),
 
   inviteToFundraising: privateProcedure
     .input(
       z.object({
         id: z.string(),
-        supporterId: z.string().nullable(),
-        partnerId: z.string().nullable(),
+        userId: z.string().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.supporterId) {
-        ctx.db
-          .insertInto('FundraisingSupporter')
-          .values({
-            status: 'pending',
-            type: 'invitation',
-            supporterId: input.supporterId,
-            fundraisingId: input.id,
-          })
-          .returning('id')
-          .executeTakeFirstOrThrow();
-      } else if (input.partnerId) {
-        ctx.db
-          .insertInto('FundraisingPartner')
-          .values({
-            status: 'pending',
-            type: 'invitation',
-            partnerId: input.partnerId,
-            fundraisingId: input.id,
-          })
-          .returning('id')
-          .executeTakeFirstOrThrow();
-      }
+      ctx.db
+        .insertInto('FundAssociation')
+        .values({
+          status: 'pending',
+          type: 'invitation',
+          userId: input.userId,
+          fundraisingId: input.id,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
       return { message: 'Success' };
     }),
   inviteToEvent: privateProcedure
     .input(
       z.object({
         id: z.string(),
-        supporterId: z.string().nullish(),
-        partnerId: z.string().nullish(),
-        volunteerId: z.string().nullish(),
+        userId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.supporterId) {
-        ctx.db
-          .insertInto('EventSupporter')
-          .values({
-            status: 'pending',
-            type: 'invitation',
-            supporterId: input.supporterId,
-            eventId: input.id,
-          })
-          .returning('id')
-          .executeTakeFirstOrThrow();
-      } else if (input.partnerId) {
-        ctx.db
-          .insertInto('EventPartner')
-          .values({
-            status: 'pending',
-            type: 'invitation',
-            partnerId: input.partnerId,
-            eventId: input.id,
-          })
-          .returning('id')
-          .executeTakeFirstOrThrow();
-      } else if (input.volunteerId) {
-        ctx.db
-          .insertInto('EventVolunteer')
-          .values({
-            status: 'pending',
-            type: 'invitation',
-            volunteerId: input.volunteerId,
-            eventId: input.id,
-          })
-          .returning('id')
-          .executeTakeFirstOrThrow();
-      }
+      ctx.db
+        .insertInto('EventAssociation')
+        .values({
+          status: 'pending',
+          type: 'invitation',
+          userId: input.userId,
+          eventId: input.id,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
       return { message: 'Success' };
     }),
 });

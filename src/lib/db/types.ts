@@ -122,7 +122,6 @@ export type Skill = {
 };
 export type User = {
   id: Generated<string>;
-  externalId: string;
   email: string;
   phoneNumber: string;
   createdAt: Generated<Timestamp>;
