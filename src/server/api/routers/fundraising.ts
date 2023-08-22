@@ -28,15 +28,14 @@ export const fundraisingRouter = createTRPCRouter({
     const fundraising = await ctx.db
       .selectFrom('Fundraising')
       .selectAll('Fundraising')
-      .leftJoin('FundraisingPartner', join =>
-        join.onRef('FundraisingPartner.fundraisingId', '=', 'Fundraising.id')
+      .leftJoin('FundAssociation', join =>
+        join.onRef('FundAssociation.fundraisingId', '=', 'Fundraising.id')
       )
-      .leftJoin('Partner', join =>
-        join.onRef('Partner.id', '=', 'FundraisingPartner.partnerId')
+      .leftJoin('User', join =>
+        join.onRef('User.id', '=', 'FundAssociation.userId')
       )
-      .leftJoin('User', join => join.onRef('Partner.userId', '=', 'User.id'))
-      .where('User.externalId', '=', ctx.userId)
-      .where('FundraisingPartner.status', '=', 'approved')
+      .where('User.id', '=', ctx.userId)
+      .where('FundAssociation.status', '=', 'approved')
       .execute();
     console.log(fundraising);
     return fundraising;
@@ -45,15 +44,14 @@ export const fundraisingRouter = createTRPCRouter({
     const fundraising = await ctx.db
       .selectFrom('Fundraising')
       .selectAll('Fundraising')
-      .leftJoin('FundraisingPartner', join =>
-        join.onRef('FundraisingPartner.fundraisingId', '=', 'Fundraising.id')
+      .leftJoin('FundAssociation', join =>
+        join.onRef('FundAssociation.fundraisingId', '=', 'Fundraising.id')
       )
-      .leftJoin('Partner', join =>
-        join.onRef('Partner.id', '=', 'FundraisingPartner.partnerId')
+      .leftJoin('User', join =>
+        join.onRef('User.id', '=', 'FundAssociation.userId')
       )
-      .leftJoin('User', join => join.onRef('Partner.userId', '=', 'User.id'))
-      .where('User.externalId', '=', ctx.userId)
-      .where('FundraisingPartner.status', '=', 'pending')
+      .where('User.id', '=', ctx.userId)
+      .where('FundAssociation.status', '=', 'pending')
       .execute();
     // console.log(fundraising);
     return fundraising;
@@ -61,12 +59,12 @@ export const fundraisingRouter = createTRPCRouter({
   getNotRelated: privateProcedure.query(async ({ ctx }) => {
     const query = await sql`
         SELECT f.* FROM Fundraising f 
-        LEFT JOIN FundraisingPartner fp ON fp.fundraisingId = f.id
-        WHERE fp.partnerId != ${sql.raw(
-          `(SELECT p1.id FROM Partner p1 LEFT JOIN User u ON u.id = p1.userId WHERE u.externalId = "${ctx.userId}")`
+        LEFT JOIN FundAssociation fa ON fa.fundraisingId = f.id
+        WHERE fa.userId != ${sql.raw(
+          `(SELECT u1.id FROM User u1 WHERE u1.id = "${ctx.userId}")`
         )} OR fp.partnerId IS NULL
-        AND f.partnerId != ${sql.raw(
-          `(SELECT p1.id FROM Partner p1 LEFT JOIN User u ON u.id = p1.userId WHERE u.externalId = "${ctx.userId}")`
+        AND f.userId != ${sql.raw(
+          `(SELECT u1.id FROM User u1 WHERE u1.id = "${ctx.userId}")`
         )}
       `.execute(ctx.db);
     console.log(query.rows);
@@ -75,13 +73,6 @@ export const fundraisingRouter = createTRPCRouter({
   create: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {
-      const partner = await ctx.db
-        .selectFrom('Partner')
-        .selectAll('Partner')
-        .innerJoin('User', join => join.onRef('User.id', '=', 'Partner.userId'))
-        .where('User.externalId', '=', ctx.userId)
-        .executeTakeFirstOrThrow();
-
       const fund = await ctx.db
         .insertInto('Fundraising')
         .values({
@@ -98,12 +89,12 @@ export const fundraisingRouter = createTRPCRouter({
           endTime: input.endTime,
           goalAmount: input.goalAmount,
           currentAmount: input.currentAmount,
-          partnerId: partner.id,
+          ownerId: ctx.userId,
         })
         .returning(['id'])
         .executeTakeFirstOrThrow();
-      // eslint-disable-next-line unused-imports/no-unused-vars
-      const categoryFund = await ctx.db
+
+      await ctx.db
         .insertInto('CategoryFundraising')
         .values(({ selectFrom }) => ({
           categoryId: selectFrom('Category')
@@ -123,33 +114,15 @@ export const fundraisingRouter = createTRPCRouter({
         .where('id', '=', input.fundraisingId)
         .executeTakeFirstOrThrow();
 
-      if (ctx.userType === 'partner') {
-        const fundraisingPartner = await ctx.db
-          .insertInto('FundraisingPartner')
-          .values(({ selectFrom }) => ({
-            fundraisingId: fundraising.id,
-            partnerId: selectFrom('Partner')
-              .leftJoin('User', 'User.id', 'Partner.userId')
-              .where('User.externalId', '=', ctx.userId),
-            status: 'pending',
-          }))
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        return fundraisingPartner;
-      } else if (ctx.userType === 'supporter') {
-        const fundraisingSupporter = await ctx.db
-          .insertInto('FundraisingSupporter')
-          .values(({ selectFrom }) => ({
-            fundraisingId: fundraising.id,
-            supporterId: selectFrom('Supporter')
-              .leftJoin('User', 'User.id', 'Supporter.userId')
-              .where('User.externalId', '=', ctx.userId),
-            status: 'pending',
-          }))
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        return fundraisingSupporter;
-      }
-      return { message: 'User not supporter or partner' };
+      const fundraisingPartner = await ctx.db
+        .insertInto('FundAssociation')
+        .values(({ selectFrom }) => ({
+          fundraisingId: fundraising.id,
+          userId: selectFrom('User').where('User.id', '=', ctx.userId),
+          status: 'pending',
+        }))
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return fundraisingPartner;
     }),
 });

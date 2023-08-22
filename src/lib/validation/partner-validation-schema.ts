@@ -12,11 +12,14 @@ export const partnerSchema = z.object({
     message: 'Please provide email',
   }),
   bio: z.string(),
-  primary_phone: z.string().regex(phoneRegex).length(8),
-  secondary_phone: z.string().regex(phoneRegex).length(8),
-  facebook: z.string().url().optional().or(z.literal('')),
-  twitter: z.string().url().optional().or(z.literal('')),
-  instagram: z.string().url().optional().or(z.literal('')),
+  contact: z.object({
+    phone_primary: z.string().regex(phoneRegex).length(8),
+    phone_secondary: z.string().regex(phoneRegex).length(8),
+    facebook: z.string().url().optional().or(z.literal('')),
+    twitter: z.string().url().optional().or(z.literal('')),
+    instagram: z.string().url().optional().or(z.literal('')),
+  }),
+  phoneNumber: z.string().regex(phoneRegex).length(8),
 });
 
 export const supporterSchema = partnerSchema;

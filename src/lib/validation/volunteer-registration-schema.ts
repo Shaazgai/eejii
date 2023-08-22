@@ -12,8 +12,7 @@ export const volunteerSchema = z.object({
     message: 'Last name must be at least 2 characters.',
   }),
   email: z.string().email(),
-  primary_phone: z.string().regex(phoneRegex).length(8),
-  secondary_phone: z.string().regex(phoneRegex).length(8).nullable(),
+  phoneNumber: z.string().regex(phoneRegex).length(8),
   birthday: z.date({
     required_error: 'A birth data is required',
   }),

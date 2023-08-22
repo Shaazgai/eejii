@@ -21,7 +21,7 @@ generator kysely {
 model User {
   // General not null fields
   id           String        @id @default(dbgenerated("gen_random_uuid()"))
-  externalId   String        @unique
+  // externalId   String        @unique
   email        String        @unique
   phoneNumber  String
   createdAt    DateTime      @default(now())

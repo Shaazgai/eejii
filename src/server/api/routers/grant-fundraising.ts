@@ -27,15 +27,6 @@ export const grantFundraisingRouter = createTRPCRouter({
   create: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {
-      const supporter = await ctx.db
-        .selectFrom('Supporter')
-        .selectAll('Supporter')
-        .innerJoin('User', join =>
-          join.onRef('User.id', '=', 'Supporter.userId')
-        )
-        .where('User.externalId', '=', ctx.userId)
-        .executeTakeFirstOrThrow();
-
       const fund = await ctx.db
         .insertInto('GrantFundraising')
         .values({
@@ -52,12 +43,12 @@ export const grantFundraisingRouter = createTRPCRouter({
           endTime: input.endTime,
           goalAmount: input.goalAmount,
           currentAmount: input.currentAmount,
-          ownerId: supporter.id,
+          ownerId: ctx.userId,
         })
         .returning(['id'])
         .executeTakeFirstOrThrow();
-      // eslint-disable-next-line unused-imports/no-unused-vars
-      const categoryGrantFund = await ctx.db
+
+      await ctx.db
         .insertInto('CategoryGrantFundraising')
         .values(({ selectFrom }) => ({
           categoryId: selectFrom('Category')
@@ -77,34 +68,15 @@ export const grantFundraisingRouter = createTRPCRouter({
         .where('id', '=', input.grantFundraisingId)
         .executeTakeFirstOrThrow();
 
-      if (ctx.userType === 'partner') {
-        const grantFundraisingPartner = await ctx.db
-          .insertInto('GrantFundraisingPartner')
-          .values(({ selectFrom }) => ({
-            grantFundraisingId: grantFundraising.id,
-            partnerId: selectFrom('Partner')
-              .leftJoin('User', 'User.id', 'Partner.userId')
-              .where('User.externalId', '=', ctx.userId),
-            status: 'pending',
-          }))
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        return grantFundraisingPartner;
-      } else if (ctx.userType === 'supporter') {
-        const grantFundraisingSupporter = await ctx.db
-          .insertInto('GrantFundraisingSupporter')
-          .values(({ selectFrom }) => ({
-            grantFundraisingId: grantFundraising.id,
-            supporterId: selectFrom('Supporter')
-              .leftJoin('User', 'User.id', 'Supporter.userId')
-              .where('User.externalId', '=', ctx.userId),
-            status: 'pending',
-          }))
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        return grantFundraisingSupporter;
-      }
-
-      return { message: 'User not supporter or partner' };
+      const grantAssociation = await ctx.db
+        .insertInto('GrantAssociation')
+        .values(({ selectFrom }) => ({
+          grantId: grantFundraising.id,
+          userId: selectFrom('User').where('User.id', '=', ctx.userId),
+          status: 'pending',
+        }))
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return grantAssociation;
     }),
 });

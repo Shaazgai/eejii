@@ -19,7 +19,6 @@ export const appRouter = createTRPCRouter({
   volunteer: volunteerRouter,
   partner: partnerRouter,
   event: eventRouter,
-  user: userRouter,
   fundraising: fundraisingRouter,
   grantFundraising: grantFundraisingRouter,
   category: categoryRouter,
