@@ -12,36 +12,25 @@ export const partnerRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const partner = await ctx.db
-        .selectFrom('Partner')
+        .selectFrom('User')
         .selectAll()
         .where('id', '=', input.id)
         .executeTakeFirstOrThrow();
 
       return partner;
     }),
-
-  getCurrentUsers: privateProcedure.query(async ({ ctx }) => {
-    const partner = await ctx.db
-      .selectFrom('Partner')
-      .selectAll()
-      .leftJoin('User', 'User.id', 'Partner.userId')
-      .rightJoin('Address', 'Address.id', 'Partner.addressId')
-      .where('User.externalId', '=', ctx.userId)
-      .executeTakeFirstOrThrow();
-    console.log(partner);
-    return partner;
-  }),
   findAllForFundInvitation: publicProcedure
     .input(z.object({ fundId: z.string() }))
     .query(async ({ ctx, input }) => {
       const query = await sql`
-        SELECT p.*
-        FROM Partner p
-        LEFT JOIN FundraisingPartner as fp ON fp.partnerId = p.id
-        WHERE fp.fundraisingId != ${input.fundId} OR fp.fundraisingId IS NULL
-        AND p.id != ${sql.raw(
-          `(SELECT f.partnerId FROM Fundraising AS f WHERE f.id = "${input.fundId}")`
+        SELECT u.*
+        FROM User u
+        LEFT JOIN FundAssociation as fa ON fp.userId = u.id
+        WHERE fa.fundraisingId != ${input.fundId} OR fa.fundraisingId IS NULL
+        AND u.id != ${sql.raw(
+          `(SELECT f.ownerId FROM Fundraising AS f WHERE f.id = "${input.fundId}")`
         )}
+        AND u.type = "partner"
         `.execute(ctx.db);
 
       return query.rows as Partner[];

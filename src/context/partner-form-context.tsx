@@ -58,10 +58,10 @@ export function PartnerFormProvider({ steps }: { steps: ReactElement[] }) {
           .facebook as string,
         instagram: (partner.socialLinks as unknown as types.ContactType)
           .instagram as string,
-        country: partner.Address?.country as string,
-        city: partner.Address?.city as string,
-        provinceName: partner.Address?.provinceName as string,
-        street: partner.Address?.street as string,
+        country: partner.country as string,
+        city: partner.city as string,
+        provinceName: partner.provinceName as string,
+        street: partner.street as string,
       };
       setData(partnerData);
     }

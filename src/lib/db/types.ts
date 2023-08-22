@@ -12,6 +12,7 @@ export type Address = {
   city: string;
   provinceName: string;
   street: string;
+  userId: string | null;
 };
 export type Category = {
   id: Generated<string>;
@@ -37,32 +38,15 @@ export type Certificate = {
   id: Generated<string>;
   name: string;
   description: string;
+  volunteerId: string | null;
 };
 export type Donation = {
   id: Generated<string>;
   amount: number;
   userId: string | null;
-  isPublicName: Generated<number>;
+  isPublicName: Generated<boolean>;
   fundraisingId: string | null;
   createdAt: Generated<Timestamp>;
-};
-export type EducationHistory = {
-  id: Generated<string>;
-  level: string;
-  schoolName: string;
-  from: Timestamp;
-  to: Timestamp | null;
-  graduate: Generated<number>;
-  volunteerId: string | null;
-};
-export type EmploymentHistory = {
-  id: Generated<string>;
-  company: string;
-  position: string;
-  from: Timestamp;
-  to: Timestamp | null;
-  currentlyWorking: Generated<number>;
-  volunteerId: string | null;
 };
 export type Event = {
   id: Generated<string>;
@@ -77,31 +61,18 @@ export type Event = {
   contact: unknown | null;
   ownerId: string | null;
 };
-export type EventPartner = {
+export type EventAssociation = {
   id: Generated<string>;
-  createdAt: Generated<Timestamp>;
-  role: string | null;
-  status: string;
+  userId: string | null;
+  eventId: string | null;
+  status: string | null;
   type: string | null;
-  partnerId: string;
-  eventId: string | null;
 };
-export type EventSupporter = {
+export type FundAssociation = {
   id: Generated<string>;
-  createdAt: Generated<Timestamp>;
-  role: string | null;
-  status: string;
-  type: string | null;
-  supporterId: string;
-  eventId: string | null;
-};
-export type EventVolunteer = {
-  id: Generated<string>;
-  volunteerId: string;
-  eventId: string | null;
-  createdAt: Generated<Timestamp>;
-  role: string | null;
-  status: string;
+  userId: string | null;
+  fundraisingId: string | null;
+  status: string | null;
   type: string | null;
 };
 export type Fundraising = {
@@ -114,25 +85,14 @@ export type Fundraising = {
   location: string | null;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
-  partnerId: string | null;
+  ownerId: string | null;
 };
-export type FundraisingPartner = {
+export type GrantAssociation = {
   id: Generated<string>;
-  createdAt: Generated<Timestamp>;
-  role: string | null;
-  status: string;
+  userId: string | null;
+  grantId: string | null;
+  status: string | null;
   type: string | null;
-  partnerId: string | null;
-  fundraisingId: string | null;
-};
-export type FundraisingSupporter = {
-  id: Generated<string>;
-  createdAt: Generated<Timestamp>;
-  role: string | null;
-  status: string;
-  type: string | null;
-  supporterId: string | null;
-  fundraisingId: string | null;
 };
 export type GrantFundraising = {
   id: Generated<string>;
@@ -145,34 +105,6 @@ export type GrantFundraising = {
   startTime: Timestamp | null;
   endTime: Timestamp | null;
   ownerId: string | null;
-};
-export type GrantFundraisingPartner = {
-  id: Generated<string>;
-  createdAt: Generated<Timestamp>;
-  role: string | null;
-  status: string;
-  type: string | null;
-  grantFundraisingId: string | null;
-  partnerId: string | null;
-};
-export type GrantFundraisingSupporter = {
-  id: Generated<string>;
-  createdAt: Generated<Timestamp>;
-  role: string | null;
-  status: string;
-  type: string | null;
-  supporterId: string | null;
-  grantFundraisingId: string | null;
-};
-export type Partner = {
-  id: Generated<string>;
-  userId: string;
-  organization: string;
-  email: string;
-  phoneNumbers: unknown;
-  bio: string;
-  socialLinks: unknown | null;
-  addressId: string | null;
 };
 export type Payment = {
   id: Generated<string>;
@@ -188,39 +120,23 @@ export type Skill = {
   id: Generated<string>;
   name: string;
 };
-export type Supporter = {
-  id: Generated<string>;
-  userId: string;
-  organization: string;
-  email: string;
-  phoneNumbers: unknown;
-  bio: string;
-  socialLinks: unknown | null;
-  addressId: string | null;
-};
 export type User = {
   id: Generated<string>;
   externalId: string;
-  username: string;
   email: string;
+  phoneNumber: string;
   createdAt: Generated<Timestamp>;
   role: Generated<Role>;
-  type: string | null;
-};
-export type Volunteer = {
-  id: Generated<string>;
-  firstName: string;
-  lastName: string;
-  phoneNumbers: unknown | null;
-  email: string | null;
-  approved: Generated<number>;
-  birthday: Timestamp | null;
+  type: string;
+  approved: Generated<boolean>;
+  firstName: string | null;
+  lastName: string | null;
   gender: string | null;
   bio: string | null;
-  skills: unknown | null;
-  userId: string;
-  xp: Generated<number | null>;
-  addressId: string | null;
+  birthday: Timestamp | null;
+  skills: string | null;
+  organization: string | null;
+  contact: unknown | null;
 };
 export type DB = {
   Address: Address;
@@ -230,22 +146,13 @@ export type DB = {
   CategoryGrantFundraising: CategoryGrantFundraising;
   Certificate: Certificate;
   Donation: Donation;
-  EducationHistory: EducationHistory;
-  EmploymentHistory: EmploymentHistory;
   Event: Event;
-  EventPartner: EventPartner;
-  EventSupporter: EventSupporter;
-  EventVolunteer: EventVolunteer;
+  EventAssociation: EventAssociation;
+  FundAssociation: FundAssociation;
   Fundraising: Fundraising;
-  FundraisingPartner: FundraisingPartner;
-  FundraisingSupporter: FundraisingSupporter;
+  GrantAssociation: GrantAssociation;
   GrantFundraising: GrantFundraising;
-  GrantFundraisingPartner: GrantFundraisingPartner;
-  GrantFundraisingSupporter: GrantFundraisingSupporter;
-  Partner: Partner;
   Payment: Payment;
   Skill: Skill;
-  Supporter: Supporter;
   User: User;
-  Volunteer: Volunteer;
 };

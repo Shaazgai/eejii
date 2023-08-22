@@ -91,7 +91,21 @@ export const publicProcedure = t.procedure;
 
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   console.log(ctx.userType);
-  if (!ctx.userId || !ctx.userType) {
+  if (!ctx.userId) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+    });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.userId,
+    },
+  });
+});
+
+const enforceUserIsVolunteer = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.userId || ctx.userType != 'volunteer') {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
     });
@@ -105,4 +119,37 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   });
 });
 
+const enforceUserIsPartner = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.userId || ctx.userType != 'partner') {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+    });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.userId,
+      userType: ctx.userType,
+    },
+  });
+});
+
+const enforceUserIsSupporter = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.userId || ctx.userType != 'supporter') {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+    });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.userId,
+      userType: ctx.userType,
+    },
+  });
+});
+
+export const volunteerProcedure = t.procedure.use(enforceUserIsVolunteer);
+export const partnerProcedure = t.procedure.use(enforceUserIsPartner);
+export const supporterProcedure = t.procedure.use(enforceUserIsSupporter);
 export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
