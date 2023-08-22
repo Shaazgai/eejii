@@ -32,7 +32,7 @@ export const partnerRouter = createTRPCRouter({
         AND u.type = "partner"
         `.execute(ctx.db);
 
-      return query.rows as Partner[];
+      return query.rows;
     }),
   findAllForEventInvitation: publicProcedure
     .input(z.object({ eventId: z.string() }))
