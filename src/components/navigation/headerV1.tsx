@@ -1,10 +1,10 @@
 'use client';
 
-import { SignOutButton, useUser } from '@clerk/nextjs';
 import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import type { ReactElement } from 'react';
 
 import {
@@ -27,7 +27,7 @@ interface HeaderProps {
 }
 
 const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
-  const { user } = useUser();
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   return (
@@ -56,17 +56,17 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
         </nav>
         <div>
           <span>
-            {user ? (
+            {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-2 px-1 focus:outline-none">
-                  <Image
+                  {/* <Image
                     alt="avatar"
                     src={user.imageUrl}
                     width={30}
                     height={30}
                     className="rounded-full"
-                  />
-                  {user.firstName || user.imageUrl}
+                  /> */}
+                  {session?.user.name}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -82,9 +82,9 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <SignOutButton />
+                    SignOut
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
