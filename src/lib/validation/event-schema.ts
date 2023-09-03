@@ -29,7 +29,7 @@ export const eventSchema = z.object({
   endTime: z.date(),
   requiredTime: z.string(),
   roles: z.array(z.string()).nullish(),
-  mainCategory: z.string(),
+  mainCategory: z.string().nullish(),
   contact: z.object({
     phone_primary: z.string().regex(phoneRegex).length(8),
     phone_secondary: z.string().regex(phoneRegex).length(8),

@@ -33,5 +33,5 @@ export const fundraisingSchema = z.object({
   currentAmount: z.number(),
   email_1: z.string().email().nullable(),
   email_2: z.string().email().nullable(),
-  mainCategory: z.string(),
+  mainCategory: z.string().nullish(),
 });

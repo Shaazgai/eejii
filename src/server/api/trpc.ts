@@ -6,9 +6,10 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { getAuth } from '@clerk/nextjs/server';
+
 import { initTRPC, TRPCError } from '@trpc/server';
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
+import { getSession } from 'next-auth/react';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
@@ -28,13 +29,13 @@ import { db } from '../db';
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
-  const { req } = _opts;
-  const sesh = getAuth(req);
-  const userId = sesh.userId;
+  const sesh = await getSession();
+  // const userId = sesh?.user.id;
+  const userId = '1d852609-05a1-4813-b797-09a904309b54';
   const user = await db
     .selectFrom('User')
     .select('type')
-    .where('id', '=', userId)
+    .where('id', '=', userId as string)
     .executeTakeFirstOrThrow();
 
   return {
@@ -104,52 +105,4 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   });
 });
 
-const enforceUserIsVolunteer = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.userId || ctx.userType != 'volunteer') {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-    });
-  }
-
-  return next({
-    ctx: {
-      userId: ctx.userId,
-      userType: ctx.userType,
-    },
-  });
-});
-
-const enforceUserIsPartner = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.userId || ctx.userType != 'partner') {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-    });
-  }
-
-  return next({
-    ctx: {
-      userId: ctx.userId,
-      userType: ctx.userType,
-    },
-  });
-});
-
-const enforceUserIsSupporter = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.userId || ctx.userType != 'supporter') {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-    });
-  }
-
-  return next({
-    ctx: {
-      userId: ctx.userId,
-      userType: ctx.userType,
-    },
-  });
-});
-
-export const volunteerProcedure = t.procedure.use(enforceUserIsVolunteer);
-export const partnerProcedure = t.procedure.use(enforceUserIsPartner);
-export const supporterProcedure = t.procedure.use(enforceUserIsSupporter);
 export const privateProcedure = t.procedure.use(enforceUserIsAuthed);

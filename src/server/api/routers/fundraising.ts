@@ -73,6 +73,7 @@ export const fundraisingRouter = createTRPCRouter({
   create: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {
+      console.log(ctx.userId);
       const fund = await ctx.db
         .insertInto('Fundraising')
         .values({
@@ -94,15 +95,17 @@ export const fundraisingRouter = createTRPCRouter({
         .returning(['id'])
         .executeTakeFirstOrThrow();
 
-      await ctx.db
-        .insertInto('CategoryFundraising')
-        .values(({ selectFrom }) => ({
-          categoryId: selectFrom('Category')
-            .where('Category.id', '=', input.mainCategory)
-            .select('Category.id'),
-          fundraisingId: fund.id,
-        }))
-        .executeTakeFirstOrThrow();
+      if (input.mainCategory) {
+        await ctx.db
+          .insertInto('CategoryFundraising')
+          .values(({ selectFrom }) => ({
+            categoryId: selectFrom('Category')
+              .where('Category.id', '=', input.mainCategory)
+              .select('Category.id'),
+            fundraisingId: fund.id,
+          }))
+          .execute();
+      }
       return fund;
     }),
   sendRequest: privateProcedure

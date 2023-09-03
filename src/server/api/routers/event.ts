@@ -24,29 +24,34 @@ export const eventRouter = createTRPCRouter({
   create: privateProcedure
     .input(eventSchema)
     .mutation(async ({ input, ctx }) => {
-      const event = await ctx.db.insertInto('Event').values({
-        title: input.title,
-        description: input.description,
-        requiredTime: input.requiredTime,
-        contact: {
-          phone_primary: input.contact.phone_primary,
-          phone_secondary: input.contact.phone_secondary,
-        },
-        location: input.location,
-        startTime: input.startTime,
-        endTime: input.endTime,
-        roles: Object.assign({}, input.roles),
-        ownerId: ctx.userId,
-      });
-
-      ctx.db
-        .insertInto('CategoryEvent')
-        .values(({ selectFrom }) => ({
-          categoryId: selectFrom('Category')
-            .where('Category.id', '=', input.mainCategory)
-            .select('Category.id'),
-        }))
+      const event = await ctx.db
+        .insertInto('Event')
+        .values({
+          title: input.title,
+          description: input.description,
+          requiredTime: input.requiredTime,
+          contact: {
+            phone_primary: input.contact.phone_primary,
+            phone_secondary: input.contact.phone_secondary,
+          },
+          location: input.location,
+          startTime: input.startTime,
+          endTime: input.endTime,
+          roles: Object.assign({}, input.roles),
+          ownerId: ctx.userId,
+        })
+        .returning(['id'])
         .executeTakeFirstOrThrow();
+      if (input.mainCategory) {
+        ctx.db
+          .insertInto('CategoryEvent')
+          .values(({ selectFrom }) => ({
+            categoryId: selectFrom('Category')
+              .where('Category.id', '=', input.mainCategory as string)
+              .select('Category.id'),
+          }))
+          .execute();
+      }
       return event;
     }),
   sendRequest: privateProcedure

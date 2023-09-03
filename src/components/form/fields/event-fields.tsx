@@ -22,15 +22,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { CategoryType } from '@/lib/types';
 import type { eventSchema } from '@/lib/validation/event-schema';
+import { Category } from '@/lib/db/types';
 const EventFields = ({
   form,
   categories,
   isCategoryFetching,
 }: {
   form: UseFormReturn<z.infer<typeof eventSchema>>;
-  categories: CategoryType[] | undefined;
+  categories: Category[] | undefined;
   isCategoryFetching: boolean;
 }) => {
   const [roleNumber, setRoleNumber] = useState<number>(0);
@@ -148,7 +148,7 @@ const EventFields = ({
 
       <div className="flex flex-row justify-between gap-5">
         <FormField
-          name="primary_phone"
+          name="contact.phone_primary"
           control={form.control}
           render={({ field }) => (
             <FormItem className="w-full">
@@ -159,7 +159,7 @@ const EventFields = ({
           )}
         />
         <FormField
-          name="secondary_phone"
+          name="contact.phone_secondary"
           control={form.control}
           render={({ field }) => (
             <FormItem className="w-full">

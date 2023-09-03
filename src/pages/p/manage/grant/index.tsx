@@ -5,7 +5,6 @@ import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
-import type { FundraisingType } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function ManageProjects() {
@@ -47,7 +46,7 @@ export default function ManageProjects() {
         <LinkTabs tabs={tabs} />
 
         {grantFundraising?.map((grant, index) => (
-          <GrantCard key={index} grant={grant as FundraisingType} />
+          <GrantCard key={index} grant={grant} />
         ))}
       </Shell>
     </PartnerLayout>
