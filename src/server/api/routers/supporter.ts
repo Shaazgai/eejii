@@ -68,7 +68,7 @@ export const supporterRouter = createTRPCRouter({
 
       const supporter = await ctx.db
         .insertInto('User')
-        .values(({ selectFrom }) => ({
+        .values(() => ({
           organization: input.organization,
           email: input.email,
           bio: input.email,

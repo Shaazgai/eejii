@@ -1,7 +1,7 @@
-import { SignOutButton, useUser } from '@clerk/nextjs';
 import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const PartnerHeader = () => {
-  const { user } = useUser();
+  const session = useSession();
   // const pathname = usePathname();
 
   return (
@@ -61,17 +61,10 @@ const PartnerHeader = () => {
       </nav> */}
       <div>
         <span>
-          {user ? (
+          {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-1 focus:outline-none">
-                <Image
-                  alt="avatar"
-                  src={user.imageUrl}
-                  width={30}
-                  height={30}
-                  className="rounded-full"
-                />
-                {user.firstName || user.imageUrl}
+                {session.data?.user.name}
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -89,7 +82,6 @@ const PartnerHeader = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <SignOutButton />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

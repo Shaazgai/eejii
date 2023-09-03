@@ -4,7 +4,7 @@ import type { z } from 'zod';
 
 import EventForm from '@/components/form/event-form';
 import PartnerLayout from '@/components/layout/partner-layout';
-import type { EventType } from '@/lib/types';
+import type { Event } from '@/lib/db/types';
 import type { eventSchema } from '@/lib/validation/event-schema';
 import { normalizeEventToForm } from '@/server/api/helpers/normalizer/normalizeForForm';
 import { api } from '@/utils/api';
@@ -27,7 +27,7 @@ const EditEvent = () => {
     <PartnerLayout>
       <EventForm
         data={
-          normalizeEventToForm(data as unknown as EventType) as z.infer<
+          normalizeEventToForm(data as unknown as Event) as z.infer<
             typeof eventSchema
           >
         }

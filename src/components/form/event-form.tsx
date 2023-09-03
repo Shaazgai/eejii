@@ -29,8 +29,10 @@ const EventForm = ({
       startTime: data?.startTime || new Date(),
       endTime: data?.endTime || new Date(),
       requiredTime: data?.requiredTime || '',
-      primary_phone: data?.primary_phone || '',
-      secondary_phone: data?.secondary_phone || '',
+      contact: {
+        phone_primary: data?.contact.phone_primary || '',
+        phone_secondary: data?.contact.phone_secondary || '',
+      },
       roles: data?.roles || [],
       mainCategory: data?.mainCategory || '',
     },
@@ -44,7 +46,7 @@ const EventForm = ({
     form.reset(data);
   }, [data]);
 
-  const { mutate } = api.event.createOrUpdate.useMutation({
+  const { mutate } = api.event.create.useMutation({
     onSuccess: newEvent => {
       console.log(newEvent);
       router.push(`/p/manage/event/${newEvent.id}/invite`);

@@ -46,7 +46,7 @@ const FundraisingForm = ({
       type: 'event',
     });
 
-  const { mutate } = api.fundraising.createOrUpdate.useMutation({
+  const { mutate } = api.fundraising.create.useMutation({
     onSuccess: newFundraising =>
       router.push(`/p/manage/${newFundraising.id}/invite`),
   });

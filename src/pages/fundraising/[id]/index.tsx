@@ -1,4 +1,3 @@
-import { getAuth } from '@clerk/nextjs/server';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import superjson from 'superjson';
@@ -7,7 +6,6 @@ import FundDetail from '@/components/detail/fund-detail';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
-import type { FundraisingType } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
 import { api } from '@/utils/api';
@@ -30,7 +28,7 @@ export default function FundraisingViewPage(
     <BasicBaseLayout>
       <Shell>
         <FundDetail
-          fund={data as unknown as FundraisingType}
+          fund={data}
           actionButton={
             <Button type="submit" onClick={handleSendRequest}>
               Send join request

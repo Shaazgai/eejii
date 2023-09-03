@@ -9,8 +9,10 @@ import { api } from '@/utils/api';
 import { Button } from '../ui/button';
 import { Form } from '../ui/form';
 import FundraisingFields from './fields/fundraising-fields';
+import { useRouter } from 'next/router';
 
 const GrantFundraisingForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof fundraisingSchema>>({
     resolver: zodResolver(fundraisingSchema),
     defaultValues: {
@@ -26,7 +28,8 @@ const GrantFundraisingForm = () => {
     },
   });
   const { mutate } = api.grantFundraising.create.useMutation({
-    onSuccess: newGrantFundraising => console.log(newGrantFundraising),
+    onSuccess: newGrantFundraising =>
+      router.push(`/p/manage/grant/${newGrantFundraising.id}`),
   });
   function onSubmit(values: z.infer<typeof fundraisingSchema>) {
     console.log(values);

@@ -1,8 +1,8 @@
-import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 import type { FormEvent, ReactNode } from 'react';
 import { useState } from 'react';
 
@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Toaster } from '@/components/ui/toaster';
-import type { ContactType, FundraisingType, PaymentType } from '@/lib/types';
+import type { Fundraising, Payment } from '@/lib/db/types';
 import { priceFormatter } from '@/lib/utils/price';
 
 import { Button } from '../ui/button';
@@ -27,22 +27,22 @@ const FundDetail = ({
   fund,
   actionButton,
 }: {
-  fund: FundraisingType;
+  fund: Fundraising;
   actionButton: ReactNode;
 }) => {
   const [selectedAmount, setSelectedAmount] = useState(0);
-  const [payment, setPayment] = useState<PaymentType>();
+  const [payment, setPayment] = useState<Payment>();
   const { toast } = useToast();
 
-  const { userId, isLoaded } = useAuth();
+  const session = useSession();
 
   async function handleDonate(event: FormEvent) {
     event.preventDefault();
-    if (!isLoaded) alert('Not logged in');
+    if (!session) alert('Not logged in');
     try {
       const res = await axios.post('/api/invoice/create', {
-        userId: userId,
-        fundId: fund?.id as string,
+        userId: session.data?.user.id,
+        fundId: fund?.id as unknown as string,
         amount: selectedAmount,
       });
 
@@ -63,7 +63,7 @@ const FundDetail = ({
         title: 'Successfully paid',
         description: 'Thanks for donation',
       });
-      setPayment({} as PaymentType);
+      setPayment({} as Payment);
     } else {
       toast({
         title: 'Not paid',
@@ -291,46 +291,42 @@ const FundDetail = ({
                   className="mt-4 divide-y divide-gray-200 dark:divide-gray-700"
                 >
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {(fund.contact as ContactType).primary_phone && (
+                    {fund.contact.primary_phone && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Phone />
                         </span>
-                        <span>
-                          {(fund.contact as ContactType).primary_phone}
-                        </span>
+                        <span>{fund.contact.primary_phone}</span>
                       </div>
                     )}
                   </li>
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {(fund.contact as ContactType).secondary_phone && (
+                    {fund.contact.secondary_phone && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Phone />
                         </span>
-                        <span>
-                          {(fund.contact as ContactType).secondary_phone}
-                        </span>
+                        <span>{fund.contact.secondary_phone}</span>
                       </div>
                     )}
                   </li>
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {(fund.contact as ContactType).email_1 && (
+                    {fund.contact.email_1 && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Mail />
                         </span>
-                        <span>{(fund.contact as ContactType).email_1}</span>
+                        <span>{fund.contact.email_1}</span>
                       </div>
                     )}
                   </li>
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {(fund.contact as ContactType).email_2 && (
+                    {fund.contact.email_2 && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Mail />
                         </span>
-                        <span>{(fund.contact as ContactType).email_2}</span>
+                        <span>{fund.contact.email_2}</span>
                       </div>
                     )}
                   </li>

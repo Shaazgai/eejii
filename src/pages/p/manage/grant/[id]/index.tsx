@@ -1,12 +1,12 @@
-import { getAuth } from '@clerk/nextjs/server';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { getSession, useSession } from 'next-auth/react';
 import superjson from 'superjson';
 
 import PartnerLayout from '@/components/layout/partner-layout';
 import { Shell } from '@/components/shells/shell';
 import { appRouter } from '@/server/api/root';
-import { prisma } from '@/server/db';
+import { db } from '@/server/db';
 import { api } from '@/utils/api';
 
 export default function EventViewPage(
@@ -40,13 +40,14 @@ export default function EventViewPage(
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { userId } = getAuth(context.req);
+  const session = await getSession();
 
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
-      prisma: prisma,
-      userId: userId ? userId : null,
+      db: db,
+      userId: session?.user.id,
+      userType: 'partner',
     },
     transformer: superjson, // optional - adds superjson serialization
   });
