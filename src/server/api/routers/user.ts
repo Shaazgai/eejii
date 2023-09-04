@@ -6,7 +6,7 @@ import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema'
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
-export const volunteerRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {

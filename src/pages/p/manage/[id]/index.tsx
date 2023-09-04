@@ -19,6 +19,13 @@ export default function EventViewPage(
   if (!props) return <>Loading...</>;
   const { id } = props;
   const { data } = api.fundraising.getById.useQuery({ id: id as string });
+  const { data: requests } = api.eventAssociation.findAll.useQuery({
+    type: null,
+    status: null,
+    eventId: null,
+    eventsOwnerId: '9cf3294b-ee52-40c2-ac22-07028dff4a3a',
+    userId: null,
+  });
   // const { data: requests, isLoading: isRequestLoading } =
   //   api.partner.getMytProjectsJoinRequestsOrInvitations.useQuery({
   //     projectType: 'fundraising',
@@ -28,6 +35,7 @@ export default function EventViewPage(
   if (!data) return <>404</>;
   // if (isRequestLoading) <>...Loading</>;
   // const [activeIndex, setActiveIndex] = useState(0);
+  console.log(requests);
   return (
     <PartnerLayout>
       <Shell>
