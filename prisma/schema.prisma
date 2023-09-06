@@ -20,28 +20,31 @@ generator kysely {
 
 model User {
   // General not null fields
-  id           String        @id @default(dbgenerated("gen_random_uuid()"))
+  id            String        @id @default(dbgenerated("gen_random_uuid()"))
   // externalId   String        @unique
-  email        String        @unique
-  phoneNumber  String
-  createdAt    DateTime      @default(now())
-  role         Role          @default(ROLE_USER)
-  type         String
-  approved     Boolean       @default(false)
+  email         String        @unique
+  phoneNumber   String
+  createdAt     DateTime      @default(now())
+  role          Role          @default(ROLE_USER)
+  type          UserType      @default(USER_VOLUNTEER)
+  requestSend   Boolean       @default(false)
+  password      String?
+  //changed user request status boolean to 3 state
+  requestStatus RequestType?
   // Volunteer fields
-  firstName    String?
-  lastName     String?
-  gender       String?
-  bio          String?
-  birthday     DateTime?
-  skills       String?
+  firstName     String?
+  lastName      String?
+  gender        String?
+  bio           String?
+  birthday      DateTime?
+  skills        String?
   // Partner, Supporter fields + bio
-  organization String?
-  contact      Json?
+  organization  String?
+  contact       Json?
   // Relations
-  Donation     Donation[]
-  Addresses    Address[]
-  Certificate  Certificate[]
+  Donation      Donation[]
+  Addresses     Address[]
+  Certificate   Certificate[]
 
   MyEvents         Event[]
   MyFunds          Fundraising[]
@@ -55,6 +58,18 @@ enum Role {
   ROLE_USER
   ROLE_ADMIN
   ROLE_SUPER_ADMIN
+}
+
+enum UserType {
+  USER_VOLUNTEER
+  USER_PARTNER
+  USER_SUPPORTER
+}
+
+enum RequestType {
+  REQUEST_PENDING
+  REQUEST_DENIED
+  REQUEST_APPROVED
 }
 
 model Event {
@@ -187,7 +202,7 @@ model Donation {
   isPublicName  Boolean      @default(false)
   Fundraising   Fundraising? @relation(fields: [fundraisingId], references: [id])
   fundraisingId String?
-  Payment       Payment?
+  Payment       Payment[]
   createdAt     DateTime     @default(now())
 
   @@index([userId])
@@ -202,7 +217,7 @@ model Payment {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
   Donation   Donation  @relation(fields: [donationId], references: [id])
-  donationId String    @unique
+  donationId String
   details    Json?
 }
 

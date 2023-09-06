@@ -4,7 +4,7 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-import type { Role } from './enums';
+import type { Role, UserType, RequestType } from './enums';
 
 export type Address = {
   id: Generated<string>;
@@ -126,8 +126,10 @@ export type User = {
   phoneNumber: string;
   createdAt: Generated<Timestamp>;
   role: Generated<Role>;
-  type: string;
-  approved: Generated<boolean>;
+  type: Generated<UserType>;
+  requestSend: Generated<boolean>;
+  password: string | null;
+  requestStatus: RequestType | null;
   firstName: string | null;
   lastName: string | null;
   gender: string | null;

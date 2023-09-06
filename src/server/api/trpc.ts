@@ -14,6 +14,8 @@ import superjson from 'superjson';
 import { ZodError } from 'zod';
 
 import { db } from '../db';
+import { getServerSession } from 'next-auth';
+import { nextAuthOptions } from '@/lib/auth';
 /**
  * 1. CONTEXT
  *
@@ -29,19 +31,14 @@ import { db } from '../db';
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
-  const sesh = await getSession();
-  // const userId = sesh?.user.id;
-  const userId = '1d852609-05a1-4813-b797-09a904309b54';
-  const user = await db
-    .selectFrom('User')
-    .select('type')
-    .where('id', '=', userId as string)
-    .executeTakeFirstOrThrow();
+  const { req, res } = _opts;
+  const session = await getServerSession(req, res, nextAuthOptions);
+  const userId = session?.user.id;
 
   return {
     db,
     userId,
-    userType: user.type,
+    userType: session?.user.userType,
   };
 };
 

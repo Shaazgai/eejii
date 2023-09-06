@@ -1,18 +1,23 @@
 import '@/styles/globals.css';
 
-import { type AppType } from 'next/app';
+import type { AppProps } from 'next/app';
+import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 
 import { api } from '@/utils/api';
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+interface CustomAppProps extends AppProps {
+  pageProps: {
+    session?: Session;
+  } & AppProps['pageProps'];
+}
+
+const CustomApp = ({ Component, pageProps }: CustomAppProps) => {
   return (
-    <SessionProvider>
-      {/* <SessionContext.Provider value={{ user }}> */}
+    <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
-      {/* </SessionContext.Provider> */}
     </SessionProvider>
   );
 };
 
-export default api.withTRPC(MyApp);
+export default api.withTRPC(CustomApp);
