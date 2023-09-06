@@ -1,6 +1,11 @@
-export { default } from 'next-auth/middleware';
+import { withAuth } from 'next-auth/middleware';
 
-// Stop Middleware running on static files
-export const config = {
-  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
-};
+export default withAuth({
+  pages: {
+    signIn: '/signin',
+    error: '/signin',
+    // newUser: '/signup',
+  },
+});
+
+export const config = { matcher: ['/v', '/v/:path*'] };
