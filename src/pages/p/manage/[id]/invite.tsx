@@ -10,6 +10,7 @@ const PartnerList = ({ fundraisingId }: { fundraisingId: string }) => {
   const { data: partners } = api.partner.findAllForFundInvitation.useQuery({
     fundId: fundraisingId,
   });
+  console.log(partners);
   const context = api.useContext();
   const { mutate, isLoading } = api.partner.inviteToFundraising.useMutation({
     onSuccess: () => {

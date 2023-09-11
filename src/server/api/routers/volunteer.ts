@@ -21,32 +21,36 @@ export const volunteerRouter = createTRPCRouter({
   findAll: publicProcedure.query(async ({ ctx }) => {
     const volunteer = await ctx.db
       .selectFrom('User')
-      .where('User.type', '=', 'volunteer')
+      .where('User.type', '=', 'USER_VOLUNTEER')
       .selectAll()
       .execute();
 
     return volunteer;
   }),
-  findAllForEventInvitation: publicProcedure
-    .input(z.object({ eventId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      console.log(input.eventId);
-      const query = await sql`
-        SELECT u.*
-        FROM User AS u 
-        LEFT JOIN EventAssociation AS ea ON ea.userId = u.id 
-        WHERE ea.eventId != ${input.eventId} OR ea.eventId IS NULL
-        AND u.type = "volunteer"
-      `.execute(ctx.db);
-      console.log(query.rows);
-      return query.rows;
-    }),
-  create: privateProcedure
+  register: privateProcedure
     .input(volunteerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {
-      const address = await ctx.db
+      const volunteer = await ctx.db
+        .updateTable('User')
+        .where('id', '=', input.id)
+        .set({
+          firstName: input.firstName,
+          lastName: input.lastName,
+          bio: input.bio,
+          birthday: input.birthday,
+          gender: input.gender,
+          type: 'USER_VOLUNTEER',
+          email: input.email,
+          // skills: Object.assign({}, input.skills as string[]),
+          phoneNumber: input.phoneNumber,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      await ctx.db
         .insertInto('Address')
         .values({
+          userId: volunteer.id,
           country: input.country,
           city: input.city,
           street: input.street,
@@ -55,23 +59,6 @@ export const volunteerRouter = createTRPCRouter({
         .returning('id')
         .executeTakeFirstOrThrow();
 
-      const volunteer = await ctx.db
-        .insertInto('User')
-        .values(({ selectFrom }) => ({
-          firstName: input?.firstName,
-          lastName: input?.lastName,
-          bio: input?.bio,
-          birthday: input?.birthday,
-          gender: input?.gender,
-          addressId: address.id,
-          type: 'volunteer',
-          userId: selectFrom('User')
-            .where('User.id', '=', ctx.userId)
-            .select('id'),
-          email: input.email,
-          skills: Object.assign({}, input.skills as string[]),
-          phoneNumber: input.phoneNumber,
-        }));
       return volunteer;
     }),
 });

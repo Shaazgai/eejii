@@ -44,4 +44,56 @@ export const eventAssociationRouter = createTRPCRouter({
       const result = await query.execute();
       return result;
     }),
+  sendRequest: privateProcedure
+    .input(z.object({ eventId: z.string(), role: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const event = await ctx.db
+        .selectFrom('Event')
+        .select('id')
+        .where('id', '=', input.eventId)
+        .executeTakeFirstOrThrow();
+
+      const eventPartner = await ctx.db
+        .insertInto('EventAssociation')
+        .values(({ selectFrom }) => ({
+          eventId: event.id,
+          ownerId: selectFrom('User').where('User.id', '=', ctx.userId),
+          status: 'pending',
+        }))
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return eventPartner;
+    }),
+  inviteToEvent: privateProcedure // Owner of the fund will invite partner
+    .input(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .insertInto('EventAssociation')
+        .values({
+          status: 'pending',
+          type: 'invitation',
+          userId: input.userId,
+          eventId: input.id,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return { message: 'Success' };
+    }),
+  handleEventRequest: privateProcedure // Owner of the event will handle the request of it's invitation
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .updateTable('EventAssociation')
+        .where('id', '=', input.id)
+        .set({
+          status: input.status,
+        })
+        .execute();
+      return { message: 'Success' };
+    }),
 });

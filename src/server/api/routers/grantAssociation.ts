@@ -16,7 +16,6 @@ export const grantAssociationRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       let query = ctx.db.selectFrom('GrantAssociation').selectAll();
 
-      console.log(input)
       if (input.type) {
         query = query.where('type', '=', input.type);
       }
@@ -43,5 +42,58 @@ export const grantAssociationRouter = createTRPCRouter({
 
       const result = await query.execute();
       return result;
+    }),
+  sendRequest: privateProcedure
+    .input(z.object({ grantFundraisingId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const grantFundraising = await ctx.db
+        .selectFrom('GrantFundraising')
+        .select('id')
+        .where('id', '=', input.grantFundraisingId)
+        .executeTakeFirstOrThrow();
+
+      const grantAssociation = await ctx.db
+        .insertInto('GrantAssociation')
+        .values(({ selectFrom }) => ({
+          grantId: grantFundraising.id,
+          userId: selectFrom('User').where('User.id', '=', ctx.userId),
+          status: 'pending',
+        }))
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return grantAssociation;
+    }),
+  inviteToGrant: privateProcedure // Owner of the grant will invite partner
+    .input(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .insertInto('GrantAssociation')
+        .values({
+          status: 'pending',
+          type: 'invitation',
+          userId: input.userId,
+          grantId: input.id,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return { message: 'Success' };
+    }),
+  handleGrantRequest: privateProcedure // Owner of the grant will handle the request of it's invitation
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .updateTable('GrantAssociation')
+        .where('id', '=', input.id)
+        .set({
+          status: input.status,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return { message: 'Success' };
     }),
 });
