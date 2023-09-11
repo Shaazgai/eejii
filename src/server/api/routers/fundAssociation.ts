@@ -44,4 +44,57 @@ export const fundAssociationRouter = createTRPCRouter({
       const result = await query.execute();
       return result;
     }),
+  handleFundRequest: privateProcedure // Owner of the fund will handle the request of it's invitation
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .updateTable('FundAssociation')
+        .where('id', '=', input.id)
+        .set({
+          status: input.status,
+        })
+        .returning('id')
+        .execute();
+      return { message: 'Success' };
+    }),
+  inviteToFundraising: privateProcedure // Owner of the fund will invite partner
+    .input(
+      z.object({
+        id: z.string(),
+        userId: z.string().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .insertInto('FundAssociation')
+        .values({
+          status: 'pending',
+          type: 'invitation',
+          userId: input.userId,
+          fundraisingId: input.id,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return { message: 'Success' };
+    }),
+  sendRequest: privateProcedure
+    .input(z.object({ fundraisingId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const fundraising = await ctx.db
+        .selectFrom('Fundraising')
+        .select('id')
+        .where('id', '=', input.fundraisingId)
+        .executeTakeFirstOrThrow();
+
+      const fundraisingPartner = await ctx.db
+        .insertInto('FundAssociation')
+        .values(({ selectFrom }) => ({
+          fundraisingId: fundraising.id,
+          userId: selectFrom('User').where('User.id', '=', ctx.userId),
+          status: 'pending',
+        }))
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return fundraisingPartner;
+    }),
 });

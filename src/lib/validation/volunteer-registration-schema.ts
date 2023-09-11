@@ -5,6 +5,7 @@ const phoneRegex = new RegExp(
 );
 
 export const volunteerSchema = z.object({
+  id: z.string(),
   firstName: z.string().min(2, {
     message: 'Fist name must be at least 2 characters.',
   }),

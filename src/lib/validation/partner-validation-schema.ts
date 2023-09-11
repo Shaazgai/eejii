@@ -5,6 +5,7 @@ const phoneRegex = new RegExp(
 );
 
 export const partnerSchema = z.object({
+  id: z.string(),
   organization: z.string().min(2, {
     message: 'Fist name must be at least 2 characters.',
   }),

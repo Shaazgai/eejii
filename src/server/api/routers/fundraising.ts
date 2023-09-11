@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
 
 export const fundraisingRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -58,18 +59,36 @@ export const fundraisingRouter = createTRPCRouter({
   }),
   getNotRelated: privateProcedure.query(async ({ ctx }) => {
     const query = await sql`
-        SELECT f.* FROM Fundraising f 
-        LEFT JOIN FundAssociation fa ON fa.fundraisingId = f.id
-        WHERE fa.userId != ${sql.raw(
-          `(SELECT u1.id FROM User u1 WHERE u1.id = "${ctx.userId}")`
-        )} OR fp.partnerId IS NULL
-        AND f.userId != ${sql.raw(
-          `(SELECT u1.id FROM User u1 WHERE u1.id = "${ctx.userId}")`
+        SELECT f.* FROM "Fundraising" f 
+        LEFT JOIN "FundAssociation" fa ON fa."fundraisingId" = f."id"
+        WHERE fa."userId" != ${sql.raw(
+          `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
+        )} OR fa."userId" IS NULL
+        AND f."userId" != ${sql.raw(
+          `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )}
       `.execute(ctx.db);
     console.log(query.rows);
     return query.rows;
   }),
+  findUsersToInvite: publicProcedure // Find all partners for fundraising to invite them
+    .input(z.object({ fundId: z.string(), userType: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const query = await sql`
+        SELECT u.*
+        FROM "User" u
+        LEFT JOIN "FundAssociation" as fa ON fa."userId" = u."id"
+        WHERE fa."fundraisingId" IS DISTINCT FROM ${
+          input.fundId
+        } OR fa."fundraisingId" IS NULL
+        AND u."id" != ${sql.raw(
+          `(SELECT f."ownerId" FROM "Fundraising" AS f WHERE f."id" = '${input.fundId}')`
+        )}
+        AND u."type" = '${input.userType}'
+        `.execute(ctx.db);
+
+      return query.rows;
+    }),
   create: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {
@@ -95,37 +114,39 @@ export const fundraisingRouter = createTRPCRouter({
         .returning(['id'])
         .executeTakeFirstOrThrow();
 
-      if (input.mainCategory) {
-        await ctx.db
-          .insertInto('CategoryFundraising')
-          .values(({ selectFrom }) => ({
-            categoryId: selectFrom('Category')
-              .where('Category.id', '=', input.mainCategory)
-              .select('Category.id'),
-            fundraisingId: fund.id,
-          }))
-          .execute();
-      }
       return fund;
     }),
-  sendRequest: privateProcedure
-    .input(z.object({ fundraisingId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const fundraising = await ctx.db
-        .selectFrom('Fundraising')
-        .select('id')
-        .where('id', '=', input.fundraisingId)
+  update: privateProcedure
+    .input(fundraisingSchema)
+    .mutation(async ({ input, ctx }) => {
+      if (!input.id) {
+        throw new TRPCError({
+          message: 'Not enough parameter',
+          code: 'BAD_REQUEST',
+        });
+      }
+      const fund = await ctx.db
+        .updateTable('Fundraising')
+        .where('id', '=', input.id as string)
+        .set({
+          title: input.title,
+          description: input.description,
+          contact: {
+            primary_phone: input.primary_phone,
+            secondary_phone: input.secondary_phone,
+            email_1: input.email_1,
+            email_2: input.email_2,
+          },
+          location: input.location,
+          startTime: input.startTime,
+          endTime: input.endTime,
+          goalAmount: input.goalAmount,
+          currentAmount: input.currentAmount,
+          ownerId: ctx.userId,
+        })
+        .returning(['id'])
         .executeTakeFirstOrThrow();
 
-      const fundraisingPartner = await ctx.db
-        .insertInto('FundAssociation')
-        .values(({ selectFrom }) => ({
-          fundraisingId: fundraising.id,
-          userId: selectFrom('User').where('User.id', '=', ctx.userId),
-          status: 'pending',
-        }))
-        .returningAll()
-        .executeTakeFirstOrThrow();
-      return fundraisingPartner;
+      return fund;
     }),
 });
