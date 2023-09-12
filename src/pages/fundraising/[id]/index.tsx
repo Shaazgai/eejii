@@ -6,6 +6,7 @@ import FundDetail from '@/components/detail/fund-detail';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
+import { getServerAuthSession } from '@/lib/auth';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
 import { api } from '@/utils/api';
@@ -41,18 +42,14 @@ export default function FundraisingViewPage(
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { userId } = getAuth(context.req);
-  const user = await db
-    .selectFrom('User')
-    .select('type')
-    .where('externalId', '=', userId)
-    .executeTakeFirst();
+  const session = await getServerAuthSession(context);
+
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
       db: db,
-      userId: userId ? userId : null,
-      userType: user ? (user.type as string) : 'user',
+      userId: session?.user.id ? session.user.id : undefined,
+      userType: session?.user.userType ? session?.user.userType : undefined,
     },
     transformer: superjson, // optional - adds superjson serialization
   });

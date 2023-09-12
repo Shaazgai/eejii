@@ -4,10 +4,10 @@ import superjson from 'superjson';
 
 import PartnerLayout from '@/components/layout/partner-layout';
 import { Shell } from '@/components/shells/shell';
+import { getServerAuthSession } from '@/lib/auth';
 import { appRouter } from '@/server/api/root';
-import { api } from '@/utils/api';
-import { getSession } from 'next-auth/react';
 import { db } from '@/server/db';
+import { api } from '@/utils/api';
 
 export default function EventViewPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -40,14 +40,14 @@ export default function EventViewPage(
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const session  = await getSession();
+  const session = await getServerAuthSession(context);
 
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
       db: db,
-      userId: session?.user.id,
-      userType: 'partner',
+      userId: session?.user.id ? session.user.id : undefined,
+      userType: session?.user.userType ? session?.user.userType : undefined,
     },
     transformer: superjson, // optional - adds superjson serialization
   });
