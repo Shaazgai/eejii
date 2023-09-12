@@ -33,7 +33,7 @@ interface SearchFields {
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchFields: SearchFields[];
+  searchFields: SearchFields[] | null;
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -62,7 +62,9 @@ export const IndexTable = <TData, TValue>({
   });
   return (
     <div className="flex flex-col gap-5">
-      <TableSearchFilter table={table} searchFields={searchFields} />
+      {searchFields && (
+        <TableSearchFilter table={table} searchFields={searchFields} />
+      )}
       <div className="rounded-md border  ">
         <Table>
           <TableHeader>

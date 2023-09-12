@@ -85,6 +85,7 @@ export type Fundraising = {
   location: string | null;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
+  createdAt: Generated<Timestamp>;
   ownerId: string | null;
 };
 export type GrantAssociation = {
@@ -104,6 +105,7 @@ export type GrantFundraising = {
   location: string | null;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
+  createdAt: Generated<Timestamp>;
   ownerId: string | null;
 };
 export type Payment = {

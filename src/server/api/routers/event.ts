@@ -1,14 +1,26 @@
+import { TRPCError } from '@trpc/server';
 import { sql } from 'kysely';
+import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import { TRPCError } from '@trpc/server';
 
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
-    const events = await opts.ctx.db.selectFrom('Event').selectAll().execute();
+    const events = await opts.ctx.db
+      .selectFrom('Event')
+      .selectAll()
+      .select(eb => [
+        jsonObjectFrom(
+          eb
+            .selectFrom('User')
+            .selectAll()
+            .whereRef('User.id', '=', 'Event.ownerId')
+        ).as('Owner'),
+      ])
+      .execute();
     return events;
   }),
 

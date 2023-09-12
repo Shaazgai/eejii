@@ -114,6 +114,7 @@ model Fundraising {
   location            String?
   startTime           DateTime?
   endTime             DateTime?
+  createdAt           DateTime              @default(now())
   Owner               User?                 @relation(fields: [ownerId], references: [id])
   ownerId             String?
   Users               FundAssociation[]
@@ -146,6 +147,7 @@ model GrantFundraising {
   location                 String?
   startTime                DateTime?
   endTime                  DateTime?
+  createdAt                DateTime                   @default(now())
   Owner                    User?                      @relation(fields: [ownerId], references: [id])
   ownerId                  String?                    @unique
   Users                    GrantAssociation[]
