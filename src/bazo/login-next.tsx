@@ -77,13 +77,18 @@ export default function Sign() {
             </div>
             <Button
               onClick={onSubmit}
-              className="mt-8 rounded-full border-2   px-24 py-0  text-white"
+              className="mt-8 rounded-full border-2  py-0 text-white"
             >
               Log in
             </Button>
-            <Button className="mt-8 rounded-full border-2  border-[#3c888D] bg-[#3c888d] px-24 py-0  text-white">
-              Sign up
-            </Button>
+            <Link href={'/auth/signup'}>
+              <Button
+                className="mt-8 rounded-full border-2 py-0"
+                variant={'secondary'}
+              >
+                New account
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
