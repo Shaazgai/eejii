@@ -1,16 +1,25 @@
+import { TRPCError } from '@trpc/server';
 import { sql } from 'kysely';
+import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import { TRPCError } from '@trpc/server';
 
 export const fundraisingRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const fundraising = await ctx.db
       .selectFrom('Fundraising')
       .selectAll()
+      .select(eb => [
+        jsonObjectFrom(
+          eb
+            .selectFrom('User')
+            .selectAll()
+            .whereRef('User.id', '=', 'Fundraising.ownerId')
+        ).as('Owner'),
+      ])
       .execute();
     return fundraising;
   }),
