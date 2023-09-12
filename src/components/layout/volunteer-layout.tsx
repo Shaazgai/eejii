@@ -9,28 +9,28 @@ interface VolunteerLayoutProps {
 export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
   const volunteerHeaderNav = [
     {
-      title: 'Home',
+      title: 'Нүүр',
       href: '/v',
       icon: <LayoutDashboard className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
-      title: 'Volunteer',
+      title: 'Төсөл хөтөлөр',
       href: '/v/volunteer',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
-      title: 'Donate',
+      title: 'Хандив',
       href: '/v/donate',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
-      title: 'Join requests',
+      title: 'Гэр бүл',
       href: '/v/join-requests',
       icon: <UserCog className='"mr-2 w-4" h-4' />,
       items: [],
