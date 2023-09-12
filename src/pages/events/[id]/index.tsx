@@ -1,12 +1,12 @@
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { getSession } from 'next-auth/react';
 import superjson from 'superjson';
 
 import EventDetail from '@/components/detail/event-detail';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
+import { getServerAuthSession } from '@/lib/auth';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
 import { api } from '@/utils/api';
@@ -42,14 +42,14 @@ export default function EventViewPage(
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const session = await getSession();
+  const session = await getServerAuthSession(context);
 
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
       db: db,
-      userId: session?.user.id,
-      userType: 'partner',
+      userId: session?.user.id ? session.user.id : undefined,
+      userType: session?.user.userType ? session?.user.userType : undefined,
     },
     transformer: superjson, // optional - adds superjson serialization
   });

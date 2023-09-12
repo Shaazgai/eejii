@@ -4,10 +4,10 @@ import superjson from 'superjson';
 
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { Button } from '@/components/ui/button';
+import { getServerAuthSession } from '@/lib/auth';
 import { appRouter } from '@/server/api/root';
-import { api } from '@/utils/api';
 import { db } from '@/server/db';
-import { getSession } from 'next-auth/react';
+import { api } from '@/utils/api';
 
 export default function GrantFundraisingViewPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -37,18 +37,17 @@ export default function GrantFundraisingViewPage(
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const session = await getSession();
+  const session = await getServerAuthSession(context);
 
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
       db: db,
-      userId: session?.user.id,
-      userType: "partner",
+      userId: session?.user.id ? session.user.id : undefined,
+      userType: session?.user.userType ? session?.user.userType : undefined,
     },
     transformer: superjson, // optional - adds superjson serialization
   });
-
   const id = context.params?.id;
 
   if (typeof id !== 'string') throw new Error('no id');

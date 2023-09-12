@@ -1,10 +1,10 @@
 'use client';
 
 import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
 import type { ReactElement } from 'react';
 
 import {
@@ -66,7 +66,7 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
                     height={30}
                     className="rounded-full"
                   /> */}
-                  {session?.user.name}
+                  {session?.user.email}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -74,7 +74,7 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
                       <AppWindow className="mr-2 h-4 w-4" />
-                      <Link href={'/v'}>Dashboard</Link>
+                      <Link href={'/v/profile'}>Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Settings className="mr-2 h-4 w-4" />
@@ -95,7 +95,7 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
                 size={'default'}
                 className="flex gap-2"
               >
-                <Link href={'sign-in'}>
+                <Link href={'/auth/login'}>
                   <User2Icon className="h-5 w-5" />
                   Login
                 </Link>

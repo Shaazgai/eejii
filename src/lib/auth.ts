@@ -1,6 +1,7 @@
 import { verify } from 'argon2';
-import type { NextAuthOptions } from 'next-auth';
+import { getServerSession, type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import type { GetServerSidePropsContext } from 'next/types';
 
 import { db } from '@/server/db';
 
@@ -46,6 +47,10 @@ export const nextAuthOptions: NextAuthOptions = {
         }
       },
     }),
+    // FacebookProvider({
+    //   clientId: process.env.FACEBOOK_CLIENT_ID,
+    //   clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+    // }),
   ],
   callbacks: {
     jwt: async ({ token, user }) => {
@@ -71,9 +76,22 @@ export const nextAuthOptions: NextAuthOptions = {
     maxAge: 15 * 24 * 30 * 60, // 15 days
   },
   pages: {
-    signIn: '/signin',
+    signIn: '/auth/login',
     // newUser: '/signup',
-    error: '/signin',
+    error: '/auth/login',
   },
   secret: process.env.NEXTAUTH_SECRET,
+};
+
+/**
+ * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
+ *
+ * @see https://next-auth.js.org/configuration/nextjs
+ */
+
+export const getServerAuthSession = (ctx: {
+  req: GetServerSidePropsContext['req'];
+  res: GetServerSidePropsContext['res'];
+}) => {
+  return getServerSession(ctx.req, ctx.res, nextAuthOptions);
 };
