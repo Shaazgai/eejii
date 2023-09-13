@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
-import type { CategoryType } from '@/lib/types';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 import { api } from '@/utils/api';
 
@@ -28,13 +27,12 @@ const FundraisingForm = ({
       location: data?.location || '',
       startTime: data?.startTime || new Date(),
       endTime: data?.endTime || new Date(),
-      primary_phone: data?.primary_phone || '',
-      secondary_phone: data?.secondary_phone || '',
       goalAmount: data?.goalAmount || 0,
       currentAmount: data?.currentAmount || 0,
-      email_1: data?.email_1 || '',
-      email_2: data?.email_2 || '',
-      mainCategory: data?.mainCategory || '',
+      contact: {
+        phone: data?.contact.phone || '',
+        email: data?.contact.email || '',
+      },
     },
   });
   useEffect(() => {
@@ -56,21 +54,17 @@ const FundraisingForm = ({
   }
   console.log(form.formState.isValid);
   return (
-    <div className="w-[500px]">
+    <div className="">
       <h3 className="mb-5 border-b border-gray-200 pb-1">Create Fundraising</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-4">
+          <div className="space-y-4 ">
             <Input
               type="hidden"
               value={data?.id as string}
               {...form.register('id')}
             />
-            <FundraisingFields
-              form={form}
-              categories={categories as CategoryType[]}
-              isCategoryFetching={isCategoryFetching}
-            />
+            <FundraisingFields form={form} />
             <div className="w-full">
               <Button
                 type="submit"

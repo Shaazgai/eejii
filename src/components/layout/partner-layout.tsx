@@ -85,7 +85,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     // </div>
     <div className="">
       <div className="flex">
-        <div className="fixed z-20 h-screen flex-none  border-r bg-indigo-500">
+        <div className="fixed z-20 h-screen flex-none border-r bg-sidebar text-sidebar-foreground">
           <Sidebar open={open} setOpen={setOpen} sidebarNav={sidebarNav} />
         </div>
         <div className={`grow  ${open ? 'sm:ms-[300px]' : 'ms-[80px]'} `}>

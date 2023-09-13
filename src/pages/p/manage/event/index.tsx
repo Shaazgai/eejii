@@ -7,6 +7,7 @@ import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import type { FundaisingType } from '@/lib/types';
 import { api } from '@/utils/api';
+import SectionHeader from '@/components/common/section-header';
 
 export default function ManageProjects() {
   const router = useRouter();
@@ -39,11 +40,23 @@ export default function ManageProjects() {
 
   return (
     <PartnerLayout>
-      <Shell>
-        <div className="flex justify-between">
-          <h2>manage-projects</h2>
-          <Button onClick={() => router.push('/p/manage/new')}>Add</Button>
-        </div>
+      <Shell variant="sidebar" className="px-10">
+        <SectionHeader
+          src={'/images/placeholder.svg'}
+          variant="dark"
+          className=""
+        >
+          <div className="flex w-full items-center justify-between">
+            <h2 className="text-3xl capitalize">Manage projects</h2>
+            <Button
+              className="rounded-full border bg-primary hover:bg-gray-200 hover:text-gray-950"
+              // variant={'secondary'}
+              onClick={() => router.push('manage/new')}
+            >
+              Add
+            </Button>
+          </div>
+        </SectionHeader>
         <LinkTabs tabs={tabs} />
 
         {event?.map((event, index) => (

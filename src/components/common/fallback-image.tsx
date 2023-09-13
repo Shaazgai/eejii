@@ -18,9 +18,9 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
   return (
     <Image
       {...rest}
-      src={imgSrc || '/images/placeholder.webp'}
+      src={imgSrc || '/images/placeholder.svg'}
       onError={() => {
-        setImgSrc('/images/placeholder.webp');
+        setImgSrc('/images/placeholder.svg');
       }}
     />
   );

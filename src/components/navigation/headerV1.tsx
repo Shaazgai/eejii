@@ -31,11 +31,11 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
   const pathname = usePathname();
 
   return (
-    <div className="fixed left-0 top-0 w-full">
+    <div className="fixed left-0 top-0 z-10 w-full border-b border-b-gray-200 bg-white">
       <div className="flex w-full flex-row items-center justify-between gap-3 p-3">
-        <div className="min-w-[160px]">
+        <Link href="/v" className="min-w-[160px]">
           <Image alt="logo" src={'/eejii.jpeg'} width={160} height={50} />
-        </div>
+        </Link>
         <div className="flex w-full flex-row items-center justify-between">
           <nav>
             <ul className="flex flex-row gap-10">

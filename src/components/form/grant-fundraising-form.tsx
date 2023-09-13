@@ -11,20 +11,22 @@ import { Form } from '../ui/form';
 import FundraisingFields from './fields/fundraising-fields';
 import { useRouter } from 'next/router';
 
-const GrantFundraisingForm = () => {
+const GrantFundraisingForm = ({data}: {data: z.infer<typeof fundraisingSchema>}) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof fundraisingSchema>>({
     resolver: zodResolver(fundraisingSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      location: '',
-      startTime: new Date(),
-      endTime: new Date(),
-      primary_phone: '',
-      secondary_phone: '',
-      goalAmount: 0,
-      currentAmount: 0,
+      title: data?.title || '',
+      description: data?.description || '',
+      location: data?.location || '',
+      startTime: data?.startTime || new Date(),
+      endTime: data?.endTime || new Date(),
+      contact: {
+        phone: data?.contact.phone || '',
+        email: data?.contact.email || '',
+      },
+      goalAmount: data?.goalAmount || 0,
+      currentAmount: data?.currentAmount || 0,
     },
   });
   const { mutate } = api.grantFundraising.create.useMutation({
@@ -37,7 +39,7 @@ const GrantFundraisingForm = () => {
   }
   console.log(form.formState.isValid);
   return (
-    <div className="w-[500px]">
+    <div className="">
       <h3 className="mb-5 border-b border-gray-200 pb-1">
         Create Grant Fundraising
       </h3>

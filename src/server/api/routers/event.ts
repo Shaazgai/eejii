@@ -108,8 +108,8 @@ export const eventRouter = createTRPCRouter({
           description: input.description,
           requiredTime: input.requiredTime,
           contact: {
-            phone_primary: input.contact.phone_primary,
-            phone_secondary: input.contact.phone_secondary,
+            phone: input.contact.phone,
+            email: input.contact.email,
           },
           location: input.location,
           startTime: input.startTime,

@@ -2,9 +2,11 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <>
-      <span>Footer</span>
-    </>
+    <div>
+      <div className='bg-primary'>
+        Footer
+      </div>
+    </div>
   );
 };
 

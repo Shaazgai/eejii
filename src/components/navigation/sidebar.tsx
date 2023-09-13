@@ -31,7 +31,7 @@ export default function Sidebar({
         no-scrollbar 
         top-30
         bottom-0 
-        z-30  
+        z-10  
         overflow-y-auto
         px-3 pb-10
         text-center
@@ -45,11 +45,7 @@ export default function Sidebar({
       </div>
       <div className="flex flex-col space-y-2">
         <div className={`${open ? 'flex justify-end' : 'flex'}`}>
-          <Button
-            className="text-gray-100"
-            onClick={() => setOpen(!open)}
-            variant={'ghost'}
-          >
+          <Button onClick={() => setOpen(!open)} variant={'ghost'}>
             {open ? (
               <AlignRight className="h-7 w-7" />
             ) : (
@@ -68,11 +64,10 @@ export default function Sidebar({
               >
                 <span
                   className={cn(
-                    `group flex w-full items-center gap-2 rounded-md border border-transparent px-2 py-2 hover:bg-muted hover:text-foreground`,
+                    `group flex w-full items-center gap-2 rounded-md border border-transparent px-2 py-2 hover:bg-muted`,
                     asPath === item.href
-                      ? 'bg-muted font-medium text-foreground'
-                      : 'text-gray-100'
-                    // item.disabled && 'pointer-events-none opacity-60'
+                      ? 'bg-primary font-medium text-popover'
+                      : 'text-sidebar-foreground'
                   )}
                 >
                   {/* <Icon className="mr-2 h-4 w-4" aria-hidden="true" /> */}
