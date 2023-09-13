@@ -27,9 +27,6 @@ export default function NewProject() {
   return (
     <PartnerLayout>
       <Shell>
-        <div className="flex justify-between">
-          <h2>New project</h2>
-        </div>
         <NormalTabs
           tabs={tabs}
           activeIndex={activeIndex}

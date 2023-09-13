@@ -40,11 +40,15 @@ export default function ManageProjects() {
   return (
     <PartnerLayout>
       <Shell variant="sidebar" className="px-10">
-        <SectionHeader src={'/images/spider.jpg'} variant="dark" className="">
+        <SectionHeader
+          src={'/images/placeholder.svg'}
+          variant="dark"
+          className=""
+        >
           <div className="flex w-full items-center justify-between">
             <h2 className="text-3xl capitalize">Manage projects</h2>
             <Button
-              className="rounded-full border bg-transparent hover:bg-gray-200 hover:text-gray-950"
+              className="rounded-full border bg-primary hover:bg-gray-200 hover:text-gray-950"
               // variant={'secondary'}
               onClick={() => router.push('manage/new')}
             >

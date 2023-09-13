@@ -22,7 +22,7 @@ export function NormalTabs({
 
   return (
     <Tabs
-      className={cn('w-full overflow-x-auto')}
+      className={cn('bg-transparent w-full overflow-x-auto')}
       // onValueChange={value => router.push(value)}
     >
       <TabsList>
@@ -30,10 +30,9 @@ export function NormalTabs({
           <TabsTrigger
             key={tab.title}
             value={`${tab.index}`}
-            className={cn(
-              activeIndex === tab.index &&
-                'bg-background text-foreground shadow-sm'
-            )}
+            // className={cn(
+            //   activeIndex === tab.index && 'bg-primary text-foreground shadow-sm'
+            // )}
             onClick={() => setActiveIndex(tab.index)}
             {...props}
           >

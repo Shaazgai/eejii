@@ -27,10 +27,10 @@ export const fundraisingSchema = z.object({
     }),
   startTime: z.date(),
   endTime: z.date(),
-  primary_phone: z.string().regex(phoneRegex).length(8).nullable(),
-  secondary_phone: z.string().regex(phoneRegex).length(8).nullable(),
   goalAmount: z.number(),
   currentAmount: z.number(),
-  email_1: z.string().email().nullable(),
-  email_2: z.string().email().nullable(),
+  contact: z.object({
+    phone: z.string().regex(phoneRegex).length(8),
+    email: z.string().email(),
+  }),
 });

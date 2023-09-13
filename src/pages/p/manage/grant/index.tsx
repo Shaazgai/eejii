@@ -6,6 +6,7 @@ import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { api } from '@/utils/api';
+import SectionHeader from '@/components/common/section-header';
 
 export default function ManageProjects() {
   const router = useRouter();
@@ -39,10 +40,22 @@ export default function ManageProjects() {
   return (
     <PartnerLayout>
       <Shell variant="sidebar" className="px-10">
-        <div className="flex justify-between">
-          <h2>manage-projects</h2>
-          <Button onClick={() => router.push('/p/manage/new')}>Add</Button>
-        </div>
+        <SectionHeader
+          src={'/images/placeholder.jpg'}
+          variant="dark"
+          className=""
+        >
+          <div className="flex w-full items-center justify-between">
+            <h2 className="text-3xl capitalize">Manage projects</h2>
+            <Button
+              className="rounded-full border bg-primary hover:bg-gray-200 hover:text-gray-950"
+              // variant={'secondary'}
+              onClick={() => router.push('manage/new')}
+            >
+              Add
+            </Button>
+          </div>
+        </SectionHeader>
         <LinkTabs tabs={tabs} />
 
         {grantFundraising?.map((grant, index) => (

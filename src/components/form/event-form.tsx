@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoaderIcon } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,7 +7,6 @@ import type { z } from 'zod';
 import EventFields from '@/components/form/fields/event-fields';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import type { CategoryType } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
 
@@ -30,11 +28,10 @@ const EventForm = ({
       endTime: data?.endTime || new Date(),
       requiredTime: data?.requiredTime || '',
       contact: {
-        phone_primary: data?.contact.phone_primary || '',
-        phone_secondary: data?.contact.phone_secondary || '',
+        phone: data?.contact.phone || '',
+        email: data?.contact.email || '',
       },
       roles: data?.roles || [],
-      mainCategory: data?.mainCategory || '',
     },
   });
   const { data: categories, isFetching: isCategoryFetching } =
@@ -58,7 +55,7 @@ const EventForm = ({
     mutate(values);
   }
   return (
-    <div className="w-[500px]">
+    <div className="">
       <h3 className="mb-5 border-b border-gray-200 pb-1">Create event</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -68,11 +65,7 @@ const EventForm = ({
             {...form.register('id')}
           />
           <div className="space-y-4">
-            <EventFields
-              form={form}
-              isCategoryFetching={isCategoryFetching}
-              categories={categories as CategoryType[]}
-            />
+            <EventFields form={form} />
             <div className="w-full">
               <Button
                 type="submit"

@@ -1,6 +1,7 @@
 import { CalendarCheck, LayoutDashboard, UserCog } from 'lucide-react';
 
 import HeaderV1 from '../navigation/headerV1';
+import Footer from './footer';
 
 interface VolunteerLayoutProps {
   children: React.ReactNode;
@@ -39,9 +40,10 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
   ];
 
   return (
-    <div>
+    <div className=''>
       <HeaderV1 headerNav={volunteerHeaderNav} />
       {children}
+      <Footer />
     </div>
   );
 }

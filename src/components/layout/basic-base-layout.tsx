@@ -7,7 +7,7 @@ const BasicBaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <HeaderV1 headerNav={[]} />
-      {children}
+      <main className="pt-12">{children}</main>
       <Footer />
     </>
   );

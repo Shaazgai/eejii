@@ -1,10 +1,12 @@
-import { Loader2 } from 'lucide-react';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import moment from 'moment';
 import { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
 import type { UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import DatePicker from '@/components/ui/date-picker-custom';
 import {
   FormControl,
   FormDescription,
@@ -14,24 +16,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import type { eventSchema } from '@/lib/validation/event-schema';
-import { Category } from '@/lib/db/types';
+
 const EventFields = ({
   form,
-  categories,
-  isCategoryFetching,
 }: {
   form: UseFormReturn<z.infer<typeof eventSchema>>;
-  categories: Category[] | undefined;
-  isCategoryFetching: boolean;
 }) => {
   const [roleNumber, setRoleNumber] = useState<number>(0);
 
@@ -49,191 +40,263 @@ const EventFields = ({
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <FormField
         control={form.control}
         name="title"
         render={({ field }) => (
-          <FormItem className="w-full">
-            <FormLabel>Title</FormLabel>
-            <Input placeholder="Organization name" {...field} />
-            <FormMessage />
-          </FormItem>
+          <div className="space-y-2">
+            <FormLabel className="text-2xl">Title</FormLabel>
+            <FormItem className="w-full rounded-2xl border bg-white px-4 py-8">
+              <Input
+                placeholder="Organization name"
+                className="rounded-none border-0 border-b border-b-gray-300 bg-transparent shadow-none focus-visible:border-b-gray-500 focus-visible:ring-0"
+                {...field}
+              />
+              <FormMessage />
+            </FormItem>
+          </div>
         )}
       />
       <FormField
         control={form.control}
         name="description"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>Description</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Tell us about event"
-                className="resize-none"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              You can <span>@mention</span> other users and organizations.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="mainCategory"
-        render={({ field }) => (
-          <FormItem className="w-full">
-            <FormLabel>Category</FormLabel>
-            <Select
-              onValueChange={value => {
-                field.onChange(value);
-              }}
-              value={field.value}
-              defaultValue={field.value}
-            >
+          <div className="space-y-2">
+            <FormLabel className="text-2xl">Description</FormLabel>
+            <FormItem className="rounded-2xl border bg-white px-4 py-8">
               <FormControl>
-                <SelectTrigger
-                  disabled={!isCategoryFetching && categories ? false : true}
-                >
-                  <SelectValue placeholder="Select Category" />
-                  {!isCategoryFetching && categories ? (
-                    <SelectValue placeholder="Select Category" />
-                  ) : (
-                    <Loader2 className="animate-spin" />
-                  )}
-                </SelectTrigger>
+                <Textarea
+                  placeholder="Tell us about event"
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
-              <SelectContent className="max-h-[50vh]">
-                {!isCategoryFetching && categories ? (
-                  categories.map(category => {
-                    console.log(isCategoryFetching);
-                    return (
-                      <SelectItem value={category.id} key={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    );
-                  })
-                ) : (
-                  <span>Loading</span>
-                )}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
+              <FormDescription>
+                You can <span>@mention</span> other users and organizations.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          </div>
         )}
       />
+      {/* <FormField */}
+      {/*   control={form.control} */}
+      {/*   name="mainCategory" */}
+      {/*   render={({ field }) => ( */}
+      {/*     <FormItem className="w-full"> */}
+      {/*       <FormLabel>Category</FormLabel> */}
+      {/*       <Select */}
+      {/*         onValueChange={value => { */}
+      {/*           field.onChange(value); */}
+      {/*         }} */}
+      {/*         value={field.value} */}
+      {/*         defaultValue={field.value} */}
+      {/*       > */}
+      {/*         <FormControl> */}
+      {/*           <SelectTrigger */}
+      {/*             disabled={!isCategoryFetching && categories ? false : true} */}
+      {/*           > */}
+      {/*             <SelectValue placeholder="Select Category" /> */}
+      {/*             {!isCategoryFetching && categories ? ( */}
+      {/*               <SelectValue placeholder="Select Category" /> */}
+      {/*             ) : ( */}
+      {/*               <Loader2 className="animate-spin" /> */}
+      {/*             )} */}
+      {/*           </SelectTrigger> */}
+      {/*         </FormControl> */}
+      {/*         <SelectContent className="max-h-[50vh]"> */}
+      {/*           {!isCategoryFetching && categories ? ( */}
+      {/*             categories.map(category => { */}
+      {/*               console.log(isCategoryFetching); */}
+      {/*               return ( */}
+      {/*                 <SelectItem value={category.id} key={category.id}> */}
+      {/*                   {category.name} */}
+      {/*                 </SelectItem> */}
+      {/*               ); */}
+      {/*             }) */}
+      {/*           ) : ( */}
+      {/*             <span>Loading</span> */}
+      {/*           )} */}
+      {/*         </SelectContent> */}
+      {/*       </Select> */}
+      {/*       <FormMessage /> */}
+      {/*     </FormItem> */}
+      {/*   )} */}
+      {/* /> */}
       <FormField
         control={form.control}
         name="location"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>Location</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Where will event be hold"
-                className="resize-none"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              You can <span>@mention</span> other users and organizations.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
+          <div className="space-y-2">
+            <FormLabel className="text-2xl">Location</FormLabel>
+            <FormItem className="rounded-2xl border bg-white px-4 py-8">
+              <FormControl>
+                <Textarea
+                  placeholder="Where will event be hold"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                You can <span>@mention</span> other users and organizations.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          </div>
         )}
       />
 
-      <div className="flex flex-row justify-between gap-5">
-        <FormField
-          name="contact.phone_primary"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Phone 1</FormLabel>
-              <Input placeholder="Primary phone" {...field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="contact.phone_secondary"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Phone 2</FormLabel>
-              <Input placeholder="Secondary phone" {...field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <div className="space-y-2">
+        <FormLabel className="text-2xl">Contact</FormLabel>
+        <div className="flex flex-row justify-between gap-5 rounded-3xl border bg-white px-4 py-8">
+          <FormField
+            name="contact.phone"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Phone</FormLabel>
+                <Input
+                  className="rounded-none border-0 border-b border-b-gray-300 bg-transparent shadow-none focus-visible:border-b-gray-500 focus-visible:ring-0"
+                  placeholder="Phone"
+                  {...field}
+                />
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="contact.email"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Email</FormLabel>
+                <Input
+                  className="rounded-none border-0 border-b border-b-gray-300 bg-transparent shadow-none focus-visible:border-b-gray-500 focus-visible:ring-0"
+                  placeholder="Email"
+                  {...field}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
-      <div className="flex flex-row justify-between gap-5">
-        <FormField
-          name="startTime"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
-              <FormLabel>Start date</FormLabel>
-              <DatePicker field={field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-      <div className="flex flex-row justify-between gap-5">
-        <FormField
-          name="endTime"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
-              <FormLabel>End date</FormLabel>
-              <DatePicker field={field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <div className="space-y-2">
+        <FormLabel className="text-2xl">Project start and end date</FormLabel>
+        <div className="flex flex-row justify-between gap-5 rounded-3xl border bg-white px-4 py-8">
+          <FormField
+            name="startTime"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex w-full flex-col">
+                <FormLabel>Start time</FormLabel>
+                <DatePicker
+                  id="exampleFormControlTextarea2"
+                  className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
+                  locale="mn"
+                  placeholderText="Өдөр сонгох"
+                  dateFormat="yyyy-MM-dd H:mm "
+                  timeInputLabel="Time:"
+                  disabledKeyboardNavigation
+                  showTimeSelect
+                  selected={field.value ? moment(field.value).toDate() : null}
+                  onKeyDown={e => {
+                    e.preventDefault();
+                  }}
+                  {...field}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="endTime"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex w-full flex-col">
+                <FormLabel>End Time</FormLabel>
+                <DatePicker
+                  id="exampleFormControlTextarea2"
+                  className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
+                  locale="mn"
+                  placeholderText="Өдөр сонгох"
+                  dateFormat="yyyy-MM-dd H:mm "
+                  timeInputLabel="Time:"
+                  disabledKeyboardNavigation
+                  showTimeSelect
+                  selected={field.value ? moment(field.value).toDate() : null}
+                  onKeyDown={e => {
+                    e.preventDefault();
+                  }}
+                  {...field}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
       <FormField
         control={form.control}
         name="requiredTime"
         render={({ field }) => (
-          <FormItem className="w-full">
-            <FormLabel>Required time</FormLabel>
-            <Input placeholder="Required time" {...field} />
-            <FormMessage />
-          </FormItem>
+          <div className="space-y-2">
+            <FormLabel className="text-2xl">Required time</FormLabel>
+            <FormItem className="w-full rounded-2xl border bg-white px-4 py-8">
+              <Input
+                placeholder="10 hours"
+                className="rounded-none border-0 border-b border-b-gray-300 bg-transparent shadow-none focus-visible:border-b-gray-500 focus-visible:ring-0"
+                {...field}
+              />
+              <FormMessage />
+            </FormItem>
+          </div>
         )}
       />
-      <div className=" space-y-2 border border-gray-200 p-5">
-        <h4>Add roles for event</h4>
-        {Array.from(Array(roleNumber).keys()).map((number, i) => (
-          <FormItem className="w-full" key={i}>
-            <Input placeholder="Role " {...form.register(`roles.${number}`)} />
-            <FormMessage />
-          </FormItem>
-        ))}
-        <div className="space-x-5">
-          <Button
-            type="button"
-            variant={'destructive'}
-            onClick={() => {
-              handleAddRole(-1);
-            }}
-          >
-            Delete role
-          </Button>
-          <Button
-            type="button"
-            variant={'outline'}
-            onClick={() => {
-              handleAddRole(1);
-            }}
-          >
-            Add role
-          </Button>
+      <div className="space-y-2">
+        <FormLabel className="text-2xl">Add roles for event</FormLabel>
+        <div className="flex flex-col justify-between gap-5 rounded-3xl border bg-white px-4 py-8">
+          {Array.from(Array(roleNumber).keys()).map((number, i) => (
+            <div className="flex flex-row gap-2" key={i}>
+              <FormItem className="w-full" key={i}>
+                <Input
+                  placeholder="Role name"
+                  className="rounded-none border-0 border-b border-b-gray-300 bg-transparent shadow-none focus-visible:border-b-gray-500 focus-visible:ring-0"
+                  {...form.register(`roles.${number}.name`)}
+                />
+                <FormMessage />
+              </FormItem>
+              <FormItem className="w-full" key={i}>
+                <Input
+                  type="number"
+                  className="rounded-none border-0 border-b border-b-gray-300 bg-transparent shadow-none focus-visible:border-b-gray-500 focus-visible:ring-0"
+                  placeholder="Numbers of volunteers in role"
+                  {...form.register(`roles.${number}.number`)}
+                />
+                <FormMessage />
+              </FormItem>
+            </div>
+          ))}
+          <div className="space-x-5">
+            <Button
+              type="button"
+              variant={'destructive'}
+              onClick={() => {
+                handleAddRole(-1);
+              }}
+            >
+              Delete role
+            </Button>
+            <Button
+              type="button"
+              variant={'outline'}
+              onClick={() => {
+                handleAddRole(1);
+              }}
+            >
+              Add role
+            </Button>
+          </div>
         </div>
       </div>
     </div>
