@@ -39,11 +39,6 @@ const FundraisingForm = ({
     form.reset(data);
   }, [data]);
 
-  const { data: categories, isFetching: isCategoryFetching } =
-    api.category.getAll.useQuery({
-      type: 'event',
-    });
-
   const { mutate } = api.fundraising.create.useMutation({
     onSuccess: newFundraising =>
       router.push(`/p/manage/${newFundraising.id}/invite`),

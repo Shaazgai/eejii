@@ -47,7 +47,7 @@ export default function ManageProjects() {
             <Button
               className="rounded-full border bg-primary hover:bg-gray-200 hover:text-gray-950"
               // variant={'secondary'}
-              onClick={() => router.push('manage/new')}
+              onClick={() => router.push('/p/manage/new')}
             >
               Add
             </Button>
