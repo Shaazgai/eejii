@@ -87,13 +87,14 @@ export const fundraisingRouter = createTRPCRouter({
         SELECT u.*
         FROM "User" u
         LEFT JOIN "FundAssociation" as fa ON fa."userId" = u."id"
-        WHERE fa."fundraisingId" IS DISTINCT FROM ${
+        WHERE (fa."fundraisingId" IS DISTINCT FROM ${
           input.fundId
-        } OR fa."fundraisingId" IS NULL
+        } OR fa."fundraisingId" IS NULL)
         AND u."id" != ${sql.raw(
           `(SELECT f."ownerId" FROM "Fundraising" AS f WHERE f."id" = '${input.fundId}')`
         )}
-        AND u."type" = '${input.userType}'
+        AND u."type" = ${input.userType}
+        AND u."id" != ${ctx.userId}
         `.execute(ctx.db);
 
       return query.rows;

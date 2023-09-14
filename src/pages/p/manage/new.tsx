@@ -33,7 +33,7 @@ export default function NewProject() {
           setActiveIndex={setActiveIndex}
         />
         {activeIndex == 0 && <FundraisingForm data={undefined} />}
-        {activeIndex == 1 && <GrantFundraisingForm />}
+        {activeIndex == 1 && <GrantFundraisingForm data={undefined} />}
         {activeIndex == 2 && <EventForm data={undefined} />}
       </Shell>
     </PartnerLayout>

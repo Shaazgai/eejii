@@ -4,23 +4,37 @@ import { useEffect, useState } from 'react';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Button } from '@/components/ui/button';
-import type { PartnerType, SupporterType, VolunteerType } from '@/lib/types';
+import { UserType } from '@/lib/db/enums';
+import type { PartnerType } from '@/lib/types';
 import { api } from '@/utils/api';
 
-const PartnerList = ({ eventId }: { eventId: string }) => {
-  const { data: partners } = api.partner.findAllForEventInvitation.useQuery({
+const UserList = ({
+  eventId,
+  userType,
+}: {
+  eventId: string;
+  userType: string;
+}) => {
+  const { data: partners } = api.event.findUsersToInvite.useQuery({
     eventId: eventId,
+    userType: userType,
   });
   const context = api.useContext();
-  const { mutate, isLoading } = api.partner.inviteToEvent.useMutation({
+  const { mutate, isLoading } = api.eventAssociation.inviteToEvent.useMutation({
     onSuccess: () => {
-      context.partner.findAllForEventInvitation.invalidate();
+      context.event.findUsersToInvite.invalidate();
     },
   });
 
   return (
     <div>
-      <h3 className="font-bold">Partners</h3>
+      <h3 className="font-bold">
+        {userType === UserType.USER_PARTNER
+          ? 'Partners'
+          : userType === UserType.USER_SUPPORTER
+          ? 'Supporters'
+          : 'Volunteers'}
+      </h3>
       <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
         {partners ? (
           partners.map((partner: PartnerType) => (
@@ -66,134 +80,29 @@ const PartnerList = ({ eventId }: { eventId: string }) => {
   );
 };
 
-const SupporterList = ({ eventId }: { eventId: string }) => {
-  const { data: supporters } = api.supporter.findAllForEventInvitation.useQuery(
-    {
-      eventId: eventId,
-    }
-  );
-  const context = api.useContext();
-  const { mutate, isLoading } = api.partner.inviteToEvent.useMutation({
-    onSuccess: () => {
-      context.supporter.findAllForEventInvitation.invalidate();
-    },
-  });
-  return (
-    <div>
-      <h3 className="font-bold">Supporters</h3>
-      <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-        {supporters ? (
-          supporters.map((supporter: SupporterType) => (
-            <li className="py-3 sm:py-4" key={supporter.id}>
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0">
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src="/eejii.jpeg"
-                    alt="avatar image"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                    {supporter.organization}
-                  </p>
-                  <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                    {supporter.email}
-                  </p>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <Button
-                    disabled={isLoading}
-                    onClick={() => {
-                      mutate({
-                        id: eventId,
-                        partnerId: null,
-                        supporterId: supporter.id,
-                      });
-                    }}
-                  >
-                    Invite
-                  </Button>
-                </div>
-              </div>
-            </li>
-          ))
-        ) : (
-          <span>...Loading</span>
-        )}
-      </ul>
-    </div>
-  );
-};
-
-const VolunteerList = ({ eventId }: { eventId: string }) => {
-  const { data: volunteers } = api.volunteer.findAllForEventInvitation.useQuery(
-    {
-      eventId: eventId,
-    }
-  );
-  const context = api.useContext();
-  const { mutate, isLoading } = api.partner.inviteToEvent.useMutation({
-    onSuccess: () => {
-      context.volunteer.findAllForEventInvitation.invalidate();
-    },
-  });
-  return (
-    <div>
-      <h3 className="font-bold">Supporters</h3>
-      <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-        {volunteers ? (
-          volunteers.map((volunteer: VolunteerType) => (
-            <li className="py-3 sm:py-4" key={volunteer.id}>
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0">
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src="/eejii.jpeg"
-                    alt="avatar image"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                    {volunteer.firstName}
-                  </p>
-                  <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                    {volunteer.email}
-                  </p>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <Button
-                    disabled={isLoading}
-                    onClick={() => {
-                      mutate({
-                        id: eventId,
-                        volunteerId: volunteer.id,
-                      });
-                    }}
-                  >
-                    Invite
-                  </Button>
-                </div>
-              </div>
-            </li>
-          ))
-        ) : (
-          <span>...Loading</span>
-        )}
-      </ul>
-    </div>
-  );
-};
-
 const Invite = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
   const [eventId, setEventId] = useState('');
+  const [userType, setUserType] = useState<string | null>(null);
+
   useEffect(() => {
     if (router.isReady) {
       setEventId(router.query.id as string);
     }
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (activeIndex === 0) {
+      setUserType(UserType.USER_PARTNER);
+    } else if (activeIndex === 1) {
+      setUserType(UserType.USER_SUPPORTER);
+    } else if (activeIndex === 2) {
+      setUserType(UserType.USER_VOLUNTEER);
+    }
+
+    console.log(userType);
+  }, [activeIndex]);
 
   const tabs = [
     {
@@ -217,10 +126,11 @@ const Invite = () => {
           setActiveIndex={setActiveIndex}
           activeIndex={activeIndex}
         />
+        <UserList eventId={eventId} userType={userType} />
 
-        {activeIndex == 0 && <PartnerList eventId={eventId} />}
-        {activeIndex == 1 && <SupporterList eventId={eventId} />}
-        {activeIndex == 2 && <VolunteerList eventId={eventId} />}
+        {/* {activeIndex == 0 && <PartnerList eventId={eventId} />} */}
+        {/* {activeIndex == 1 && <SupporterList eventId={eventId} />} */}
+        {/* {activeIndex == 2 && <VolunteerList eventId={eventId} />} */}
         <div className="flex justify-end">
           <Button
             onClick={() => {
