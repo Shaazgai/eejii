@@ -18,7 +18,7 @@ const FundraisingList = ({
         {!isLoading &&
           fundraisings?.length > 0 &&
           fundraisings.map(fund => {
-            return <FundCard key={fund.id} fund={fund} />;
+            return <FundCard key={fund.id} fund={fund} isVolunteer={true} />;
           })}
       </div>
     </div>

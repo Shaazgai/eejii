@@ -11,7 +11,7 @@ export default function index() {
       <div className="flex justify-center">
         <div className="grid grid-cols-1 gap-4  md:grid-cols-2 lg:md:grid-cols-3">
           {events?.map((event, index) => (
-            <EventCardPublic event={event} key={index} isVolunteer={false} />
+            <EventCardPublic event={event} key={index} isVolunteer={true} />
           ))}
         </div>
       </div>

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { format } from 'date-fns';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
-import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import type { FormEvent, ReactNode } from 'react';
 import { useState } from 'react';
 
@@ -33,6 +34,7 @@ const FundDetail = ({
   const [selectedAmount, setSelectedAmount] = useState(0);
   const [payment, setPayment] = useState<Payment>();
   const { toast } = useToast();
+  const router = useRouter();
 
   const session = useSession();
 
@@ -75,7 +77,11 @@ const FundDetail = ({
     <div className="">
       <div className="mb-3 flex items-center justify-between gap-5 border-b-2 border-dashed pb-2">
         <div className="mb-3 flex items-center gap-5">
-          <Button className="h-12 w-12 rounded-full p-3" variant={'outline'}>
+          <Button
+            onClick={() => router.back()}
+            className="h-12 w-12 rounded-full p-3"
+            variant={'outline'}
+          >
             <ArrowLeft className="h-12 w-12" />
           </Button>
           <div>
@@ -129,7 +135,7 @@ const FundDetail = ({
                                     onClick={() => {
                                       setSelectedAmount(100);
                                     }}
-                                    className="rounded bg-primary px-2 py-1 text-primary-foreground hover:bg-indigo-800"
+                                    className="text-primary-foreground rounded bg-primary px-2 py-1 hover:bg-indigo-800"
                                   >
                                     100
                                   </Button>
@@ -138,7 +144,7 @@ const FundDetail = ({
                                     onClick={() => {
                                       setSelectedAmount(200);
                                     }}
-                                    className="rounded bg-primary px-2 py-1 text-primary-foreground hover:bg-indigo-800"
+                                    className="text-primary-foreground rounded bg-primary px-2 py-1 hover:bg-indigo-800"
                                   >
                                     200
                                   </Button>
@@ -147,7 +153,7 @@ const FundDetail = ({
                                     onClick={() => {
                                       setSelectedAmount(300);
                                     }}
-                                    className="rounded bg-primary px-2 py-1 text-primary-foreground hover:bg-indigo-800"
+                                    className="text-primary-foreground rounded bg-primary px-2 py-1 hover:bg-indigo-800"
                                   >
                                     300
                                   </Button>
@@ -156,7 +162,7 @@ const FundDetail = ({
                                     onClick={() => {
                                       setSelectedAmount(400);
                                     }}
-                                    className="rounded bg-primary px-2 py-1 text-primary-foreground hover:bg-indigo-800"
+                                    className="text-primary-foreground rounded bg-primary px-2 py-1 hover:bg-indigo-800"
                                   >
                                     400
                                   </Button>
