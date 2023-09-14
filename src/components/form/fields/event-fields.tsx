@@ -266,7 +266,7 @@ const EventFields = ({
                 />
                 <FormMessage />
               </FormItem>
-              <FormItem className="w-full" key={i}>
+              <FormItem className="w-full" key={i + 1}>
                 <Input
                   type="number"
                   className="rounded-none border-0 border-b border-b-gray-300 bg-transparent shadow-none focus-visible:border-b-gray-500 focus-visible:ring-0"

@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoaderIcon } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,6 +7,7 @@ import type { z } from 'zod';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 import { api } from '@/utils/api';
 
+import { Icons } from '../icons';
 import { Button } from '../ui/button';
 import { Form } from '../ui/form';
 import { Input } from '../ui/input';
@@ -76,7 +76,7 @@ const FundraisingForm = ({
                 }
               >
                 {form.formState.isLoading || form.formState.isSubmitting ? (
-                  <LoaderIcon />
+                  <Icons.spinner className="h-4 w-4 animate-spin" />
                 ) : (
                   'Submit'
                 )}

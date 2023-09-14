@@ -8,7 +8,6 @@ import { UserType } from '@/lib/db/enums';
 export default function Auth() {
   const session = useSession();
   const router = useRouter();
-  console.log('🚀 ~ file: login.tsx:10 ~ Auth ~ session:', session);
 
   function checkUserType(userTypeProp: UserType) {
     if (userTypeProp == UserType.USER_VOLUNTEER) return 'v';
