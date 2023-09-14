@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { UserType } from '@/lib/db/enums';
 
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
@@ -87,13 +88,14 @@ export const eventRouter = createTRPCRouter({
         SELECT u.*
         FROM "User" u
         LEFT JOIN "EventAssociation" as ea ON ea."userId" = u."id"
-        WHERE ea."eventId" IS DISTINCT FROM ${
+        WHERE (ea."eventId" IS DISTINCT FROM ${
           input.eventId
-        } OR ea."eventId" IS NULL
+        } OR ea."eventId" IS NULL)
         AND u."id" != ${sql.raw(
           `(SELECT e."ownerId" FROM "Event" AS e WHERE e."id" = '${input.eventId}')`
         )}
-        AND u."type" = '${input.userType}'
+        AND u."type" = ${input.userType}
+        AND u."id" != ${ctx.userId}
         `.execute(ctx.db);
 
       return query.rows;

@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoaderIcon } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,9 +11,7 @@ import { Form } from '@/components/ui/form';
 import { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
 
-import { Icons } from '../icons';
 import { Input } from '../ui/input';
-import { LoaderIcon } from 'lucide-react';
 
 const EventForm = ({
   data,
@@ -73,7 +72,7 @@ const EventForm = ({
                 }
               >
                 {form.formState.isLoading || form.formState.isSubmitting ? (
-                  <Icons.spinner className="h-4 w-4 animate-spin" />
+                  <LoaderIcon />
                 ) : (
                   'Submit'
                 )}
