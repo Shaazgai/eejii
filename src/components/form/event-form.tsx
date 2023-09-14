@@ -10,6 +10,7 @@ import { Form } from '@/components/ui/form';
 import { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
 
+import { Icons } from '../icons';
 import { Input } from '../ui/input';
 
 const EventForm = ({
@@ -75,7 +76,7 @@ const EventForm = ({
                 }
               >
                 {form.formState.isLoading || form.formState.isSubmitting ? (
-                  <LoaderIcon />
+                  <Icons.spinner className="h-4 w-4 animate-spin" />
                 ) : (
                   'Submit'
                 )}

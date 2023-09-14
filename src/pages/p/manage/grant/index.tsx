@@ -1,22 +1,19 @@
 import { useRouter } from 'next/router';
 
 import GrantCard from '@/components/card/manage/grant-card';
+import SectionHeader from '@/components/common/section-header';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { api } from '@/utils/api';
-import SectionHeader from '@/components/common/section-header';
 
 export default function ManageProjects() {
   const router = useRouter();
 
   const { data: fundraising, isLoading: isFundraisingLoading } =
     api.fundraising.getAll.useQuery();
-  console.log(
-    '🚀 ~ file: index.tsx:15 ~ ManageProjects ~ fundraising:',
-    isFundraisingLoading
-  );
+
   const { data: grantFundraising, isLoading: isGrantFundraisingLoading } =
     api.grantFundraising.getAll.useQuery();
   const { data: event, isLoading: isEventLoading } =
