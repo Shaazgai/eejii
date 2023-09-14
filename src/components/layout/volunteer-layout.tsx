@@ -18,21 +18,21 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
     },
     {
       title: 'Төсөл хөтөлөр',
-      href: '/v/volunteer',
+      href: '/v/events',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
       title: 'Хандив',
-      href: '/v/donate',
+      href: '/v/fundraising',
       icon: <CalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
       title: 'Гэр бүл',
-      href: '/v/join-requests',
+      href: '/v/family',
       icon: <UserCog className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
@@ -40,7 +40,7 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
   ];
 
   return (
-    <div className=''>
+    <div className="">
       <HeaderV1 headerNav={volunteerHeaderNav} />
       {children}
       <Footer />
