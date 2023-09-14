@@ -12,6 +12,7 @@ import { api } from '@/utils/api';
 
 import { Icons } from '../icons';
 import { Input } from '../ui/input';
+import { LoaderIcon } from 'lucide-react';
 
 const EventForm = ({
   data,
@@ -35,10 +36,6 @@ const EventForm = ({
       roles: data?.roles || [],
     },
   });
-  const { data: categories, isFetching: isCategoryFetching } =
-    api.category.getAll.useQuery({
-      type: 'event',
-    });
 
   useEffect(() => {
     form.reset(data);

@@ -96,7 +96,7 @@ const HeaderV2 = ({
               size={'default'}
               className="flex gap-2"
             >
-              <Link href={'sign-in'}>
+              <Link href={'/auth/login'}>
                 <User2Icon className="h-5 w-5" />
                 Login
               </Link>

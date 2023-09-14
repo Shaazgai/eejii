@@ -11,7 +11,11 @@ import { Form } from '../ui/form';
 import FundraisingFields from './fields/fundraising-fields';
 import { useRouter } from 'next/router';
 
-const GrantFundraisingForm = ({data}: {data: z.infer<typeof fundraisingSchema>}) => {
+const GrantFundraisingForm = ({
+  data,
+}: {
+  data: z.infer<typeof fundraisingSchema>;
+}) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof fundraisingSchema>>({
     resolver: zodResolver(fundraisingSchema),

@@ -7,7 +7,7 @@ const phoneRegex = new RegExp(
 export const roleSchema = z.string();
 
 export const eventSchema = z.object({
-  id: z.string().nullish(),
+  id: z.string().nullish().nullable(),
   title: z.string().min(2, {
     message: 'Country must have at least 2 characters.',
   }),
