@@ -119,6 +119,11 @@ export default function Signup() {
             >
               Volunteer
             </Button>
+            <Button
+              onClick={() => handleUserTypeSelection(UserType.USER_SUPPORTER)}
+            >
+              Supporter
+            </Button>
           </div>
         )}
       </div>

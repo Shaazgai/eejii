@@ -17,12 +17,16 @@ const EventDetail = ({
   actionButton: ReactNode;
 }) => {
   const router = useRouter();
-  console.log(event.CategoryEvent);
+
   return (
     <div>
       <div className="mb-3 flex items-center justify-between gap-5  pb-2">
         <div className="mb-3 flex items-center gap-5">
-          <Button className="h-12 w-12 rounded-full p-3" variant={'outline'}>
+          <Button
+            onClick={() => router.back()}
+            className="h-12 w-12 rounded-full p-3"
+            variant={'outline'}
+          >
             <ArrowLeft className="h-12 w-12" />
           </Button>
           <div>
@@ -90,7 +94,7 @@ const EventDetail = ({
                   width={30}
                   height={30}
                 />
-                <span className="">{event.Owner.organization}</span>
+                <span className="">{event.Owner?.organization}</span>
               </div>
             </CardHeader>
             <CardContent>
@@ -100,22 +104,22 @@ const EventDetail = ({
                 className="mt-4 divide-y divide-gray-200 dark:divide-gray-700"
               >
                 <li className="flex justify-between rounded  py-3 sm:py-2">
-                  <span>Organization:</span> {event.Owner.organization}
+                  <span>Organization:</span> {event.Owner?.organization}
                 </li>
                 <li className="flex justify-between rounded py-1 sm:py-2">
-                  <span>Email:</span> {event.Owner.email}
+                  <span>Email:</span> {event.Owner?.email}
                 </li>
                 <li className="flex justify-between rounded py-1 sm:py-2">
                   <span>Primary phone:</span>{' '}
                   {
-                    (event.Owner.phoneNumbers as unknown as ContactType)
+                    (event.Owner?.phoneNumbers as unknown as ContactType)
                       ?.primary_phone
                   }
                 </li>
                 <li className="flex justify-between rounded py-1 sm:py-2">
                   <span>Secondary phone:</span>{' '}
                   {
-                    (event.Owner.phoneNumbers as unknown as ContactType)
+                    (event.Owner?.phoneNumbers as unknown as ContactType)
                       ?.secondary_phone
                   }
                 </li>
@@ -137,26 +141,26 @@ const EventDetail = ({
             <CardHeader>
               Attending
               <span>
-                {event.EventPartner.filter(ep => ep.status === 'approved')
+                {event.EventPartner?.filter(ep => ep.status === 'approved')
                   .length +
-                  event.EventSupporter.filter(es => es.status === 'approved')
+                  event.EventSupporter?.filter(es => es.status === 'approved')
                     .length >
                   0 && (
                   <span>
                     Collaborating with{' '}
-                    {event.EventPartner.filter(ep => ep.status === 'approved')
+                    {event.EventPartner?.filter(ep => ep.status === 'approved')
                       .length +
-                      event.EventSupporter.filter(
+                      event.EventSupporter?.filter(
                         es => es.status === 'approved'
                       ).length}
                     {' partners and supporters'}
                   </span>
                 )}
-                {event.EventVolunteer.filter(ev => ev.status === 'approved')
+                {event.EventVolunteer?.filter(ev => ev.status === 'approved')
                   .length > 0 && (
                   <span>
                     {
-                      event.EventVolunteer.filter(
+                      event.EventVolunteer?.filter(
                         ev => ev.status === 'approved'
                       ).length
                     }

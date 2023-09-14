@@ -1,6 +1,7 @@
 'use client';
 
 import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -17,7 +18,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { Button } from '../ui/button';
-import { useSession } from 'next-auth/react';
 interface HeaderProps {
   title: string;
   href: string;
@@ -68,7 +68,7 @@ const HeaderV2 = ({
           {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-1 focus:outline-none">
-                {session?.user.name}
+                {session?.user.email}
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -84,8 +84,9 @@ const HeaderV2 = ({
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut()}>
                   <LogOut className="mr-2 h-4 w-4" />
+                  SignOut
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

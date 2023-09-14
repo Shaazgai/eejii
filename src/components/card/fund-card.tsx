@@ -4,9 +4,15 @@ import type { FundraisingType } from '@/lib/types';
 
 import { Icons } from '../icons';
 
-export default function FundCardPublic({ fund }: { fund: FundraisingType }) {
+export default function FundCardPublic({
+  fund,
+  isVolunteer,
+}: {
+  fund: FundraisingType;
+  isVolunteer: boolean;
+}) {
   return (
-    <Link href={`/fundraising/${fund.id}`}>
+    <Link href={`/${isVolunteer ? 'v/' : ''}fundraising/${fund.id}`}>
       <div className="md:w-70 flex w-full flex-col  rounded-xl border ">
         <div
           aria-label="Product Placeholder"

@@ -4,10 +4,16 @@ import type { EventType } from '@/lib/types';
 
 import { Icons } from '../icons';
 
-export default function EventCardPublic({ event }: { event: EventType }) {
-  console.log(event);
+export default function EventCardPublic({
+  event,
+  isVolunteer,
+}: {
+  event: EventType;
+  isVolunteer: boolean;
+}) {
+  console.log('🚀 ~ file: event-card.tsx:14 ~ isVolunteer:', isVolunteer);
   return (
-    <Link href={`/events/${event.id}`}>
+    <Link href={`/${isVolunteer ? 'v/' : ''}events/${event.id}`}>
       <div className="md:w-70 flex w-full flex-col  rounded-xl border ">
         <div
           aria-label="Product Placeholder"

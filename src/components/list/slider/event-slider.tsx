@@ -91,7 +91,10 @@ const EventSlider = ({
                 events.slice(0, 6).map(event => {
                   return (
                     <div className="embla__slide" key={event.id}>
-                      <EventCard event={event as EventType} />
+                      <EventCard
+                        event={event as EventType}
+                        isVolunteer={true}
+                      />
                     </div>
                   );
                 })}

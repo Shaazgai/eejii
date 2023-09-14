@@ -92,7 +92,7 @@ const FundSlider = ({
                 fundraisings.slice(0, 6).map(fund => {
                   return (
                     <div className="embla__slide" key={fund.id}>
-                      <FundCardPublic fund={fund} />
+                      <FundCardPublic fund={fund} isVolunteer={true} />
                     </div>
                   );
                 })}
