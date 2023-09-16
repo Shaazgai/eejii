@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import type { EventType } from '@/lib/types';
+import type { EventWithOwner } from '@/lib/types';
 
 import { Icons } from '../icons';
 
@@ -8,7 +8,7 @@ export default function EventCardPublic({
   event,
   isVolunteer,
 }: {
-  event: EventType;
+  event: EventWithOwner;
   isVolunteer: boolean;
 }) {
   console.log('🚀 ~ file: event-card.tsx:14 ~ isVolunteer:', isVolunteer);

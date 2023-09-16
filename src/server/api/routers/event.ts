@@ -3,10 +3,11 @@ import { sql } from 'kysely';
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
-import type { User } from '@/lib/db/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { UserType } from '@/lib/db/enums';
+import { User } from '@/lib/db/types';
 
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
@@ -74,7 +75,7 @@ export const eventRouter = createTRPCRouter({
         WHERE ea."userId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )} OR ea."userId" IS NULL
-        AND e."userId" != ${sql.raw(
+        AND e."ownerId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )}
       `.execute(ctx.db);

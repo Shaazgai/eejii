@@ -73,7 +73,7 @@ export const grantFundraisingRouter = createTRPCRouter({
         WHERE ga."userId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )} OR ga."userId" IS NULL
-        AND g."userId" != ${sql.raw(
+        AND g."ownerId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )}
       `.execute(ctx.db);
@@ -107,10 +107,8 @@ export const grantFundraisingRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           contact: {
-            primary_phone: input.primary_phone,
-            secondary_phone: input.secondary_phone,
-            email_1: input.email_1,
-            email_2: input.email_2,
+            phone: input.contact.phone,
+            email: input.contact.email,
           },
           location: input.location,
           startTime: input.startTime,
@@ -140,10 +138,8 @@ export const grantFundraisingRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           contact: {
-            primary_phone: input.primary_phone,
-            secondary_phone: input.secondary_phone,
-            email_1: input.email_1,
-            email_2: input.email_2,
+            phone: input.contact.phone,
+            email: input.contact.email,
           },
           location: input.location,
           startTime: input.startTime,

@@ -1,20 +1,50 @@
-import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
+import EventRequestCard from '@/components/card/request/event-request-card';
 import FundRequestCard from '@/components/card/request/fund-request-card';
+import GrantRequestCard from '@/components/card/request/grant-request-card';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
-import type { FundraisingType } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import type {
+  EventAssociationWithEvent,
+  FundAssociationWithFund,
+  GrantAssociationWithGrant,
+} from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Index = () => {
+  const session = useSession();
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
-  const { data: myCollaborations, isLoading: isCollabLoading } =
-    api.fundraising.getMyCollaborated.useQuery();
-  const { data: myPendingCollabs, isLoading: isPendingLoading } =
-    api.fundraising.getMyPending.useQuery();
-  const { data: notRelatedFunds, isLoading: isExploreLoading } =
-    api.fundraising.getNotRelated.useQuery();
+  const [status, setStatus] = useState('approved');
+
+  const { data: eventAssociation, isLoading: isEventLoading } =
+    api.eventAssociation.findAll.useQuery({
+      userId: session.data?.user.id,
+      status: status,
+    });
+  const { data: fundAssociation, isLoading: isFundLoading } =
+    api.fundAssociation.findAll.useQuery({
+      userId: session.data?.user.id,
+      status: status,
+    });
+  const { data: grantAssociation, isLoading: isGrantLoading } =
+    api.grantAssociation.findAll.useQuery({
+      userId: session.data?.user.id,
+      status: status,
+    });
+  useEffect(() => {
+    if (activeIndex === 0) {
+      setStatus('approved');
+    } else if (activeIndex === 1) {
+      setStatus('pending');
+    }
+  }, [activeIndex]);
   const tabs = [
     {
       title: `My collaborations`,
@@ -23,10 +53,6 @@ const Index = () => {
     {
       title: `Pending`,
       index: 1,
-    },
-    {
-      title: `Explore`,
-      index: 2,
     },
   ];
 
@@ -40,65 +66,63 @@ const Index = () => {
               Search through exciting projects and send request to join them
             </p>
           </div>
-          <NormalTabs
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-            tabs={tabs}
-          />
-          {activeIndex === 0 && (
-            <div className="space-y-4">
-              {myCollaborations && myCollaborations.length > 0 ? (
-                !isCollabLoading && myCollaborations ? (
-                  myCollaborations.map(collab => (
-                    <FundRequestCard
-                      fundraising={collab as FundraisingType}
-                      key={collab.id}
-                    />
-                  ))
-                ) : (
-                  <span>..Loading</span>
-                )
-              ) : (
-                <span>No collab</span>
-              )}
-            </div>
-          )}
-          {activeIndex === 1 && (
-            <div className="space-y-4">
-              {myPendingCollabs && myPendingCollabs?.length > 0 ? (
-                !isPendingLoading && myPendingCollabs ? (
-                  myPendingCollabs.map(collab => (
-                    <FundRequestCard
-                      fundraising={collab as FundraisingType}
-                      key={collab.id}
-                    />
-                  ))
-                ) : (
-                  <span>..Loading</span>
-                )
-              ) : (
-                <span>No collab</span>
-              )}
-            </div>
-          )}
-          {activeIndex == 2 && (
-            <div className="space-y-4">
-              {notRelatedFunds && notRelatedFunds.length > 0 ? (
-                !isExploreLoading && notRelatedFunds ? (
-                  notRelatedFunds.map((collab, i) => (
-                    <FundRequestCard
-                      fundraising={collab as FundraisingType}
+          <div className="flex justify-between">
+            <NormalTabs
+              activeIndex={activeIndex}
+              setActiveIndex={setActiveIndex}
+              tabs={tabs}
+            />
+            <Button
+              variant={'outline'}
+              onClick={() => router.push('/p/collaboration/explore')}
+            >
+              Explore <ArrowRight />
+            </Button>
+          </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h3>Events</h3>
+              {!isEventLoading
+                ? eventAssociation?.map((event, i) => (
+                    <EventRequestCard
+                      eventAssociation={
+                        event as unknown as EventAssociationWithEvent
+                      }
                       key={i}
                     />
                   ))
-                ) : (
-                  <span>..Loading</span>
-                )
-              ) : (
-                <span>No collab</span>
-              )}
+                : '..Loading'}
+              {eventAssociation?.length === 0 && 'No result'}
             </div>
-          )}
+            <div className="space-y-2">
+              <h3>Fundraisings</h3>
+              {!isFundLoading
+                ? fundAssociation?.map((fund, i) => (
+                    <FundRequestCard
+                      fundAssociation={
+                        fund as unknown as FundAssociationWithFund
+                      }
+                      key={i}
+                    />
+                  ))
+                : '..Loading'}
+              {fundAssociation?.length === 0 && 'No result'}
+            </div>
+            <div>
+              <h3>Grant Fundraisings</h3>
+              {!isGrantLoading
+                ? grantAssociation?.map((grant, i) => (
+                    <GrantRequestCard
+                      grantAssociation={
+                        grant as unknown as GrantAssociationWithGrant
+                      }
+                      key={i}
+                    />
+                  ))
+                : '..Loading'}
+              {grantAssociation?.length === 0 && 'No result'}
+            </div>
+          </div>
         </div>
       </Shell>
     </PartnerLayout>

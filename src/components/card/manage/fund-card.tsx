@@ -2,11 +2,11 @@ import { ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/router';
 
 import { Button } from '@/components/ui/button';
-import type { FundraisingType } from '@/lib/types';
+import type { Fundraising } from '@/lib/db/types';
 export default function FundCard({
   fundraising,
 }: {
-  fundraising: FundraisingType;
+  fundraising: Fundraising;
 }) {
   console.log('🚀 ~ file: project-card.tsx:11 ~ fundraising:', fundraising);
   const router = useRouter();

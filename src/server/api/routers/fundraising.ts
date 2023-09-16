@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { Fundraising } from '@/lib/db/types';
 
 export const fundraisingRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -73,12 +74,11 @@ export const fundraisingRouter = createTRPCRouter({
         WHERE fa."userId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )} OR fa."userId" IS NULL
-        AND f."userId" != ${sql.raw(
+        AND f."ownerId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )}
       `.execute(ctx.db);
-    console.log(query.rows);
-    return query.rows;
+    return query.rows as Fundraising[];
   }),
   findUsersToInvite: publicProcedure // Find all partners for fundraising to invite them
     .input(z.object({ fundId: z.string(), userType: z.string() }))
@@ -94,7 +94,7 @@ export const fundraisingRouter = createTRPCRouter({
           `(SELECT f."ownerId" FROM "Fundraising" AS f WHERE f."id" = '${input.fundId}')`
         )}
         AND u."type" = ${input.userType}
-        AND u."id" != ${ctx.userId}
+        AND u."id" = ${ctx.userId}
         `.execute(ctx.db);
 
       return query.rows;
@@ -109,10 +109,8 @@ export const fundraisingRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           contact: {
-            primary_phone: input.primary_phone,
-            secondary_phone: input.secondary_phone,
-            email_1: input.email_1,
-            email_2: input.email_2,
+            phone: input.contact.phone,
+            email: input.contact.email,
           },
           location: input.location,
           startTime: input.startTime,
@@ -142,10 +140,8 @@ export const fundraisingRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           contact: {
-            primary_phone: input.primary_phone,
-            secondary_phone: input.secondary_phone,
-            email_1: input.email_1,
-            email_2: input.email_2,
+            phone: input.contact.phone,
+            email: input.contact.email,
           },
           location: input.location,
           startTime: input.startTime,
