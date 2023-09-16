@@ -1,3 +1,4 @@
+import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
 import { createTRPCRouter, privateProcedure } from '../trpc';
@@ -14,9 +15,18 @@ export const fundAssociationRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      let query = ctx.db.selectFrom('FundAssociation').selectAll();
-
-      console.log(input)
+      let query = ctx.db
+        .selectFrom('FundAssociation')
+        .selectAll()
+        .select(eb => [
+          jsonObjectFrom(
+            eb
+              .selectFrom('Fundraising')
+              .selectAll()
+              .whereRef('Fundraising.id', '=', 'FundAssociation.fundraisingId')
+          ).as('Fundraising'),
+        ]);
+      console.log(input);
       if (input.type) {
         query = query.where('FundAssociation.type', '=', input.type);
       }

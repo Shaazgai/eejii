@@ -1,8 +1,14 @@
 import Link from 'next/link';
 
+import type { GrantFundraising } from '@/lib/db/types';
+
 import { Icons } from '../icons';
 
-export default function GrantCardPublic({ grant }) {
+export default function GrantCardPublic({
+  grant,
+}: {
+  grant: GrantFundraising;
+}) {
   return (
     <Link href={`/grant-fundraising/${grant?.id}`}>
       <div className="flex w-96 flex-col rounded-xl  border">

@@ -1,20 +1,20 @@
 import { Button } from '@/components/ui/button';
-import type { FundAssociationWithFund } from '@/lib/types';
+import type { EventAssociationWithEvent } from '@/lib/types';
 import { api } from '@/utils/api';
 
-const FundRequestCard = ({
-  fundAssociation,
+const EventRequestCard = ({
+  eventAssociation,
 }: {
-  fundAssociation: FundAssociationWithFund;
+  eventAssociation: EventAssociationWithEvent;
 }) => {
-  const fundraising = fundAssociation.Fundraising;
-  const { mutate } = api.fundAssociation.handleFundRequest.useMutation({
+  const event = eventAssociation.Event;
+  const { mutate } = api.eventAssociation.handleEventRequest.useMutation({
     onSuccess: res => console.log(res),
   });
 
   function handleRequest(status: string) {
     mutate({
-      id: fundAssociation.id as unknown as string,
+      id: eventAssociation.id as unknown as string,
       status: status,
     });
   }
@@ -25,13 +25,13 @@ const FundRequestCard = ({
           2022.10.10
         </div>
         <div className="flex flex-col p-4">
-          <div>{fundraising?.title}</div>
-          <div>{fundraising?.description}</div>
+          <div>{event?.title}</div>
+          <div>{event?.description}</div>
         </div>
       </div>
       <div className="flex items-center justify-center p-4">
-        {fundAssociation.type === 'invitation' &&
-          fundAssociation.status === 'pending' && (
+        {eventAssociation.type === 'invitation' &&
+          eventAssociation.status === 'pending' && (
             <div className="space-x-2">
               <Button
                 variant="default"
@@ -52,4 +52,4 @@ const FundRequestCard = ({
   );
 };
 
-export default FundRequestCard;
+export default EventRequestCard;

@@ -1,4 +1,12 @@
-import type { Event, Fundraising, GrantFundraising, User } from './db/types';
+import type {
+  Event,
+  EventAssociation,
+  FundAssociation,
+  Fundraising,
+  GrantAssociation,
+  GrantFundraising,
+  User,
+} from './db/types';
 
 export type VolunteerTableProps = {
   email: string;
@@ -22,4 +30,16 @@ export type FundWithOwner = Fundraising & {
 
 export type GrantFundWithOwner = GrantFundraising & {
   Owner: User;
+};
+
+export type EventAssociationWithEvent = EventAssociation & {
+  Event: Event;
+};
+
+export type FundAssociationWithFund = FundAssociation & {
+  Fundraising: Fundraising;
+};
+
+export type GrantAssociationWithGrant = GrantAssociation & {
+  Grant: GrantFundraising;
 };

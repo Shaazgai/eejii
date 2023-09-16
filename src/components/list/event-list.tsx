@@ -1,13 +1,15 @@
-import type { EventType } from '@/lib/types';
+import type { EventWithOwner } from '@/lib/types';
 
 import EventCard from '../card/event-card';
 
 const EventList = ({
   events,
   isLoading,
+  isVolunteer,
 }: {
-  events: EventType[];
+  events: EventWithOwner[];
   isLoading: boolean;
+  isVolunteer: boolean;
 }) => {
   return (
     <div>
@@ -18,8 +20,14 @@ const EventList = ({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!isLoading &&
           events?.length > 0 &&
-          events.map(event => {
-            return <EventCard key={event.id} event={event} />;
+          events.map((event, i) => {
+            return (
+              <EventCard
+                key={i}
+                event={event as EventWithOwner}
+                isVolunteer={isVolunteer}
+              />
+            );
           })}
       </div>
     </div>
