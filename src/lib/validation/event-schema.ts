@@ -32,7 +32,7 @@ export const eventSchema = z.object({
     .array(
       z.object({
         name: z.string(),
-        number: z.number(),
+        number: z.string(),
       })
     )
     .nullish(),
