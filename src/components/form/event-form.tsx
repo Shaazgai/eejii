@@ -39,6 +39,7 @@ const EventForm = ({
   useEffect(() => {
     form.reset(data);
   }, [data]);
+  console.log(form.formState.isValid);
 
   const { mutate } = api.event.create.useMutation({
     onSuccess: newEvent => {

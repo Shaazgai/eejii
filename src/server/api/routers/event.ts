@@ -3,10 +3,10 @@ import { sql } from 'kysely';
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
+import type { User } from '@/lib/db/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import { UserType } from '@/lib/db/enums';
 
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
@@ -98,7 +98,7 @@ export const eventRouter = createTRPCRouter({
         AND u."id" != ${ctx.userId}
         `.execute(ctx.db);
 
-      return query.rows;
+      return query.rows as User[];
     }),
   create: privateProcedure
     .input(eventSchema)
@@ -140,8 +140,8 @@ export const eventRouter = createTRPCRouter({
           description: input.description,
           requiredTime: input.requiredTime,
           contact: {
-            phone_primary: input.contact.phone_primary,
-            phone_secondary: input.contact.phone_secondary,
+            phone: input.contact.phone,
+            email: input.contact.email,
           },
           location: input.location,
           startTime: input.startTime,

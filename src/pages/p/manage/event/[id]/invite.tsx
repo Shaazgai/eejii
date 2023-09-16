@@ -5,7 +5,6 @@ import PartnerLayout from '@/components/layout/partner-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Button } from '@/components/ui/button';
 import { UserType } from '@/lib/db/enums';
-import type { PartnerType } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const UserList = ({
@@ -15,7 +14,7 @@ const UserList = ({
   eventId: string;
   userType: string;
 }) => {
-  const { data: partners } = api.event.findUsersToInvite.useQuery({
+  const { data: users } = api.event.findUsersToInvite.useQuery({
     eventId: eventId,
     userType: userType,
   });
@@ -36,9 +35,9 @@ const UserList = ({
           : 'Volunteers'}
       </h3>
       <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-        {partners ? (
-          partners.map((partner: PartnerType) => (
-            <li className="py-3 sm:py-4" key={partner.id}>
+        {users ? (
+          users.map((user, i) => (
+            <li className="py-3 sm:py-4" key={i}>
               <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0">
                   {/* <img
@@ -46,14 +45,14 @@ const UserList = ({
                     src="/eejii.jpeg"
                     alt="avatar image"
                   /> */}
-                  {partner.id}
+                  {user.id as unknown as string}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                    {partner.organization}
+                    {user.organization}
                   </p>
                   <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                    {partner.email}
+                    {user.email}
                   </p>
                 </div>
                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
@@ -62,7 +61,7 @@ const UserList = ({
                     onClick={() => {
                       mutate({
                         id: eventId,
-                        partnerId: partner.id,
+                        userId: user.id as unknown as string,
                       });
                     }}
                   >
@@ -84,7 +83,7 @@ const Invite = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
   const [eventId, setEventId] = useState('');
-  const [userType, setUserType] = useState<string | null>(null);
+  const [userType, setUserType] = useState<string | null>('USER_PARTNER');
 
   useEffect(() => {
     if (router.isReady) {
@@ -126,11 +125,7 @@ const Invite = () => {
           setActiveIndex={setActiveIndex}
           activeIndex={activeIndex}
         />
-        <UserList eventId={eventId} userType={userType} />
-
-        {/* {activeIndex == 0 && <PartnerList eventId={eventId} />} */}
-        {/* {activeIndex == 1 && <SupporterList eventId={eventId} />} */}
-        {/* {activeIndex == 2 && <VolunteerList eventId={eventId} />} */}
+        <UserList eventId={eventId} userType={userType as string} />
         <div className="flex justify-end">
           <Button
             onClick={() => {
