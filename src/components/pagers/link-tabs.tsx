@@ -10,7 +10,7 @@ export function LinkTabs({ tabs }) {
 
   return (
     <Tabs
-      className={cn('w-full overflow-x-auto')}
+      className={cn('overflow-x-auto')}
       onValueChange={value => router.push(value)}
     >
       <TabsList>

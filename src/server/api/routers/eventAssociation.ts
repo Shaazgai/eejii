@@ -17,7 +17,13 @@ export const eventAssociationRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       let query = ctx.db
         .selectFrom('EventAssociation')
-        .selectAll()
+        .select([
+          'EventAssociation.id',
+          'EventAssociation.type',
+          'EventAssociation.userId',
+          'EventAssociation.status',
+          'EventAssociation.eventId',
+        ])
         .select(eb => [
           jsonObjectFrom(
             eb
@@ -26,7 +32,6 @@ export const eventAssociationRouter = createTRPCRouter({
               .whereRef('Event.id', '=', 'EventAssociation.eventId')
           ).as('Event'),
         ]);
-      console.log(input);
       if (input.type) {
         query = query.where('EventAssociation.type', '=', input.type);
       }
@@ -97,13 +102,14 @@ export const eventAssociationRouter = createTRPCRouter({
   handleEventRequest: privateProcedure // Owner of the event will handle the request of it's invitation
     .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      ctx.db
+      const res = await ctx.db
         .updateTable('EventAssociation')
         .where('id', '=', input.id)
         .set({
           status: input.status,
         })
-        .execute();
-      return { message: 'Success' };
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return { message: 'Success', response: res };
     }),
 });

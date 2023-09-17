@@ -3,11 +3,10 @@ import { sql } from 'kysely';
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
+import type { User } from '@/lib/db/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import { UserType } from '@/lib/db/enums';
-import { User } from '@/lib/db/types';
 
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
@@ -25,7 +24,15 @@ export const eventRouter = createTRPCRouter({
       .execute();
     return events;
   }),
+  getMyEvents: privateProcedure.query(async ({ ctx }) => {
+    const events = await ctx.db
+      .selectFrom('Event')
+      .selectAll()
+      .where('ownerId', '=', ctx.userId)
+      .execute();
 
+    return events;
+  }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {

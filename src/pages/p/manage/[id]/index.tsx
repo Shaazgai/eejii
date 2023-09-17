@@ -35,7 +35,7 @@ export default function EventViewPage(
   if (!data) return <>404</>;
   // if (isRequestLoading) <>...Loading</>;
   // const [activeIndex, setActiveIndex] = useState(0);
-  console.log(requests);
+  // console.log(requests);
   return (
     <PartnerLayout>
       <Shell>

@@ -17,7 +17,13 @@ export const fundAssociationRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       let query = ctx.db
         .selectFrom('FundAssociation')
-        .selectAll()
+        .select([
+          'FundAssociation.id',
+          'FundAssociation.type',
+          'FundAssociation.userId',
+          'FundAssociation.status',
+          'FundAssociation.fundraisingId',
+        ])
         .select(eb => [
           jsonObjectFrom(
             eb
@@ -26,7 +32,6 @@ export const fundAssociationRouter = createTRPCRouter({
               .whereRef('Fundraising.id', '=', 'FundAssociation.fundraisingId')
           ).as('Fundraising'),
         ]);
-      console.log(input);
       if (input.type) {
         query = query.where('FundAssociation.type', '=', input.type);
       }

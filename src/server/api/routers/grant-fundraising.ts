@@ -23,7 +23,15 @@ export const grantFundraisingRouter = createTRPCRouter({
       .execute();
     return grantFundraising;
   }),
+  getMyGrants: privateProcedure.query(async ({ ctx }) => {
+    const grants = await ctx.db
+      .selectFrom('GrantFundraising')
+      .selectAll()
+      .where('ownerId', '=', ctx.userId)
+      .execute();
 
+    return grants;
+  }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
