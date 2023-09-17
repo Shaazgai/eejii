@@ -85,6 +85,7 @@ const Index = () => {
               {!isEventLoading
                 ? eventAssociation?.map((event, i) => (
                     <EventRequestCard
+                      isOwner={false}
                       eventAssociation={
                         event as unknown as EventAssociationWithEvent
                       }
@@ -99,6 +100,7 @@ const Index = () => {
               {!isFundLoading
                 ? fundAssociation?.map((fund, i) => (
                     <FundRequestCard
+                      isOwner={false}
                       fundAssociation={
                         fund as unknown as FundAssociationWithFund
                       }
@@ -113,6 +115,7 @@ const Index = () => {
               {!isGrantLoading
                 ? grantAssociation?.map((grant, i) => (
                     <GrantRequestCard
+                      isOwner={false}
                       grantAssociation={
                         grant as unknown as GrantAssociationWithGrant
                       }

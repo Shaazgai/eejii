@@ -17,7 +17,13 @@ export const grantAssociationRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       let query = ctx.db
         .selectFrom('GrantAssociation')
-        .selectAll()
+        .select([
+          'GrantAssociation.id',
+          'GrantAssociation.type',
+          'GrantAssociation.userId',
+          'GrantAssociation.status',
+          'GrantAssociation.grantId',
+        ])
         .select(eb => [
           jsonObjectFrom(
             eb

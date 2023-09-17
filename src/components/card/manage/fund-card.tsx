@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { Button } from '@/components/ui/button';
 import type { Fundraising } from '@/lib/db/types';
+
 export default function FundCard({
   fundraising,
 }: {

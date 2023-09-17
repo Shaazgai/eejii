@@ -3,10 +3,10 @@ import { sql } from 'kysely';
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
+import type { Fundraising } from '@/lib/db/types';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import { Fundraising } from '@/lib/db/types';
 
 export const fundraisingRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -24,7 +24,15 @@ export const fundraisingRouter = createTRPCRouter({
       .execute();
     return fundraising;
   }),
+  getMyFunds: privateProcedure.query(async ({ ctx }) => {
+    const fundraisings = await ctx.db
+      .selectFrom('Fundraising')
+      .selectAll()
+      .where('ownerId', '=', ctx.userId)
+      .execute();
 
+    return fundraisings;
+  }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
