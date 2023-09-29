@@ -1,18 +1,30 @@
 import { TRPCError } from '@trpc/server';
 import { sql } from 'kysely';
-import { jsonObjectFrom } from 'kysely/helpers/postgres';
+import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
 import type { Fundraising } from '@/lib/db/types';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
+import { createPresignedUrl } from '../helper/imageHelper';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const fundraisingRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const fundraising = await ctx.db
       .selectFrom('Fundraising')
-      .selectAll()
+      .select([
+        'Fundraising.id',
+        'Fundraising.title',
+        'Fundraising.description',
+        'Fundraising.currentAmount',
+        'Fundraising.goalAmount',
+        'Fundraising.contact',
+        'Fundraising.location',
+        'Fundraising.startTime',
+        'Fundraising.endTime',
+        'Fundraising.createdAt',
+      ])
       .select(eb => [
         jsonObjectFrom(
           eb
@@ -20,6 +32,12 @@ export const fundraisingRouter = createTRPCRouter({
             .selectAll()
             .whereRef('User.id', '=', 'Fundraising.ownerId')
         ).as('Owner'),
+        jsonArrayFrom(
+          eb
+            .selectFrom('FundImage')
+            .selectAll()
+            .whereRef('Fundraising.id', '=', 'FundImage.ownerId')
+        ).as('Images'),
       ])
       .execute();
     return fundraising;
@@ -27,7 +45,26 @@ export const fundraisingRouter = createTRPCRouter({
   getMyFunds: privateProcedure.query(async ({ ctx }) => {
     const fundraisings = await ctx.db
       .selectFrom('Fundraising')
-      .selectAll()
+      .select([
+        'Fundraising.id',
+        'Fundraising.title',
+        'Fundraising.description',
+        'Fundraising.currentAmount',
+        'Fundraising.goalAmount',
+        'Fundraising.contact',
+        'Fundraising.location',
+        'Fundraising.startTime',
+        'Fundraising.endTime',
+        'Fundraising.createdAt',
+      ])
+      .select(eb => [
+        jsonArrayFrom(
+          eb
+            .selectFrom('FundImage')
+            .selectAll()
+            .whereRef('Fundraising.id', '=', 'FundImage.ownerId')
+        ).as('Images'),
+      ])
       .where('ownerId', '=', ctx.userId)
       .execute();
 
@@ -39,7 +76,32 @@ export const fundraisingRouter = createTRPCRouter({
       const fundraising = await ctx.db
         .selectFrom('Fundraising')
         .where('id', '=', input.id)
-        .selectAll()
+        .select([
+          'Fundraising.id',
+          'Fundraising.title',
+          'Fundraising.description',
+          'Fundraising.currentAmount',
+          'Fundraising.goalAmount',
+          'Fundraising.contact',
+          'Fundraising.location',
+          'Fundraising.startTime',
+          'Fundraising.endTime',
+          'Fundraising.createdAt',
+        ])
+        .select(eb => [
+          jsonObjectFrom(
+            eb
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'Fundraising.ownerId')
+          ).as('Owner'),
+          jsonArrayFrom(
+            eb
+              .selectFrom('FundImage')
+              .selectAll()
+              .whereRef('Fundraising.id', '=', 'FundImage.ownerId')
+          ).as('Images'),
+        ])
         .executeTakeFirstOrThrow();
       return fundraising;
     }),
@@ -162,5 +224,26 @@ export const fundraisingRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       return fund;
+    }),
+  createPresignedUrl: privateProcedure
+    .input(
+      z.object({
+        fundId: z.string(),
+        name: z.string(),
+        contentType: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const fundImage = await ctx.db
+        .insertInto('FundImage')
+        .values({
+          ownerId: input.fundId,
+          type: 'main',
+          path: `uploads/fund/${input.name}`,
+        })
+        .returning(['path'])
+        .executeTakeFirstOrThrow();
+
+      return createPresignedUrl(fundImage.path, input.contentType);
     }),
 });

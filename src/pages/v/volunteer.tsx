@@ -14,6 +14,7 @@ const Volunteer = () => {
   const { data: fundraising, isLoading: isFundLoading } =
     api.fundraising.getAll.useQuery();
 
+  // console.log(process.env.AWS_PATH);
   const [activeIndex, setActiveIndex] = useState(0);
   const tabs = [
     {
@@ -38,6 +39,7 @@ const Volunteer = () => {
         {activeIndex === 0 && (
           <EventList
             events={events as EventType[]}
+            isVolunteer={true}
             isLoading={isEventLoading}
           />
         )}

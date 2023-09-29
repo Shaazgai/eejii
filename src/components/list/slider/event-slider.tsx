@@ -88,7 +88,7 @@ const EventSlider = ({
             <div className="embla__container">
               {!isEventLoading &&
                 events &&
-                events.slice(0, 6).map(event => {
+                events.map(event => {
                   return (
                     <div className="embla__slide" key={event.id}>
                       <EventCard

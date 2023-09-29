@@ -10,6 +10,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.418.0",
+    "@ckeditor/ckeditor5-build-classic": "^39.0.2",
+    "@ckeditor/ckeditor5-react": "^6.1.0",
     "@hookform/resolvers": "^3.1.1",
     "@neondatabase/serverless": "^0.4.26",
     "@prisma/client": "^4.14.0",
@@ -38,6 +41,7 @@
     "@upstash/ratelimit": "^0.4.3",
     "argon2": "^0.31.1",
     "autoprefixer": "10.4.14",
+    "aws-sdk": "^2.1463.0",
     "axios": "^1.4.0",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
@@ -63,13 +67,15 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.1",
     "react-icons": "^4.10.1",
+    "react-image-file-resizer": "^0.4.8",
     "superjson": "^1.12.2",
     "svix": "^1.5.2",
     "swiper": "^10.2.0",
     "tailwind-merge": "^1.13.2",
     "tailwindcss": "3.3.2",
     "tailwindcss-animate": "^1.0.6",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zod-form-data": "^2.0.1"
   },
   "devDependencies": {
     "@types/eslint": "^8.37.0",

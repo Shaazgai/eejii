@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import type { EventWithOwner } from '@/lib/types';
 
+import { FallbackImage } from '../common/fallback-image';
 import { Icons } from '../icons';
 
 export default function EventCardPublic({
@@ -11,7 +12,13 @@ export default function EventCardPublic({
   event: EventWithOwner;
   isVolunteer: boolean;
 }) {
-  console.log('🚀 ~ file: event-card.tsx:14 ~ isVolunteer:', isVolunteer);
+  const image =
+    Array.isArray(event.Images) && event.Images.length > 0
+      ? process.env.NEXT_PUBLIC_AWS_PATH +
+        '/' +
+        event.Images.find(i => i.type === 'main')?.path
+      : null;
+  console.log(image);
   return (
     <Link href={`/${isVolunteer ? 'v/' : ''}events/${event.id}`}>
       <div className="md:w-70 flex w-full flex-col  rounded-xl border ">
@@ -21,9 +28,11 @@ export default function EventCardPublic({
           aria-roledescription="placeholder"
           className="flex aspect-video h-full w-full flex-1 items-center justify-center bg-secondary"
         >
-          <Icons.placeholder
-            className="h-9 w-9 text-muted-foreground"
-            aria-hidden="true"
+          <FallbackImage
+            src={image as string}
+            width={500}
+            height={500}
+            alt="event-image"
           />
         </div>
         <div className="p-4">

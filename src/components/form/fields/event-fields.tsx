@@ -19,6 +19,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { eventSchema } from '@/lib/validation/event-schema';
 
+import CKeditor from '../ckeditor';
+
 const EventFields = ({
   form,
 }: {
@@ -66,6 +68,14 @@ const EventFields = ({
             <FormLabel className="text-2xl">Description</FormLabel>
             <FormItem className="rounded-2xl border bg-white px-4 py-8">
               <FormControl>
+                {/* <CKeditor */}
+                {/*   // name="description" */}
+                {/*   {...field} */}
+                {/*   // onChange={data => { */}
+                {/*   //   setData(data); */}
+                {/*   // }} */}
+                {/*   editorLoaded={true} */}
+                {/* /> */}
                 <Textarea
                   placeholder="Tell us about event"
                   className="resize-none"
@@ -80,6 +90,12 @@ const EventFields = ({
           </div>
         )}
       />
+      {/* <FormField */}
+      {/*   control={form.control} */}
+      {/*   name="image" */}
+      {/*   render={({ field }) => ( */}
+      {/*   )} */}
+      {/* /> */}
       {/* <FormField */}
       {/*   control={form.control} */}
       {/*   name="mainCategory" */}
@@ -193,7 +209,7 @@ const EventFields = ({
                 <DatePicker
                   id="exampleFormControlTextarea2"
                   className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
-                  locale="mn"
+                  // locale="mn"
                   placeholderText="Өдөр сонгох"
                   dateFormat="yyyy-MM-dd H:mm "
                   timeInputLabel="Time:"
@@ -218,7 +234,7 @@ const EventFields = ({
                 <DatePicker
                   id="exampleFormControlTextarea2"
                   className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
-                  locale="mn"
+                  // locale="mn"
                   placeholderText="Өдөр сонгох"
                   dateFormat="yyyy-MM-dd H:mm "
                   timeInputLabel="Time:"
