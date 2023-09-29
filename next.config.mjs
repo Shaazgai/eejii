@@ -22,7 +22,7 @@ const config = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'img.clerk.com',
+        hostname: 'dev-tsomo.s3.amazonaws.com',
       },
     ],
   },

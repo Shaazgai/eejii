@@ -52,6 +52,7 @@ model User {
   EventAssociation EventAssociation[]
   FundAssociation  FundAssociation[]
   GrantAssociation GrantAssociation[]
+  UserImage        UserImage[]
 }
 
 enum Role {
@@ -87,6 +88,7 @@ model Event {
   ownerId       String?
   CategoryEvent CategoryEvent[]
   Users         EventAssociation[]
+  EventImage    EventImage[]
 
   @@index([ownerId])
 }
@@ -120,6 +122,7 @@ model Fundraising {
   Users               FundAssociation[]
   Donation            Donation[]
   CategoryFundraising CategoryFundraising[]
+  FundImage           FundImage[]
 
   @@index([ownerId])
 }
@@ -152,6 +155,7 @@ model GrantFundraising {
   ownerId                  String?                    @unique
   Users                    GrantAssociation[]
   CategoryGrantFundraising CategoryGrantFundraising[]
+  GrantImage               GrantImage[]
 
   @@index([ownerId])
 }
@@ -263,4 +267,36 @@ model CategoryEvent {
 
   @@index([eventId])
   @@index([categoryId])
+}
+
+model EventImage {
+  id      String  @id @default(dbgenerated("gen_random_uuid()"))
+  owner   Event   @relation(fields: [ownerId], references: [id])
+  ownerId String
+  path    String
+  type    String?
+}
+
+model FundImage {
+  id      String      @id @default(dbgenerated("gen_random_uuid()"))
+  owner   Fundraising @relation(fields: [ownerId], references: [id])
+  ownerId String
+  path    String
+  type    String?
+}
+
+model GrantImage {
+  id      String           @id @default(dbgenerated("gen_random_uuid()"))
+  owner   GrantFundraising @relation(fields: [ownerId], references: [id])
+  ownerId String
+  path    String
+  type    String?
+}
+
+model UserImage {
+  id      String  @id @default(dbgenerated("gen_random_uuid()"))
+  owner   User    @relation(fields: [ownerId], references: [id])
+  ownerId String
+  path    String
+  type    String?
 }

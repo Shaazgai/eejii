@@ -1,10 +1,17 @@
 import { z } from 'zod';
+import { zfd } from 'zod-form-data';
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 
 export const roleSchema = z.string();
+
+// if (typeof window === 'undefined') {
+//   // eslint-disable-next-line @typescript-eslint/no-var-requires
+//   const undici = require('undici');
+//   globalThis.File = undici.File;
+// }
 
 export const eventSchema = z.object({
   id: z.string().nullish().nullable(),
@@ -40,4 +47,5 @@ export const eventSchema = z.object({
     phone: z.string().regex(phoneRegex).length(8),
     email: z.string().email(),
   }),
+  // image: z.string(),
 });

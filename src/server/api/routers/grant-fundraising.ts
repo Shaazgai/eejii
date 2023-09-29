@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import crypto from 'crypto';
 import { sql } from 'kysely';
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
@@ -6,6 +7,7 @@ import { z } from 'zod';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { createPresignedUrl } from '../helper/imageHelper';
 
 export const grantFundraisingRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -160,5 +162,26 @@ export const grantFundraisingRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       return fund;
+    }),
+  createPresignedUrl: privateProcedure
+    .input(
+      z.object({
+        grantId: z.string(),
+        name: z.string(),
+        contentType: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const grantImage = await ctx.db
+        .insertInto('GrantImage')
+        .values({
+          ownerId: input.grantId,
+          type: 'main',
+          path: `uploads/grant/${input.name}`,
+        })
+        .returning(['path'])
+        .executeTakeFirstOrThrow();
+
+      return createPresignedUrl(grantImage.path, input.contentType);
     }),
 });

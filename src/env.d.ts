@@ -3,6 +3,7 @@ declare module '@/env.mjs' {
     NODE_ENV: string;
     DATABASE_URL: string;
     NEXTAUTH_SECRET: string;
+    AWS_PATH: string;
   };
 
   export default env;

@@ -1,16 +1,23 @@
 import Link from 'next/link';
 
-import type { FundraisingType } from '@/lib/types';
+import type { FundWithOwner } from '@/lib/types';
 
+import { FallbackImage } from '../common/fallback-image';
 import { Icons } from '../icons';
 
 export default function FundCardPublic({
   fund,
   isVolunteer,
 }: {
-  fund: FundraisingType;
+  fund: FundWithOwner;
   isVolunteer: boolean;
 }) {
+  const image =
+    Array.isArray(fund.Images) && fund.Images.length > 0
+      ? process.env.NEXT_PUBLIC_AWS_PATH +
+        '/' +
+        fund.Images.find(i => i.type === 'main')?.path
+      : null;
   return (
     <Link href={`/${isVolunteer ? 'v/' : ''}fundraising/${fund.id}`}>
       <div className="md:w-70 flex w-full flex-col  rounded-xl border ">
@@ -20,9 +27,11 @@ export default function FundCardPublic({
           aria-roledescription="placeholder"
           className="flex aspect-video h-full w-full flex-1 items-center justify-center bg-secondary"
         >
-          <Icons.placeholder
-            className="h-9 w-9 text-muted-foreground"
-            aria-hidden="true"
+          <FallbackImage
+            src={image as string}
+            width={500}
+            height={500}
+            alt="event-image"
           />
         </div>
         <div className="p-4">

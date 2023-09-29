@@ -68,11 +68,23 @@ export type EventAssociation = {
   status: string | null;
   type: string | null;
 };
+export type EventImage = {
+  id: Generated<string>;
+  ownerId: string;
+  path: string;
+  type: string | null;
+};
 export type FundAssociation = {
   id: Generated<string>;
   userId: string | null;
   fundraisingId: string | null;
   status: string | null;
+  type: string | null;
+};
+export type FundImage = {
+  id: Generated<string>;
+  ownerId: string;
+  path: string;
   type: string | null;
 };
 export type Fundraising = {
@@ -108,6 +120,12 @@ export type GrantFundraising = {
   createdAt: Generated<Timestamp>;
   ownerId: string | null;
 };
+export type GrantImage = {
+  id: Generated<string>;
+  ownerId: string;
+  path: string;
+  type: string | null;
+};
 export type Payment = {
   id: Generated<string>;
   amount: number;
@@ -141,6 +159,12 @@ export type User = {
   organization: string | null;
   contact: unknown | null;
 };
+export type UserImage = {
+  id: Generated<string>;
+  ownerId: string;
+  path: string;
+  type: string | null;
+};
 export type DB = {
   Address: Address;
   Category: Category;
@@ -151,11 +175,15 @@ export type DB = {
   Donation: Donation;
   Event: Event;
   EventAssociation: EventAssociation;
+  EventImage: EventImage;
   FundAssociation: FundAssociation;
+  FundImage: FundImage;
   Fundraising: Fundraising;
   GrantAssociation: GrantAssociation;
   GrantFundraising: GrantFundraising;
+  GrantImage: GrantImage;
   Payment: Payment;
   Skill: Skill;
   User: User;
+  UserImage: UserImage;
 };

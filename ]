@@ -1,30 +1,25 @@
 import { TRPCError } from '@trpc/server';
 import crypto from 'crypto';
 import { sql } from 'kysely';
-import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
+import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
-import type { Event, User } from '@/lib/db/types';
+import type { User, Event } from '@/lib/db/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createPresignedUrl } from '../helper/imageHelper';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
+interface Response {
+  event?: Event;
+  presignedUrl?: string;
+}
+
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure.query(async opts => {
     const events = await opts.ctx.db
       .selectFrom('Event')
-      .select([
-        'Event.id',
-        'Event.title',
-        'Event.description',
-        'Event.location',
-        'Event.startTime',
-        'Event.endTime',
-        'Event.requiredTime',
-        'Event.roles',
-        'Event.contact',
-      ])
+      .selectAll()
       .select(eb => [
         jsonObjectFrom(
           eb
@@ -32,12 +27,6 @@ export const eventRouter = createTRPCRouter({
             .selectAll()
             .whereRef('User.id', '=', 'Event.ownerId')
         ).as('Owner'),
-        jsonArrayFrom(
-          eb
-            .selectFrom('EventImage')
-            .selectAll()
-            .whereRef('Event.id', '=', 'EventImage.ownerId')
-        ).as('Images'),
       ])
       .execute();
     return events;
@@ -45,25 +34,7 @@ export const eventRouter = createTRPCRouter({
   getMyEvents: privateProcedure.query(async ({ ctx }) => {
     const events = await ctx.db
       .selectFrom('Event')
-      .select([
-        'Event.id',
-        'Event.title',
-        'Event.description',
-        'Event.location',
-        'Event.startTime',
-        'Event.endTime',
-        'Event.requiredTime',
-        'Event.roles',
-        'Event.contact',
-      ])
-      .select(eb => [
-        jsonArrayFrom(
-          eb
-            .selectFrom('EventImage')
-            .selectAll()
-            .whereRef('Event.id', '=', 'EventImage.ownerId')
-        ).as('Images'),
-      ])
+      .selectAll()
       .where('ownerId', '=', ctx.userId)
       .execute();
 
@@ -199,24 +170,19 @@ export const eventRouter = createTRPCRouter({
     }),
 
   createPresignedUrl: privateProcedure
-    .input(
-      z.object({
-        eventId: z.string(),
-        name: z.string(),
-        contentType: z.string(),
-      })
-    )
+    .input(z.object({ eventId: z.string(), contentType: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      const name = crypto.randomBytes(12).toString('hex');
       const eventImage = await ctx.db
         .insertInto('EventImage')
         .values({
           ownerId: input.eventId,
           type: 'main',
-          path: `uploads/event/${input.name}`,
+          path: `uploads/event/${name}`,
         })
         .returning(['path'])
         .executeTakeFirstOrThrow();
 
-      return createPresignedUrl(eventImage.path, input.contentType);
+      return createPresignedUrl(eventImage.path, contentType);
     }),
 });
