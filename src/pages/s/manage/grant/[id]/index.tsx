@@ -2,7 +2,7 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import superjson from 'superjson';
 
-import PartnerLayout from '@/components/layout/partner-layout';
+import SupporterLayout from '@/components/layout/supporter-layout';
 import { Shell } from '@/components/shells/shell';
 import { getServerAuthSession } from '@/lib/auth';
 import { appRouter } from '@/server/api/root';
@@ -26,7 +26,7 @@ export default function EventViewPage(
   //   mutate({ eventId: data?.id as string, role: 'mopper' });
   // }
   return (
-    <PartnerLayout>
+    <SupporterLayout>
       <Shell>
         <div className="flex justify-center">{data?.title}</div>
         <div className="flex justify-center">
@@ -35,7 +35,7 @@ export default function EventViewPage(
         </Button> */}
         </div>
       </Shell>
-    </PartnerLayout>
+    </SupporterLayout>
   );
 }
 

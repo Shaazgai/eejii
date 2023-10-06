@@ -30,7 +30,7 @@ const GrantFundraisingForm = ({
     defaultValues: {
       title: data?.title || '',
       description: data?.description || '',
-      location: data?.location || '',
+      // location: data?.location || '',
       startTime: data?.startTime || new Date(),
       endTime: data?.endTime || new Date(),
       contact: {

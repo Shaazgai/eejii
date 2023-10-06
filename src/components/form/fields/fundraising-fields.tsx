@@ -107,28 +107,28 @@ const FundraisingFields = ({
       {/*     </FormItem> */}
       {/*   )} */}
       {/* /> */}
-      <FormField
-        control={form.control}
-        name="location"
-        render={({ field }) => (
-          <div className="space-y-2">
-            <FormLabel className="text-2xl">Location</FormLabel>
-            <FormItem className="rounded-2xl border bg-white px-4 py-8">
-              <FormControl>
-                <Textarea
-                  placeholder="Where will event be hold"
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                You can <span>@mention</span> other users and organizations.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          </div>
-        )}
-      />
+      {/* <FormField */}
+      {/*   control={form.control} */}
+      {/*   name="location" */}
+      {/*   render={({ field }) => ( */}
+      {/*     <div className="space-y-2"> */}
+      {/*       <FormLabel className="text-2xl">Location</FormLabel> */}
+      {/*       <FormItem className="rounded-2xl border bg-white px-4 py-8"> */}
+      {/*         <FormControl> */}
+      {/*           <Textarea */}
+      {/*             placeholder="Where will event be hold" */}
+      {/*             className="resize-none" */}
+      {/*             {...field} */}
+      {/*           /> */}
+      {/*         </FormControl> */}
+      {/*         <FormDescription> */}
+      {/*           You can <span>@mention</span> other users and organizations. */}
+      {/*         </FormDescription> */}
+      {/*         <FormMessage /> */}
+      {/*       </FormItem> */}
+      {/*     </div> */}
+      {/*   )} */}
+      {/* /> */}
 
       <div className="space-y-2">
         <FormLabel className="text-2xl">Contact</FormLabel>

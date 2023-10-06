@@ -18,13 +18,14 @@ export const fundraisingSchema = z.object({
     .min(2, {
       message: 'Country must have at least 2 characters.',
     }),
-  location: z
-    .string({
-      required_error: 'Please provide location info',
-    })
-    .min(2, {
-      message: 'Country must have at least 2 characters.',
-    }),
+  // location: z
+  //   .string({
+  //     required_error: 'Please provide location info',
+  //   })
+  //   .min(2, {
+  //     message: 'Country must have at least 2 characters.',
+  //   })
+  //   .nullable(),
   startTime: z.date(),
   endTime: z.date(),
   goalAmount: z.number(),

@@ -1,7 +1,10 @@
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import GrantCard from '@/components/card/manage/grant-card';
+import SectionHeader from '@/components/common/section-header';
 import SupporterLayout from '@/components/layout/supporter-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
@@ -12,39 +15,35 @@ export default function ManageProjects() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const { data: fundraising, isLoading: isFundraisingLoading } =
-    api.fundraising.getAll.useQuery();
-  console.log(
-    '🚀 ~ file: index.tsx:15 ~ ManageProjects ~ fundraising:',
-    fundraising
-  );
   const { data: grantFundraising, isLoading: isGrantFundraisingLoading } =
-    api.grantFundraising.getAll.useQuery();
-  const { data: event, isLoading: isEventLoading } =
-    api.event.getAll.useQuery();
-
-  // const tabs = [
-  //   {
-  //     title: `Fundraising (${fundraising?.length})`,
-  //     index: 0,
-  //   },
-  //   {
-  //     title: `Grant-fundraising (${grantFundraising?.length})`,
-  //     index: 1,
-  //   },
-  //   {
-  //     title: `Event (${event?.length})`,
-  //     index: 2,
-  //   },
-  // ];
+    api.grantFundraising.getMyGrants.useQuery();
 
   return (
     <SupporterLayout>
       <Shell>
-        <div className="flex justify-between">
-          <h2>manage-projects</h2>
-          <Button onClick={() => router.push('manage/new')}>Add</Button>
-        </div>
+        <SectionHeader
+          src={'/images/placeholder.svg'}
+          variant="dark"
+          className=""
+        >
+          <div className="flex w-full items-center justify-between">
+            {/* <h2 className="text-3xl capitalize">Manage projects</h2> */}
+            <Button
+              className="rounded-full border bg-primary hover:bg-gray-200 hover:text-gray-950"
+              onClick={() => router.push('/s/manage/new')}
+            >
+              Add
+            </Button>
+            <Link
+              className="flex items-center gap-2 text-gray-950 hover:underline "
+              href={'/s/manage/requests'}
+            >
+              Manage request
+              <ArrowRight />
+            </Link>
+          </div>
+        </SectionHeader>
+        <div className="flex justify-between"></div>
         {/* <NormalTabs
           tabs={tabs}
           activeIndex={activeIndex}

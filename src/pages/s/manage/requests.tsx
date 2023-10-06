@@ -1,33 +1,17 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 
-import EventRequestCard from '@/components/card/request/event-request-card';
-import FundRequestCard from '@/components/card/request/fund-request-card';
 import GrantRequestCard from '@/components/card/request/grant-request-card';
-import PartnerLayout from '@/components/layout/partner-layout';
+import SupporterLayout from '@/components/layout/supporter-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
-import type {
-  EventAssociationWithEvent,
-  FundAssociationWithFund,
-  GrantAssociationWithGrant,
-} from '@/lib/types';
+import type { GrantAssociationWithGrant } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Requests = () => {
   const session = useSession();
   const [activeIndex, setActiveIndex] = useState(0);
   const [status, setStatus] = useState('approved');
-  const { data: eventAssociation, isLoading: isEventLoading } =
-    api.eventAssociation.findAll.useQuery({
-      eventsOwnerId: session.data?.user.id,
-      status: status,
-    });
-  const { data: fundAssociation, isLoading: isFundLoading } =
-    api.fundAssociation.findAll.useQuery({
-      fundsOwnerId: session.data?.user.id,
-      status: status,
-    });
   const { data: grantAssociation, isLoading: isGrantLoading } =
     api.grantAssociation.findAll.useQuery({
       grantsOwnerId: session.data?.user.id,
@@ -57,7 +41,7 @@ const Requests = () => {
     },
   ];
   return (
-    <PartnerLayout>
+    <SupporterLayout>
       <Shell variant="sidebar" className="px-10">
         <div className="space-y-4">
           <div>
@@ -74,34 +58,6 @@ const Requests = () => {
           />
         </div>
         <div className="space-y-4">
-          <div className="space-y-2">
-            <h3>Events</h3>
-            {!isEventLoading
-              ? eventAssociation?.map((event, i) => (
-                  <EventRequestCard
-                    isOwner={true}
-                    eventAssociation={
-                      event as unknown as EventAssociationWithEvent
-                    }
-                    key={i}
-                  />
-                ))
-              : '..Loading'}
-            {eventAssociation?.length === 0 && 'No result'}
-          </div>
-          <div className="space-y-2">
-            <h3>Fundraisings</h3>
-            {!isFundLoading
-              ? fundAssociation?.map((fund, i) => (
-                  <FundRequestCard
-                    isOwner={true}
-                    fundAssociation={fund as unknown as FundAssociationWithFund}
-                    key={i}
-                  />
-                ))
-              : '..Loading'}
-            {fundAssociation?.length === 0 && 'No result'}
-          </div>
           <div>
             <h3>Grant Fundraisings</h3>
             {!isGrantLoading
@@ -119,7 +75,7 @@ const Requests = () => {
           </div>
         </div>
       </Shell>
-    </PartnerLayout>
+    </SupporterLayout>
   );
 };
 
