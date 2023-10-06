@@ -190,3 +190,6 @@
 .embla__dot--selected:after {
   background: rgba(0, 0, 0, 1)
 }
+.ck-editor__editable {
+  min-height: 200px;
+}
