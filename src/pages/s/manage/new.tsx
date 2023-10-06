@@ -8,36 +8,13 @@ import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
 
 export default function NewProject() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const tabs = [
-    {
-      title: 'Fundraising',
-      index: 0,
-    },
-    {
-      title: 'Grant-fundraising',
-      index: 1,
-    },
-    {
-      title: 'Event',
-      index: 2,
-    },
-  ];
-
   return (
     <SupporterLayout>
       <Shell>
-        <div className="flex justify-between">
-          <h2>New project</h2>
-        </div>
-        <NormalTabs
-          tabs={tabs}
-          activeIndex={activeIndex}
-          setActiveIndex={setActiveIndex}
-        />
-        {activeIndex == 0 && <FundraisingForm />}
-        {activeIndex == 1 && <GrantFundraisingForm />}
-        {activeIndex == 2 && <EventForm />}
+        {/* <div className="flex justify-between"> */}
+        {/*   <h2>New project</h2> */}
+        {/* </div> */}
+        <GrantFundraisingForm data={undefined} />
       </Shell>
     </SupporterLayout>
   );

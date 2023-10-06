@@ -1,6 +1,7 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
 import moment from 'moment';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import type { UseFormReturn } from 'react-hook-form';
@@ -19,7 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { eventSchema } from '@/lib/validation/event-schema';
 
-import CKeditor from '../ckeditor';
+import CKEditor from '../ckeditor';
 
 const EventFields = ({
   form,
@@ -27,6 +28,12 @@ const EventFields = ({
   form: UseFormReturn<z.infer<typeof eventSchema>>;
 }) => {
   const [roleNumber, setRoleNumber] = useState<number>(0);
+  const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
+
+  const Editor = dynamic(() => import('../ckeditor'), { ssr: false });
+  useEffect(() => {
+    setEditorLoaded(true);
+  }, []);
 
   useEffect(() => {
     if (form.getValues('roles')) {
@@ -66,22 +73,15 @@ const EventFields = ({
         render={({ field }) => (
           <div className="space-y-2">
             <FormLabel className="text-2xl">Description</FormLabel>
-            <FormItem className="rounded-2xl border bg-white px-4 py-8">
-              <FormControl>
-                {/* <CKeditor */}
-                {/*   // name="description" */}
-                {/*   {...field} */}
-                {/*   // onChange={data => { */}
-                {/*   //   setData(data); */}
-                {/*   // }} */}
-                {/*   editorLoaded={true} */}
-                {/* /> */}
-                <Textarea
-                  placeholder="Tell us about event"
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
+            <FormItem className="h-96 rounded-2xl border bg-white px-4 py-8">
+              {/* <FormControl> */}
+              <Editor {...field} editorLoaded={editorLoaded} />
+              {/* <Textarea */}
+              {/*   placeholder="Tell us about event" */}
+              {/*   className="resize-none" */}
+              {/*   {...field} */}
+              {/* /> */}
+              {/* </FormControl> */}
               <FormDescription>
                 You can <span>@mention</span> other users and organizations.
               </FormDescription>

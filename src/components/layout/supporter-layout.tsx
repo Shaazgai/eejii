@@ -1,6 +1,7 @@
 import {
   CalendarCheck,
   Heart,
+  HeartHandshake,
   LayoutDashboard,
   Newspaper,
   Settings,
@@ -33,16 +34,16 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
       external: '',
     },
     {
-      title: 'Join requests',
-      href: '/s/join-requests',
-      icon: <UserCog className="ml-1 mr-1 h-7 w-7" />,
+      title: 'Collabration',
+      href: '/s/collaboration',
+      icon: <HeartHandshake className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
 
     {
       title: 'Donations',
-      href: '/s/purchases',
+      href: '/s/donations',
       icon: <Heart className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -65,7 +66,7 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
   return (
     <div className="">
       <div className="flex">
-        <div className="fixed z-20 h-screen flex-none  border-r bg-indigo-500">
+        <div className="fixed z-20 h-screen flex-none border-r bg-sidebar text-sidebar-foreground">
           <Sidebar open={open} setOpen={setOpen} sidebarNav={sidebarNav} />
         </div>
         <div className={`grow  ${open ? 'sm:ms-[300px]' : 'ms-[80px]'} `}>
