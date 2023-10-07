@@ -76,7 +76,7 @@ const EventDetail = ({
               <ul className="ms-5 list-disc">
                 {event?.roles &&
                   Object.values(event?.roles).map((role, i) => (
-                    <li key={i}>{role.name}</li>
+                    <li key={i}>{String(role.name)}</li>
                   ))}
               </ul>
             </div>
