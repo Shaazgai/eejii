@@ -1,4 +1,9 @@
 import type {
+  RequestType as RequestTypeConst,
+  Role as RoleConst,
+  UserType as UserTypeConst,
+} from './db/enums';
+import type {
   Donation,
   Event,
   EventAssociation,
@@ -11,6 +16,11 @@ import type {
   GrantImage,
   User,
 } from './db/types';
+
+export type Role = (typeof RoleConst)[keyof typeof RoleConst];
+export type UserType = (typeof UserTypeConst)[keyof typeof UserTypeConst];
+export type RequestType =
+  (typeof RequestTypeConst)[keyof typeof RequestTypeConst];
 
 export type VolunteerTableProps = {
   email: string;
