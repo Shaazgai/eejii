@@ -192,7 +192,7 @@ const FundDetail = ({
                             ) : (
                               <div>
                                 <img
-                                  src={`data:image/png;base64,${payment.details?.qr_image}`}
+                                  // src={`data:image/png;base64,${payment.details?.qr_image}`}
                                   className="w-full border"
                                   alt="qr"
                                 />
