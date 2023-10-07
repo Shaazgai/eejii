@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import PartnerLayout from '@/components/layout/partner-layout';
+import SupporterLayout from '@/components/layout/supporter-layout';
 import EventList from '@/components/list/event-list';
 import FundraisingList from '@/components/list/fund-list';
 import GrantFundraisingList from '@/components/list/grant-list';
@@ -9,7 +9,6 @@ import { Shell } from '@/components/shells/shell';
 import type { Fundraising, GrantFundraising } from '@/lib/db/types';
 import type { EventWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
-import SupporterLayout from '@/components/layout/supporter-layout';
 
 export const ExploreFundraisings = () => {
   const { data: fundraisings, isLoading: isFundLoading } =

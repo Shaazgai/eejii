@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { format } from 'date-fns';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import type { FormEvent, ReactNode } from 'react';
 import { useState } from 'react';
 
@@ -17,18 +17,20 @@ import {
 } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Toaster } from '@/components/ui/toaster';
-import type { Fundraising, Payment } from '@/lib/db/types';
+import type { Payment } from '@/lib/db/types';
+import type { FundWithOwner } from '@/lib/types';
 import { priceFormatter } from '@/lib/utils/price';
 
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Input } from '../ui/input';
 import { useToast } from '../ui/use-toast';
+
 const FundDetail = ({
   fund,
   actionButton,
 }: {
-  fund: Fundraising;
+  fund: FundWithOwner;
   actionButton: ReactNode;
 }) => {
   const [selectedAmount, setSelectedAmount] = useState(0);
@@ -72,7 +74,6 @@ const FundDetail = ({
       });
     }
   }
-  console.log(selectedAmount);
   return (
     <div className="">
       <div className="mb-3 flex items-center justify-between gap-5 border-b-2 border-dashed pb-2">
@@ -87,8 +88,13 @@ const FundDetail = ({
           <div>
             <h1 className=" text-3xl  font-bold">{fund.title}</h1>
             <div className="flex gap-3">
-              <span>{format(fund.startTime, 'PPP HH:mm')}</span>---
-              <span>{format(fund.endTime, 'PPP HH:mm')}</span>
+              <span>
+                {format(fund.startTime as unknown as Date, 'PPP HH:mm')}
+              </span>
+              ---
+              <span>
+                {format(fund.endTime as unknown as Date, 'PPP HH:mm')}
+              </span>
             </div>
           </div>
         </div>
@@ -192,7 +198,9 @@ const FundDetail = ({
                                 />
                                 <Button
                                   onClick={() => {
-                                    handleVerify(payment.id);
+                                    handleVerify(
+                                      payment.id as unknown as string
+                                    );
                                   }}
                                 >
                                   Verify
@@ -242,7 +250,7 @@ const FundDetail = ({
                       return (
                         <li
                           className="rounded px-3 py-3 sm:py-4"
-                          key={donation.id}
+                          key={donation.id as unknown as string}
                         >
                           <div className="flex items-center justify-between">
                             <span className="flex flex-col">
@@ -266,12 +274,15 @@ const FundDetail = ({
                                 )}
                                 <div className="flex flex-col">
                                   <strong className="text-md">
-                                    {donation.isPublicName
-                                      ? donation.User?.username
-                                      : 'Unknown'}
+                                    {/* {donation.isPublicName */}
+                                    {/*   ? donation.User?.username */}
+                                    {/*   : 'Unknown'} */}
                                   </strong>
                                   <span className="text-sm">
-                                    {format(donation.createdAt, 'PPP')}
+                                    {format(
+                                      donation.createdAt as unknown as Date,
+                                      'PPP'
+                                    )}
                                   </span>
                                 </div>
                               </div>
@@ -297,42 +308,22 @@ const FundDetail = ({
                   className="mt-4 divide-y divide-gray-200 dark:divide-gray-700"
                 >
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {fund.contact.primary_phone && (
+                    {fund?.contact && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Phone />
                         </span>
-                        <span>{fund.contact.primary_phone}</span>
+                        <span>{fund.contact?.phone_number}</span>
                       </div>
                     )}
                   </li>
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {fund.contact.secondary_phone && (
-                      <div className="flex justify-between">
-                        <span className="flex items-center gap-2">
-                          <Phone />
-                        </span>
-                        <span>{fund.contact.secondary_phone}</span>
-                      </div>
-                    )}
-                  </li>
-                  <li className="rounded px-3 py-2 sm:py-2">
-                    {fund.contact.email_1 && (
+                    {fund?.contact && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Mail />
                         </span>
-                        <span>{fund.contact.email_1}</span>
-                      </div>
-                    )}
-                  </li>
-                  <li className="rounded px-3 py-2 sm:py-2">
-                    {fund.contact.email_2 && (
-                      <div className="flex justify-between">
-                        <span className="flex items-center gap-2">
-                          <Mail />
-                        </span>
-                        <span>{fund.contact.email_2}</span>
+                        <span>{fund.contact.email}</span>
                       </div>
                     )}
                   </li>

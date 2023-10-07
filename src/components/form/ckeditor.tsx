@@ -1,3 +1,6 @@
+/* eslint-disable unused-imports/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
@@ -7,14 +10,12 @@ import React, { useEffect, useRef } from 'react';
 interface CKeditorProps {
   onChange: (data: string) => void;
   editorLoaded: boolean;
-  name: string;
   value: string;
 }
 
 export default function CKeditor({
   onChange,
   editorLoaded,
-  name,
   value,
 }: CKeditorProps) {
   const editorRef = useRef<{
@@ -23,6 +24,7 @@ export default function CKeditor({
   }>();
   useEffect(() => {
     editorRef.current = {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
       ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
     };
@@ -55,7 +57,7 @@ export default function CKeditor({
         <CKEditor
           editor={ClassicEditor}
           data={value}
-          onChange={(event: any, editor: any) => {
+          onChange={(_event: any, editor: any) => {
             const data = editor.getData();
             onChange(data);
           }}
@@ -75,7 +77,7 @@ export default function CKeditor({
           }}
         />
       ) : (
-        <div>Editor loading</div>
+        <div>Editor loading </div>
       )}
     </>
   );

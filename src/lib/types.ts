@@ -1,4 +1,5 @@
 import type {
+  Donation,
   Event,
   EventAssociation,
   EventImage,
@@ -31,6 +32,7 @@ export type EventWithOwner = Event & {
 export type FundWithOwner = Fundraising & {
   Owner: User;
   Images: FundImage[];
+  Donation: Donation[];
 };
 
 export type GrantFundWithOwner = GrantFundraising & {
@@ -59,4 +61,18 @@ export type S3ParamType = {
   'X-Amz-Date': string;
   'X-Amz-Signature': string;
   bucket: string;
+};
+
+export type Contact = {
+  phone_number: string;
+  email: string;
+};
+
+export type PaymentDetails = {
+  qr_image: string;
+};
+
+export type EventRole = {
+  name: string;
+  number: number;
 };

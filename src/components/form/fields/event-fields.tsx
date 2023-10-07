@@ -20,8 +20,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { eventSchema } from '@/lib/validation/event-schema';
 
-import CKEditor from '../ckeditor';
-
 const EventFields = ({
   form,
 }: {

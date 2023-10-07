@@ -111,7 +111,7 @@ const EventRequestCard = ({
           <div>{eventAssociation.type}</div>
         </div>
         <div className="flex items-center border-r p-4">
-          <div>{eventAssociation.id}</div>
+          <div>{eventAssociation.id as unknown as string}</div>
         </div>
       </div>
       <div className="flex items-center justify-center p-4">

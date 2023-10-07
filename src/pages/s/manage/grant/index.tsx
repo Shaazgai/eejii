@@ -1,21 +1,19 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 
 import GrantCard from '@/components/card/manage/grant-card';
 import SectionHeader from '@/components/common/section-header';
 import SupporterLayout from '@/components/layout/supporter-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
-import type { FundraisingType } from '@/lib/types';
+import type { Fundraising } from '@/lib/db/types';
 import { api } from '@/utils/api';
 
 export default function ManageProjects() {
   const router = useRouter();
-  const [activeIndex, setActiveIndex] = useState(0);
 
-  const { data: grantFundraising, isLoading: isGrantFundraisingLoading } =
+  const { data: grantFundraising } =
     api.grantFundraising.getMyGrants.useQuery();
 
   return (
@@ -50,7 +48,7 @@ export default function ManageProjects() {
           setActiveIndex={setActiveIndex}
         /> */}
         {grantFundraising?.map((grant, index) => (
-          <GrantCard key={index} grant={grant as FundraisingType} />
+          <GrantCard key={index} grant={grant as Fundraising} />
         ))}
       </Shell>
     </SupporterLayout>

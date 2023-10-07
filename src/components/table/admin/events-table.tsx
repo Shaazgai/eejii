@@ -1,13 +1,13 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
+import Link from 'next/link';
 
+import type { User } from '@/lib/db/types';
 import type { EventWithOwner } from '@/lib/types';
 
 import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
-import { User } from '@/lib/db/types';
-import Link from 'next/link';
 
 const EventsTable = ({ data }: { data: EventWithOwner[] }) => {
   const columns: ColumnDef<EventWithOwner>[] = [

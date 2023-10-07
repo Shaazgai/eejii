@@ -1,4 +1,3 @@
-import { sql } from 'kysely';
 import { z } from 'zod';
 
 import { addressSchema } from '@/lib/validation/address-validation-schema';

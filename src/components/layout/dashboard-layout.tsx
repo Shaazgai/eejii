@@ -1,20 +1,30 @@
-import { Anchor, Bell, ChevronRight, Grape, HeartHandshake, Home, LayoutGrid, Menu, Moon, PartyPopper, Sun, Users } from 'lucide-react';
+import {
+  Anchor,
+  Bell,
+  ChevronRight,
+  HeartHandshake,
+  Home,
+  LayoutGrid,
+  PartyPopper,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
-  const [isDark, setIsDark] = useState(false);
+  // const [isDark, setIsDark] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const setDark = (val: string) => {
-    if (val === 'dark') {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    }
-  };
+  // const setDark = (val: string) => {
+  //   if (val === 'dark') {
+  //     setIsDark(true);
+  //     document.documentElement.classList.add('dark');
+  //   } else {
+  //     setIsDark(false);
+  //     document.documentElement.classList.remove('dark');
+  //   }
+  // };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
@@ -55,7 +65,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <div className="fixed z-30 flex h-16 w-full items-center justify-center bg-white border-b border-b-gray-200 p-2 px-10 dark:bg-[#0F172A]">
+      <div className="fixed z-30 flex h-16 w-full items-center justify-center border-b border-b-gray-200 bg-white p-2 px-10 dark:bg-[#0F172A]">
         <div
           className={`logo  ${
             isSidebarOpen ? '' : 'ml-12'

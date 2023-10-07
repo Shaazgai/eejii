@@ -4,9 +4,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 // import Swiper core and required modules
-import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
 import { FallbackImage } from '@/components/common/fallback-image';
 import VolunteerLayout from '@/components/layout/volunteer-layout';
 import EventSlider from '@/components/list/slider/event-slider';

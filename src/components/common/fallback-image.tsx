@@ -22,6 +22,7 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
       onError={() => {
         setImgSrc('/images/placeholder.svg');
       }}
+      alt={'image'}
     />
   );
 };
