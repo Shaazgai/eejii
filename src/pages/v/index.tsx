@@ -12,6 +12,7 @@ import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import type { EventWithOwner, FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
@@ -67,11 +68,14 @@ export default function Index() {
           </Card>
         </div>
         <div className="-translate-y-10">
-          <EventSlider events={events} isEventLoading={isEventLoading} />
+          <EventSlider
+            events={events as unknown as EventWithOwner[]}
+            isEventLoading={isEventLoading}
+          />
         </div>
         <div className="-translate-y-10">
           <FundSlider
-            fundraisings={fundraisings as FundraisingType[]}
+            fundraisings={fundraisings as unknown as FundWithOwner[]}
             isFundLoading={isFundLoading}
           />
         </div>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import FundraisingsTable from '@/components/table/admin/fundraisings-table';
-import type { Fundraising } from '@/lib/db/types';
+import type { FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
@@ -43,7 +43,7 @@ export default function Index() {
         <div>
           {fundraisings && (
             <FundraisingsTable
-              data={fundraisings as unknown as Fundraising[]}
+              data={fundraisings as unknown as FundWithOwner[]}
             />
           )}
         </div>

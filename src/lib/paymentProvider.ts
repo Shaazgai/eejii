@@ -116,7 +116,7 @@ export async function verify({ invoiceId }: { invoiceId: string }) {
   console.log(paymentData);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const { count, paid_amount, rows } = paymentData;
+  const { rows } = paymentData;
   const isPaid = rows[0]?.payment_status === 'PAID';
   const payment_status = isPaid ? 'PAID' : 'UNPAID';
 

@@ -20,20 +20,11 @@ export default function EventViewPage(
   console.log('🚀 ~ file: index.tsx:19 ~ data:', data);
   if (!data) return <>404</>;
 
-  // const { mutate } = api.event.sendRequest.useMutation({
-  //   onSuccess: newReq => console.log(newReq),
-  // });
-  // function handleSendRequest() {
-  //   mutate({ eventId: data?.id as string, role: 'mopper' });
-  // }
   return (
     <PartnerLayout>
       <Shell>
         <div className="flex justify-center">{data?.title}</div>
         <div className="flex justify-center">
-          {/* <Button type="submit" onClick={handleSendRequest}>
-          Send join request
-        </Button> */}
           <Link href={`/p/manage/event/${props.id}/invite`}>Invite users</Link>
         </div>
       </Shell>

@@ -3,7 +3,7 @@ import { sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
-import type { Fundraising } from '@/lib/db/types';
+import type { Fundraising, User } from '@/lib/db/types';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createPresignedUrl } from '../helper/imageHelper';
@@ -167,7 +167,7 @@ export const fundraisingRouter = createTRPCRouter({
         AND u."id" = ${ctx.userId}
         `.execute(ctx.db);
 
-      return query.rows;
+      return query.rows as User[];
     }),
   create: privateProcedure
     .input(fundraisingSchema)
@@ -182,7 +182,6 @@ export const fundraisingRouter = createTRPCRouter({
             phone: input.contact.phone,
             email: input.contact.email,
           },
-          location: input.location,
           startTime: input.startTime,
           endTime: input.endTime,
           goalAmount: input.goalAmount,
@@ -213,7 +212,6 @@ export const fundraisingRouter = createTRPCRouter({
             phone: input.contact.phone,
             email: input.contact.email,
           },
-          location: input.location,
           startTime: input.startTime,
           endTime: input.endTime,
           goalAmount: input.goalAmount,

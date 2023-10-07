@@ -64,7 +64,7 @@ export type S3ParamType = {
 };
 
 export type Contact = {
-  phone_number: string;
+  phone: string;
   email: string;
 };
 
@@ -74,5 +74,10 @@ export type PaymentDetails = {
 
 export type EventRole = {
   name: string;
-  number: number;
+  number: string;
+};
+
+export type Tab = {
+  title: string;
+  href: string;
 };

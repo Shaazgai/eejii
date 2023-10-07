@@ -3,7 +3,7 @@ import { useState } from 'react';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import EventsTable from '@/components/table/admin/events-table';
-import type { Event } from '@/lib/db/types';
+import type { EventWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
@@ -41,7 +41,9 @@ export default function Index() {
           />
         </div>
         <div>
-          {events && <EventsTable data={events as unknown as Event[]} />}
+          {events && (
+            <EventsTable data={events as unknown as EventWithOwner[]} />
+          )}
         </div>
       </div>
     </DashboardLayout>

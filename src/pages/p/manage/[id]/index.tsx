@@ -8,7 +8,7 @@ import PartnerLayout from '@/components/layout/partner-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { getServerAuthSession } from '@/lib/auth';
-import type { Fundraising } from '@/lib/db/types';
+import type { FundWithOwner } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
 import { api } from '@/utils/api';
@@ -41,7 +41,7 @@ export default function EventViewPage(
     <PartnerLayout>
       <Shell>
         <FundDetail
-          fund={data as unknown as Fundraising}
+          fund={data as unknown as FundWithOwner}
           actionButton={
             <Button
               type="submit"
@@ -63,10 +63,11 @@ export default function EventViewPage(
             Invite users
           </Button>
         </div>
-        {false
-          ? // <RequestsDataTable data={} type={'fundaising'} />
-            null
-          : 'loadiing..'}
+        {/* {false ? ( */}
+        {/*   <RequestsDataTable data={null} type={'fundaising'} /> */}
+        {/* ) : ( */}
+        {/*   'loadiing..' */}
+        {/* )} */}
       </Shell>
     </PartnerLayout>
   );

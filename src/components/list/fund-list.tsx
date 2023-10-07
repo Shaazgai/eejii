@@ -1,11 +1,11 @@
 import FundCard from '@/components/card/fund-card';
-import type { Fundraising } from '@/lib/db/types';
+import type { FundWithOwner } from '@/lib/types';
 
 const FundraisingList = ({
   fundraisings,
   isLoading,
 }: {
-  fundraisings: Fundraising[];
+  fundraisings: FundWithOwner[];
   isLoading: boolean;
 }) => {
   return (

@@ -2,25 +2,18 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
 
-import type { JoinRequestTableProps } from '@/lib/types';
-import { api } from '@/utils/api';
-
 import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
 
-const SupporterJoinRequestTable = ({
-  data,
-}: {
-  data: JoinRequestTableProps[];
-}) => {
-  const utils = api.useContext();
-  const { mutate, isLoading } = api.supporter.handleRequest.useMutation({
-    onSuccess: res => {
-      console.log(res);
-      utils.supporter.getMytProjectsJoinRequestsOrInvitations.invalidate();
-    },
-  });
-  const columns: ColumnDef<JoinRequestTableProps>[] = [
+const SupporterJoinRequestTable = ({ data }: { data: null }) => {
+  // const utils = api.useContext();
+  // const { mutate, isLoading } = api.supporter.handleRequest.useMutation({
+  //   onSuccess: res => {
+  //     console.log(res);
+  //     utils.supporter.getMytProjectsJoinRequestsOrInvitations.invalidate();
+  //   },
+  // });
+  const columns: ColumnDef<null>[] = [
     {
       accessorKey: 'type',
       header: 'Request/Invitation',
@@ -112,24 +105,24 @@ const SupporterJoinRequestTable = ({
           <div className="flex flex-row gap-2">
             <span>
               <Button
-                disabled={isLoading}
-                onClick={() =>
-                  mutate({
-                    id: requestId,
-                    status: 'approved',
-                  })
-                }
+              // disabled={isLoading}
+              // onClick={() =>
+              //   mutate({
+              //     id: requestId,
+              //     status: 'approved',
+              //   })
+              // }
               >
                 Approve
               </Button>
               <Button
-                disabled={isLoading}
-                onClick={() =>
-                  mutate({
-                    id: requestId,
-                    status: 'denied',
-                  })
-                }
+              // disabled={isLoading}
+              // onClick={() =>
+              // mutate({
+              //   id: requestId,
+              //   status: 'denied',
+              // })
+              //}
               >
                 Deny
               </Button>

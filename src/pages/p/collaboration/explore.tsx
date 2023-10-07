@@ -6,8 +6,8 @@ import FundraisingList from '@/components/list/fund-list';
 import GrantFundraisingList from '@/components/list/grant-list';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
-import type { Fundraising, GrantFundraising } from '@/lib/db/types';
-import type { EventWithOwner } from '@/lib/types';
+import type { GrantFundraising } from '@/lib/db/types';
+import type { EventWithOwner, FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export const ExploreFundraisings = () => {
@@ -17,7 +17,7 @@ export const ExploreFundraisings = () => {
     <div>
       {!isFundLoading ? (
         <FundraisingList
-          fundraisings={fundraisings as Fundraising[]}
+          fundraisings={fundraisings as FundWithOwner[]}
           isLoading={isFundLoading}
         />
       ) : (

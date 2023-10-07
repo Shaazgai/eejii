@@ -1,9 +1,10 @@
 import { usePathname, useRouter } from 'next/navigation';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { Tab } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-export function LinkTabs({ tabs }) {
+export function LinkTabs({ tabs }: { tabs: Tab[] }) {
   const router = useRouter();
   const pathname = usePathname();
   console.log('🚀 ~ file: link-tabs.tsx:9 ~ LinkTabs ~ pathname:', pathname);

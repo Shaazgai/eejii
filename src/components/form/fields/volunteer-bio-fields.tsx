@@ -82,22 +82,12 @@ const VolunteerBioFields = ({
       />
       <div className="flex flex-row justify-between gap-5">
         <FormField
-          name="primary_phone"
+          name="phoneNumber"
           control={form.control}
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Phone 1</FormLabel>
               <Input placeholder="Primary phone" {...field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="secondary_phone"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Phone 2</FormLabel>
-              <Input placeholder="Secondary phone" {...field} />
               <FormMessage />
             </FormItem>
           )}

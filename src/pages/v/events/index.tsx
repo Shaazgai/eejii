@@ -5,7 +5,7 @@ import EventList from '@/components/list/event-list';
 import FundraisingList from '@/components/list/fund-list';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
-import type { EventType, FundraisingType } from '@/lib/types';
+import type { EventWithOwner, FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Volunteer = () => {
@@ -37,13 +37,14 @@ const Volunteer = () => {
         </div>
         {activeIndex === 0 && (
           <EventList
-            events={events as EventType[]}
+            isVolunteer={true}
+            events={events as unknown as EventWithOwner[]}
             isLoading={isEventLoading}
           />
         )}
         {activeIndex === 1 && (
           <FundraisingList
-            fundraisings={fundraising as FundraisingType[]}
+            fundraisings={fundraising as unknown as FundWithOwner[]}
             isLoading={isFundLoading}
           />
         )}

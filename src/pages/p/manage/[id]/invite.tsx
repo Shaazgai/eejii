@@ -59,7 +59,7 @@ const UserList = ({
                     onClick={() => {
                       mutate({
                         id: fundraisingId,
-                        userId: user.id,
+                        userId: user.id as unknown as string,
                       });
                     }}
                   >

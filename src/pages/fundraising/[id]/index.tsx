@@ -7,6 +7,7 @@ import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { getServerAuthSession } from '@/lib/auth';
+import type { FundWithOwner } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
 import { api } from '@/utils/api';
@@ -19,7 +20,7 @@ export default function FundraisingViewPage(
   const { data } = api.fundraising.getById.useQuery({ id: id as string });
   if (!data) return <div>404</div>;
 
-  const { mutate } = api.fundraising.sendRequest.useMutation({
+  const { mutate } = api.fundAssociation.sendRequest.useMutation({
     onSuccess: newReq => console.log(newReq),
   });
   function handleSendRequest() {
@@ -29,7 +30,7 @@ export default function FundraisingViewPage(
     <BasicBaseLayout>
       <Shell>
         <FundDetail
-          fund={data}
+          fund={data as unknown as FundWithOwner}
           actionButton={
             <Button type="submit" onClick={handleSendRequest}>
               Send join request

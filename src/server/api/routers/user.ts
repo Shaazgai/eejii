@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { userSignUpSchema } from '@/lib/validation/user-schema';
 
-import { createTRPCRouter, publicProcedure } from '../trpc';
+import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const userRouter = createTRPCRouter({
   getById: publicProcedure
@@ -17,6 +17,18 @@ export const userRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       return volunteer;
+    }),
+  getMyDonations: privateProcedure
+    .input(z.object({ limit: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const donations = await ctx.db
+        .selectFrom('Donation')
+        .selectAll()
+        .where('userId', '=', ctx.userId)
+        .limit(input.limit)
+        .execute();
+
+      return donations;
     }),
   insertUser: publicProcedure
     .input(userSignUpSchema)

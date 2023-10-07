@@ -72,14 +72,7 @@ const EventFields = ({
           <div className="space-y-2">
             <FormLabel className="text-2xl">Description</FormLabel>
             <FormItem className="h-96 rounded-2xl border bg-white px-4 py-8">
-              {/* <FormControl> */}
               <Editor {...field} editorLoaded={editorLoaded} />
-              {/* <Textarea */}
-              {/*   placeholder="Tell us about event" */}
-              {/*   className="resize-none" */}
-              {/*   {...field} */}
-              {/* /> */}
-              {/* </FormControl> */}
               <FormDescription>
                 You can <span>@mention</span> other users and organizations.
               </FormDescription>
@@ -201,52 +194,72 @@ const EventFields = ({
           <FormField
             name="startTime"
             control={form.control}
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col">
-                <FormLabel>Start time</FormLabel>
-                <DatePicker
-                  id="exampleFormControlTextarea2"
-                  className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
-                  // locale="mn"
-                  placeholderText="Өдөр сонгох"
-                  dateFormat="yyyy-MM-dd H:mm "
-                  timeInputLabel="Time:"
-                  disabledKeyboardNavigation
-                  showTimeSelect
-                  selected={field.value ? moment(field.value).toDate() : null}
-                  onKeyDown={e => {
-                    e.preventDefault();
-                  }}
-                  {...field}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const handleDateChange = (date: Date) => {
+                form.setValue('startTime', date, { shouldValidate: true });
+              };
+              return (
+                <FormItem className="flex w-full flex-col">
+                  <FormLabel>Start time</FormLabel>
+                  <DatePicker
+                    id="exampleFormControlTextarea2"
+                    className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
+                    // locale="mn"
+                    placeholderText="Өдөр сонгох"
+                    dateFormat="yyyy-MM-dd H:mm "
+                    timeInputLabel="Time:"
+                    disabledKeyboardNavigation
+                    showTimeSelect
+                    selected={field.value ? moment(field.value).toDate() : null}
+                    value={
+                      field.value
+                        ? moment(field.value).toDate().toISOString()
+                        : ''
+                    }
+                    onKeyDown={e => {
+                      e.preventDefault();
+                    }}
+                    onChange={handleDateChange}
+                  />
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
           <FormField
             name="endTime"
             control={form.control}
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col">
-                <FormLabel>End Time</FormLabel>
-                <DatePicker
-                  id="exampleFormControlTextarea2"
-                  className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
-                  // locale="mn"
-                  placeholderText="Өдөр сонгох"
-                  dateFormat="yyyy-MM-dd H:mm "
-                  timeInputLabel="Time:"
-                  disabledKeyboardNavigation
-                  showTimeSelect
-                  selected={field.value ? moment(field.value).toDate() : null}
-                  onKeyDown={e => {
-                    e.preventDefault();
-                  }}
-                  {...field}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const handleDateChange = (date: Date) => {
+                form.setValue('endTime', date, { shouldValidate: true });
+              };
+              return (
+                <FormItem className="flex w-full flex-col">
+                  <FormLabel>End Time</FormLabel>
+                  <DatePicker
+                    id="exampleFormControlTextarea2"
+                    className="w-full rounded-full border px-3 py-2 text-sm ring-0 focus:outline-none"
+                    // locale="mn"
+                    placeholderText="Өдөр сонгох"
+                    dateFormat="yyyy-MM-dd H:mm "
+                    timeInputLabel="Time:"
+                    disabledKeyboardNavigation
+                    showTimeSelect
+                    selected={field.value ? moment(field.value).toDate() : null}
+                    onKeyDown={e => {
+                      e.preventDefault();
+                    }}
+                    value={
+                      field.value
+                        ? moment(field.value).toDate().toISOString()
+                        : ''
+                    }
+                    onChange={handleDateChange}
+                  />
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
         </div>
       </div>

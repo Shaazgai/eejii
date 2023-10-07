@@ -7,7 +7,7 @@ import SectionHeader from '@/components/common/section-header';
 import SupporterLayout from '@/components/layout/supporter-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
-import type { Fundraising } from '@/lib/db/types';
+import type { GrantFundraising } from '@/lib/db/types';
 import { api } from '@/utils/api';
 
 export default function ManageProjects() {
@@ -48,7 +48,7 @@ export default function ManageProjects() {
           setActiveIndex={setActiveIndex}
         /> */}
         {grantFundraising?.map((grant, index) => (
-          <GrantCard key={index} grant={grant as Fundraising} />
+          <GrantCard key={index} grant={grant as unknown as GrantFundraising} />
         ))}
       </Shell>
     </SupporterLayout>

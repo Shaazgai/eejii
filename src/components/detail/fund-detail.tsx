@@ -313,7 +313,7 @@ const FundDetail = ({
                         <span className="flex items-center gap-2">
                           <Phone />
                         </span>
-                        <span>{fund.contact?.phone_number}</span>
+                        <span>{fund.contact?.phone}</span>
                       </div>
                     )}
                   </li>

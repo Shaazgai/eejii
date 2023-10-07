@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Fundraising } from '@/lib/db/types';
+import type { FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Donate = () => {
@@ -172,7 +172,7 @@ const Donate = () => {
         </div>
         <div className="-translate-y-10">
           <FundraisingList
-            fundraisings={fundraising as unknown as Fundraising[]}
+            fundraisings={fundraising as unknown as FundWithOwner[]}
             isLoading={isFundLoading}
           />
           {/* <EventSlider
