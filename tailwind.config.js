@@ -31,6 +31,7 @@ module.exports = {
           foreground: 'hsl(var(--sidebar-foreground))',
         },
         primary: '#3c888D',
+        primaryDark: '#2f4a53',
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
@@ -74,6 +75,13 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+      },
+      backgroundImage: {
+        backGroundImg: "url('/images/backGroundImg.png')",
+        folderLeft: "url('/images/folderLeft.png')",
+        folderLeftIMG: "url('/images/folderLeftIMG.png')",
+        folderRight: "url('/images/folderRight.png')",
+        folderRightIMG: "url('/images/folderRightIMG.png')",
       },
     },
   },
