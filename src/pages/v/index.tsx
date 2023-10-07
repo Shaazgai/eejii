@@ -4,9 +4,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 // import Swiper core and required modules
-import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
 import { FallbackImage } from '@/components/common/fallback-image';
 import VolunteerLayout from '@/components/layout/volunteer-layout';
 import EventSlider from '@/components/list/slider/event-slider';
@@ -15,6 +12,7 @@ import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import type { EventWithOwner, FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
@@ -70,11 +68,14 @@ export default function Index() {
           </Card>
         </div>
         <div className="-translate-y-10">
-          <EventSlider events={events} isEventLoading={isEventLoading} />
+          <EventSlider
+            events={events as unknown as EventWithOwner[]}
+            isEventLoading={isEventLoading}
+          />
         </div>
         <div className="-translate-y-10">
           <FundSlider
-            fundraisings={fundraisings as FundraisingType[]}
+            fundraisings={fundraisings as unknown as FundWithOwner[]}
             isFundLoading={isFundLoading}
           />
         </div>

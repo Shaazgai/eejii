@@ -20,7 +20,7 @@ import FundraisingFields from './fields/fundraising-fields';
 const GrantFundraisingForm = ({
   data,
 }: {
-  data: z.infer<typeof fundraisingSchema>;
+  data: z.infer<typeof fundraisingSchema> | undefined;
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
@@ -30,7 +30,6 @@ const GrantFundraisingForm = ({
     defaultValues: {
       title: data?.title || '',
       description: data?.description || '',
-      // location: data?.location || '',
       startTime: data?.startTime || new Date(),
       endTime: data?.endTime || new Date(),
       contact: {

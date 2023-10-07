@@ -4,9 +4,7 @@ import type { z } from 'zod';
 
 import FundraisingForm from '@/components/form/fundraising-form';
 import PartnerLayout from '@/components/layout/partner-layout';
-import type { FundraisingType } from '@/lib/types';
 import type { fundraisingSchema } from '@/lib/validation/fundraising-schema';
-import { normalizeFundToForm } from '@/server/api/helpers/normalizer/normalizeForForm';
 import { api } from '@/utils/api';
 
 const EditFundraising = () => {
@@ -22,11 +20,7 @@ const EditFundraising = () => {
   return (
     <PartnerLayout>
       <FundraisingForm
-        data={
-          normalizeFundToForm(fund as unknown as FundraisingType) as z.infer<
-            typeof fundraisingSchema
-          >
-        }
+        data={fund as z.infer<typeof fundraisingSchema> | undefined}
       />
     </PartnerLayout>
   );

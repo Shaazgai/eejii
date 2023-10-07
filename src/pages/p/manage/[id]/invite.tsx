@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Button } from '@/components/ui/button';
-import { api } from '@/utils/api';
 import { UserType } from '@/lib/db/enums';
+import { api } from '@/utils/api';
 
 const UserList = ({
   fundraisingId,
@@ -59,7 +59,7 @@ const UserList = ({
                     onClick={() => {
                       mutate({
                         id: fundraisingId,
-                        userId: user.id,
+                        userId: user.id as unknown as string,
                       });
                     }}
                   >

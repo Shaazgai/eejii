@@ -1,30 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import type { Payment } from '@/lib/db/types';
 import { verify } from '@/lib/paymentProvider';
-import { prisma } from '@/server/db';
+import { db } from '@/server/db';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { paymentId } = req.body;
-  const payment = await prisma.payment.findUniqueOrThrow({
-    where: { id: paymentId },
+  const response = await db
+    .selectFrom('Payment')
+    .selectAll()
+    .where('Payment.id', '=', paymentId)
+    .executeTakeFirstOrThrow();
+  const payment = response as unknown as Payment;
+  const invoiceRes = await verify({
+    invoiceId: payment.invoiceId as string,
   });
-  const invoiceRes = await verify({ invoiceId: payment.invoiceId as string });
 
   if (invoiceRes.code === 'success') {
-    await prisma.payment.update({
-      where: { id: paymentId },
-      data: { status: 'PAID' },
+    db.updateTable('Payment').where('id', '=', paymentId).set({
+      status: 'PAID',
     });
     return res.status(200).json({ message: 'PAID' });
   } else {
-    await prisma.payment.update({
-      where: { id: paymentId },
-      data: {
-        status: 'UNPAID',
-      },
+    db.updateTable('Payment').where('id', '=', paymentId).set({
+      status: 'UNPAID',
     });
     return res.status(200).json({ code: 'UNPAID' });
   }

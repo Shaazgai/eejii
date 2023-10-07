@@ -5,7 +5,6 @@ import {
   LayoutDashboard,
   Newspaper,
   Settings,
-  UserCog,
 } from 'lucide-react';
 import { useState } from 'react';
 

@@ -1,46 +1,45 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-// import { verify, generate } from '@/lib/paymentProvider';
 import { generate } from '@/lib/paymentProvider';
-import { prisma } from '@/server/db';
+import { db } from '@/server/db';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { userId, fundId, amount } = req.body;
-  // const user = await prisma.user.findUniqueOrThrow({
-  //   where: { externalId: userId },
-  // });
-  console.log(amount);
-  const donation = await prisma.donation.create({
-    data: {
-      User: { connect: { externalId: userId } },
-      Fundraising: { connect: { id: fundId } },
+  const response = await db.transaction().execute(async trx => {
+    const donation = await trx
+      .insertInto('Donation')
+      .values({
+        amount: amount,
+        userId: userId,
+        isPublicName: true,
+        fundraisingId: fundId,
+      })
+      .returning('id')
+      .executeTakeFirstOrThrow();
+
+    const invoice = await generate({
+      invoiceNo: donation.id,
       amount: amount,
-      Payment: {
-        create: {
-          status: 'PENDING',
-          amount: amount,
-        },
-      },
-    },
+      expireAt: undefined,
+    });
+
+    const payment = await trx
+      .insertInto('Payment')
+      .values({
+        amount: amount,
+        status: 'AWAITING_PAYMENT',
+        donationId: donation.id,
+        invoiceId: invoice.invoice_id,
+        details: invoice,
+      })
+      .returningAll()
+      .executeTakeFirstOrThrow();
+
+    return payment;
   });
 
-  const invoice = await generate({
-    invoiceNo: donation.id,
-    amount: amount,
-    expireAt: undefined,
-  });
-  const payment = await prisma.payment.update({
-    where: { donationId: donation.id },
-    data: {
-      invoiceId: invoice.invoice_id,
-      status: 'AWAITING_PAYMENT',
-      details: invoice,
-    },
-  });
-
-  // console.log(JSON.stringify(invoice));
-  return res.status(200).json(payment);
+  return res.status(200).json(response);
 }

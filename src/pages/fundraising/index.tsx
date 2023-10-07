@@ -1,6 +1,6 @@
 import FundCardPublic from '@/components/card/fund-card';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import type { FundraisingType } from '@/lib/types';
+import type { FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
@@ -13,7 +13,7 @@ export default function Index() {
         <div className="grid grid-cols-1 gap-4  md:grid-cols-2 lg:md:grid-cols-3">
           {fundraisings?.map((fund, index) => (
             <FundCardPublic
-              fund={fund as FundraisingType}
+              fund={fund as unknown as FundWithOwner}
               key={index}
               isVolunteer={false}
             />

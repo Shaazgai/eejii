@@ -1,10 +1,10 @@
 import { TRPCError } from '@trpc/server';
-import crypto from 'crypto';
 import { sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
-import type { Event, User } from '@/lib/db/types';
+import type { User } from '@/lib/db/types';
+import type { EventWithOwner } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createPresignedUrl } from '../helper/imageHelper';
@@ -77,7 +77,7 @@ export const eventRouter = createTRPCRouter({
         .selectAll()
         .where('Event.id', '=', input.id)
         .execute();
-      return event;
+      return event as unknown as EventWithOwner;
     }),
   getMyCollaborated: privateProcedure.query(async ({ ctx }) => {
     const events = await ctx.db
@@ -92,7 +92,6 @@ export const eventRouter = createTRPCRouter({
       .where('User.id', '=', ctx.userId)
       .where('EventAssociation.status', '=', 'approved')
       .execute();
-    console.log(events);
     return events;
   }),
   getMyPending: privateProcedure.query(async ({ ctx }) => {

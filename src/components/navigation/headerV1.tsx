@@ -1,10 +1,10 @@
 'use client';
 
 import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import type { ReactElement } from 'react';
 
 import {

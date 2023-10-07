@@ -1,11 +1,11 @@
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
 import SectionHeader from '@/components/common/section-header';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
 
 const ManageProjectsHeading = () => {
   const router = useRouter();
@@ -42,7 +42,10 @@ const ManageProjectsHeading = () => {
       </SectionHeader>
       <div className="flex justify-between">
         <LinkTabs tabs={tabs} />
-        <Link className="flex items-center gap-2 border px-4 py-0 rounded-full hover:bg-primary hover:text-white" href={'/p/manage/requests'}>
+        <Link
+          className="flex items-center gap-2 rounded-full border px-4 py-0 hover:bg-primary hover:text-white"
+          href={'/p/manage/requests'}
+        >
           Manage request
           <ArrowRight />
         </Link>

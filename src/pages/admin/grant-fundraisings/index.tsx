@@ -3,9 +3,8 @@ import { useState } from 'react';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import GrantFundsTable from '@/components/table/admin/grantfunds-table';
-import type { GrantFundraising } from '@/lib/db/types';
+import type { GrantFundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
-import { GrantFundWithOwner } from '@/lib/types';
 
 export default function Index() {
   const { data: grantFundraisings } = api.grantFundraising.getAll.useQuery();

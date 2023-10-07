@@ -8,6 +8,7 @@ import PartnerLayout from '@/components/layout/partner-layout';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { getServerAuthSession } from '@/lib/auth';
+import type { FundWithOwner } from '@/lib/types';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
 import { api } from '@/utils/api';
@@ -19,13 +20,13 @@ export default function EventViewPage(
   if (!props) return <>Loading...</>;
   const { id } = props;
   const { data } = api.fundraising.getById.useQuery({ id: id as string });
-  const { data: requests } = api.eventAssociation.findAll.useQuery({
-    type: null,
-    status: null,
-    eventId: null,
-    eventsOwnerId: '9cf3294b-ee52-40c2-ac22-07028dff4a3a',
-    userId: null,
-  });
+  // const { data: requests } = api.eventAssociation.findAll.useQuery({
+  //   type: null,
+  //   status: null,
+  //   eventId: null,
+  //   eventsOwnerId: '9cf3294b-ee52-40c2-ac22-07028dff4a3a',
+  //   userId: null,
+  // });
   // const { data: requests, isLoading: isRequestLoading } =
   //   api.partner.getMytProjectsJoinRequestsOrInvitations.useQuery({
   //     projectType: 'fundraising',
@@ -40,7 +41,7 @@ export default function EventViewPage(
     <PartnerLayout>
       <Shell>
         <FundDetail
-          fund={data}
+          fund={data as unknown as FundWithOwner}
           actionButton={
             <Button
               type="submit"
@@ -62,10 +63,11 @@ export default function EventViewPage(
             Invite users
           </Button>
         </div>
-        {false
-          ? // <RequestsDataTable data={} type={'fundaising'} />
-            null
-          : 'loadiing..'}
+        {/* {false ? ( */}
+        {/*   <RequestsDataTable data={null} type={'fundaising'} /> */}
+        {/* ) : ( */}
+        {/*   'loadiing..' */}
+        {/* )} */}
       </Shell>
     </PartnerLayout>
   );

@@ -1,7 +1,6 @@
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Shell } from '@/components/shells/shell';
-import PartnerFormContainer from '@/containers/partner-form-container';
 
 export default function ManageProjects() {
   const tabs = [
@@ -18,9 +17,7 @@ export default function ManageProjects() {
     <PartnerLayout>
       <Shell>
         <LinkTabs tabs={tabs} />
-        <div className="container">
-          <PartnerFormContainer />
-        </div>
+        <div className="container"></div>
       </Shell>
     </PartnerLayout>
   );

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
 
-import type { ContactType, EventType } from '@/lib/types';
+import type { EventWithOwner } from '@/lib/types';
 
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
@@ -13,7 +13,7 @@ const EventDetail = ({
   event,
   actionButton,
 }: {
-  event: EventType;
+  event: EventWithOwner;
   actionButton: ReactNode;
 }) => {
   const router = useRouter();
@@ -47,24 +47,24 @@ const EventDetail = ({
             />
           </div>
           <div>
-            {event.CategoryEvent &&
-              event?.CategoryEvent.map(categoryEvent => {
-                const category = categoryEvent?.Category;
-                return (
-                  <Button
-                    variant={'outline'}
-                    size={'sm'}
-                    type="button"
-                    onClick={() => {
-                      router.push(`/explore/category/${category?.id}`);
-                    }}
-                    key={category?.id}
-                    className="rounded-full"
-                  >
-                    {category?.name}
-                  </Button>
-                );
-              })}
+            {/* {event.CategoryEvent && */}
+            {/*   event?.CategoryEvent.map(categoryEvent => { */}
+            {/*     const category = categoryEvent?.Category; */}
+            {/*     return ( */}
+            {/*       <Button */}
+            {/*         variant={'outline'} */}
+            {/*         size={'sm'} */}
+            {/*         type="button" */}
+            {/*         onClick={() => { */}
+            {/*           router.push(`/explore/category/${category?.id}`); */}
+            {/*         }} */}
+            {/*         key={category?.id} */}
+            {/*         className="rounded-full" */}
+            {/*       > */}
+            {/*         {category?.name} */}
+            {/*       </Button> */}
+            {/*     ); */}
+            {/*   })} */}
           </div>
           <div className="space-y-5">
             <div>
@@ -76,7 +76,7 @@ const EventDetail = ({
               <ul className="ms-5 list-disc">
                 {event?.roles &&
                   Object.values(event?.roles).map((role, i) => (
-                    <li key={i}>{role}</li>
+                    <li key={i}>{role.name}</li>
                   ))}
               </ul>
             </div>
@@ -110,18 +110,7 @@ const EventDetail = ({
                   <span>Email:</span> {event.Owner?.email}
                 </li>
                 <li className="flex justify-between rounded py-1 sm:py-2">
-                  <span>Primary phone:</span>{' '}
-                  {
-                    (event.Owner?.phoneNumbers as unknown as ContactType)
-                      ?.primary_phone
-                  }
-                </li>
-                <li className="flex justify-between rounded py-1 sm:py-2">
-                  <span>Secondary phone:</span>{' '}
-                  {
-                    (event.Owner?.phoneNumbers as unknown as ContactType)
-                      ?.secondary_phone
-                  }
+                  <span>Phone number:</span> {event.Owner?.phoneNumber}
                 </li>
               </ul>
             </CardContent>
@@ -130,44 +119,49 @@ const EventDetail = ({
             <CardHeader>
               {event?.startTime && event?.endTime && (
                 <div className="flex gap-3">
-                  <span>{format(event?.startTime, 'PPP HH:mm')}</span>-
-                  <span>{format(event?.endTime, 'PPP HH:mm')}</span>
+                  <span>
+                    {format(event?.startTime as unknown as Date, 'PPP HH:mm')}
+                  </span>
+                  -
+                  <span>
+                    {format(event?.endTime as unknown as Date, 'PPP HH:mm')}
+                  </span>
                 </div>
               )}
               <p>{event.requiredTime}</p>
             </CardHeader>
           </Card>
           <Card>
-            <CardHeader>
-              Attending
-              <span>
-                {event.EventPartner?.filter(ep => ep.status === 'approved')
-                  .length +
-                  event.EventSupporter?.filter(es => es.status === 'approved')
-                    .length >
-                  0 && (
-                  <span>
-                    Collaborating with{' '}
-                    {event.EventPartner?.filter(ep => ep.status === 'approved')
-                      .length +
-                      event.EventSupporter?.filter(
-                        es => es.status === 'approved'
-                      ).length}
-                    {' partners and supporters'}
-                  </span>
-                )}
-                {event.EventVolunteer?.filter(ev => ev.status === 'approved')
-                  .length > 0 && (
-                  <span>
-                    {
-                      event.EventVolunteer?.filter(
-                        ev => ev.status === 'approved'
-                      ).length
-                    }
-                  </span>
-                )}
-              </span>
-            </CardHeader>
+            {/* <CardHeader> */}
+            {/*   Attending */}
+            {/*   <span> */}
+            {/*     {event.EventPartner?.filter(ep => ep.status === 'approved') */}
+            {/*       .length + */}
+            {/*       event.EventSupporter?.filter(es => es.status === 'approved') */}
+            {/*         .length > */}
+            {/*       0 && ( */}
+            {/*       <span> */}
+            {/*         Collaborating with{' '} */}
+            {/*         {event.EventPartner?.filter(ep => ep.status === 'approved') */}
+            {/*           .length + */}
+            {/*           event.EventSupporter?.filter( */}
+            {/*             es => es.status === 'approved' */}
+            {/*           ).length} */}
+            {/*         {' partners and supporters'} */}
+            {/*       </span> */}
+            {/*     )} */}
+            {/*     {event.EventVolunteer?.filter(ev => ev.status === 'approved') */}
+            {/*       .length > 0 && ( */}
+            {/*       <span> */}
+            {/*         { */}
+            {/*           event.EventVolunteer?.filter( */}
+            {/*             ev => ev.status === 'approved' */}
+            {/*           ).length */}
+            {/*         } */}
+            {/*       </span> */}
+            {/*     )} */}
+            {/*   </span> */}
+            {/* </CardHeader> */}
           </Card>
         </div>
       </div>

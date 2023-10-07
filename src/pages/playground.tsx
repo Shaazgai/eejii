@@ -1,10 +1,11 @@
-import LoginComp from "@/bazo/login-comp"
-import React from 'react'
+import React from 'react';
 
-export default function Play()  {
+import LoginComp from '@/bazo/login-comp';
+
+export default function Play() {
   return (
-      <div>
+    <div>
       <LoginComp />
     </div>
-  )
+  );
 }

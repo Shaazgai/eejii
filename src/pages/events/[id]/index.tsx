@@ -18,11 +18,11 @@ export default function EventViewPage(
   const { id } = props;
   const { data } = api.event.getById.useQuery({ id: id as string });
 
-  const { _mutate } = api.event.sendRequest.useMutation({
+  const { mutate } = api.eventAssociation.sendRequest.useMutation({
     onSuccess: newReq => console.log(newReq),
   });
   function handleSendRequest() {
-    // mutate({ eventId: data?.id as string, role: 'mopper' });
+    mutate({ eventId: data?.id as unknown as string, role: 'mopper' });
   }
   if (!data) return <>404</>;
   return (

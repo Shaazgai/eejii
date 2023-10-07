@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import type { EventType } from '@/lib/types';
+import type { EventWithOwner } from '@/lib/types';
 
 import EventCard from '../../card/event-card';
 import { DotButton } from './slider-button-dots';
@@ -13,7 +13,7 @@ const EventSlider = ({
   events,
   isEventLoading,
 }: {
-  events: EventType[];
+  events: EventWithOwner[];
   isEventLoading: boolean;
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -88,11 +88,11 @@ const EventSlider = ({
             <div className="embla__container">
               {!isEventLoading &&
                 events &&
-                events.map(event => {
+                events.map((event, i) => {
                   return (
-                    <div className="embla__slide" key={event.id}>
+                    <div className="embla__slide" key={i}>
                       <EventCard
-                        event={event as EventType}
+                        event={event as EventWithOwner}
                         isVolunteer={true}
                       />
                     </div>

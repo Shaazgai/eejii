@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { FundraisingType } from '@/lib/types';
+import type { FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Donate = () => {
@@ -34,6 +34,7 @@ const Donate = () => {
     api.fundraising.getAll.useQuery();
 
   const form = useForm();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onSubmit(values: any) {
     console.log(values);
   }
@@ -171,7 +172,7 @@ const Donate = () => {
         </div>
         <div className="-translate-y-10">
           <FundraisingList
-            fundraisings={fundraising as FundraisingType[]}
+            fundraisings={fundraising as unknown as FundWithOwner[]}
             isLoading={isFundLoading}
           />
           {/* <EventSlider

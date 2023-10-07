@@ -16,7 +16,7 @@ export default function GrantFundraisingViewPage(
   const { id } = props;
   const { data } = api.grantFundraising.getById.useQuery({ id: id as string });
 
-  const { mutate } = api.grantFundraising.sendRequest.useMutation({
+  const { mutate } = api.grantAssociation.sendRequest.useMutation({
     onSuccess: newReq => console.log(newReq),
   });
   function handleSendRequest() {

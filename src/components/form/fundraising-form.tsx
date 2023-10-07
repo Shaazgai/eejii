@@ -17,11 +17,6 @@ import { Form, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import FundraisingFields from './fields/fundraising-fields';
 
-type CreateSignatureData = {
-  url: string;
-  fields: S3ParamType;
-};
-
 const FundraisingForm = ({
   data,
 }: {
@@ -33,7 +28,6 @@ const FundraisingForm = ({
     defaultValues: {
       title: data?.title || '',
       description: data?.description || '',
-      location: data?.location || '',
       startTime: data?.startTime || new Date(),
       endTime: data?.endTime || new Date(),
       goalAmount: data?.goalAmount || 0,

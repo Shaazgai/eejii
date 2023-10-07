@@ -9,13 +9,13 @@
 
 import { initTRPC, TRPCError } from '@trpc/server';
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
-import { getSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
-import { db } from '../db';
-import { getServerSession } from 'next-auth';
 import { nextAuthOptions } from '@/lib/auth';
+
+import { db } from '../db';
 /**
  * 1. CONTEXT
  *
