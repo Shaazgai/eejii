@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
 
-import type { EventWithOwner } from '@/lib/types';
+import type { EventRole, EventWithOwner } from '@/lib/types';
 
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
@@ -74,11 +74,10 @@ const EventDetail = ({
             <div>
               <h3 className="text-xl font-semibold">Roles</h3>
               <ul className="ms-5 list-disc">
-                {/* {event?.roles && */}
-                {/*   Object.values(event?.roles).map((role, i) => ( */}
-                {/*     <li key={i}>{String(role.name)}</li> */}
-                {/*   )) */}
-                {/* } */}
+                {(event?.roles as EventRole[]) &&
+                  Object.values(event?.roles as EventRole[]).map((role, i) => (
+                    <li key={i}>{String(role.name)}</li>
+                  ))}
               </ul>
             </div>
           </div>

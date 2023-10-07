@@ -18,7 +18,7 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Toaster } from '@/components/ui/toaster';
 import type { Payment } from '@/lib/db/types';
-import type { FundWithOwner } from '@/lib/types';
+import type { Contact, FundWithOwner, PaymentDetails } from '@/lib/types';
 import { priceFormatter } from '@/lib/utils/price';
 
 import { Button } from '../ui/button';
@@ -192,7 +192,10 @@ const FundDetail = ({
                             ) : (
                               <div>
                                 <img
-                                  // src={`data:image/png;base64,${payment.details?.qr_image}`}
+                                  src={`data:image/png;base64,${
+                                    (payment.details as PaymentDetails)
+                                      ?.qr_image
+                                  }`}
                                   className="w-full border"
                                   alt="qr"
                                 />
@@ -308,22 +311,29 @@ const FundDetail = ({
                   className="mt-4 divide-y divide-gray-200 dark:divide-gray-700"
                 >
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {fund?.contact && (
+                    {(fund?.contact as Contact) && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Phone />
                         </span>
-                        <span>{fund.contact?.phone}</span>
+                        <span>
+                          {
+                            (fund.contact as Contact)
+                              ?.phone as unknown as string
+                          }
+                        </span>
                       </div>
                     )}
                   </li>
                   <li className="rounded px-3 py-2 sm:py-2">
-                    {fund?.contact && (
+                    {(fund?.contact as Contact) && (
                       <div className="flex justify-between">
                         <span className="flex items-center gap-2">
                           <Mail />
                         </span>
-                        <span>{fund.contact.email}</span>
+                        <span>
+                          {(fund.contact as Contact).email as unknown as string}
+                        </span>
                       </div>
                     )}
                   </li>

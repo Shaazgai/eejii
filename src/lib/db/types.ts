@@ -4,7 +4,6 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-import type { Contact, EventRole, PaymentDetails } from '../types';
 import type { RequestType, Role, UserType } from './enums';
 
 export type Address = {
@@ -54,7 +53,7 @@ export type Event = {
   title: string;
   description: string;
   location: string;
-  roles: EventRole[] | null;
+  roles: unknown | null;
   createdAt: Generated<Timestamp>;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
@@ -95,7 +94,7 @@ export type Fundraising = {
   description: string;
   goalAmount: number;
   currentAmount: number;
-  contact: Contact | null;
+  contact: unknown | null;
   location: string | null;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
@@ -136,7 +135,7 @@ export type Payment = {
   createdAt: Generated<Timestamp>;
   updatedAt: Timestamp | null;
   donationId: string;
-  details: PaymentDetails | null;
+  details: unknown | null;
 };
 
 export type Skill = {
