@@ -21,7 +21,7 @@ const PartnerHeader = () => {
   return (
     <header className="flex w-full flex-row items-center justify-between p-3">
       <div>
-        <Image alt="logo" src={'/eejii.jpeg'} width={200} height={50} />
+        <Image alt="logo" src={'/images/eejii.jpeg'} width={200} height={50} />
       </div>
       {/* <nav>
         <ul className="flex flex-row gap-10">
