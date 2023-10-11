@@ -1,16 +1,35 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, CheckCheck, XIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import type { User } from '@/lib/db/types';
 import type { GrantFundWithOwner } from '@/lib/types';
 
-// import type { User } from '@/lib/types';
 import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
+import { DataTablePagination } from '../table-pagination';
+import type { Dispatch, SetStateAction } from 'react';
+import { api } from '@/utils/api';
+import { ProjectStatus } from '@/lib/db/enums';
 
-const GrantFundsTable = ({ data }: { data: GrantFundWithOwner[] }) => {
+const GrantFundsTable = ({
+  data,
+  page,
+  setPage,
+  totalPage,
+  totalCount,
+  hasNextPage,
+  hasPrevPage,
+}: {
+  data: GrantFundWithOwner[];
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  totalPage: number;
+  totalCount: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}) => {
   const columns: ColumnDef<GrantFundWithOwner>[] = [
     {
       accessorKey: 'title',
@@ -66,40 +85,47 @@ const GrantFundsTable = ({ data }: { data: GrantFundWithOwner[] }) => {
     {
       accessorKey: 'id',
       header: 'Action',
-      // cell: ({ row }) => {
-      //   const requestId = row.getValue('requestId') as string;
-      //   console.log(requestId);
-      //   return (
-      //     <div className="flex flex-row gap-2">
-      //       <span>
-      //         <Button
-      //           disabled={isLoading}
-      //           onClick={() =>
-      //             mutate({
-      //               id: requestId,
-      //               projectType: type,
-      //               status: 'approved',
-      //             })
-      //           }
-      //         >
-      //           Approve
-      //         </Button>
-      //         <Button
-      //           disabled={isLoading}
-      //           onClick={() =>
-      //             mutate({
-      //               id: requestId,
-      //               projectType: type,
-      //               status: 'denied',
-      //             })
-      //           }
-      //         >
-      //           Deny
-      //         </Button>
-      //       </span>
-      //     </div>
-      //   );
-      // },
+      cell: ({ row }) => {
+        const context = api.useContext();
+        const { mutate, isLoading } =
+          api.grantFundraising.changeStatus.useMutation({
+            onSuccess: _ => {
+              context.grantFundraising.getAll.invalidate();
+            },
+          });
+
+        const requestId = row.getValue('id') as string;
+        return (
+          <div className="flex flex-row gap-2">
+            <Button
+              disabled={isLoading}
+              variant={'default'}
+              size={'icon'}
+              onClick={() =>
+                mutate({
+                  id: requestId,
+                  status: ProjectStatus.APPROVED,
+                })
+              }
+            >
+              <CheckCheck />
+            </Button>
+            <Button
+              disabled={isLoading}
+              variant={'destructive'}
+              size={'icon'}
+              onClick={() =>
+                mutate({
+                  id: requestId,
+                  status: ProjectStatus.DENIED,
+                })
+              }
+            >
+              <XIcon />
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 
@@ -116,7 +142,17 @@ const GrantFundsTable = ({ data }: { data: GrantFundWithOwner[] }) => {
   return (
     <div>
       {data ? (
-        <IndexTable columns={columns} data={data} searchFields={null} />
+        <div className="space-y-5">
+          <IndexTable columns={columns} data={data} searchFields={null} />
+          <DataTablePagination
+            page={page}
+            setPage={setPage}
+            totalPage={totalPage}
+            hasNextPage={hasNextPage}
+            hasPrevPage={hasPrevPage}
+            count={totalCount}
+          />
+        </div>
       ) : (
         'loading'
       )}

@@ -1,14 +1,34 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, CheckCheck, XIcon } from 'lucide-react';
 
 import type { User } from '@/lib/db/types';
 
 // import type { User } from '@/lib/types';
 import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
+import type { Dispatch, SetStateAction } from 'react';
+import { DataTablePagination } from '../table-pagination';
+import { api } from '@/utils/api';
+import { RequestType } from '@/lib/db/enums';
 
-const VolunteerTable = ({ data }: { data: User[] }) => {
+const VolunteerTable = ({
+  data,
+  page,
+  setPage,
+  hasNextPage,
+  hasPrevPage,
+  totalPage,
+  count,
+}: {
+  data: User[];
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  totalPage: number;
+  count: number;
+}) => {
   const columns: ColumnDef<User>[] = [
     {
       accessorKey: 'email',
@@ -72,40 +92,47 @@ const VolunteerTable = ({ data }: { data: User[] }) => {
     {
       accessorKey: 'id',
       header: 'Action',
-      // cell: ({ row }) => {
-      //   const requestId = row.getValue('requestId') as string;
-      //   console.log(requestId);
-      //   return (
-      //     <div className="flex flex-row gap-2">
-      //       <span>
-      //         <Button
-      //           disabled={isLoading}
-      //           onClick={() =>
-      //             mutate({
-      //               id: requestId,
-      //               projectType: type,
-      //               status: 'approved',
-      //             })
-      //           }
-      //         >
-      //           Approve
-      //         </Button>
-      //         <Button
-      //           disabled={isLoading}
-      //           onClick={() =>
-      //             mutate({
-      //               id: requestId,
-      //               projectType: type,
-      //               status: 'denied',
-      //             })
-      //           }
-      //         >
-      //           Deny
-      //         </Button>
-      //       </span>
-      //     </div>
-      //   );
-      // },
+      cell: ({ row }) => {
+        const context = api.useContext();
+        const { mutate, isLoading } = api.user.changeStatus.useMutation({
+          onSuccess: _ => {
+            context.volunteer.findAll.invalidate();
+          },
+        });
+
+        const requestId = row.getValue('id') as string;
+        console.log(requestId);
+        return (
+          <div className="flex flex-row gap-2">
+            <Button
+              disabled={isLoading}
+              variant={'default'}
+              size={'icon'}
+              onClick={() =>
+                mutate({
+                  userId: requestId,
+                  status: RequestType.REQUEST_APPROVED,
+                })
+              }
+            >
+              <CheckCheck />
+            </Button>
+            <Button
+              disabled={isLoading}
+              variant={'destructive'}
+              size={'icon'}
+              onClick={() =>
+                mutate({
+                  userId: requestId,
+                  status: RequestType.REQUEST_DENIED,
+                })
+              }
+            >
+              <XIcon />
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 
@@ -122,7 +149,17 @@ const VolunteerTable = ({ data }: { data: User[] }) => {
   return (
     <div>
       {data ? (
-        <IndexTable columns={columns} data={data} searchFields={null} />
+        <div className="space-y-5">
+          <IndexTable columns={columns} data={data} searchFields={null} />
+          <DataTablePagination
+            page={page}
+            setPage={setPage}
+            totalPage={totalPage}
+            hasPrevPage={hasPrevPage}
+            hasNextPage={hasNextPage}
+            count={count}
+          />
+        </div>
       ) : (
         'loading'
       )}

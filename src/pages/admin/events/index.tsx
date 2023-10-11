@@ -7,9 +7,13 @@ import type { EventWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
-  const { data: events } = api.event.getAll.useQuery();
-  console.log(events);
+  const [page, setPage] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const { data: eventsData, isLoading } = api.event.getAll.useQuery({
+    page: page,
+    limit: 10,
+  });
 
   const tabs = [
     {
@@ -41,8 +45,16 @@ export default function Index() {
           />
         </div>
         <div>
-          {events && (
-            <EventsTable data={events as unknown as EventWithOwner[]} />
+          {!isLoading && (
+            <EventsTable
+              data={eventsData?.items as unknown as EventWithOwner[]}
+              page={page}
+              setPage={setPage}
+              totalPage={eventsData?.pagination.totalPages as number}
+              totalCount={eventsData?.pagination.totalCount as number}
+              hasNextPage={eventsData?.pagination.hasNextPage as boolean}
+              hasPrevPage={eventsData?.pagination.hasPrevPage as boolean}
+            />
           )}
         </div>
       </div>

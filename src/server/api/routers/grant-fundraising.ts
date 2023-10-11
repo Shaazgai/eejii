@@ -7,23 +7,93 @@ import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
 import { createPresignedUrl } from '../helper/imageHelper';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import type { GrantFundWithOwner, ListResponse, Pagination } from '@/lib/types';
+import { getPaginationInfo } from '../helper/paginationInfo';
+import type { User } from '@/lib/db/types';
+import { ProjectStatus } from '@/lib/db/enums';
 
 export const grantFundraisingRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const grantFundraising = await ctx.db
-      .selectFrom('GrantFundraising')
-      .selectAll()
-      .select(eb => [
-        jsonObjectFrom(
-          eb
-            .selectFrom('User')
-            .selectAll()
-            .whereRef('User.id', '=', 'GrantFundraising.ownerId')
-        ).as('Owner'),
-      ])
-      .execute();
-    return grantFundraising;
-  }),
+  getAll: publicProcedure
+    .input(
+      z.object({
+        page: z.number().default(1),
+        limit: z.number().default(20),
+        title: z.string().nullish(),
+        enabled: z.boolean().nullish(),
+        status: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db.transaction().execute(async trx => {
+        let query = ctx.db
+          .selectFrom('GrantFundraising')
+          .selectAll()
+          .select(eb => [
+            jsonObjectFrom(
+              eb
+                .selectFrom('User')
+                .selectAll()
+                .whereRef('User.id', '=', 'GrantFundraising.ownerId')
+            ).as('Owner'),
+          ]);
+
+        if (input.title) {
+          query = query.where('title', 'like', '%' + input.title + '%');
+        }
+        if (input.enabled) {
+          query = query.where('enabled', '=', input.enabled);
+        }
+        if (input.status) {
+          query = query.where('status', '=', input.status as ProjectStatus);
+        }
+        const queryResult = await query
+          .limit(input.limit)
+          .offset(input.limit * (input.page - 1))
+          .execute();
+
+        let paginationQuery = trx
+          .selectFrom('GrantFundraising')
+          .select(expressionBuilder => {
+            return expressionBuilder.fn.countAll().as('count');
+          });
+        if (input.title) {
+          paginationQuery = paginationQuery.where(
+            'title',
+            'like',
+            '%' + input.title + '%'
+          );
+        }
+        if (input.enabled) {
+          paginationQuery = paginationQuery.where(
+            'enabled',
+            '=',
+            input.enabled
+          );
+        }
+        if (input.status) {
+          paginationQuery = paginationQuery.where(
+            'status',
+            '=',
+            input.status as ProjectStatus
+          );
+        }
+        const { count } = await paginationQuery.executeTakeFirstOrThrow();
+        return {
+          data: queryResult,
+          count,
+        };
+      });
+      const paginationInfo: Pagination = getPaginationInfo({
+        totalCount: result.count as number,
+        limit: input.limit,
+        page: input.page,
+      });
+      const response: ListResponse<GrantFundWithOwner> = {
+        items: result.data as unknown as GrantFundWithOwner[],
+        pagination: paginationInfo,
+      };
+      return response;
+    }),
   getMyGrants: privateProcedure.query(async ({ ctx }) => {
     const grants = await ctx.db
       .selectFrom('GrantFundraising')
@@ -92,20 +162,22 @@ export const grantFundraisingRouter = createTRPCRouter({
   findUsersToInvite: publicProcedure // Find all partners for event to invite them
     .input(z.object({ grantId: z.string(), userType: z.string() }))
     .query(async ({ ctx, input }) => {
+      console.log(input.userType);
       const query = await sql`
         SELECT u.*
         FROM "User" u
         LEFT JOIN "GrantAssociation" as ga ON ga."userId" = u."id"
-        WHERE ga."grantId" IS DISTINCT FROM ${
+        WHERE (ga."grantId" IS DISTINCT FROM ${
           input.grantId
-        } OR ga."grantId" IS NULL
+        } OR ga."grantId" IS NULL)
         AND u."id" != ${sql.raw(
           `(SELECT g."ownerId" FROM "GrantFundraising" AS g WHERE g."id" = '${input.grantId}')`
         )}
-        AND u."type" = '${input.userType}'
+        AND u."type" = ${input.userType}
+        AND u."id" != ${ctx.userId}
         `.execute(ctx.db);
 
-      return query.rows;
+      return query.rows as User[];
     }),
   create: privateProcedure
     .input(fundraisingSchema)
@@ -124,6 +196,8 @@ export const grantFundraisingRouter = createTRPCRouter({
           goalAmount: input.goalAmount,
           currentAmount: input.currentAmount,
           ownerId: ctx.userId,
+          enabled: false,
+          status: ProjectStatus.PENDING,
         })
         .returning(['id'])
         .executeTakeFirstOrThrow();
@@ -180,5 +254,33 @@ export const grantFundraisingRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       return createPresignedUrl(grantImage.path, input.contentType);
+    }),
+
+  changeStatus: publicProcedure
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      let state: string;
+      if (input.status === ProjectStatus.APPROVED) {
+        state = ProjectStatus.APPROVED;
+      } else if (input.status === ProjectStatus.DENIED) {
+        state = ProjectStatus.DENIED;
+      } else if (input.status === ProjectStatus.DONE) {
+        state = ProjectStatus.DONE;
+      } else {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'NOT VALID REQUEST TYPE',
+        });
+      }
+      const grant = await ctx.db
+        .updateTable('GrantFundraising')
+        .where('GrantFundraising.id', '=', input.id)
+        .set({
+          status: state as ProjectStatus,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      return grant;
     }),
 });

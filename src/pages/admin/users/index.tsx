@@ -9,15 +9,27 @@ import type { User } from '@/lib/db/types';
 import { api } from '@/utils/api';
 
 export const Partners = () => {
+  const [page, setPage] = useState(1);
   const {
-    data: partners,
+    data: partnersData,
     isLoading: isPartnerLoading,
     isFetching: isPartnerFetching,
-  } = api.partner.findAll.useQuery();
+  } = api.partner.findAll.useQuery({
+    page: page,
+    limit: 10,
+  });
   return (
     <div>
       {!isPartnerLoading && !isPartnerFetching ? (
-        <PartnerTable data={partners as unknown as User[]} />
+        <PartnerTable
+          data={partnersData?.items as unknown as User[]}
+          page={page}
+          setPage={setPage}
+          totalPage={partnersData?.pagination.totalPages as number}
+          hasNextPage={partnersData?.pagination.hasNextPage as boolean}
+          hasPrevPage={partnersData?.pagination.hasPrevPage as boolean}
+          count={partnersData?.pagination.totalCount as number}
+        />
       ) : (
         'Loading'
       )}
@@ -26,15 +38,28 @@ export const Partners = () => {
 };
 
 export const Supporters = () => {
+  const [page, setPage] = useState(1);
   const {
-    data: supporters,
+    data: supportersData,
     isLoading: isSupporterLoading,
     isFetching: isSupporterFetching,
-  } = api.supporter.findAll.useQuery();
+  } = api.supporter.findAll.useQuery({
+    page: page,
+    limit: 10,
+  });
+
   return (
     <div>
       {!isSupporterLoading && !isSupporterFetching ? (
-        <SupporterTable data={supporters as unknown as User[]} />
+        <SupporterTable
+          data={supportersData?.items as unknown as User[]}
+          page={page}
+          setPage={setPage}
+          totalPage={supportersData?.pagination.totalPages as number}
+          hasNextPage={supportersData?.pagination.hasNextPage as boolean}
+          hasPrevPage={supportersData?.pagination.hasPrevPage as boolean}
+          count={supportersData?.pagination.totalCount as number}
+        />
       ) : (
         'Loading'
       )}
@@ -42,15 +67,27 @@ export const Supporters = () => {
   );
 };
 export const Volunteers = () => {
+  const [page, setPage] = useState(1);
   const {
-    data: volunteers,
+    data: volunteersData,
     isLoading: isVolunteerLoading,
     isFetching: isVolunteerFetching,
-  } = api.volunteer.findAll.useQuery();
+  } = api.volunteer.findAll.useQuery({
+    page: page,
+    limit: 10,
+  });
   return (
     <div>
       {!isVolunteerLoading && !isVolunteerFetching ? (
-        <VolunteerTable data={volunteers as unknown as User[]} />
+        <VolunteerTable
+          data={volunteersData?.items as unknown as User[]}
+          page={page}
+          setPage={setPage}
+          totalPage={volunteersData?.pagination.totalPages as number}
+          hasNextPage={volunteersData?.pagination.hasNextPage as boolean}
+          hasPrevPage={volunteersData?.pagination.hasPrevPage as boolean}
+          count={volunteersData?.pagination.totalCount as number}
+        />
       ) : (
         'Loading'
       )}

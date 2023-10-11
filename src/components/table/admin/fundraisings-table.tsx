@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, CheckCheck, XIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import type { User } from '@/lib/db/types';
@@ -8,8 +8,28 @@ import type { FundWithOwner } from '@/lib/types';
 
 import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
+import { DataTablePagination } from '../table-pagination';
+import type { Dispatch, SetStateAction } from 'react';
+import { api } from '@/utils/api';
+import { ProjectStatus } from '@/lib/db/enums';
 
-const FundraisingsTable = ({ data }: { data: FundWithOwner[] }) => {
+const FundraisingsTable = ({
+  data,
+  page,
+  setPage,
+  totalPage,
+  totalCount,
+  hasNextPage,
+  hasPrevPage,
+}: {
+  data: FundWithOwner[];
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  totalPage: number;
+  totalCount: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}) => {
   const columns: ColumnDef<FundWithOwner>[] = [
     {
       accessorKey: 'title',
@@ -47,8 +67,8 @@ const FundraisingsTable = ({ data }: { data: FundWithOwner[] }) => {
       },
     },
     {
-      accessorKey: 'location',
-      header: 'Location',
+      accessorKey: 'status',
+      header: 'Status',
     },
     {
       accessorKey: 'contact',
@@ -74,40 +94,46 @@ const FundraisingsTable = ({ data }: { data: FundWithOwner[] }) => {
     {
       accessorKey: 'id',
       header: 'Action',
-      // cell: ({ row }) => {
-      //   const requestId = row.getValue('requestId') as string;
-      //   console.log(requestId);
-      //   return (
-      //     <div className="flex flex-row gap-2">
-      //       <span>
-      //         <Button
-      //           disabled={isLoading}
-      //           onClick={() =>
-      //             mutate({
-      //               id: requestId,
-      //               projectType: type,
-      //               status: 'approved',
-      //             })
-      //           }
-      //         >
-      //           Approve
-      //         </Button>
-      //         <Button
-      //           disabled={isLoading}
-      //           onClick={() =>
-      //             mutate({
-      //               id: requestId,
-      //               projectType: type,
-      //               status: 'denied',
-      //             })
-      //           }
-      //         >
-      //           Deny
-      //         </Button>
-      //       </span>
-      //     </div>
-      //   );
-      // },
+      cell: ({ row }) => {
+        const context = api.useContext();
+        const { mutate, isLoading } = api.fundraising.changeStatus.useMutation({
+          onSuccess: _ => {
+            context.fundraising.getAll.invalidate();
+          },
+        });
+
+        const requestId = row.getValue('id') as string;
+        return (
+          <div className="flex flex-row gap-2">
+            <Button
+              disabled={isLoading}
+              variant={'default'}
+              size={'icon'}
+              onClick={() =>
+                mutate({
+                  id: requestId,
+                  status: ProjectStatus.APPROVED,
+                })
+              }
+            >
+              <CheckCheck />
+            </Button>
+            <Button
+              disabled={isLoading}
+              variant={'destructive'}
+              size={'icon'}
+              onClick={() =>
+                mutate({
+                  id: requestId,
+                  status: ProjectStatus.DENIED,
+                })
+              }
+            >
+              <XIcon />
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 
@@ -124,7 +150,17 @@ const FundraisingsTable = ({ data }: { data: FundWithOwner[] }) => {
   return (
     <div>
       {data ? (
-        <IndexTable columns={columns} data={data} searchFields={null} />
+        <div className="space-y-5">
+          <IndexTable columns={columns} data={data} searchFields={null} />
+          <DataTablePagination
+            page={page}
+            setPage={setPage}
+            totalPage={totalPage}
+            hasNextPage={hasNextPage}
+            hasPrevPage={hasPrevPage}
+            count={totalCount}
+          />
+        </div>
       ) : (
         'loading'
       )}

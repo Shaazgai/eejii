@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { userSignUpSchema } from '@/lib/validation/user-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { RequestType } from '@/lib/db/enums';
 
 export const userRouter = createTRPCRouter({
   getById: publicProcedure
@@ -61,6 +62,7 @@ export const userRouter = createTRPCRouter({
           email: email,
           password: hashedPassword,
           phoneNumber,
+          requestStatus: RequestType.REQUEST_PENDING,
           type: input.userType as
             | 'USER_VOLUNTEER'
             | 'USER_PARTNER'
@@ -75,5 +77,29 @@ export const userRouter = createTRPCRouter({
         message: 'Account created successfully',
         result: user,
       };
+    }),
+  changeStatus: publicProcedure // Must be admin procedure
+    .input(z.object({ userId: z.string(), status: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      let state: string;
+      if (input.status === RequestType.REQUEST_APPROVED) {
+        state = RequestType.REQUEST_APPROVED;
+      } else if (input.status === RequestType.REQUEST_DENIED) {
+        state = RequestType.REQUEST_DENIED;
+      } else {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'NOT VALID REQUEST TYPE',
+        });
+      }
+
+      const user = await ctx.db
+        .updateTable('User')
+        .where('User.id', '=', input.userId)
+        .set({ requestStatus: state as RequestType })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      return user;
     }),
 });

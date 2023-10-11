@@ -4,6 +4,9 @@ import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import type { ListResponse, Pagination } from '@/lib/types';
+import { getPaginationInfo } from '../helper/paginationInfo';
+import type { User } from '@/lib/db/types';
 
 export const volunteerRouter = createTRPCRouter({
   getById: publicProcedure
@@ -17,15 +20,45 @@ export const volunteerRouter = createTRPCRouter({
 
       return volunteer;
     }),
-  findAll: publicProcedure.query(async ({ ctx }) => {
-    const volunteer = await ctx.db
-      .selectFrom('User')
-      .where('User.type', '=', 'USER_VOLUNTEER')
-      .selectAll()
-      .execute();
+  findAll: publicProcedure
+    .input(
+      z.object({ page: z.number().default(1), limit: z.number().default(20) })
+    )
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db.transaction().execute(async trx => {
+        const volunteers = await trx
+          .selectFrom('User')
+          .selectAll()
+          .where('User.type', '=', 'USER_VOLUNTEER')
+          .limit(input.limit)
+          .offset(input.limit * (input.page - 1))
+          .execute();
 
-    return volunteer;
-  }),
+        const { count } = await trx
+          .selectFrom('User')
+          .select(expressionBuilder => {
+            return expressionBuilder.fn.countAll().as('count');
+          })
+          .where('User.type', '=', 'USER_VOLUNTEER')
+          .executeTakeFirstOrThrow();
+        return {
+          data: volunteers,
+          count,
+        };
+      });
+
+      const totalCount = result.count as number;
+      const paginationInfo: Pagination = getPaginationInfo({
+        totalCount: totalCount,
+        limit: input.limit,
+        page: input.page,
+      });
+      const response: ListResponse<User> = {
+        items: result.data as unknown as User[],
+        pagination: paginationInfo,
+      };
+      return response;
+    }),
   register: privateProcedure
     .input(volunteerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {

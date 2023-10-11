@@ -4,7 +4,7 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-import type { RequestType, Role, UserType } from './enums';
+import type { Role, UserType, RequestType, ProjectStatus } from './enums';
 
 export type Address = {
   id: Generated<string>;
@@ -54,6 +54,8 @@ export type Event = {
   description: string;
   location: string;
   roles: unknown | null;
+  enabled: boolean;
+  status: ProjectStatus | null;
   createdAt: Generated<Timestamp>;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
@@ -61,7 +63,6 @@ export type Event = {
   contact: unknown | null;
   ownerId: string | null;
 };
-
 export type EventAssociation = {
   id: Generated<string>;
   userId: string | null;
@@ -98,6 +99,8 @@ export type Fundraising = {
   location: string | null;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
+  enabled: boolean;
+  status: ProjectStatus | null;
   createdAt: Generated<Timestamp>;
   ownerId: string | null;
 };
@@ -116,6 +119,8 @@ export type GrantFundraising = {
   currentAmount: number;
   contact: unknown | null;
   location: string | null;
+  enabled: boolean;
+  status: ProjectStatus | null;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
   createdAt: Generated<Timestamp>;
@@ -137,7 +142,6 @@ export type Payment = {
   donationId: string;
   details: unknown | null;
 };
-
 export type Skill = {
   id: Generated<string>;
   name: string;

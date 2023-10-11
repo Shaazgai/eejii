@@ -4,6 +4,9 @@ import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { getPaginationInfo } from '../helper/paginationInfo';
+import type { ListResponse, Pagination } from '@/lib/types';
+import type { User } from '@/lib/db/types';
 
 export const partnerRouter = createTRPCRouter({
   getById: publicProcedure
@@ -17,15 +20,45 @@ export const partnerRouter = createTRPCRouter({
 
       return partner;
     }),
-  findAll: publicProcedure.query(async ({ ctx }) => {
-    const supporter = await ctx.db
-      .selectFrom('User')
-      .where('User.type', '=', 'USER_PARTNER')
-      .selectAll()
-      .execute();
+  findAll: publicProcedure
+    .input(
+      z.object({ page: z.number().default(1), limit: z.number().default(20) })
+    )
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db.transaction().execute(async trx => {
+        const partners = await trx
+          .selectFrom('User')
+          .where('User.type', '=', 'USER_PARTNER')
+          .selectAll()
+          .limit(input.limit)
+          .offset(input.limit * (input.page - 1))
+          .execute();
 
-    return supporter;
-  }),
+        const { count } = await trx
+          .selectFrom('User')
+          .select(expressionBuilder => {
+            return expressionBuilder.fn.countAll().as('count');
+          })
+          .where('User.type', '=', 'USER_PARTNER')
+          .executeTakeFirstOrThrow();
+
+        return {
+          data: partners,
+          count,
+        };
+      });
+
+      const paginationInfo: Pagination = getPaginationInfo({
+        totalCount: result.count as number,
+        limit: input.limit,
+        page: input.page,
+      });
+      const response: ListResponse<User> = {
+        items: result.data as unknown as User[],
+        pagination: paginationInfo,
+      };
+      return response;
+    }),
   register: privateProcedure
     .input(partnerSchema.merge(addressSchema))
     .mutation(async ({ input, ctx }) => {

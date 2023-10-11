@@ -73,12 +73,21 @@ enum RequestType {
   REQUEST_APPROVED
 }
 
+enum ProjectStatus {
+  PENDING
+  APPROVED
+  DENIED
+  DONE
+}
+
 model Event {
   id            String             @id @default(dbgenerated("gen_random_uuid()"))
   title         String
   description   String
   location      String
   roles         Json?
+  enabled       Boolean
+  status        ProjectStatus?
   createdAt     DateTime           @default(now())
   startTime     DateTime?
   endTime       DateTime?
@@ -116,6 +125,8 @@ model Fundraising {
   location            String?
   startTime           DateTime?
   endTime             DateTime?
+  enabled             Boolean
+  status              ProjectStatus?
   createdAt           DateTime              @default(now())
   Owner               User?                 @relation(fields: [ownerId], references: [id])
   ownerId             String?
@@ -148,6 +159,8 @@ model GrantFundraising {
   currentAmount            Int
   contact                  Json?
   location                 String?
+  enabled                  Boolean
+  status                   ProjectStatus?
   startTime                DateTime?
   endTime                  DateTime?
   createdAt                DateTime                   @default(now())
