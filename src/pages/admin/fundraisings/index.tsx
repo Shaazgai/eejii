@@ -7,9 +7,15 @@ import type { FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
-  const { data: fundraisings } = api.fundraising.getAll.useQuery();
-  console.log(fundraisings);
+  const [page, setPage] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const { data: fundraisingsData, isLoading } = api.fundraising.getAll.useQuery(
+    {
+      page: page,
+      limit: 10,
+    }
+  );
 
   const tabs = [
     {
@@ -41,9 +47,15 @@ export default function Index() {
           />
         </div>
         <div>
-          {fundraisings && (
+          {!isLoading && (
             <FundraisingsTable
-              data={fundraisings as unknown as FundWithOwner[]}
+              data={fundraisingsData?.items as unknown as FundWithOwner[]}
+              page={page}
+              setPage={setPage}
+              totalPage={fundraisingsData?.pagination.totalPages as number}
+              totalCount={fundraisingsData?.pagination.totalCount as number}
+              hasNextPage={fundraisingsData?.pagination.hasNextPage as boolean}
+              hasPrevPage={fundraisingsData?.pagination.hasPrevPage as boolean}
             />
           )}
         </div>

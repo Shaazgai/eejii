@@ -7,12 +7,19 @@ import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
 import type { EventWithOwner, FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
+import { ProjectStatus } from '@/lib/db/enums';
 
 const Volunteer = () => {
-  const { data: events, isLoading: isEventLoading } =
-    api.event.getAll.useQuery();
+  const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
+    { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
+  );
   const { data: fundraising, isLoading: isFundLoading } =
-    api.fundraising.getAll.useQuery();
+    api.fundraising.getAll.useQuery({
+      page: 1,
+      limit: 10,
+      enabled: true,
+      status: ProjectStatus.APPROVED,
+    });
 
   // console.log(process.env.AWS_PATH);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -38,14 +45,14 @@ const Volunteer = () => {
         </div>
         {activeIndex === 0 && (
           <EventList
-            events={events as unknown as EventWithOwner[]}
+            events={events?.items as unknown as EventWithOwner[]}
             isVolunteer={true}
             isLoading={isEventLoading}
           />
         )}
         {activeIndex === 1 && (
           <FundraisingList
-            fundraisings={fundraising as unknown as FundWithOwner[]}
+            fundraisings={fundraising?.items as unknown as FundWithOwner[]}
             isLoading={isFundLoading}
           />
         )}

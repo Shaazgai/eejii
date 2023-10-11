@@ -22,7 +22,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { DataTablePagination } from './table-pagination';
 import { TableSearchFilter } from './table-search-filter';
 
 interface SearchFields {
@@ -110,7 +109,6 @@ export const IndexTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
     </div>
   );
 };

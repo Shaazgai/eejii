@@ -7,9 +7,14 @@ import type { GrantFundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
-  const { data: grantFundraisings } = api.grantFundraising.getAll.useQuery();
-  console.log(grantFundraisings);
+  const [page, setPage] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const { data: grantFundraisingsData, isLoading } =
+    api.grantFundraising.getAll.useQuery({
+      page: page,
+      limit: 10,
+    });
 
   const tabs = [
     {
@@ -41,9 +46,21 @@ export default function Index() {
           />
         </div>
         <div>
-          {grantFundraisings && (
+          {!isLoading && (
             <GrantFundsTable
-              data={grantFundraisings as unknown as GrantFundWithOwner[]}
+              data={grantFundraisingsData as unknown as GrantFundWithOwner[]}
+              page={page}
+              setPage={setPage}
+              totalPage={grantFundraisingsData?.pagination.totalPages as number}
+              totalCount={
+                grantFundraisingsData?.pagination.totalCount as number
+              }
+              hasNextPage={
+                grantFundraisingsData?.pagination.hasNextPage as boolean
+              }
+              hasPrevPage={
+                grantFundraisingsData?.pagination.hasPrevPage as boolean
+              }
             />
           )}
         </div>

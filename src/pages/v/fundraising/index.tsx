@@ -26,12 +26,18 @@ import {
 } from '@/components/ui/select';
 import type { FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
+import { ProjectStatus } from '@/lib/db/enums';
 
 const Donate = () => {
   const { data: categories, isFetching: isCategoryFetching } =
     api.category.getAll.useQuery({ type: 'event' });
-  const { data: fundraising, isLoading: isFundLoading } =
-    api.fundraising.getAll.useQuery();
+  const { data: fundraisings, isLoading: isFundLoading } =
+    api.fundraising.getAll.useQuery({
+      page: 1,
+      limit: 20,
+      enabled: true,
+      status: ProjectStatus.APPROVED,
+    });
 
   const form = useForm();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -172,7 +178,7 @@ const Donate = () => {
         </div>
         <div className="-translate-y-10">
           <FundraisingList
-            fundraisings={fundraising as unknown as FundWithOwner[]}
+            fundraisings={fundraisings?.items as unknown as FundWithOwner[]}
             isLoading={isFundLoading}
           />
           {/* <EventSlider

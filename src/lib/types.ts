@@ -91,3 +91,16 @@ export type Tab = {
   title: string;
   href: string;
 };
+
+export type ListResponse<TData> = {
+  items: TData[];
+  pagination: Pagination;
+};
+
+export type Pagination = {
+  currentPage: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  totalPages: number;
+  totalCount: number;
+};

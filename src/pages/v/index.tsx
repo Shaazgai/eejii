@@ -14,12 +14,19 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import type { EventWithOwner, FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
+import { ProjectStatus } from '@/lib/db/enums';
 
 export default function Index() {
-  const { data: events, isLoading: isEventLoading } =
-    api.event.getAll.useQuery();
+  const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
+    { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
+  );
   const { data: fundraisings, isLoading: isFundLoading } =
-    api.fundraising.getAll.useQuery();
+    api.fundraising.getAll.useQuery({
+      page: 1,
+      limit: 10,
+      enabled: true,
+      status: ProjectStatus.APPROVED,
+    });
 
   return (
     <VolunteerLayout>
@@ -69,13 +76,13 @@ export default function Index() {
         </div>
         <div className="-translate-y-10">
           <EventSlider
-            events={events as unknown as EventWithOwner[]}
+            events={events?.items as unknown as EventWithOwner[]}
             isEventLoading={isEventLoading}
           />
         </div>
         <div className="-translate-y-10">
           <FundSlider
-            fundraisings={fundraisings as unknown as FundWithOwner[]}
+            fundraisings={fundraisings?.items as unknown as FundWithOwner[]}
             isFundLoading={isFundLoading}
           />
         </div>

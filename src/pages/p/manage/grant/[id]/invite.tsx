@@ -12,25 +12,25 @@ import type { User } from '@/lib/db/types';
 const Invite = () => {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [eventId, setEventId] = useState('');
-  const [userType, setUserType] = useState<string | null>('USER_PARTNER');
+  const [grantId, setGrantId] = useState('');
+  const [userType, setUserType] = useState<string | null>(null);
 
   const context = api.useContext();
   const { data: users, isLoading: isUsersLoading } =
-    api.event.findUsersToInvite.useQuery({
-      eventId: eventId,
+    api.grantFundraising.findUsersToInvite.useQuery({
+      grantId: grantId,
       userType: userType as string,
     });
   const { mutate: invite, isLoading: isInviteLoading } =
-    api.eventAssociation.inviteToEvent.useMutation({
+    api.grantAssociation.inviteToGrant.useMutation({
       onSuccess: () => {
-        context.event.findUsersToInvite.invalidate();
+        context.grantFundraising.findUsersToInvite.invalidate();
       },
     });
 
   useEffect(() => {
     if (router.isReady) {
-      setEventId(router.query.id as string);
+      setGrantId(router.query.id as string);
     }
   }, [router.isReady]);
 
@@ -39,11 +39,7 @@ const Invite = () => {
       setUserType(UserType.USER_PARTNER);
     } else if (activeIndex === 1) {
       setUserType(UserType.USER_SUPPORTER);
-    } else if (activeIndex === 2) {
-      setUserType(UserType.USER_VOLUNTEER);
     }
-
-    console.log(userType);
   }, [activeIndex]);
 
   function handleInvite(id: string, userId: string) {
@@ -59,11 +55,8 @@ const Invite = () => {
       title: 'Supporter',
       index: 1,
     },
-    {
-      title: 'Volunteer',
-      index: 2,
-    },
   ];
+
   return (
     <PartnerLayout>
       <div className="space-y-5 p-24">
@@ -76,7 +69,7 @@ const Invite = () => {
           <UserList
             users={users as User[]}
             invite={handleInvite}
-            projectId={eventId}
+            projectId={grantId}
             userType={userType as string}
             isInviteLoading={isInviteLoading}
           />
@@ -84,7 +77,7 @@ const Invite = () => {
         <div className="flex justify-end">
           <Button
             onClick={() => {
-              router.push(`/p/manage/event/${eventId}`);
+              router.push(`/p/manage/grant/${grantId}`);
             }}
           >
             Skip

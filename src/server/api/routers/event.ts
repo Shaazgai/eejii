@@ -4,44 +4,95 @@ import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
 import type { User } from '@/lib/db/types';
-import type { EventWithOwner } from '@/lib/types';
+import type { EventWithOwner, ListResponse, Pagination } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
 import { createPresignedUrl } from '../helper/imageHelper';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { getPaginationInfo } from '../helper/paginationInfo';
+import { ProjectStatus } from '@/lib/db/enums';
 
 export const eventRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async opts => {
-    const events = await opts.ctx.db
-      .selectFrom('Event')
-      .select([
-        'Event.id',
-        'Event.title',
-        'Event.description',
-        'Event.location',
-        'Event.startTime',
-        'Event.endTime',
-        'Event.requiredTime',
-        'Event.roles',
-        'Event.contact',
-      ])
-      .select(eb => [
-        jsonObjectFrom(
-          eb
-            .selectFrom('User')
-            .selectAll()
-            .whereRef('User.id', '=', 'Event.ownerId')
-        ).as('Owner'),
-        jsonArrayFrom(
-          eb
-            .selectFrom('EventImage')
-            .selectAll()
-            .whereRef('Event.id', '=', 'EventImage.ownerId')
-        ).as('Images'),
-      ])
-      .execute();
-    return events;
-  }),
+  getAll: publicProcedure
+    .input(
+      z.object({
+        page: z.number().default(1),
+        limit: z.number().default(20),
+        title: z.string().nullish(),
+        status: z.string().nullish(),
+        enabled: z.boolean().nullish(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const result = await ctx.db.transaction().execute(async trx => {
+        let query = trx
+          .selectFrom('Event')
+          .select([
+            'Event.id',
+            'Event.title',
+            'Event.description',
+            'Event.location',
+            'Event.startTime',
+            'Event.endTime',
+            'Event.requiredTime',
+            'Event.roles',
+            'Event.contact',
+            'Event.status',
+            'Event.enabled',
+          ])
+          .select(eb => [
+            jsonObjectFrom(
+              eb
+                .selectFrom('User')
+                .selectAll()
+                .whereRef('User.id', '=', 'Event.ownerId')
+            ).as('Owner'),
+            jsonArrayFrom(
+              eb
+                .selectFrom('EventImage')
+                .selectAll()
+                .whereRef('Event.id', '=', 'EventImage.ownerId')
+            ).as('Images'),
+          ]);
+        if (input.title) {
+          query = query.where('title', 'like', '%' + input.title + '%');
+        }
+        if (input.enabled) {
+          query = query.where('enabled', '=', input.enabled);
+        }
+        if (input.status) {
+          query = query.where('status', '=', input.status as ProjectStatus);
+        }
+
+        const queryResult = await query
+          .limit(input.limit)
+          .offset(input.limit * (input.page - 1))
+          .execute();
+        const { count } = await trx
+          .selectFrom('Event')
+          .select(expressionBuilder => {
+            return expressionBuilder.fn.countAll().as('count');
+          })
+          .executeTakeFirstOrThrow();
+
+        return {
+          data: queryResult,
+          count,
+        };
+      });
+
+      const totalCount = result.count as number;
+      const paginationInfo: Pagination = getPaginationInfo({
+        totalCount: totalCount,
+        limit: input.limit,
+        page: input.page,
+      });
+      const response: ListResponse<EventWithOwner> = {
+        items: result.data as unknown as EventWithOwner[],
+        pagination: paginationInfo,
+      };
+      return response;
+    }),
   getMyEvents: privateProcedure.query(async ({ ctx }) => {
     const events = await ctx.db
       .selectFrom('Event')
@@ -161,6 +212,8 @@ export const eventRouter = createTRPCRouter({
           endTime: input.endTime,
           roles: Object.assign({}, input.roles),
           ownerId: ctx.userId,
+          enabled: false,
+          status: ProjectStatus.PENDING,
         })
         .returning(['id'])
         .executeTakeFirstOrThrow();
@@ -217,5 +270,33 @@ export const eventRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       return createPresignedUrl(eventImage.path, input.contentType);
+    }),
+
+  changeStatus: publicProcedure
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      let state: string;
+      if (input.status === ProjectStatus.APPROVED) {
+        state = ProjectStatus.APPROVED;
+      } else if (input.status === ProjectStatus.DENIED) {
+        state = ProjectStatus.DENIED;
+      } else if (input.status === ProjectStatus.DONE) {
+        state = ProjectStatus.DONE;
+      } else {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'NOT VALID REQUEST TYPE',
+        });
+      }
+      const event = await ctx.db
+        .updateTable('Event')
+        .where('Event.id', '=', input.id)
+        .set({
+          status: state as ProjectStatus,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      return event;
     }),
 });
