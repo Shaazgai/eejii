@@ -16,6 +16,7 @@ import { ZodError } from 'zod';
 import { nextAuthOptions } from '@/lib/auth';
 
 import { db } from '../db';
+import { Role } from '@/lib/db/enums';
 /**
  * 1. CONTEXT
  *
@@ -39,6 +40,7 @@ export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
     db,
     userId,
     userType: session?.user.userType,
+    role: session?.user.role,
   };
 };
 
@@ -88,7 +90,6 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-  console.log(ctx.userType);
   if (!ctx.userId) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
@@ -103,3 +104,25 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
 });
 
 export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
+
+const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.userId) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+    });
+  }
+  if (ctx.role !== Role.ROLE_ADMIN) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+    });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.userId,
+      role: ctx.role,
+    },
+  });
+});
+
+export const adminProcedure = t.procedure.use(enforceUserIsAdmin);

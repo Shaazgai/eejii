@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { UserType } from '@/lib/db/enums';
+import { Role, UserType } from '@/lib/db/enums';
 import { api } from '@/utils/api';
 
 export default function Signup() {
@@ -46,16 +46,22 @@ export default function Signup() {
     console.log('🚀 ~ file: signup.tsx:18 ~ onSubmit ~ result:', result);
   };
 
-  function checkUserType(userTypeProp: UserType) {
-    if (userTypeProp == UserType.USER_VOLUNTEER) return 'v';
-    if (userTypeProp == UserType.USER_PARTNER) return 'p';
-    if (userTypeProp == UserType.USER_SUPPORTER) return 's';
+  function checkUserType(userTypeProp: UserType, role: Role) {
+    if (userTypeProp == UserType.USER_VOLUNTEER && role == Role.ROLE_USER)
+      return 'v';
+    else if (userTypeProp == UserType.USER_PARTNER && role == Role.ROLE_USER)
+      return 'p';
+    else if (userTypeProp == UserType.USER_SUPPORTER && role == Role.ROLE_USER)
+      return 's';
+    else if (role == Role.ROLE_ADMIN) return 'admin';
     return;
   }
 
   useEffect(() => {
     if (session.data != null) {
-      router.push(`/${checkUserType(session.data.user.userType)}`);
+      router.push(
+        `/${checkUserType(session.data.user.userType, session.data.user.role)}`
+      );
     }
   }, [session]);
 
