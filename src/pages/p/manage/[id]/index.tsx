@@ -82,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
       db: db,
       userId: session?.user.id ? session.user.id : undefined,
       userType: session?.user.userType ? session?.user.userType : undefined,
+      role: session?.user.role,
     },
     transformer: superjson, // optional - adds superjson serialization
   });
