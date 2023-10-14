@@ -87,7 +87,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
               </div>
             </div>
 
-            <div className="md:text-md hidden text-sm text-black dark:text-white md:block">
+            <div className="hidden text-sm text-black dark:text-white md:block md:text-md">
               John Doe
             </div>
           </div>

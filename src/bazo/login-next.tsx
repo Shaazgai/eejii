@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
-import { Icons } from '@/components/icons';
+import { Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Sign() {
@@ -20,22 +20,25 @@ export default function Sign() {
   };
   return (
     <>
-      <div>
-        <div className="leading-10">
-          <div className="h-30 flex w-full items-center justify-center pb-20 pt-20">
+      <div className="h-screen w-full bg-brand450">
+        <div className="m-auto h-[577px] w-[854px]">
+          <div className="flex w-full items-center justify-center pb-10 pt-10">
             <Image
               className=""
-              src="/images/eejii.jpeg"
+              src="/images/foundation_logo.jpg"
               width={289}
               height={60}
               alt="logo"
             />
           </div>
-          <div className="h-85 w-85 ml-80 mr-80 flex flex-col items-center justify-center border-2 pb-10 pt-10">
-            <button className="flex rounded-full border-2 border-hidden  bg-[#F3F9FA] px-24 py-1">
-              <span className="flex items-center gap-2">
-                <Link className="text-3xl text-blue-700" href="/">
-                  <Icons.facebook className="h-4 w-4" />
+          <div className="h-85 w-85 flex flex-col items-center justify-center border-2 pb-10 pt-10">
+            <button className="flex h-12 w-[359px] rounded-full  border-2 border-hidden bg-[#F3F9FA]">
+              <span className="m-auto flex items-center">
+                <Link
+                  className="content-center  text-3xl text-brand500"
+                  href="/"
+                >
+                  <Facebook />
                 </Link>
                 Sign in with Facebook
               </span>
@@ -62,8 +65,6 @@ export default function Sign() {
                   className="border-blue-gray-200 text-blue-gray-700 placeholder-shown:border-blue-gray-200 disabled:bg-blue-gray-50 peer h-full w-full border-b bg-transparent pb-1.5 pt-4 font-sans text-sm font-normal outline outline-0 transition-all focus:border-pink-500 focus:outline-0 disabled:border-0"
                   onChange={e => setEmail(e.target.value)}
                 />
-                {/* <label className="after:content[' '] pointer-events-none absolute left-0 -top-2.5 flex h-full w-full select-none text-sm font-normal leading-tight text-blue-gray-500 transition-all after:absolute after:-bottom-2.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-pink-500 after:transition-transform after:duration-300 peer-placeholder-shown:leading-tight peer-placeholder-shown:text-blue-gray-500 peer-focus:text-sm peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:after:scale-x-100 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-    </label> */}
               </div>
               <div className="relative h-11 w-full min-w-[200px]">
                 <input
@@ -71,19 +72,17 @@ export default function Sign() {
                   placeholder="Password"
                   onChange={e => setPassword(e.target.value)}
                 />
-                {/* <label className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-pink-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:after:scale-x-100 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-    </label> */}
               </div>
             </div>
             <Button
               onClick={onSubmit}
-              className="mt-8 rounded-full border-2  py-0 text-white"
+              className="mt-8 h-[60px] w-72 rounded-full  border-2  py-0 text-white"
             >
               Log in
             </Button>
             <Link href={'/auth/signup'}>
               <Button
-                className="mt-8 rounded-full border-2 py-0"
+                className="mt-8 h-[60px] w-72 rounded-full border-2 border-transparent py-0"
                 variant={'secondary'}
               >
                 New account
