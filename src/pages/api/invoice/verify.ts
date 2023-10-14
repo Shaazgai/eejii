@@ -20,14 +20,20 @@ export default async function handler(
   });
 
   if (invoiceRes.code === 'success') {
-    db.updateTable('Payment').where('id', '=', paymentId).set({
-      status: 'PAID',
-    });
+    db.updateTable('Payment')
+      .where('id', '=', paymentId)
+      .set({
+        status: 'PAID',
+      })
+      .executeTakeFirstOrThrow();
     return res.status(200).json({ message: 'PAID' });
   } else {
-    db.updateTable('Payment').where('id', '=', paymentId).set({
-      status: 'UNPAID',
-    });
+    db.updateTable('Payment')
+      .where('id', '=', paymentId)
+      .set({
+        status: 'UNPAID',
+      })
+      .executeTakeFirstOrThrow();
     return res.status(200).json({ code: 'UNPAID' });
   }
 }

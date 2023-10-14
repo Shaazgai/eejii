@@ -1,10 +1,10 @@
 'use client';
 
-import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
+import { AppWindow, LogOut, Settings, User2, User2Icon } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
 import type { ReactElement } from 'react';
 
 import {
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import NotificationMenu from '../common/notification-menu';
 import { Button } from '../ui/button';
 interface HeaderProps {
   title: string;
@@ -66,30 +67,34 @@ const HeaderV2 = ({
       <div>
         <span>
           {session ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 px-1 focus:outline-none">
-                {session?.user.email}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <AppWindow className="mr-2 h-4 w-4" />
-                    <Link href={'/v'}>Dashboard</Link>
+            <div className="flex gap-5 px-5">
+              <NotificationMenu />
+              <DropdownMenu>
+                <DropdownMenuTrigger className="relative flex h-[60px] items-center justify-center gap-2 rounded-full bg-zinc-100 p-1 px-3 font-medium hover:bg-zinc-200 focus:outline-none">
+                  <User2 size={30} />
+                  {session?.user.email}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <AppWindow className="mr-2 h-4 w-4" />
+                      <Link href={'/v'}>Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Settings className="mr-2 h-4 w-4" />
+                      <Link href={'/v/settings'}>Settings</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    SignOut
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <Link href={'/v/settings'}>Settings</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  SignOut
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           ) : (
             <Button
               asChild

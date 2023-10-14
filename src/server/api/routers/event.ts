@@ -7,10 +7,16 @@ import type { User } from '@/lib/db/types';
 import type { EventWithOwner, ListResponse, Pagination } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
-import { createPresignedUrl } from '../helper/imageHelper';
-import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import { getPaginationInfo } from '../helper/paginationInfo';
 import { ProjectStatus } from '@/lib/db/enums';
+import { createPresignedUrl } from '../helper/imageHelper';
+import { sendNotification } from '../helper/notification';
+import { getPaginationInfo } from '../helper/paginationInfo';
+import {
+  adminProcedure,
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from '../trpc';
 
 export const eventRouter = createTRPCRouter({
   getAll: publicProcedure
@@ -215,8 +221,17 @@ export const eventRouter = createTRPCRouter({
           enabled: false,
           status: ProjectStatus.PENDING,
         })
-        .returning(['id'])
+        .returning(['id', 'title', 'description'])
         .executeTakeFirstOrThrow();
+
+      sendNotification({
+        title: `New event request: ${event.title} Eejii.org`,
+        link: `/admin/events/${event.id}`,
+        body: event.description,
+        receiverId: ctx.userId,
+        senderId: ctx.userId,
+        type: 'project_request',
+      });
       return event;
     }),
   update: privateProcedure
@@ -272,7 +287,7 @@ export const eventRouter = createTRPCRouter({
       return createPresignedUrl(eventImage.path, input.contentType);
     }),
 
-  changeStatus: publicProcedure
+  changeStatus: adminProcedure
     .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ input, ctx }) => {
       let state: string;
@@ -294,9 +309,19 @@ export const eventRouter = createTRPCRouter({
         .set({
           status: state as ProjectStatus,
         })
-        .returning('id')
+        .returning(['id', 'title', 'ownerId'])
         .executeTakeFirstOrThrow();
 
+      sendNotification({
+        title: `Your request to create '#${event.title}' has been ${
+          input.status === ProjectStatus.APPROVED ? 'approved' : 'denied'
+        }`,
+        body: null,
+        link: `/p/manage/${event.id}`,
+        receiverId: event.ownerId as string,
+        senderId: ctx.userId as string,
+        type: 'project_request',
+      });
       return event;
     }),
 });

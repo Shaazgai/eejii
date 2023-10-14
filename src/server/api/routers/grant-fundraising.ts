@@ -5,12 +5,13 @@ import { z } from 'zod';
 
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
-import { createPresignedUrl } from '../helper/imageHelper';
-import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import type { GrantFundWithOwner, ListResponse, Pagination } from '@/lib/types';
-import { getPaginationInfo } from '../helper/paginationInfo';
-import type { User } from '@/lib/db/types';
 import { ProjectStatus } from '@/lib/db/enums';
+import type { User } from '@/lib/db/types';
+import type { GrantFundWithOwner, ListResponse, Pagination } from '@/lib/types';
+import { createPresignedUrl } from '../helper/imageHelper';
+import { sendNotification } from '../helper/notification';
+import { getPaginationInfo } from '../helper/paginationInfo';
+import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const grantFundraisingRouter = createTRPCRouter({
   getAll: publicProcedure
@@ -159,7 +160,7 @@ export const grantFundraisingRouter = createTRPCRouter({
     console.log(query.rows);
     return query.rows;
   }),
-  findUsersToInvite: publicProcedure // Find all partners for event to invite them
+  findUsersToInvite: publicProcedure // Find all partners for grant to invite them
     .input(z.object({ grantId: z.string(), userType: z.string() }))
     .query(async ({ ctx, input }) => {
       console.log(input.userType);
@@ -199,9 +200,17 @@ export const grantFundraisingRouter = createTRPCRouter({
           enabled: false,
           status: ProjectStatus.PENDING,
         })
-        .returning(['id'])
+        .returning(['id', 'title', 'description'])
         .executeTakeFirstOrThrow();
 
+      sendNotification({
+        title: `New fundraising request: ${fund.title} Eejii.org`,
+        link: `/admin/grant-fundraisings/${fund.id}`,
+        body: fund.description,
+        receiverId: ctx.userId,
+        senderId: ctx.userId,
+        type: 'project_request',
+      });
       return fund;
     }),
   update: privateProcedure
@@ -278,9 +287,19 @@ export const grantFundraisingRouter = createTRPCRouter({
         .set({
           status: state as ProjectStatus,
         })
-        .returning('id')
+        .returning(['id', 'title', 'ownerId'])
         .executeTakeFirstOrThrow();
 
+      sendNotification({
+        title: `Your request to create '#${grant.title}' has been ${
+          input.status === ProjectStatus.APPROVED ? 'approved' : 'denied'
+        }`,
+        body: null,
+        link: `/p/manage/${grant.id}`,
+        receiverId: grant.ownerId as string,
+        senderId: ctx.userId as string,
+        type: 'project_request',
+      });
       return grant;
     }),
 });
