@@ -1,6 +1,5 @@
-import React from 'react';
-
 import LoginComp from '@/bazo/login-comp';
+import React from 'react';
 
 export default function Play() {
   return (

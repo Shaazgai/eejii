@@ -36,7 +36,7 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
         <Link href="/v" className="min-w-[160px]">
           <Image
             alt="logo"
-            src={'/images/eejii.jpeg'}
+            src={'/images/foundation_logo.jpg'}
             width={160}
             height={50}
           />

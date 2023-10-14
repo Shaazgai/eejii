@@ -114,21 +114,21 @@ export default function Signup() {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <div>Sign up as a</div>
+            <div className="text-center">Бүртгэл үүсгэх</div>
             <Button
               onClick={() => handleUserTypeSelection(UserType.USER_PARTNER)}
             >
-              Partner
+              Хамтрагч
             </Button>
             <Button
               onClick={() => handleUserTypeSelection(UserType.USER_VOLUNTEER)}
             >
-              Volunteer
+              Сайн дурын ажилтан
             </Button>
             <Button
               onClick={() => handleUserTypeSelection(UserType.USER_SUPPORTER)}
             >
-              Supporter
+              Дэмжигч
             </Button>
           </div>
         )}

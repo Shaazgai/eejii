@@ -44,7 +44,7 @@ export const UserList = ({
                   </p>
                   {/* <p>{user.id}</p> */}
                 </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                <div className="text-base inline-flex items-center font-semibold text-gray-900 dark:text-white">
                   <Button
                     disabled={isInviteLoading}
                     onClick={() => {
