@@ -86,6 +86,7 @@ const FundRequestCard = ({
   isOwner: boolean;
 }) => {
   const fundraising = fundAssociation.Fundraising;
+  console.log(fundAssociation);
   const context = api.useContext();
   const { mutate } = api.fundAssociation.handleFundRequest.useMutation({
     onSuccess: () => context.fundAssociation.findAll.invalidate(),

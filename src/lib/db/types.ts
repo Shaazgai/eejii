@@ -132,6 +132,18 @@ export type GrantImage = {
   path: string;
   type: string | null;
 };
+export type Notification = {
+  id: Generated<string>;
+  receiverId: string;
+  senderId: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp | null;
+  status: string | null;
+  link: string | null;
+  title: string;
+  body: string | null;
+  type: string;
+};
 export type Payment = {
   id: Generated<string>;
   amount: number;
@@ -188,6 +200,7 @@ export type DB = {
   GrantAssociation: GrantAssociation;
   GrantFundraising: GrantFundraising;
   GrantImage: GrantImage;
+  Notification: Notification;
   Payment: Payment;
   Skill: Skill;
   User: User;

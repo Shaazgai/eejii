@@ -1,6 +1,8 @@
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
+import { UserType } from '@/lib/db/enums';
+import { sendNotification } from '../helper/notification';
 import { createTRPCRouter, privateProcedure } from '../trpc';
 
 export const fundAssociationRouter = createTRPCRouter({
@@ -62,25 +64,64 @@ export const fundAssociationRouter = createTRPCRouter({
   handleFundRequest: privateProcedure // Owner of the fund will handle the request of it's invitation
     .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      ctx.db
+      const fundAssociation = await ctx.db
         .updateTable('FundAssociation')
         .where('id', '=', input.id)
         .set({
           status: input.status,
         })
-        .returning('id')
-        .execute();
+        .returning(expressionBuilder => [
+          jsonObjectFrom(
+            expressionBuilder
+              .selectFrom('Fundraising')
+              .select(['id', 'title'])
+              .select(eb => [
+                jsonObjectFrom(
+                  eb
+                    .selectFrom('User')
+                    .selectAll()
+                    .whereRef('User.id', '=', 'Fundraising.ownerId')
+                ).as('Owner'),
+              ])
+              .whereRef('Fundraising.id', '=', 'FundAssociation.fundraisingId')
+          ).as('Fundraising'),
+          jsonObjectFrom(
+            expressionBuilder
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'FundAssociation.userId')
+          ).as('User'),
+        ])
+        .executeTakeFirstOrThrow();
+
+      const fundraisingTitle = fundAssociation.Fundraising
+        ? fundAssociation.Fundraising.title
+        : 'your project';
+      const fundId = fundAssociation.Fundraising
+        ? fundAssociation.Fundraising.id
+        : null;
+
+      sendNotification({
+        title: `Your request to join ${fundraisingTitle} has been ${
+          input.status === 'APPROVED' ? 'approved' : 'denied'
+        }`,
+        body: null,
+        link: `/fundraising/${fundId}`,
+        receiverId: fundAssociation.User?.id as string,
+        senderId: ctx.userId,
+        type: 'join_request',
+      });
       return { message: 'Success' };
     }),
   inviteToFundraising: privateProcedure // Owner of the fund will invite partner
     .input(
       z.object({
         id: z.string(),
-        userId: z.string().nullable(),
+        userId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      ctx.db
+      const fundAssociation = await ctx.db
         .insertInto('FundAssociation')
         .values({
           status: 'pending',
@@ -88,28 +129,114 @@ export const fundAssociationRouter = createTRPCRouter({
           userId: input.userId,
           fundraisingId: input.id,
         })
-        .returning('id')
+        .returning(expressionBuilder => [
+          jsonObjectFrom(
+            expressionBuilder
+              .selectFrom('Fundraising')
+              .select(['id', 'title', 'description'])
+              .select(eb => [
+                jsonObjectFrom(
+                  eb
+                    .selectFrom('User')
+                    .selectAll()
+                    .whereRef('User.id', '=', 'Fundraising.ownerId')
+                ).as('Owner'),
+              ])
+              .whereRef('Fundraising.id', '=', 'FundAssociation.fundraisingId')
+          ).as('Fundraising'),
+          jsonObjectFrom(
+            expressionBuilder
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'FundAssociation.userId')
+          ).as('User'),
+        ])
         .executeTakeFirstOrThrow();
+      const ownerName = fundAssociation.Fundraising?.Owner
+        ? fundAssociation.Fundraising.Owner.organization
+        : 'User';
+      const fundraisingTitle = fundAssociation.Fundraising
+        ? fundAssociation.Fundraising.title
+        : 'your project';
+      const fundDetail = fundAssociation.Fundraising
+        ? fundAssociation.Fundraising.description
+        : null;
+
+      const link =
+        fundAssociation.User?.type === UserType.USER_PARTNER
+          ? '/p/collabration'
+          : fundAssociation.User?.type === UserType.USER_SUPPORTER
+          ? '/s/collabration'
+          : 'unknown';
+      sendNotification({
+        title: `'${ownerName}' wants you to join '${fundraisingTitle}'`,
+        body: fundDetail,
+        link: link,
+        receiverId: input.userId as string,
+        senderId: ctx.userId,
+        type: 'invite_request',
+      });
       return { message: 'Success' };
     }),
   sendRequest: privateProcedure
     .input(z.object({ fundraisingId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const fundraising = await ctx.db
-        .selectFrom('Fundraising')
-        .select('id')
-        .where('id', '=', input.fundraisingId)
-        .executeTakeFirstOrThrow();
-
-      const fundraisingPartner = await ctx.db
+      const fundAssociation = await ctx.db
         .insertInto('FundAssociation')
         .values(({ selectFrom }) => ({
-          fundraisingId: fundraising.id,
-          userId: selectFrom('User').where('User.id', '=', ctx.userId),
+          type: 'request',
+          fundraisingId: selectFrom('Fundraising')
+            .select('id')
+            .where('Fundraising.id', '=', input.fundraisingId),
+          userId: selectFrom('User')
+            .select('id')
+            .where('User.id', '=', ctx.userId),
           status: 'pending',
         }))
-        .returningAll()
+        .returning(expressionBuilder => [
+          jsonObjectFrom(
+            expressionBuilder
+              .selectFrom('Fundraising')
+              .select(['id', 'title'])
+              .select(eb => [
+                jsonObjectFrom(
+                  eb
+                    .selectFrom('User')
+                    .selectAll()
+                    .whereRef('User.id', '=', 'Fundraising.ownerId')
+                ).as('Owner'),
+              ])
+              .whereRef('Fundraising.id', '=', 'FundAssociation.fundraisingId')
+          ).as('Fundraising'),
+          jsonObjectFrom(
+            expressionBuilder
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'FundAssociation.userId')
+          ).as('User'),
+        ])
         .executeTakeFirstOrThrow();
-      return fundraisingPartner;
+      const userEmail = fundAssociation.User
+        ? fundAssociation.User.email
+        : 'User';
+      const fundraisingTitle = fundAssociation.Fundraising
+        ? fundAssociation.Fundraising.title
+        : 'your project';
+      const fundId = fundAssociation.Fundraising
+        ? fundAssociation.Fundraising.id
+        : null;
+      sendNotification({
+        title: `${userEmail} wants to join ${fundraisingTitle}`,
+        body: null,
+        link: `/${
+          fundAssociation.Fundraising?.Owner?.type === UserType.USER_PARTNER
+            ? 'p'
+            : 's'
+        }/manage/${fundId}`,
+        receiverId: fundAssociation.Fundraising?.Owner?.id as string,
+        senderId: ctx.userId,
+        type: 'join_request',
+      });
+      return fundAssociation;
     }),
 });

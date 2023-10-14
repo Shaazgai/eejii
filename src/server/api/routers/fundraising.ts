@@ -6,11 +6,17 @@ import { z } from 'zod';
 import type { Fundraising, User } from '@/lib/db/types';
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
-import { createPresignedUrl } from '../helper/imageHelper';
-import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import type { FundWithOwner, ListResponse, Pagination } from '@/lib/types';
-import { getPaginationInfo } from '../helper/paginationInfo';
 import { ProjectStatus } from '@/lib/db/enums';
+import type { FundWithOwner, ListResponse, Pagination } from '@/lib/types';
+import { createPresignedUrl } from '../helper/imageHelper';
+import { sendNotification } from '../helper/notification';
+import { getPaginationInfo } from '../helper/paginationInfo';
+import {
+  adminProcedure,
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from '../trpc';
 
 export const fundraisingRouter = createTRPCRouter({
   getAll: publicProcedure
@@ -243,7 +249,6 @@ export const fundraisingRouter = createTRPCRouter({
   create: privateProcedure
     .input(fundraisingSchema)
     .mutation(async ({ input, ctx }) => {
-      console.log(ctx.userId);
       const fund = await ctx.db
         .insertInto('Fundraising')
         .values({
@@ -261,9 +266,17 @@ export const fundraisingRouter = createTRPCRouter({
           enabled: false,
           status: ProjectStatus.PENDING,
         })
-        .returning(['id'])
+        .returning(['id', 'title', 'description'])
         .executeTakeFirstOrThrow();
 
+      sendNotification({
+        title: `New fundraising request: ${fund.title} Eejii.org`,
+        link: `/admin/fundraisings/${fund.id}`,
+        body: fund.description,
+        receiverId: ctx.userId,
+        senderId: ctx.userId,
+        type: 'project_request',
+      });
       return fund;
     }),
   update: privateProcedure
@@ -318,7 +331,7 @@ export const fundraisingRouter = createTRPCRouter({
       return createPresignedUrl(fundImage.path, input.contentType);
     }),
 
-  changeStatus: publicProcedure
+  changeStatus: adminProcedure
     .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ input, ctx }) => {
       let state: string;
@@ -340,9 +353,19 @@ export const fundraisingRouter = createTRPCRouter({
         .set({
           status: state as ProjectStatus,
         })
-        .returning('id')
+        .returning(['id', 'title', 'ownerId'])
         .executeTakeFirstOrThrow();
 
+      sendNotification({
+        title: `Your request to create '#${fund.title}' has been ${
+          input.status === ProjectStatus.APPROVED ? 'approved' : 'denied'
+        }`,
+        body: null,
+        link: `/p/manage/${fund.id}`,
+        receiverId: fund.ownerId as string,
+        senderId: ctx.userId as string,
+        type: 'project_request',
+      });
       return fund;
     }),
 });

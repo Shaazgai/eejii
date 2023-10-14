@@ -46,13 +46,15 @@ model User {
   Addresses     Address[]
   Certificate   Certificate[]
 
-  MyEvents         Event[]
-  MyFunds          Fundraising[]
-  MyGrants         GrantFundraising[]
-  EventAssociation EventAssociation[]
-  FundAssociation  FundAssociation[]
-  GrantAssociation GrantAssociation[]
-  UserImage        UserImage[]
+  MyEvents             Event[]
+  MyFunds              Fundraising[]
+  MyGrants             GrantFundraising[]
+  EventAssociation     EventAssociation[]
+  FundAssociation      FundAssociation[]
+  GrantAssociation     GrantAssociation[]
+  UserImage            UserImage[]
+  receivedNotification Notification[]     @relation("receiver")
+  sendNotifications    Notification[]     @relation("sender")
 }
 
 enum Role {
@@ -312,4 +314,22 @@ model UserImage {
   ownerId String
   path    String
   type    String?
+}
+
+model Notification {
+  id         String    @id @default(dbgenerated("gen_random_uuid()"))
+  receiver   User      @relation("receiver", fields: [receiverId], references: [id])
+  receiverId String
+  sender     User      @relation("sender", fields: [senderId], references: [id])
+  senderId   String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  status     String?
+  link       String?
+  title      String
+  body       String?
+  type       String
+
+  @@index([receiverId])
+  @@index([senderId])
 }

@@ -4,8 +4,14 @@ import { z } from 'zod';
 
 import { userSignUpSchema } from '@/lib/validation/user-schema';
 
-import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import { RequestType } from '@/lib/db/enums';
+import { RequestType, Role } from '@/lib/db/enums';
+import { ServerSettings } from '@/lib/server-settings';
+import {
+  adminProcedure,
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from '../trpc';
 
 export const userRouter = createTRPCRouter({
   getById: publicProcedure
@@ -34,7 +40,6 @@ export const userRouter = createTRPCRouter({
   insertUser: publicProcedure
     .input(userSignUpSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log('🚀 ~ file: user.ts:24 ~ .mutation ~ input:', input);
       const { phoneNumber, email, password } = input;
 
       const exists = await ctx.db
@@ -51,10 +56,6 @@ export const userRouter = createTRPCRouter({
       }
 
       const hashedPassword = await hash(password);
-      console.log(
-        '🚀 ~ file: user.ts:41 ~ .mutation ~ hashedPassword:',
-        hashedPassword
-      );
 
       const user = await ctx.db
         .insertInto('User')
@@ -62,15 +63,27 @@ export const userRouter = createTRPCRouter({
           email: email,
           password: hashedPassword,
           phoneNumber,
+          role: Role.ROLE_USER,
           requestStatus: RequestType.REQUEST_PENDING,
           type: input.userType as
             | 'USER_VOLUNTEER'
             | 'USER_PARTNER'
             | 'USER_SUPPORTER',
         })
-        .returning('email')
-        .executeTakeFirst();
-      console.log('🚀 ~ file: user.ts:54 ~ .mutation ~ user:', user);
+        .returning(['email', 'type', 'id'])
+        .executeTakeFirstOrThrow();
+
+      ctx.db
+        .insertInto('Notification')
+        .values({
+          title: user.email + ' wants to join Eejii.org',
+          link: '/admin/users',
+          receiverId: user.id,
+          senderId: user.id,
+          status: 'new',
+          type: 'request',
+        })
+        .execute();
 
       return {
         status: 201,
@@ -78,7 +91,7 @@ export const userRouter = createTRPCRouter({
         result: user,
       };
     }),
-  changeStatus: publicProcedure // Must be admin procedure
+  changeStatus: adminProcedure
     .input(z.object({ userId: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
       let state: string;
@@ -97,9 +110,31 @@ export const userRouter = createTRPCRouter({
         .updateTable('User')
         .where('User.id', '=', input.userId)
         .set({ requestStatus: state as RequestType })
-        .returning('id')
+        .returning(['type', 'id'])
         .executeTakeFirstOrThrow();
 
+      ctx.db
+        .insertInto('Notification')
+        .values({
+          title: ServerSettings.NOTIFICATION[user.type].APPROVED_TITLE,
+          body: ServerSettings.NOTIFICATION[user.type].APPROVED_BODY,
+          receiverId: user.id,
+          senderId: ctx.userId,
+          status: 'new',
+          type: 'request',
+        })
+        .execute();
       return user;
     }),
+  getNotifications: privateProcedure.query(async ({ ctx }) => {
+    const notifications = ctx.db
+      .selectFrom('Notification')
+      .selectAll()
+      .where('Notification.receiverId', '=', ctx.userId)
+      .orderBy('Notification.createdAt')
+      .limit(50)
+      .execute();
+
+    return notifications;
+  }),
 });
