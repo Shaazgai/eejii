@@ -40,7 +40,7 @@ export default function Home() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/medium"
                   className="block rounded py-2 pl-3 pr-4 font-bold text-gray-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-blue-500 md:p-0 md:hover:bg-transparent md:hover:text-primary md:dark:hover:bg-transparent"
                 >
                   Медиа
@@ -192,9 +192,9 @@ export default function Home() {
                   ажилчид эзэлж байна
                 </p>
                 <Link href="#" className="relative top-8">
-                  <Button className="flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-[#266b70] text-[12px] font-semibold text-white">
+                  <Button className="flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-brand40 text-[12px] font-semibold text-white hover:bg-brand40">
                     Бидэнтэй нэгдэх
-                    <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-[#bfe88c] pl-[2px] pt-[2.5px]">
+                    <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-brand800 pl-[2px] pt-[2.5px]">
                       <MoveUpRight />
                     </span>
                   </Button>
@@ -219,7 +219,7 @@ export default function Home() {
               <p className="h-[72px] w-[201px]">
                 Бид нийт 4.819.065,00 төгрөгийн хандив цуглуулжээ
               </p>
-              <Button className="ml-2 flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-[#cacaca] text-[12px] font-bold text-[#000000]">
+              <Button className="ml-2 flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-[#cacaca] text-[12px] font-bold text-[#000000] hover:text-white">
                 Хандив өгөх
                 <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-[#000000] pl-[2px] pt-[2.5px] text-white">
                   <MoveUpRight />
@@ -232,10 +232,6 @@ export default function Home() {
               </h6>
             </div>
             <div className="flex h-[434.64px] flex-col justify-between">
-              {/* <div className="h-[299.64px] w-[222.75px] border2 bg-primary rounded-3xl">
-                  <h4 className="w-[73px] h-[46px] text-[#ffffff] text-3xl font-bold">55%</h4>
-                  <p className="w-[201px] h-[94px] text-[16px] text-[#c4dbdd]">Манай нийт оролцогчдын 55 хувийг нь сайн дурын ажилчид эзэлж байна</p>    
-              </div>  */}
               <div className="flex h-[299.64px] w-[222.75px] flex-col items-start justify-center bg-[url('/images/folderRight.png')] bg-cover pl-3 text-start">
                 <img
                   src="/images/folderINimg.png"
@@ -246,9 +242,9 @@ export default function Home() {
                   энэ сард нийт 3 төсөл шинээр нэмэгдлээ
                 </p>
                 <Link href="#" className="relative top-2">
-                  <Button className="flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-[#9cc865] text-[12px] font-bold text-[#000000]">
+                  <Button className="flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-brand950 text-[12px] font-bold text-brand400 hover:bg-brand950">
                     Дэлгэрэнгүй
-                    <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-[#000000] pl-[2px] pt-[2.5px] text-[#9cc865]">
+                    <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-brand400 pl-[2px] pt-[2.5px] text-brand800">
                       <MoveUpRight />
                     </span>
                   </Button>
@@ -261,7 +257,7 @@ export default function Home() {
                   alt="heartIMG"
                   className="h-[55px] w-[55px]"
                 />
-                <h1 className="pl-2 font-bold  text-[#bfe88c]">
+                <h1 className="pl-2 font-bold  text-brand800">
                   Be someone's <br /> hope today
                 </h1>
               </div>
@@ -425,11 +421,11 @@ export default function Home() {
             </h6>
             <Link
               href="#"
-              className="flex justify-between text-[20px] font-bold text-primary"
+              className="flex justify-between pr-4 text-[20px] font-bold text-primary"
             >
               Дэлгэрэнгүй{' '}
               <span className="relative left-1 top-1">
-                <MoveUpRight />
+                <MoveUpRight size="22" />
               </span>
             </Link>
           </div>
@@ -438,7 +434,7 @@ export default function Home() {
               <img src="/images/projectImg1.png" alt="projectImage" />
               <div className="p-5">
                 <Button
-                  className="h-[25px] w-[112px] bg-[#d8e7eb] font-semibold text-primary"
+                  className="h-[25px] w-[112px] bg-brand20 font-semibold text-primary hover:bg-brand20"
                   variant={'default'}
                 >
                   Education
@@ -479,7 +475,7 @@ export default function Home() {
               <img src="/images/projectImg1.png" alt="projectImage" />
               <div className="p-5">
                 <Button
-                  className="h-[25px] w-[112px] bg-[#d8e7eb] font-semibold  text-primary"
+                  className="h-[25px] w-[112px] bg-brand20 font-semibold  text-primary hover:bg-brand20"
                   variant={'default'}
                 >
                   Education
@@ -497,13 +493,13 @@ export default function Home() {
                 <div className="flex pt-4">
                   {' '}
                   <div className="h-[1.1vh] w-full rounded-lg   border-transparent bg-gray-200">
-                    <div className="w-[80%] rounded-lg bg-[#FF9900] py-1 text-xs leading-none"></div>
+                    <div className="w-[80%] rounded-lg bg-brand100 py-1 text-xs leading-none"></div>
                   </div>
                   <span className="relative bottom-3 left-2">80%</span>
                 </div>
                 <div className="flex justify-between pb-4">
                   <h1>
-                    Цагласан:<span className="text-[#FF9900]"> 426000</span>
+                    Цагласан:<span className="text-brand100"> 426000</span>
                   </h1>{' '}
                   <h1>
                     Зорилго:<span className="text-primary"> 2000000</span>
@@ -520,7 +516,7 @@ export default function Home() {
               <img src="/images/projectImg2.png" alt="projectImage" />
               <div className="p-5">
                 <Button
-                  className="h-[25px] w-[112px] bg-[#fde4e4] font-semibold  text-[#f47979]"
+                  className="h-[25px] w-[112px] bg-brand200 font-semibold  text-brand150 hover:bg-brand200"
                   variant={'default'}
                 >
                   Health
@@ -538,13 +534,13 @@ export default function Home() {
                 <div className="flex pt-4">
                   {' '}
                   <div className="h-[1.1vh] w-full rounded-lg   border-transparent bg-gray-200">
-                    <div className="w-[80%] rounded-lg bg-[#FF9900] py-1 text-xs leading-none"></div>
+                    <div className="w-[80%] rounded-lg bg-brand100 py-1 text-xs leading-none"></div>
                   </div>
                   <span className="relative bottom-3 left-2">80%</span>
                 </div>
                 <div className="flex justify-between pb-4">
                   <h1>
-                    Цагласан:<span className="text-[#FF9900]"> 426000</span>
+                    Цагласан:<span className="text-brand100"> 426000</span>
                   </h1>{' '}
                   <h1>
                     Зорилго:<span className="text-primary"> 2000000</span>
@@ -572,8 +568,11 @@ export default function Home() {
                 байгаарай
               </h6>
               <Link href="#">
-                <Button className="h-[64px] w-[205px] rounded-3xl border border-primary bg-transparent text-[18px] font-bold text-primary">
-                  Хандив өгөх <MoveUpRight />
+                <Button className="h-[64px] w-[205px] rounded-3xl border border-primary bg-transparent text-[18px] font-bold text-primary hover:bg-transparent">
+                  Хандив өгөх{' '}
+                  <span className="relative left-2">
+                    <MoveUpRight size="20" />
+                  </span>
                 </Button>
               </Link>
             </div>
@@ -585,7 +584,7 @@ export default function Home() {
                 alt="mediaIMG"
                 className="h-[188px] w-[295px]"
               />
-              <Button className="mt-4  h-[24px] rounded-full bg-[#eaeaea] text-[16px] font-semibold text-[#929292]">
+              <Button className="mt-4  h-[24px] rounded-full bg-brand250 text-[16px] font-semibold text-brand30 hover:bg-brand250">
                 12 сарын 20,2022
               </Button>
               <h1 className="h-12 pt-2 font-bold">
@@ -601,8 +600,8 @@ export default function Home() {
                 className="m-auto flex pt-3 text-[20px] font-bold text-primary"
               >
                 Унших{' '}
-                <span className="relative left-2 top-1">
-                  <MoveUpRight />
+                <span className="relative left-2 top-2">
+                  <MoveUpRight size="21" />
                 </span>
               </Link>
             </div>
@@ -612,7 +611,7 @@ export default function Home() {
                 alt="mediaIMG"
                 className="h-[188px] w-[295px]"
               />
-              <Button className="mt-4  h-[24px] rounded-full bg-[#eaeaea] text-[16px] font-semibold text-[#929292]">
+              <Button className="mt-4  h-[24px] rounded-full bg-brand250 text-[16px] font-semibold text-brand30 hover:bg-brand250">
                 12 сарын 20,2022
               </Button>
               <h1 className="h-12 pt-2 font-bold">
@@ -628,8 +627,8 @@ export default function Home() {
                 className="m-auto flex pt-3 text-[20px] font-bold text-primary"
               >
                 Унших{' '}
-                <span className="relative left-2 top-1">
-                  <MoveUpRight />
+                <span className="relative left-2 top-2">
+                  <MoveUpRight size="21" />
                 </span>
               </Link>
             </div>
@@ -639,8 +638,8 @@ export default function Home() {
                 alt="mediaIMG"
                 className="h-[188px] w-[295px]"
               />
-              <Button className="mt-4  h-[24px] rounded-full bg-[#eaeaea] text-[16px] font-semibold text-[#929292]">
-                04 сарын 24,2023
+              <Button className="mt-4  h-[24px] rounded-full bg-brand250 text-[16px] font-semibold text-brand30 hover:bg-brand250">
+                12 сарын 20,2022
               </Button>
               <h1 className="h-12 pt-2 font-bold">
                 Гэмтэл Согог Судлалын Үндэсний төв болон
@@ -655,8 +654,8 @@ export default function Home() {
                 className="m-auto flex pt-3 text-[20px] font-bold text-primary"
               >
                 Унших{' '}
-                <span className="relative left-2 top-1">
-                  <MoveUpRight />
+                <span className="relative left-2 top-2">
+                  <MoveUpRight size="21" />
                 </span>
               </Link>
             </div>
@@ -666,8 +665,8 @@ export default function Home() {
                 alt="mediaIMG"
                 className="h-[188px] w-[295px]"
               />
-              <Button className="mt-4  h-[24px] rounded-full bg-[#eaeaea] text-[16px] font-semibold text-[#929292]">
-                04 сарын 24,2023
+              <Button className="mt-4  h-[24px] rounded-full bg-brand250 text-[16px] font-semibold text-brand30 hover:bg-brand250">
+                12 сарын 20,2022
               </Button>
               <h1 className="h-12 pt-2 font-bold">
                 "Хайр дүүрэн цүнх" сайн үйлсийн аянд хандив ирлээ
@@ -682,8 +681,8 @@ export default function Home() {
                 className="m-auto flex pt-3 text-[20px] font-bold text-primary"
               >
                 Унших{' '}
-                <span className="relative left-2 top-1">
-                  <MoveUpRight />
+                <span className="relative left-2 top-2">
+                  <MoveUpRight size="21" />
                 </span>
               </Link>
             </div>
