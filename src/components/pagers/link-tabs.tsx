@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 export function LinkTabs({ tabs }: { tabs: Tab[] }) {
   const router = useRouter();
   const pathname = usePathname();
-  console.log('🚀 ~ file: link-tabs.tsx:9 ~ LinkTabs ~ pathname:', pathname);
 
   return (
     <Tabs
@@ -20,8 +19,7 @@ export function LinkTabs({ tabs }: { tabs: Tab[] }) {
             key={tab.title}
             value={tab.href}
             className={cn(
-              pathname === `${tab.href}` &&
-                'bg-background text-foreground shadow-sm'
+              pathname === `${tab.href}` && 'bg-primary text-white shadow-sm'
             )}
             onClick={() => router.push(tab.href)}
           >
