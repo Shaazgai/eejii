@@ -131,10 +131,22 @@ export const userRouter = createTRPCRouter({
       .selectFrom('Notification')
       .selectAll()
       .where('Notification.receiverId', '=', ctx.userId)
-      .orderBy('Notification.createdAt')
+      .orderBy('Notification.updatedAt', 'desc')
       .limit(50)
       .execute();
 
     return notifications;
   }),
+  setSeen: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      ctx.db
+        .updateTable('Notification')
+        .where('id', '=', input.id)
+        .set({
+          status: 'seen',
+          updatedAt: new Date(),
+        })
+        .execute();
+    }),
 });

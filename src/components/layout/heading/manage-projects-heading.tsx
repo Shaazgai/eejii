@@ -1,7 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 import SectionHeader from '@/components/common/section-header';
 import { LinkTabs } from '@/components/pagers/link-tabs';
@@ -11,15 +10,15 @@ const ManageProjectsHeading = () => {
   const router = useRouter();
   const tabs = [
     {
-      title: `Fundraising ()`,
+      title: `Fundraising`,
       href: '/p/manage',
     },
     {
-      title: `Grant-fundraising ()`,
+      title: `Grant-fundraising`,
       href: '/p/manage/grant',
     },
     {
-      title: `Event ()`,
+      title: `Event`,
       href: '/p/manage/event',
     },
   ];
@@ -32,12 +31,7 @@ const ManageProjectsHeading = () => {
       >
         <div className="flex w-full items-center justify-between">
           <h2 className="text-3xl capitalize">Manage projects</h2>
-          <Button
-            className="rounded-full border bg-primary hover:bg-gray-200 hover:text-gray-950"
-            onClick={() => router.push('/p/manage/new')}
-          >
-            Add
-          </Button>
+          <Button onClick={() => router.push('/p/manage/new')}>Add</Button>
         </div>
       </SectionHeader>
       <div className="flex justify-between">

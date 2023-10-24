@@ -70,8 +70,8 @@ const HeaderV2 = ({
             <div className="flex gap-5 px-5">
               <NotificationMenu />
               <DropdownMenu>
-                <DropdownMenuTrigger className="relative flex h-[60px] items-center justify-center gap-2 rounded-full bg-zinc-100 p-1 px-3 font-medium hover:bg-zinc-200 focus:outline-none">
-                  <User2 size={30} />
+                <DropdownMenuTrigger className="relative flex h-[40px] items-center justify-center gap-2 rounded-full bg-zinc-100 p-1 px-3 font-medium hover:bg-zinc-200 focus:outline-none">
+                  <User2 size={24} />
                   {session?.user.email}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">

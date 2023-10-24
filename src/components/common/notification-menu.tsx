@@ -17,13 +17,20 @@ const NotificationMenu = () => {
   const { data: notifications, isLoading } =
     api.user.getNotifications.useQuery();
 
+  const { mutate: seen } = api.user.setSeen.useMutation();
+  function handleSeen(id: string) {
+    seen({ id: id });
+  }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className=" relative flex h-[60px] w-[60px] items-center justify-center gap-2 rounded-full bg-zinc-100 p-2 hover:bg-zinc-200 focus:outline-none">
-        <Bell size={30} />
-        <span className="absolute right-2 top-0 flex translate-x-1/2 rounded-full bg-red-400 px-2 text-sm font-bold text-red-50">
-          {notifications ? notifications?.length : 0}
-        </span>
+      <DropdownMenuTrigger className=" relative flex h-[40px] w-[40px] items-center justify-center gap-2 rounded-full bg-zinc-100 p-2 hover:bg-zinc-200 focus:outline-none">
+        <Bell size={24} />
+        {notifications &&
+          notifications?.filter(n => n.status === 'new')?.length > 0 && (
+            <span className="absolute right-2 top-0 flex translate-x-1/2 rounded-full bg-red-400 px-2 text-sm font-bold text-red-50">
+              {notifications?.filter(n => n.status === 'new')?.length}
+            </span>
+          )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-96">
         <DropdownMenuLabel>My notifications</DropdownMenuLabel>
@@ -34,9 +41,18 @@ const NotificationMenu = () => {
               return (
                 <Link
                   key={i}
+                  onClick={() => {
+                    handleSeen(notification.id);
+                  }}
                   href={notification.link ? (notification.link as string) : '#'}
                 >
-                  <DropdownMenuItem className="flex gap-2 rounded-none border-l-2 border-indigo-500">
+                  <DropdownMenuItem
+                    className={`flex gap-2 rounded-none ${
+                      notification.status != 'seen'
+                        ? 'border-l-2 border-indigo-500'
+                        : ''
+                    }`}
+                  >
                     <div className="relative h-20 w-20 flex-none">
                       <FallbackImage
                         src={''}
