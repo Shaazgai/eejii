@@ -49,6 +49,7 @@ module.exports = {
         primary: '#3c888D',
         primaryDark: '#2f4a53',
         primarySecond: '#8ab8bb',
+        brand5:'#808080',
         brand10: '#e6e3e0',
         brand20: '#d8e7eb',
         brand30: '#929292',
