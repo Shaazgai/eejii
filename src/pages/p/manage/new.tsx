@@ -11,15 +11,15 @@ export default function NewProject() {
   const [activeIndex, setActiveIndex] = useState(0);
   const tabs = [
     {
-      title: 'Fundraising',
+      title: 'Хандив өгөх төсөл',
       index: 0,
     },
     {
-      title: 'Grant-fundraising',
+      title: 'Хандив олох төсөл',
       index: 1,
     },
     {
-      title: 'Event',
+      title: 'Арга хэмжээ',
       index: 2,
     },
   ];

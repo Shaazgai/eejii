@@ -10,15 +10,15 @@ const ManageProjectsHeading = () => {
   const router = useRouter();
   const tabs = [
     {
-      title: `Fundraising`,
+      title: `Хандив өгөх төсөл`,
       href: '/p/manage',
     },
     {
-      title: `Grant-fundraising`,
+      title: `Хандив олох төсөл`,
       href: '/p/manage/grant',
     },
     {
-      title: `Event`,
+      title: `Арга хэмжээ`,
       href: '/p/manage/event',
     },
   ];
@@ -29,9 +29,16 @@ const ManageProjectsHeading = () => {
         variant="dark"
         className=""
       >
-        <div className="flex w-full items-center justify-between">
-          <h2 className="text-3xl capitalize">Manage projects</h2>
-          <Button onClick={() => router.push('/p/manage/new')}>Add</Button>
+        <div className="flex w-full items-center justify-between pl-4 pr-7 pt-4">
+          <h2 className="text-3xl  font-semibold text-brand400">
+            Төсөл,хөтөлбөрүүд
+          </h2>
+          <Button
+            className="border border-brand40 bg-transparent font-bold text-primary hover:bg-transparent"
+            onClick={() => router.push('/p/manage/new')}
+          >
+            Төсөл нэмэх
+          </Button>
         </div>
       </SectionHeader>
       <div className="flex justify-between">
