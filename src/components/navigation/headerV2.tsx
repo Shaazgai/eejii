@@ -44,8 +44,14 @@ const HeaderV2 = ({
       } z-10 flex h-[80px] grow items-center justify-between border-b border-gray-200 bg-white`}
     >
       <div>
-        <Image alt="logo" src={'/images/eejii.jpeg'} width={160} height={50} />
+        <Image
+          alt="logo"
+          src={'/images/homie/eejii.jpeg'}
+          width={160}
+          height={50}
+        />
       </div>
+
       <nav>
         <ul className="flex flex-row gap-10">
           {headerNav && headerNav.length > 0 ? (
