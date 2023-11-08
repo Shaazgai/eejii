@@ -16,7 +16,7 @@ export const Medium = () => {
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
           <Link href="#" className="flex h-[72px] w-[215px] items-center">
             <img
-              src="/images/foundation_logo.jpg"
+              src="/images/homie/foundation_logo.jpg"
               className="h-[72px] w-[215px]"
               alt="foundation Logo"
             />
@@ -158,7 +158,7 @@ export const Medium = () => {
             <div className="flex justify-around">
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_1.png"
+                  src="/images/media/media_1.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -185,7 +185,7 @@ export const Medium = () => {
               </div>
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_2.png"
+                  src="/images/media/media_2.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -212,7 +212,7 @@ export const Medium = () => {
               </div>
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_3.png"
+                  src="/images/media/media_3.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -241,7 +241,7 @@ export const Medium = () => {
             <div className="flex justify-around">
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_4.png"
+                  src="/images/media/media_4.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -266,7 +266,7 @@ export const Medium = () => {
               </div>
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_5.png"
+                  src="/images/media/media_5.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -291,7 +291,7 @@ export const Medium = () => {
               </div>
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_6.png"
+                  src="/images/media/media_6.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -320,7 +320,7 @@ export const Medium = () => {
             <div className="flex justify-around">
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_7.png"
+                  src="/images/media/media_7.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -347,7 +347,7 @@ export const Medium = () => {
               </div>
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_8.png"
+                  src="/images/media/media_8.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -374,7 +374,7 @@ export const Medium = () => {
               </div>
               <div className="h-[375px] w-[295px]">
                 <img
-                  src="/images/media_9.png"
+                  src="/images/media/media_9.png"
                   alt="mediaIMG"
                   className="h-[188px] w-[295px]"
                 />
@@ -431,7 +431,7 @@ export const Medium = () => {
       <section className="h-64 p-20">
         <div className="flex h-[244px] justify-around">
           <div>
-            <img src="/images/proLogo.png" alt="mainLogo" />
+            <img src="/images/homie/proLogo.png" alt="mainLogo" />
           </div>
           <div className="leading-9">
             <h6 className="pb-4 text-xl font-bold">Шуурхай холбоос</h6>

@@ -39,7 +39,7 @@ export const About = () => {
           </div>
           <div className="relative right-20">
             <img
-              src="/images/ceoIMG.png"
+              src="/images/about/ceoIMG.png"
               alt="CEO image"
               className="h-[254px] w-[268px]"
             />
@@ -58,24 +58,24 @@ export const About = () => {
             <div className="flex pl-10 pt-2">
               <div className="">
                 <img
-                  src="/images/aboutIMG1.png"
+                  src="/images/about/aboutIMG1.png"
                   alt="aboutIMG"
                   className="h-[197px] w-[209px]"
                 />
                 <img
-                  src="/images/aboutIMG3.png"
+                  src="/images/about/aboutIMG3.png"
                   alt="aboutIMG"
                   className="relative top-5 h-[172px] w-[172px] p-3"
                 />
               </div>
               <div className="pt-10">
                 <img
-                  src="/images/aboutIMG2.png"
+                  src="/images/about/aboutIMG2.png"
                   alt="aboutIMG"
                   className="relative left-14 top-7 h-[192px] w-[197px] "
                 />
                 <img
-                  src="/images/aboutIMG4.png"
+                  src="/images/about/aboutIMG4.png"
                   alt="aboutIMG"
                   className="relative left-7 top-14 h-[182px] w-[182px] p-3"
                 />
@@ -120,7 +120,7 @@ export const About = () => {
           "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
         </h2>
       </section>
-      <section className="h-[1021px] w-full bg-[url('/images/firstBG.png')] bg-cover  p-16">
+      <section className="h-[1021px] w-full bg-[url('/images/media/firstBG.png')] bg-cover  p-16">
         <div className="">
           <h4 className="text-center text-3xl">
             Яагаад хураамж төлөх ёстой вэ?
@@ -237,7 +237,7 @@ export const About = () => {
         <div className="flex  h-[200px] w-full">
           <div>
             <img
-              src="/images/AboutFam1.png"
+              src="/images/about/AboutFam1.png"
               alt="all in one"
               className="h-[152px] w-[163px]"
             />
@@ -268,7 +268,7 @@ export const About = () => {
           </div>
           <div>
             <img
-              src="/images/AboutFam2.png"
+              src="/images/about/AboutFam2.png"
               alt="all in one"
               className="h-[152px] w-[163px]"
             />
@@ -277,7 +277,7 @@ export const About = () => {
         <div className="flex h-[200px]  w-full pt-16">
           <div>
             <img
-              src="/images/AboutFam3.png"
+              src="/images/about/AboutFam3.png"
               alt="all in one"
               className="h-[152px] w-[163px]"
             />
@@ -308,18 +308,18 @@ export const About = () => {
           </div>
           <div>
             <img
-              src="/images/AboutFam4.png"
+              src="/images/about/AboutFam4.png"
               alt="all in one"
               className="h-[152px] w-[163px]"
             />
           </div>
         </div>
       </section>
-      <section className="flex h-[573px] w-full items-center bg-[url('/images/secondBG.png')] bg-cover">
+      <section className="flex h-[573px] w-full items-center bg-[url('/images/media/secondBG.png')] bg-cover">
         <div className="m-auto flex h-[358px] w-[1327px]  justify-around">
           <div className="m-auto h-[358px] w-[307px] rounded-md bg-brand450 p-4 ">
             <img
-              src="/images/goodHumanpng.png"
+              src="/images/about/goodHumanpng.png"
               alt="be good Human"
               className="h-[230px] w-[271px]"
             />
@@ -330,7 +330,7 @@ export const About = () => {
           </div>
           <div className="m-auto h-[358px] w-[307px] rounded-md bg-brand450 p-4 ">
             <img
-              src="/images/wizard.png"
+              src="/images/about/wizard.png"
               alt="be good Human"
               className="h-[230px] w-[271px]"
             />
@@ -341,7 +341,7 @@ export const About = () => {
           </div>
           <div className="m-auto h-[358px] w-[307px] rounded-md bg-brand450 p-4 ">
             <img
-              src="/images/warm.png"
+              src="/images/about/warm.png"
               alt="be good Human"
               className="h-[230px] w-[271px]"
             />
@@ -352,7 +352,7 @@ export const About = () => {
           </div>
           <div className="m-auto h-[358px] w-[307px] rounded-md bg-brand450 p-4 ">
             <img
-              src="/images/dream.png"
+              src="/images/about/dream.png"
               alt="be good Human"
               className="h-[230px] w-[271px]"
             />
@@ -366,7 +366,7 @@ export const About = () => {
       <section className="h-64 p-20">
         <div className="flex h-[244px] justify-around">
           <div>
-            <img src="/images/proLogo.png" alt="mainLogo" />
+            <img src="/images/homie/proLogo.png" alt="mainLogo" />
           </div>
           <div className="leading-9">
             <h6 className="pb-4 text-xl font-bold">Шуурхай холбоос</h6>

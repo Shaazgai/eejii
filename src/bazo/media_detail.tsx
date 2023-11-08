@@ -17,7 +17,7 @@ export const Mediums = () => {
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
           <Link href="#" className="flex h-[72px] w-[215px] items-center">
             <img
-              src="/images/foundation_logo.jpg"
+              src="/images/homie/foundation_logo.jpg"
               className="h-[72px] w-[215px]"
               alt="foundation Logo"
             />
@@ -155,7 +155,7 @@ export const Mediums = () => {
       </nav>
       <section className="relative top-10 h-[1910px] bg-[#fffcf6]">
         <img
-          src="/images/media_10.png"
+          src="/images/media/media_10.png"
           alt="mediaNext"
           className="m-auto h-[324px] w-[1241px]"
         />
@@ -206,28 +206,28 @@ export const Mediums = () => {
               <div className="flex h-8 w-[200px] justify-around">
                 <Link href="/">
                   <img
-                    src="/images/facebook.png"
+                    src="/images/media/facebook.png"
                     alt="facebook"
                     className="h-8 w-8"
                   />
                 </Link>
                 <Link href="/">
                   <img
-                    src="/images/instagram.png"
+                    src="/images/media/instagram.png"
                     alt="instagram"
                     className="h-8 w-8"
                   />
                 </Link>
                 <Link href="/">
                   <img
-                    src="/images/twitter.png"
+                    src="/images/media/twitter.png"
                     alt="twitter"
                     className="h-8 w-8"
                   />
                 </Link>
                 <Link href="/">
                   <img
-                    src="/images/gmail.png"
+                    src="/images/media/gmail.png"
                     alt="gmail"
                     className="h-8 w-8"
                   />
@@ -241,7 +241,7 @@ export const Mediums = () => {
           <div className="flex justify-around">
             <div className="h-[375px] w-[295px]">
               <img
-                src="/images/media_4.png"
+                src="/images/media/media_4.png"
                 alt="mediaIMG"
                 className="h-[188px] w-[295px]"
               />
@@ -266,7 +266,7 @@ export const Mediums = () => {
             </div>
             <div className="h-[375px] w-[295px]">
               <img
-                src="/images/media_5.png"
+                src="/images/media/media_5.png"
                 alt="mediaIMG"
                 className="h-[188px] w-[295px]"
               />
@@ -291,7 +291,7 @@ export const Mediums = () => {
             </div>
             <div className="h-[375px] w-[295px]">
               <img
-                src="/images/media_6.png"
+                src="/images/media/media_6.png"
                 alt="mediaIMG"
                 className="h-[188px] w-[295px]"
               />
@@ -322,7 +322,7 @@ export const Mediums = () => {
       <section className="h-64 p-20">
         <div className="flex h-[244px] justify-around">
           <div>
-            <img src="/images/proLogo.png" alt="mainLogo" />
+            <img src="/images/homie/proLogo.png" alt="mainLogo" />
           </div>
           <div className="leading-9">
             <h6 className="pb-4 text-xl font-bold">Шуурхай холбоос</h6>
