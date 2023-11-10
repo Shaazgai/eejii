@@ -1,6 +1,6 @@
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
-import { UserProfile } from '@/components/section/user-profile';
+import { UserProfile } from '@/components/sections/user-profile';
 import { Shell } from '@/components/shells/shell';
 
 export default function ManageProjects() {
