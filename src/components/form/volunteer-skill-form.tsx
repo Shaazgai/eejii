@@ -25,7 +25,7 @@ const VolunteerSkillForm = () => {
   //
   // async function onSubmit() {
   //   console.log(selectedSkills);
-  //   setData({ ...data, skills: selectedSkills });
+  //   setData({ ...data, skills: selectedSkills })
   //   if (!isLastStep) return next();
   // }
   // function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -50,8 +50,8 @@ const VolunteerSkillForm = () => {
   return (
     <Form {...form}>
       {/* <form onSubmit={form.handleSubmit(onSubmit)} className="w-[500px]"> */}
-      {/*   <h3 className="mb-5  border-b border-gray-200 pb-1">Add skill</h3> */}
-      {/*   <div className="mb-2 flex"> */}
+      {/*   <h3 className="pb-1 mb-5 border-b border-gray-200">Add skill</h3> */}
+      {/*   <div className="flex mb-2"> */}
       {/*     <Input */}
       {/*       value={query} */}
       {/*       onChange={handleChange} */}
@@ -73,7 +73,7 @@ const VolunteerSkillForm = () => {
       {/*       Add */}
       {/*     </Button> */}
       {/*   </div> */}
-      {/*   <div className="space-x-2 space-y-2 border-b-2 border-dashed pb-2"> */}
+      {/*   <div className="pb-2 space-x-2 space-y-2 border-b-2 border-dashed"> */}
       {/*     {selectedSkills.map(skill => ( */}
       {/*       <Button */}
       {/*         type="button" */}

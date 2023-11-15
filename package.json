@@ -78,7 +78,8 @@
     "tailwindcss-animate": "^1.0.6",
     "tsc": "^2.0.4",
     "zod": "^3.21.4",
-    "zod-form-data": "^2.0.1"
+    "zod-form-data": "^2.0.1",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@types/eslint": "^8.37.0",

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Role, UserType } from '@/lib/db/enums';
 import { api } from '@/utils/api';
+import VolunteerRegisterForm from '@/components/form/multiStep/volunteerRegister';
 
 export default function Signup() {
   const session = useSession();
@@ -69,49 +70,53 @@ export default function Signup() {
     <BasicBaseLayout>
       <div className="flex h-screen w-full items-center justify-center">
         {selectedUserType ? (
-          <div className="flex flex-col gap-4">
-            <label>
-              phoneNumber
-              <Input
-                name="email"
-                type="text"
-                onChange={e => setPhoneNumber(e.target.value)}
-              />
-            </label>
-            <label>
-              Email
-              <Input
-                name="email"
-                type="text"
-                onChange={e => setEmail(e.target.value)}
-              />
-            </label>
-            <label>
-              Password
-              <Input
-                name="password"
-                type="password"
-                onChange={e => setPassword(e.target.value)}
-              />
-            </label>
-            <Button type="submit" onClick={onSubmit}>
-              Sign up
-            </Button>
-
-            <Link href={'/auth/login'}>
-              <Button className=" w-full" variant={'secondary'}>
-                Have a account?
+          selectedUserType == UserType.USER_VOLUNTEER ? (
+            <VolunteerRegisterForm />
+          ) : (
+            <div className="flex flex-col gap-4">
+              <label>
+                phoneNumber
+                <Input
+                  name="email"
+                  type="text"
+                  onChange={e => setPhoneNumber(e.target.value)}
+                />
+              </label>
+              <label>
+                Email
+                <Input
+                  name="email"
+                  type="text"
+                  onChange={e => setEmail(e.target.value)}
+                />
+              </label>
+              <label>
+                Password
+                <Input
+                  name="password"
+                  type="password"
+                  onChange={e => setPassword(e.target.value)}
+                />
+              </label>
+              <Button type="submit" onClick={onSubmit}>
+                Sign up
               </Button>
-            </Link>
 
-            <Button
-              onClick={() => resetUserType()}
-              className=" w-full"
-              variant={'secondary'}
-            >
-              Back
-            </Button>
-          </div>
+              <Link href={'/auth/login'}>
+                <Button className="w-full " variant={'secondary'}>
+                  Have a account?
+                </Button>
+              </Link>
+
+              <Button
+                onClick={() => resetUserType()}
+                className="w-full "
+                variant={'secondary'}
+              >
+                Back
+              </Button>
+            </div>
+          )
         ) : (
           <div className="flex flex-col gap-4">
             <div className="text-center">Бүртгэл үүсгэх</div>
