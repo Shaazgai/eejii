@@ -1,6 +1,6 @@
 import React from 'react';
-import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import { Facebook, Instagram } from 'lucide-react';
+// import BasicBaseLayout from '@/components/layout/basic-base-layout';
+// import { Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -110,7 +110,7 @@ export const About = () => {
             </p>
           </div>
         </div>
-        <h2 className="pt-12 text-center font-semibold  text-primary">
+        <h2 className="pt-12 text-center font-semibold text-primary">
           "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
         </h2>
       </section>

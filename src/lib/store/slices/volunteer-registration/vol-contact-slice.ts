@@ -2,11 +2,15 @@ import type { StateCreator } from 'zustand';
 
 type ContactInfo = {
   birthdate: string;
-  isMale: boolean;
+  gender: string;
   registerCode: string;
-  birthYear: number;
-  birthMonth: number;
-  birthDay: number;
+  birthYear: string;
+  birthMonth: string;
+  birthDay: string;
+  firstLetter: string;
+  secondLetter: string;
+  registerNumber: string | undefined;
+  birthDate: Date | undefined;
 };
 
 type ContactInfoSlice = {
@@ -16,11 +20,15 @@ type ContactInfoSlice = {
 
 const initialState = {
   birthdate: '',
-  birthDay: 1,
-  birthMonth: 1,
-  birthYear: 2013,
-  isMale: true,
+  birthDay: '1',
+  birthMonth: '1',
+  birthYear: '2013',
+  gender: '',
   registerCode: '',
+  firstLetter: 'А',
+  secondLetter: 'А',
+  registerNumber: undefined,
+  birthDate: undefined,
 };
 
 const VolContactSlice: StateCreator<ContactInfoSlice> = set => ({
