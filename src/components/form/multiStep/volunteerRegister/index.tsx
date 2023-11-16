@@ -3,6 +3,8 @@ import React from 'react';
 import VolRegisterStep from './vol-register-step';
 import PersonalInfo from './vol-step-personalInfo';
 import Contact from './vol-step-contact';
+import HomeAddress from './vol-step-home-address';
+import Bio from './vol-step-bio';
 
 export default function VolunteerRegisterForm() {
   const { step } = useStoreVolunteer(state => state);
@@ -18,9 +20,8 @@ export default function VolunteerRegisterForm() {
       </section>
       {step === 1 && <PersonalInfo />}
       {step === 2 && <Contact />}
-      {/* {step === 2 && <Plan />}
-      {step === 3 && <Addons />}
-      {step === 4 && <Summary />} */}
+      {step === 3 && <HomeAddress />}
+      {step === 4 && <Bio />}
     </div>
   );
 }
