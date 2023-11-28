@@ -1,4 +1,4 @@
-import { StateCreator } from "zustand";
+import type { StateCreator } from 'zustand';
 
 type Plan = {
   id: number;
@@ -14,14 +14,14 @@ type PlanSlice = {
 
 const initialState = {
   id: 0,
-  name: "",
+  name: '',
   price: 0,
-  type: "",
+  type: '',
 };
 
-const createPlanSlice: StateCreator<PlanSlice> = (set) => ({
+const createPlanSlice: StateCreator<PlanSlice> = set => ({
   plan: initialState,
-  setPlan: (data) => set((state) => ({ plan: { ...state.plan, ...data } })),
+  setPlan: data => set(state => ({ plan: { ...state.plan, ...data } })),
 });
 
 export default createPlanSlice;

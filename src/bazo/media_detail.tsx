@@ -1,14 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
-import {
-  Facebook,
-  ArrowLeft,
-  Instagram,
-  ChevronDown,
-  CalendarHeart,
-  MoveUpRight,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ArrowLeft, MoveUpRight } from 'lucide-react';
+import Link from 'next/link';
 
 export const Mediums = () => {
   return (

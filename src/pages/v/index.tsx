@@ -12,9 +12,9 @@ import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { ProjectStatus } from '@/lib/db/enums';
 import type { EventWithOwner, FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
-import { ProjectStatus } from '@/lib/db/enums';
 
 export default function Index() {
   const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(

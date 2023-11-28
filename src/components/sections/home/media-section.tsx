@@ -1,15 +1,5 @@
-import React from 'react';
-
-import {
-  ArrowRight,
-  Facebook,
-  MoveUpRight,
-  Instagram,
-  ChevronDown,
-  CalendarHeart,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { MoveUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MediaSection() {

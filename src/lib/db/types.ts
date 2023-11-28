@@ -172,7 +172,7 @@ export type User = {
   lastName: string | null;
   gender: string | null;
   bio: string | null;
-  birthday: Timestamp | null;
+  birthDate: Timestamp | null;
   skills: string | null;
   organization: string | null;
   contact: unknown | null;

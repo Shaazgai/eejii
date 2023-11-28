@@ -1,15 +1,5 @@
-import React from 'react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import {
-  ArrowRight,
-  Facebook,
-  MoveUpRight,
-  Instagram,
-  ChevronDown,
-  CalendarHeart,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 export default function Features() {
   return (
     <section className="max-h-[120vh] w-full bg-[#FFFCF9]">
