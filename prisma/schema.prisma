@@ -36,7 +36,7 @@ model User {
   lastName      String?
   gender        String?
   bio           String?
-  birthDate      DateTime?
+  birthDate     DateTime?
   skills        String?
   // Partner, Supporter fields + bio
   organization  String?

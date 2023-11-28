@@ -232,4 +232,37 @@ export const eventAssociationRouter = createTRPCRouter({
       });
       return { message: 'Success', response: eventAssociation };
     }),
+
+  getMyVolunteer: privateProcedure
+    .input(z.object({ partnerId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const volunteers = await ctx.db
+        .selectFrom('User')
+        .select([
+          'User.id',
+          'User.phoneNumber',
+          'User.email',
+          'User.firstName',
+          'User.lastName',
+        ])
+        .select(eb => [
+          jsonObjectFrom(
+            eb
+              .selectFrom('EventAssociation')
+              .selectAll()
+              .whereRef('User.id', '=', 'EventAssociation.userId')
+          ).as('EventAssociation'),
+        ])
+        .leftJoin('EventAssociation', join =>
+          join.onRef('User.id', '=', 'EventAssociation.userId')
+        )
+        .leftJoin('Event', join =>
+          join.onRef('Event.id', '=', 'EventAssociation.eventId')
+        )
+        .where('User.type', '=', 'USER_VOLUNTEER')
+        .where('Event.ownerId', '=', input.partnerId)
+        .execute();
+
+      return volunteers;
+    }),
 });

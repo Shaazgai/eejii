@@ -1,13 +1,5 @@
-import React from 'react';
+import { Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
-import {
-  ArrowRight,
-  Facebook,
-  MoveUpRight,
-  Instagram,
-  ChevronDown,
-  CalendarHeart,
-} from 'lucide-react';
 
 export default function PublicFooter() {
   return (

@@ -3,10 +3,10 @@ import { z } from 'zod';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
-import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import type { User } from '@/lib/db/types';
 import type { ListResponse, Pagination } from '@/lib/types';
 import { getPaginationInfo } from '../helper/paginationInfo';
-import type { User } from '@/lib/db/types';
+import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const volunteerRouter = createTRPCRouter({
   getById: publicProcedure
@@ -69,7 +69,7 @@ export const volunteerRouter = createTRPCRouter({
           firstName: input.firstName,
           lastName: input.lastName,
           bio: input.bio,
-          birthday: input.birthday,
+          birthDate: input.birthday,
           gender: input.gender,
           type: 'USER_VOLUNTEER',
           email: input.email,
