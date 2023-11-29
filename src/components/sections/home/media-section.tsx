@@ -1,7 +1,5 @@
-import React from 'react';
-
-import { MoveUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { MoveUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MediaSection() {

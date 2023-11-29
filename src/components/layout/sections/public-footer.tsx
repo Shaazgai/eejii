@@ -1,6 +1,5 @@
 import { Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
-import { Facebook, Instagram } from 'lucide-react';
 
 export default function PublicFooter() {
   return (

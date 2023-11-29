@@ -1,6 +1,5 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 export default function Features() {
   return (
     <section className="max-h-[120vh] w-full bg-[#FFFCF9]">

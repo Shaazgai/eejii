@@ -1,6 +1,3 @@
-import React from 'react';
-import Link from 'next/link';
-import { ArrowLeft, MoveUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, MoveUpRight } from 'lucide-react';
 import Link from 'next/link';
