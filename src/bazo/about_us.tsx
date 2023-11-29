@@ -1,13 +1,13 @@
 import React from 'react';
-// import BasicBaseLayout from '@/components/layout/basic-base-layout';
-// import { Facebook, Instagram } from 'lucide-react';
+import BasicBaseLayout from '@/components/layout/basic-base-layout';
+import { Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export const About = () => {
   return (
     <>
-      <section className="h-auto w-full bg-brand450 p-10">
+      {/* <section className="h-auto w-full bg-brand450 p-10">
         <div className="flex justify-around">
           <div>
             <h1 className="h-[46px] w-[592px] font-semibold">
@@ -42,8 +42,85 @@ export const About = () => {
             </h6>
           </div>
         </div>
+      </section> */}
+      <section className="h-[914px] w-full bg-brand450 pt-20">
+        <div className="flex justify-around pl-24">
+          <div className="h-[264px] w-[741px] text-lg">
+            <h2 className="text-center font-bold text-primary">
+              "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
+            </h2>
+            <p className="pt-5 font-semibold text-brand400">
+              {' '}
+              Бид хэдий чинээ эрт хамтран ажиллана, төдий чинээ эрт зөв тусыг
+              хэрэгтэй хүнд нь <br /> хүргэх, нийгмийн хэт туйлшрал, бэлэнчлэх
+              сэтгэлгээ, ядуурал, өвчлөлөөс хүн амыг <br /> хамгаалах боломжтой.{' '}
+              <br /> Иймд бид НҮТББ, хувь хүн, энэ төрлийн үйл ажиллагаа
+              явуулдаг олон улсын салбар <br /> байгууллага, дотоод, гадаад сайн
+              дурынхны зохион байгуулдаг хүмүүнлэг болон сайн <br /> үйлсийн
+              аян, төсөл, хөтөлбөрийг нэгтгэсэн Mонголын анхны ALL IN ONE олон
+              талт дэмжих <br /> системийг хайр түгээгч та бүхэндээ зориулан
+              хөгжүүлж байна. <br /> Уг сангийн одоогийн хувилбар нь эцсийн
+              хувилбар биш бөгөөд цаашид та бүхний саналын <br /> дагуу 4 талт
+              оролцогчдод давуу байдлаар тасралтгүй хөгжүүлсээр байх болно.
+            </p>
+          </div>
+          <div className="flex">
+            <img
+              src="/images/about/aboutIMG3.png"
+              alt="aboutIMG"
+              className="relative right-44 top-5 h-[192px] w-[197px] p-3"
+            />
+            <img
+              src="/images/about/aboutIMG4.png"
+              alt="aboutIMG"
+              className="relative right-40 top-20 h-[192px] w-[192px] p-3"
+            />
+          </div>
+        </div>
+        <div className="flex justify-around pl-10 pr-10 pt-16">
+          <div className="flex">
+            <img
+              src="/images/about/aboutIMG1.png"
+              alt="aboutIMG"
+              className="h-[197px] w-[209px]"
+            />
+            <img
+              src="/images/about/aboutIMG2.png"
+              alt="aboutIMG"
+              className="relative left-14 top-16 h-[240px] w-[238px] "
+            />
+          </div>
+          <div className="h-[306px] w-[726px] text-lg">
+            <h2 className="text-center font-bold text-primary">
+              "Сайхан ирээдүйг сайн хүн биш сайн хүмүүс бүтээдэг"
+            </h2>
+            <p className="pt-5 font-semibold text-brand400">
+              {' '}
+              Одоогийн хувилбар дээр Дэмжих тал санд байршсан дурын хөтөлбөрийг
+              дэмжсэнээр хүмүүнлэгийн модонд мөчир эзэмших ба тухайн модонд таны
+              дэмжсэн хөтөлбөрийн <br /> тоогоор навч ургах байдлаар нийгмийн
+              хариуцлагаа тодотгуулах түүхчилсэн самбар <br /> эзэмших болно.
+              Хамтрагч байгууллагын тухайд өөрийн нэр, логогоор төсөл хөтөлбөрөө
+              байршуулж, хандив босгох, өгөх, сургалт, арга хэмжээ зохион
+              байгуулахаас гадна <br /> сайн дурын ажилтнуудад хамтарсан
+              сертификат, дэмжигчдэдээ талархлын навч өгөх боломжтой. Харин сайн
+              дурын ажилчдадаа бид үнэ цэнэтэй сайн дурын ажилд хувь <br />{' '}
+              нэмрээ оруулах, олон төрлийн сургалт, лекц, арга хэмжээнд үнэ
+              төлбөргүй хамрагдах, <br />
+              бие даан хүмүүнлэгийн болон сургалтын арга хэмжээг санаачлан
+              зохион байгуулах, XP волунтурын 4 эрэмбэ ахин, үнэ цэнэтэй
+              хосолсон сертификаттай болох гэх мэт <br />
+              боломжуудыг олгохоор уг санг хөгжүүлж байна.
+            </p>
+          </div>
+        </div>
+        <div>
+          <h2 className="pt-24 text-center font-semibold  text-primary">
+            "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
+          </h2>
+        </div>
       </section>
-      <section className="h-[88vh]  bg-brand450 pt-16">
+      {/* <section className="h-[88vh]  bg-brand450 pt-16">
         <div className="flex justify-around">
           <div className="">
             <h2 className="pl-20 text-primary">
@@ -113,8 +190,8 @@ export const About = () => {
         <h2 className="pt-12 text-center font-semibold text-primary">
           "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
         </h2>
-      </section>
-      <section className="h-[1021px] w-full bg-[url('/images/media/firstBG.png')] bg-cover  p-16">
+      </section> */}
+      <section className="h-[1128px] w-full bg-[url('/images/media/firstBG.png')] bg-cover  p-16">
         <div className="">
           <h4 className="text-center text-3xl">
             Яагаад хураамж төлөх ёстой вэ?
@@ -130,22 +207,36 @@ export const About = () => {
             <div className="pb-16">
               <Link href="#">
                 <Button className="h-[56px] w-[360px] rounded-xl bg-brand450 text-xl  font-bold text-primary shadow-xl shadow-[#9DC3C6] hover:bg-brand450">
-                  Дэмжигч
+                  Хамтрагч
                 </Button>
               </Link>
             </div>
 
-            <div className="m-auto flex h-[305px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand750">
+            <div className="m-auto flex h-[706px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand750">
               <h5 className="relative bottom-11 text-2xl font-semibold text-brand750">
-                Free
+                Basic
               </h5>
               <span className="relative bottom-10 flex justify-center text-xl font-bold">
                 ₮0/<h2 className="pt-1.5 text-sm text-brand700">1 жил</h2>
               </span>
               <ul className="relative bottom-8 w-[254px] list-disc pl-16 text-start">
-                <li>Нэрийн хуудас(profile, page)</li>
+                <li>Нэрийн хуудас /Энгийн загвар/</li>
                 <li>Хандив өгөх</li>
-                <li>сургалт зохион байгуулах</li>
+                <li>Сертификат, тодорхойлолт авах /limited/</li>
+                <li>сургалт зохион байгуулах /limited/</li>
+                <li>Төсөл оруулах/limited/</li>
+                <li>Арга хэмжээ зохион байгуулах/limited/</li>
+                <li>Мэдээ оруулах/limited/</li>
+                <li>Сайн дурын ажилтан авах/limited/</li>
+                <div className="text-brand5">
+                  <li>Олон Улсын төсөл</li>
+                  <li>VOI CART</li>
+                  <li>Онцлох мэдээ</li>
+                  <li>Онцлох төсөл</li>
+                  <li>Banner хуудас</li>
+                  <li>Онцлох хамтрагч</li>
+                  <li>Үнэлгээ, сэтгэгдэл</li>
+                </div>
               </ul>
               <Link href="#">
                 <Button className="relative bottom-5 h-[39px] w-[240px] rounded-xl bg-primarySecond text-lg text-brand450  hover:bg-primarySecond">
@@ -158,27 +249,37 @@ export const About = () => {
             <div className="pb-16">
               <Link href="#">
                 <Button className="h-[56px] w-[360px] rounded-xl bg-brand900 text-xl  font-bold text-primary shadow-xl shadow-[#9DC3C6] hover:bg-brand900">
-                  Хамтрагч
+                  Дэмжигч
                 </Button>
               </Link>
             </div>
 
-            <div className="m-auto flex h-[405px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand800">
+            <div className="m-auto flex h-[706px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand800">
               <h5 className="relative bottom-11 text-2xl font-semibold text-brand800">
-                Free
+                Preimium
               </h5>
               <span className="relative bottom-10 flex justify-center text-xl font-bold">
                 ₮1'000'000/
                 <h2 className="pt-1.5 text-sm text-brand700">1 жил</h2>
               </span>
-              <ul className="relative bottom-8 w-[284px] list-disc pl-16 text-start">
-                <li>Нэрийн хуудас(profile, page)</li>
+              <ul className="relative bottom-8 w-[254px] list-disc pl-16 text-start">
+                <li>Нэрийн хуудас /Энгийн загвар/</li>
                 <li>Хандив өгөх</li>
-                <li>сургалт зохион байгуулах</li>
-                <li>Сертификат, тодорхойлолт авах</li>
-                <li>Шинэ төсөл оруулах</li>
-                <li>Арга хэмжээ зохион байгуулах</li>
-                <li>Мэдээ оруулах</li>
+                <li>Сертификат, тодорхойлолт авах /limited/</li>
+                <li>сургалт зохион байгуулах /limited/</li>
+                <li>Төсөл оруулах/limited/</li>
+                <li>Арга хэмжээ зохион байгуулах/limited/</li>
+                <li>Мэдээ оруулах/limited/</li>
+                <li>Сайн дурын ажилтан авах/limited/</li>
+                <div>
+                  <li>Олон Улсын төсөл</li>
+                  <li>VOI CART</li>
+                  <li>Онцлох мэдээ</li>
+                  <li>Онцлох төсөл</li>
+                  <li>Banner хуудас</li>
+                  <li>Онцлох хамтрагч</li>
+                  <li>Үнэлгээ, сэтгэгдэл</li>
+                </div>
               </ul>
               <Link href="#">
                 <Button className="relative bottom-5 h-[39px] w-[240px] rounded-xl bg-primarySecond text-lg text-brand450  hover:bg-primarySecond">
@@ -196,30 +297,22 @@ export const About = () => {
               </Link>
             </div>
 
-            <div className="m-auto flex h-[605px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand850">
-              <h5 className="relative bottom-11 text-2xl font-semibold text-brand850">
-                Free
+            <div className="m-auto flex h-[706px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand850">
+              <h5 className="relative  bottom-[90px] text-2xl font-semibold text-brand850">
+                Pro
               </h5>
-              <span className="relative bottom-10 flex justify-center text-xl font-bold">
-                ₮10'000'000/
-                <h2 className="pt-1.5 text-sm text-brand700">1 жил</h2>
+              <span className="relative bottom-28 flex justify-center text-xl font-bold">
+                On Processing
               </span>
-              <ul className="relative bottom-8 w-[263px] list-disc pl-16 text-start">
-                <li>Нэрийн хуудас(profile, page)</li>
-                <li>Хандив өгөх</li>
-                <li>сургалт зохион байгуулах</li>
-                <li>Сертификат, тодорхойлолт авах</li>
-                <li>Шинэ төсөл оруулах</li>
-                <li>Арга хэмжээ зохион байгуулах</li>
-                <li>Мэдээ оруулах</li>
-                <li>Олон улсын төсөл</li>
-                <li>Бэлгийн карт</li>
-                <li>VOI cart</li>
-                <li>Санд байршсан бүх арга хэмжээн дэмжигч болох</li>
-                <li>Banner хуудас</li>
+              <ul className="relative bottom-16 left-10  w-[263px] list-disc bg-[url('/images/about/womanBG.png')] object-cover pl-16 text-start">
+                <img
+                  src="/images/about/woman.png"
+                  alt="woman"
+                  className="h-[299px] w-[145px]"
+                />
               </ul>
               <Link href="#">
-                <Button className="relative bottom-5 h-[39px] w-[240px] rounded-xl bg-primarySecond text-lg text-brand450  hover:bg-primarySecond">
+                <Button className="relative bottom-0 h-[39px] w-[240px] rounded-xl bg-primarySecond text-lg text-brand450  hover:bg-primarySecond">
                   Гишүүн болох
                 </Button>
               </Link>
