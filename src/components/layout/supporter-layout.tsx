@@ -21,6 +21,7 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
     {
       title: 'Dashboard',
       href: '/s',
+      slug: '',
       icon: <LayoutDashboard className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -28,6 +29,7 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
     {
       title: 'Grant fundraising',
       href: '/s/manage/grant',
+      slug: 'manage',
       icon: <CalendarCheck className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -35,6 +37,7 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
     {
       title: 'Collabration',
       href: '/s/collaboration',
+      slug: 'collaboration',
       icon: <HeartHandshake className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -43,13 +46,15 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
     {
       title: 'Donations',
       href: '/s/donations',
+      slug: 'donations',
       icon: <Heart className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
     {
       title: 'Media',
-      href: '/s/purchases',
+      href: '/s/media',
+      slug: 'media',
       icon: <Newspaper className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -57,6 +62,7 @@ export default function SupporterLayout({ children }: SupporterLayoutProps) {
     {
       title: 'Settings',
       href: '/s/settings',
+      slug: 'settings',
       icon: <Settings className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',

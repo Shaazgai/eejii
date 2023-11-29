@@ -124,7 +124,7 @@ module.exports = {
         folderRightIMG: "url('/images/homie/folderRightIMG.png')",
         secondBG: "url('/images/media/secondBG.png')",
         firstBG: "url('/images/media/firstBG.png')",
-        womanBG:"url('/images/about/womanBG.png')",
+        womanBG: "url('/images/about/womanBG.png')",
       },
     },
   },

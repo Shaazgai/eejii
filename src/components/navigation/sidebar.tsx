@@ -1,7 +1,13 @@
 import { AlignLeft, AlignRight, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import type { Dispatch, ReactElement, SetStateAction } from 'react';
+import {
+  useEffect,
+  useState,
+  type Dispatch,
+  type ReactElement,
+  type SetStateAction,
+} from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -12,6 +18,7 @@ interface SidebarProps {
   icon: ReactElement;
   items: string[];
   external: string;
+  slug: string;
 }
 export default function Sidebar({
   sidebarNav,
@@ -22,7 +29,23 @@ export default function Sidebar({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { asPath } = useRouter();
+  const router = useRouter();
+  const [active, setActive] = useState('Dashboard');
+  useEffect(() => {
+    const currentPath = router.asPath.split('?')[0]?.split('/')[2];
+
+    console.log(currentPath);
+    const activeItem = sidebarNav.find(item => {
+      console.log(item.slug);
+      console.log(currentPath);
+      return item.slug === currentPath;
+    });
+    console.log(activeItem);
+
+    if (activeItem) {
+      setActive(activeItem.title);
+    }
+  }, [router.asPath]);
 
   return (
     <div
@@ -65,7 +88,7 @@ export default function Sidebar({
                 <span
                   className={cn(
                     `group flex w-full items-center gap-2 rounded-md border border-transparent px-2 py-2 hover:bg-muted`,
-                    asPath === item.href
+                    active == item.title
                       ? 'bg-primary font-medium text-popover'
                       : 'text-sidebar-foreground'
                   )}
