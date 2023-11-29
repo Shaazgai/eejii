@@ -1,6 +1,7 @@
-import { Button } from '@/components/ui/button';
-import { MoveUpRight } from 'lucide-react';
 import Link from 'next/link';
+import { MoveUpRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import React from 'react';
 
 export default function Banner() {
   return (

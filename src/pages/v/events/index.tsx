@@ -40,6 +40,12 @@ const Volunteer = () => {
         {/*   /> */}
         {/* )} */}
       </Shell>
+      <h1 className="h-[454px] w-full bg-primary">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis,
+        officiis perspiciatis cupiditate velit enim aperiam qui error voluptas,
+        voluptate fuga accusantium aliquid laudantium magni quo optio aliquam.
+        Dicta, repudiandae eligendi.
+      </h1>
     </VolunteerLayout>
   );
 };

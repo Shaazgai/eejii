@@ -1,6 +1,7 @@
 import React from 'react';
 // import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 import Image from 'next/image';
 import {
@@ -24,24 +25,24 @@ const components: {
     href: '/docs/primitives/alert-dialog',
   },
   {
-    title: 'Арга хэмжээ',
-    imagePath: '',
-    href: '/docs/primitives/hover-card',
-  },
-  {
-    title: 'Сайн дурын ажил',
-    imagePath: '/images/volunteer/volunteerIcon.png',
-    href: '/docs/primitives/progress',
-  },
-  {
     title: 'Дэмжигч',
     imagePath: '/images/supporter/supporterIcon.png',
     href: '/docs/primitives/scroll-area',
   },
   {
+    title: 'Арга хэмжээ',
+    imagePath: '/images/eventss/calendar.png',
+    href: '/docs/primitives/hover-card',
+  },
+  {
     title: 'Хамтрагч',
     imagePath: '/images/homie/chairity.png',
     href: '/docs/primitives/tabs',
+  },
+  {
+    title: 'Сайн дурын ажил',
+    imagePath: '/images/volunteer/volunteerIcon.png',
+    href: '/docs/primitives/progress',
   },
   {
     title: 'Сайн дурын ажилтан',
@@ -143,6 +144,16 @@ export default function PublicHeader() {
               >
                 Нэвтрэх
               </Link>
+            </li>
+            <li>
+              <Button className="h-[48px] w-[106px] rounded-sm">
+                <Link
+                  href="/#"
+                  className="block text-lg font-bold text-brand450"
+                >
+                  Donate
+                </Link>
+              </Button>
             </li>
           </ul>
         </div>
