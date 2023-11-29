@@ -13,7 +13,7 @@ export function LinkTabs({ tabs }: { tabs: Tab[] }) {
       className={cn('overflow-x-auto')}
       onValueChange={value => router.push(value)}
     >
-      <TabsList>
+      <TabsList defaultValue={tabs[0]?.href}>
         {tabs.map(tab => (
           <TabsTrigger
             key={tab.title}

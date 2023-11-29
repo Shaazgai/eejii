@@ -6,8 +6,7 @@ import SectionHeader from '@/components/common/section-header';
 import { LinkTabs } from '@/components/pagers/link-tabs';
 import { Button } from '@/components/ui/button';
 
-const ManageProjectsHeading = () => {
-  const router = useRouter();
+const Tabs = () => {
   const tabs = [
     {
       title: `Хандив өгөх төсөл`,
@@ -22,6 +21,22 @@ const ManageProjectsHeading = () => {
       href: '/p/manage/event',
     },
   ];
+  return (
+    <div className="flex justify-between">
+      <LinkTabs tabs={tabs} />
+      <Link
+        className="flex items-center gap-2 rounded-full border px-4 py-0 hover:bg-primary hover:text-white"
+        href={'/p/manage/requests'}
+      >
+        Manage request
+        <ArrowRight />
+      </Link>
+    </div>
+  );
+};
+
+const ManageProjectsHeading = () => {
+  const router = useRouter();
   return (
     <>
       <SectionHeader
@@ -41,16 +56,7 @@ const ManageProjectsHeading = () => {
           </Button>
         </div>
       </SectionHeader>
-      <div className="flex justify-between">
-        <LinkTabs tabs={tabs} />
-        <Link
-          className="flex items-center gap-2 rounded-full border px-4 py-0 hover:bg-primary hover:text-white"
-          href={'/p/manage/requests'}
-        >
-          Manage request
-          <ArrowRight />
-        </Link>
-      </div>
+      <Tabs />
     </>
   );
 };

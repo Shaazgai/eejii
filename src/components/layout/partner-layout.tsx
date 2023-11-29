@@ -21,6 +21,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     {
       title: 'Dashboard',
       href: '/p',
+      slug: '',
       icon: <LayoutDashboard className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -28,13 +29,15 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     {
       title: 'Manage Projects',
       href: '/p/manage',
+      slug: 'manage',
       icon: <CalendarCheck className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
     {
       title: 'Volunteers',
-      href: '/p/volunteers',
+      href: '/p/volunteering',
+      slug: 'volunteering',
       icon: <Users className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -42,6 +45,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     {
       title: 'Collaboration',
       href: '/p/collaboration',
+      slug: 'collaboration',
       icon: <HeartHandshake className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -49,6 +53,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     {
       title: 'Donations',
       href: '/p/donations',
+      slug: 'donations',
       icon: <Heart className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -56,6 +61,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     {
       title: 'Media',
       href: '/p/media',
+      slug: 'media',
       icon: <Newspaper className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -63,6 +69,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     {
       title: 'Settings',
       href: '/p/settings',
+      slug: 'settings',
       icon: <Settings className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',

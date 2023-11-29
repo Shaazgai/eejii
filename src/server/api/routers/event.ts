@@ -112,6 +112,10 @@ export const eventRouter = createTRPCRouter({
         'Event.requiredTime',
         'Event.roles',
         'Event.contact',
+        'Event.enabled',
+        'Event.ownerId',
+        'Event.createdAt',
+        'Event.status',
       ])
       .select(eb => [
         jsonArrayFrom(
