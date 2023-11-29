@@ -1,8 +1,5 @@
-import React from 'react';
-import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import { Facebook, Instagram } from 'lucide-react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export const About = () => {
   return (

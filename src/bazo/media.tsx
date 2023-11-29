@@ -1,12 +1,3 @@
-import React from 'react';
-import Link from 'next/link';
-import {
-  Facebook,
-  MoveUpRight,
-  Instagram,
-  ChevronDown,
-  CalendarHeart,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MoveUpRight } from 'lucide-react';
 import Link from 'next/link';
