@@ -97,7 +97,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
         </div>
         <div className={`grow  ${open ? 'sm:ms-[300px]' : 'ms-[80px]'} `}>
           <HeaderV2 open={open} headerNav={[]} />
-          <div className="bg-brand450 pt-20 pb-0">{children}</div>
+          <div className="bg-brand450 pb-0 pt-20">{children}</div>
         </div>
       </div>
     </div>
