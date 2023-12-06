@@ -1,7 +1,7 @@
 import { verify } from 'argon2';
-import type { GetServerSidePropsContext } from 'next/types';
 import { getServerSession, type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import type { GetServerSidePropsContext } from 'next/types';
 
 import { db } from '@/server/db';
 

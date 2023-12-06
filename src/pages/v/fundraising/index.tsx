@@ -24,9 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ProjectStatus } from '@/lib/db/enums';
 import type { FundWithOwner } from '@/lib/types';
 import { api } from '@/utils/api';
-import { ProjectStatus } from '@/lib/db/enums';
 
 const Donate = () => {
   const { data: categories, isFetching: isCategoryFetching } =

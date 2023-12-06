@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 
-import EventCard from '@/components/card/manage/event-card';
 import SectionHeader from '@/components/common/section-header';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { LinkTabs } from '@/components/pagers/link-tabs';
+import { EventCard } from '@/components/partner/event/card';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import type { Event } from '@/lib/db/types';
@@ -22,7 +22,7 @@ export default function Volunteers() {
     },
   ];
 
-  const { data: events, isLoading } = api.event.getMyEvents.useQuery();
+  const { data: events, isLoading } = api.event.getMyEvents.useQuery({});
 
   return (
     <PartnerLayout>
@@ -47,8 +47,8 @@ export default function Volunteers() {
         <LinkTabs tabs={tabs} />
       </Shell>
       {!isLoading && events
-        ? events.map(event => (
-            <EventCard event={event as unknown as Event} key={event.id} />
+        ? events.map((event, i) => (
+            <EventCard event={event as unknown as Event} key={i} />
           ))
         : '...Loading'}
     </PartnerLayout>

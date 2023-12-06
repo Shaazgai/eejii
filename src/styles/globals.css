@@ -9,7 +9,7 @@
 
     --sidebar: 0 0% 100%;
     --sidebar-foreground: 240 10% 3.9%;
-    
+
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
@@ -145,7 +145,6 @@
   right: 1.6rem; */
 /* } */
 
-
 .embla__dot {
   -webkit-appearance: none;
   background-color: transparent;
@@ -184,11 +183,10 @@
   width: 100%;
   height: 0.3rem;
   content: '';
-
 }
 
 .embla__dot--selected:after {
-  background: rgba(0, 0, 0, 1)
+  background: rgba(0, 0, 0, 1);
 }
 .ck-editor__editable {
   min-height: 200px;
