@@ -40,12 +40,12 @@ const ManageProjectsHeading = () => {
   return (
     <>
       <SectionHeader
-        src={'/images/placeholder.svg'}
+        src={'/images/projectss/projectBG.png'}
         variant="dark"
         className=""
       >
         <div className="flex w-full items-center justify-between pl-4 pr-7 pt-4">
-          <h2 className="text-3xl  font-semibold text-brand400">
+          <h2 className="text-3xl font-semibold text-brand400">
             Төсөл,хөтөлбөрүүд
           </h2>
           <Button
