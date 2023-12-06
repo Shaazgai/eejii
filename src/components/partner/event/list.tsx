@@ -7,16 +7,18 @@ export const EventListPrivate = ({
   events,
   isLoading,
 }: {
-  events: EventWithOwner[];
+  events: EventWithOwner[] | undefined;
   isLoading: boolean;
 }) => {
   return (
     <>
       {!isLoading ? (
         <SimpleGrid spacing={20}>
-          {events.map((item, i) => (
-            <EventCard key={i} event={item as unknown as Event} />
-          ))}
+          {events && events?.length > 0
+            ? events?.map((item, i) => (
+                <EventCard key={i} event={item as unknown as Event} />
+              ))
+            : 'No events'}
         </SimpleGrid>
       ) : (
         <SimpleGrid>

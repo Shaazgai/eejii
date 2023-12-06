@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import EventForm from '@/components/form/event-form';
 import FundraisingForm from '@/components/form/fundraising-form';
 import GrantFundraisingForm from '@/components/form/grant-fundraising-form';
@@ -8,10 +6,22 @@ import handleImageUpload from '@/lib/hooks/upload-image';
 import type { S3ParamType } from '@/lib/types';
 import type { eventSchema } from '@/lib/validation/event-schema';
 import type { fundraisingSchema } from '@/lib/validation/fundraising-schema';
+import tabsClasses from '@/styles/Tabs.module.css';
 import { api } from '@/utils/api';
-import { Container, Tabs } from '@mantine/core';
+import {
+  ActionIcon,
+  Container,
+  Flex,
+  Paper,
+  Space,
+  Tabs,
+  Title,
+} from '@mantine/core';
 import type { FileWithPath } from '@mantine/dropzone';
+import { IconArrowLeft } from '@tabler/icons-react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import type { z } from 'zod';
 
 const NewEvent = () => {
@@ -136,7 +146,13 @@ export default function NewProject() {
   return (
     <PartnerLayout>
       <Container fluid p={'xl'}>
-        <Tabs defaultValue="fundraising">
+        <Tabs
+          defaultValue="fundraising"
+          classNames={{
+            list: tabsClasses.list,
+            tab: tabsClasses.tab,
+          }}
+        >
           <Tabs.List defaultValue={'fundraising'}>
             <Tabs.Tab value="fundraising" onClick={() => setActiveIndex(0)}>
               Fundraising
@@ -152,6 +168,26 @@ export default function NewProject() {
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>
+        <Space h={'lg'} />
+        <Paper withBorder p={20} radius={'md'}>
+          <Flex justify={'start'} align={'center'} gap={20}>
+            <ActionIcon
+              component={Link}
+              href={'/p/manage'}
+              radius={'xl'}
+              size={'lg'}
+              variant="light"
+            >
+              <IconArrowLeft />
+            </ActionIcon>
+            <Title order={2}>
+              {activeIndex == 0 && 'Fundraising'}
+              {activeIndex == 1 && 'Grant fundraising'}
+              {activeIndex == 2 && 'Event'}
+            </Title>
+          </Flex>
+        </Paper>
+        <Space h={'lg'} />
         {activeIndex == 0 && <NewFundraising />}
         {activeIndex == 1 && <NewGrantFundraising />}
         {activeIndex == 2 && <NewEvent />}

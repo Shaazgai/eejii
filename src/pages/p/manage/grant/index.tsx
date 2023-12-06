@@ -1,7 +1,8 @@
 import PartnerLayout from '@/components/layout/partner-layout';
 import { GrantFundraisingListPrivate } from '@/components/partner/grant-fundraising/list';
-import type { ProjectStatus } from '@/lib/db/enums';
+import { ProjectStatus } from '@/lib/db/enums';
 import segmentClasses from '@/styles/SegmentedControl.module.css';
+import tabsClasses from '@/styles/Tabs.module.css';
 import { api } from '@/utils/api';
 import {
   BackgroundImage,
@@ -14,7 +15,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconArrowRight, IconPlus } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -53,7 +54,13 @@ export default function ManageProjects() {
           </Flex>
         </BackgroundImage>
         <Space h={'md'} />
-        <Tabs defaultValue="grant_fundraising">
+        <Tabs
+          defaultValue="grant_fundraising"
+          classNames={{
+            list: tabsClasses.list,
+            tab: tabsClasses.tab,
+          }}
+        >
           <Tabs.List>
             <Tabs.Tab
               value="fundraising"
@@ -67,13 +74,6 @@ export default function ManageProjects() {
               onClick={() => router.push('/p/manage/event')}
             >
               Event
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="explore"
-              ml="auto"
-              rightSection={<IconArrowRight />}
-            >
-              Explore
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>
@@ -91,6 +91,14 @@ export default function ManageProjects() {
               borderBottom: '1px solid var(--mantine-color-gray-3)',
             },
           }}
+          onChange={e => {
+            e.preventDefault();
+            const value = e.currentTarget.value;
+            router.push({
+              pathname: router.pathname,
+              query: { ...router.query, name: value },
+            });
+          }}
         />
 
         <Space h={'lg'} />
@@ -100,7 +108,19 @@ export default function ManageProjects() {
           }}
           color="white"
           fw={700}
-          data={['React', 'Angular', 'Vue', 'Svelte']}
+          data={[
+            ProjectStatus.APPROVED,
+            ProjectStatus.PENDING,
+            ProjectStatus.DONE,
+            ProjectStatus.DENIED,
+          ]}
+          defaultValue={status as string}
+          onChange={value => {
+            router.push({
+              pathname: router.pathname,
+              query: { ...router.query, status: value },
+            });
+          }}
           styles={{
             root: {
               background: 'none',
@@ -115,14 +135,10 @@ export default function ManageProjects() {
         />
 
         <Space h={'lg'} />
-        {grantFundraisings ? (
-          <GrantFundraisingListPrivate
-            grantFundraisings={grantFundraisings}
-            isLoading={isLoading}
-          />
-        ) : (
-          <Text>No grant fundraisings</Text>
-        )}
+        <GrantFundraisingListPrivate
+          grantFundraisings={grantFundraisings}
+          isLoading={isLoading}
+        />
       </Container>
     </PartnerLayout>
   );

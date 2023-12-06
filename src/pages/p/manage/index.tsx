@@ -1,6 +1,7 @@
 import PartnerLayout from '@/components/layout/partner-layout';
 import { FundraisingListPrivate } from '@/components/partner/fundraising/list';
 import segmentClasses from '@/styles/SegmentedControl.module.css';
+import tabsClasses from '@/styles/Tabs.module.css';
 
 import { ProjectStatus } from '@/lib/db/enums';
 import { api } from '@/utils/api';
@@ -15,7 +16,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconArrowRight, IconPlus } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -55,7 +56,13 @@ export default function ManageProjects() {
           </Flex>
         </BackgroundImage>
         <Space h={'md'} />
-        <Tabs defaultValue="fundraising">
+        <Tabs
+          defaultValue="fundraising"
+          classNames={{
+            list: tabsClasses.list,
+            tab: tabsClasses.tab,
+          }}
+        >
           <Tabs.List>
             <Tabs.Tab value="fundraising">Fundraising</Tabs.Tab>
             <Tabs.Tab
@@ -69,13 +76,6 @@ export default function ManageProjects() {
               onClick={() => router.push('/p/manage/event')}
             >
               Event
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="explore"
-              ml="auto"
-              rightSection={<IconArrowRight />}
-            >
-              Explore
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>
@@ -116,6 +116,7 @@ export default function ManageProjects() {
             ProjectStatus.DONE,
             ProjectStatus.DENIED,
           ]}
+          defaultValue={status as string}
           onChange={value => {
             router.push({
               pathname: router.pathname,
@@ -134,14 +135,11 @@ export default function ManageProjects() {
             },
           }}
         />
-        {fundraisings ? (
-          <FundraisingListPrivate
-            fundraisings={fundraisings}
-            isLoading={isFundraisingLoading}
-          />
-        ) : (
-          <Text>No fundraising</Text>
-        )}
+        <Space h={'lg'} />
+        <FundraisingListPrivate
+          fundraisings={fundraisings}
+          isLoading={isFundraisingLoading}
+        />
       </Container>
     </PartnerLayout>
   );
