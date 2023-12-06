@@ -9,7 +9,12 @@ export default function NewProject() {
         {/* <div className="flex justify-between"> */}
         {/*   <h2>New project</h2> */}
         {/* </div> */}
-        <GrantFundraisingForm data={undefined} />
+        <GrantFundraisingForm
+          data={undefined}
+          handleSubmit={() => {}}
+          isPending={true}
+          setFiles={() => {}}
+        />
       </Shell>
     </SupporterLayout>
   );

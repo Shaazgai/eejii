@@ -1,17 +1,33 @@
 import { z } from 'zod';
 
-import { createTRPCRouter, publicProcedure } from '../trpc';
+import { categorySchema } from '@/lib/validation/category.schema';
+import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const categoryRouter = createTRPCRouter({
   getAll: publicProcedure
-    .input(z.object({ type: z.string() }))
+    .input(z.object({ type: z.string().nullish(), name: z.string().nullish() }))
     .query(async opts => {
-      const category = await opts.ctx.db
-        .selectFrom('Category')
-        .selectAll()
-        .where('type', '=', opts.input.type)
-        .execute();
+      const query = opts.ctx.db.selectFrom('Category').selectAll();
 
+      if (opts.input.type) {
+        query.where('Category.type', '=', opts.input.type);
+      }
+      if (opts.input.name) {
+        query.where('Category.name', '=', opts.input.name);
+      }
+
+      const category = await query.execute();
       return category;
+    }),
+  create: privateProcedure
+    .input(categorySchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .insertInto('Category')
+        .values({
+          name: input.name,
+          type: input.type,
+        })
+        .executeTakeFirstOrThrow();
     }),
 });

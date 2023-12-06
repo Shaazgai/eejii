@@ -20,7 +20,7 @@ export default function FundCardPublic({
       : null;
   return (
     <Link href={`/${isVolunteer ? 'v/' : ''}fundraising/${fund.id}`}>
-      <div className="md:w-70 flex w-full flex-col  rounded-xl border ">
+      <div className="md:w-70 flex w-full flex-col rounded-xl  border bg-brand450 ">
         <div
           aria-label="Product Placeholder"
           role="img"

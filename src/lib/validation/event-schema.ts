@@ -34,17 +34,16 @@ export const eventSchema = z.object({
   startTime: z.date(),
   endTime: z.date(),
   requiredTime: z.string(),
-  roles: z
-    .array(
-      z.object({
-        name: z.string(),
-        number: z.string(),
-      })
-    )
-    .nullish(),
+  roles: z.object({
+    skills: z.string(),
+    duties: z.string(),
+    number: z.string(),
+  }),
   contact: z.object({
     phone: z.string().regex(phoneRegex).length(8),
     email: z.string().email(),
   }),
+  categories: z.array(z.string().nullable()),
+
   // image: z.string(),
 });

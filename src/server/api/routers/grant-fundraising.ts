@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { sql } from 'kysely';
-import { jsonObjectFrom } from 'kysely/helpers/postgres';
+import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
@@ -95,22 +95,84 @@ export const grantFundraisingRouter = createTRPCRouter({
       };
       return response;
     }),
-  getMyGrants: privateProcedure.query(async ({ ctx }) => {
-    const grants = await ctx.db
-      .selectFrom('GrantFundraising')
-      .selectAll()
-      .where('ownerId', '=', ctx.userId)
-      .execute();
+  getMyGrants: privateProcedure
+    .input(
+      z.object({ name: z.string().nullish(), status: z.string().nullish() })
+    )
+    .query(async ({ ctx, input }) => {
+      let query = ctx.db
+        .selectFrom('GrantFundraising')
+        .select([
+          'GrantFundraising.id',
+          'GrantFundraising.title',
+          'GrantFundraising.description',
+          'GrantFundraising.currentAmount',
+          'GrantFundraising.goalAmount',
+          'GrantFundraising.contact',
+          'GrantFundraising.location',
+          'GrantFundraising.startTime',
+          'GrantFundraising.endTime',
+          'GrantFundraising.createdAt',
+        ])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('GrantImage')
+              .selectAll()
+              .whereRef('GrantFundraising.id', '=', 'GrantImage.ownerId')
+          ).as('Images'),
+        ])
+        .where('ownerId', '=', ctx.userId);
+      if (input.name) {
+        query = query.where(
+          'GrantFundraising.title',
+          'like',
+          '%' + input.name + '%'
+        );
+      }
+      if (input.status) {
+        query = query.where(
+          'GrantFundraising.status',
+          '=',
+          input.status as ProjectStatus
+        );
+      }
+      const grants = await query.execute();
 
-    return grants;
-  }),
+      return grants as unknown as GrantFundWithOwner[];
+    }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const grantFundraising = await ctx.db
         .selectFrom('GrantFundraising')
         .where('id', '=', input.id)
-        .selectAll()
+        .select([
+          'GrantFundraising.id',
+          'GrantFundraising.title',
+          'GrantFundraising.description',
+          'GrantFundraising.currentAmount',
+          'GrantFundraising.goalAmount',
+          'GrantFundraising.contact',
+          'GrantFundraising.location',
+          'GrantFundraising.startTime',
+          'GrantFundraising.endTime',
+          'GrantFundraising.createdAt',
+        ])
+        .select(eb => [
+          jsonObjectFrom(
+            eb
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'GrantFundraising.ownerId')
+          ).as('Owner'),
+          jsonArrayFrom(
+            eb
+              .selectFrom('GrantImage')
+              .selectAll()
+              .whereRef('GrantFundraising.id', '=', 'GrantImage.ownerId')
+          ).as('Images'),
+        ])
         .executeTakeFirstOrThrow();
       return grantFundraising;
     }),

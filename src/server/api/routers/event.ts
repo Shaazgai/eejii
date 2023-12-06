@@ -99,45 +99,81 @@ export const eventRouter = createTRPCRouter({
       };
       return response;
     }),
-  getMyEvents: privateProcedure.query(async ({ ctx }) => {
-    const events = await ctx.db
-      .selectFrom('Event')
-      .select([
-        'Event.id',
-        'Event.title',
-        'Event.description',
-        'Event.location',
-        'Event.startTime',
-        'Event.endTime',
-        'Event.requiredTime',
-        'Event.roles',
-        'Event.contact',
-        'Event.enabled',
-        'Event.ownerId',
-        'Event.createdAt',
-        'Event.status',
-      ])
-      .select(eb => [
-        jsonArrayFrom(
-          eb
-            .selectFrom('EventImage')
-            .selectAll()
-            .whereRef('Event.id', '=', 'EventImage.ownerId')
-        ).as('Images'),
-      ])
-      .where('ownerId', '=', ctx.userId)
-      .execute();
+  getMyEvents: privateProcedure
+    .input(
+      z.object({ name: z.string().nullish(), status: z.string().nullish() })
+    )
+    .query(async ({ ctx, input }) => {
+      let query = ctx.db
+        .selectFrom('Event')
+        .select([
+          'Event.id',
+          'Event.title',
+          'Event.description',
+          'Event.location',
+          'Event.startTime',
+          'Event.endTime',
+          'Event.requiredTime',
+          'Event.roles',
+          'Event.contact',
+          'Event.enabled',
+          'Event.ownerId',
+          'Event.createdAt',
+          'Event.status',
+        ])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('EventImage')
+              .selectAll()
+              .whereRef('Event.id', '=', 'EventImage.ownerId')
+          ).as('Images'),
+        ])
+        .where('ownerId', '=', ctx.userId);
+      if (input.name) {
+        query = query.where('Event.title', 'like', '%' + input.name + '%');
+      }
+      if (input.status) {
+        query = query.where('Event.status', '=', input.status as ProjectStatus);
+      }
+      const events = await query.execute();
 
-    return events;
-  }),
+      return events as unknown as EventWithOwner[];
+    }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const event = await ctx.db
         .selectFrom('Event')
-        .selectAll()
+        .select([
+          'Event.id',
+          'Event.title',
+          'Event.description',
+          'Event.location',
+          'Event.startTime',
+          'Event.endTime',
+          'Event.requiredTime',
+          'Event.roles',
+          'Event.contact',
+          'Event.enabled',
+          'Event.ownerId',
+          'Event.createdAt',
+          'Event.status',
+        ])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('Category')
+              .selectAll()
+              .leftJoin('CategoryEvent', join =>
+                join.onRef('CategoryEvent.eventId', '=', 'Event.id')
+              )
+              .whereRef('CategoryEvent.categoryId', '=', 'Category.id')
+          ).as('Categories'),
+        ])
         .where('Event.id', '=', input.id)
-        .execute();
+        .executeTakeFirstOrThrow();
+
       return event as unknown as EventWithOwner;
     }),
   getMyCollaborated: privateProcedure.query(async ({ ctx }) => {
@@ -241,32 +277,52 @@ export const eventRouter = createTRPCRouter({
   update: privateProcedure
     .input(eventSchema)
     .mutation(async ({ input, ctx }) => {
-      if (!input.id) {
-        throw new TRPCError({
-          message: 'Not enough parameter',
-          code: 'BAD_REQUEST',
-        });
-      }
-      const event = await ctx.db
-        .updateTable('Event')
-        .where('id', '=', input.id)
-        .set({
-          title: input.title,
-          description: input.description,
-          requiredTime: input.requiredTime,
-          contact: {
-            phone: input.contact.phone,
-            email: input.contact.email,
-          },
-          location: input.location,
-          startTime: input.startTime,
-          endTime: input.endTime,
-          roles: Object.assign({}, input.roles),
-          ownerId: ctx.userId,
-        })
-        .returning(['id'])
-        .executeTakeFirstOrThrow();
-      return event;
+      const transaction = await ctx.db.transaction().execute(async trx => {
+        if (!input.id) {
+          throw new TRPCError({
+            message: 'Not enough parameter',
+            code: 'BAD_REQUEST',
+          });
+        }
+        const event = await trx
+          .updateTable('Event')
+          .where('id', '=', input.id)
+          .set({
+            title: input.title,
+            description: input.description,
+            requiredTime: input.requiredTime,
+            contact: {
+              phone: input.contact.phone,
+              email: input.contact.email,
+            },
+            location: input.location,
+            startTime: input.startTime,
+            endTime: input.endTime,
+            roles: Object.assign({}, input.roles),
+            ownerId: ctx.userId,
+          })
+          .returning(['id'])
+          .executeTakeFirstOrThrow();
+        console.log(input.categories);
+        if (input.categories) {
+          console.log(input.categories);
+          await trx
+            .deleteFrom('CategoryEvent')
+            .where('CategoryEvent.eventId', '=', event.id)
+            .execute();
+          input.categories.map(c => {
+            trx
+              .insertInto('CategoryEvent')
+              .values({
+                eventId: event.id,
+                categoryId: c,
+              })
+              .execute();
+          });
+        }
+        return event;
+      });
+      return transaction;
     }),
 
   createPresignedUrl: privateProcedure

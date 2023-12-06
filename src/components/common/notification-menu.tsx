@@ -1,4 +1,5 @@
 import { api } from '@/utils/api';
+import { Indicator } from '@mantine/core';
 import { formatDistance } from 'date-fns';
 import { Bell } from 'lucide-react';
 import Link from 'next/link';
@@ -24,13 +25,23 @@ const NotificationMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className=" relative flex h-[40px] w-[40px] items-center justify-center gap-2 rounded-full bg-zinc-100 p-2 hover:bg-zinc-200 focus:outline-none">
-        <Bell size={24} />
-        {notifications &&
+        <Indicator
+          inline
+          size={20}
+          offset={-5}
+          position="bottom-end"
+          color="red"
+          withBorder
+          label={notifications?.filter(n => n.status === 'new')?.length}
+        >
+          <Bell size={24} />
+        </Indicator>
+        {/* {notifications &&
           notifications?.filter(n => n.status === 'new')?.length > 0 && (
             <span className="absolute right-2 top-0 flex translate-x-1/2 rounded-full bg-red-400 px-2 text-sm font-bold text-red-50">
               {notifications?.filter(n => n.status === 'new')?.length}
             </span>
-          )}
+          )} */}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-96">
         <DropdownMenuLabel>My notifications</DropdownMenuLabel>

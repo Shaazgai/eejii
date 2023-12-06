@@ -36,6 +36,15 @@ export type VolunteerTableProps = {
 
 export type EventWithOwner = Event & {
   Owner: User;
+  Categories: [
+    {
+      id: string;
+      name: string;
+      type: string;
+      eventId: string;
+      categoryId: string;
+    }
+  ];
   Images: EventImage[];
 };
 
@@ -83,7 +92,8 @@ export type PaymentDetails = {
 };
 
 export type EventRole = {
-  name: string;
+  skills: string;
+  duties: string;
   number: string;
 };
 

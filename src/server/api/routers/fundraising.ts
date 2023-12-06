@@ -119,40 +119,70 @@ export const fundraisingRouter = createTRPCRouter({
       };
       return response;
     }),
-  getMyFunds: privateProcedure.query(async ({ ctx }) => {
-    const fundraisings = await ctx.db
-      .selectFrom('Fundraising')
-      .select([
-        'Fundraising.id',
-        'Fundraising.title',
-        'Fundraising.description',
-        'Fundraising.currentAmount',
-        'Fundraising.goalAmount',
-        'Fundraising.contact',
-        'Fundraising.location',
-        'Fundraising.startTime',
-        'Fundraising.endTime',
-        'Fundraising.createdAt',
-      ])
-      .select(eb => [
-        jsonArrayFrom(
-          eb
-            .selectFrom('FundImage')
-            .selectAll()
-            .whereRef('Fundraising.id', '=', 'FundImage.ownerId')
-        ).as('Images'),
-      ])
-      .where('ownerId', '=', ctx.userId)
-      .execute();
+  getMyFunds: privateProcedure
+    .input(
+      z.object({
+        name: z.string().nullish(),
+        status: z
+          .enum([
+            ProjectStatus.APPROVED,
+            ProjectStatus.DENIED,
+            ProjectStatus.DONE,
+            ProjectStatus.PENDING,
+          ])
+          .nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      let query = ctx.db
+        .selectFrom('Fundraising')
+        .select([
+          'Fundraising.id',
+          'Fundraising.title',
+          'Fundraising.description',
+          'Fundraising.currentAmount',
+          'Fundraising.goalAmount',
+          'Fundraising.contact',
+          'Fundraising.location',
+          'Fundraising.startTime',
+          'Fundraising.endTime',
+          'Fundraising.createdAt',
+          'Fundraising.ownerId',
+          'Fundraising.status',
+          'Fundraising.enabled',
+        ])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('FundImage')
+              .selectAll()
+              .whereRef('Fundraising.id', '=', 'FundImage.ownerId')
+          ).as('Images'),
+        ])
+        .where('ownerId', '=', ctx.userId);
+      if (input.name) {
+        query = query.where(
+          'Fundraising.title',
+          'like',
+          '%' + input.name + '%'
+        );
+      }
+      if (input.status) {
+        query = query.where(
+          'Fundraising.status',
+          '=',
+          input.status as ProjectStatus
+        );
+      }
+      const fundraisings = await query.execute();
 
-    return fundraisings;
-  }),
+      return fundraisings as unknown as FundWithOwner[];
+    }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const fundraising = await ctx.db
         .selectFrom('Fundraising')
-        .where('id', '=', input.id)
         .select([
           'Fundraising.id',
           'Fundraising.title',
@@ -179,6 +209,7 @@ export const fundraisingRouter = createTRPCRouter({
               .whereRef('Fundraising.id', '=', 'FundImage.ownerId')
           ).as('Images'),
         ])
+        .where('Fundraising.id', '=', input.id)
         .executeTakeFirstOrThrow();
       return fundraising;
     }),

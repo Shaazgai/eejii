@@ -6,6 +6,7 @@ import {
   Home,
   LayoutGrid,
   PartyPopper,
+  Tag,
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -59,6 +60,12 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       title: 'Grant Fundraisings',
       href: '/admin/grant-fundraisings',
       icon: <Anchor />,
+      items: [],
+    },
+    {
+      title: 'Category',
+      href: '/admin/category',
+      icon: <Tag />,
       items: [],
     },
   ];

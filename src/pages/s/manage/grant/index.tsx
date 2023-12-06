@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import GrantCard from '@/components/card/manage/grant-card';
+import GrantCard from '@/components/card/grant-card';
 import SectionHeader from '@/components/common/section-header';
 import SupporterLayout from '@/components/layout/supporter-layout';
 import { Shell } from '@/components/shells/shell';
@@ -13,8 +13,9 @@ import { api } from '@/utils/api';
 export default function ManageProjects() {
   const router = useRouter();
 
-  const { data: grantFundraising } =
-    api.grantFundraising.getMyGrants.useQuery();
+  const { data: grantFundraising } = api.grantFundraising.getMyGrants.useQuery(
+    {}
+  );
 
   return (
     <SupporterLayout>
