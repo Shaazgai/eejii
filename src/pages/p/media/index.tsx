@@ -9,10 +9,12 @@ export default function Media() {
 
   return (
     <PartnerLayout>
-      <Shell variant="sidebar" className="px-10">
-        <div className="flex justify-between">
-          <h2>manage-projects</h2>
-          <Button onClick={() => router.push('manage/new')}>Add</Button>
+      <Shell variant="sidebar" className="bg-brand1000 px-10">
+        <div className="flex h-[264px] justify-between bg-[url('/images/media/mediaBG.png')] p-7">
+          <h2 className="font-bold text-3xl">Мэдээ</h2>
+          <Button onClick={() => router.push('manage/new')} className="w-[133px] h-[34px]">
+            Мэдээ оруулах
+          </Button>
         </div>
       </Shell>
     </PartnerLayout>

@@ -72,6 +72,7 @@ module.exports = {
         brand850: '#da5627',
         brand900: '#d7dcce',
         brand950: '#9cc865',
+        brand1000: '#fefaf4',
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
@@ -125,6 +126,10 @@ module.exports = {
         secondBG: "url('/images/media/secondBG.png')",
         firstBG: "url('/images/media/firstBG.png')",
         womanBG: "url('/images/about/womanBG.png')",
+        mediaBG: "url('/images/media/mediaBG.png')",
+        projectBG: "url('/images/projectss/projectBG.png')",
+        volunteerBG: "url('/images/volunteer/volunteerBG.png')",
+        donationBG: "url('/images/donation/donationBG.png')",
       },
     },
   },
