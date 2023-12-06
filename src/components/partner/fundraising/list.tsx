@@ -7,24 +7,26 @@ export const FundraisingListPrivate = ({
   fundraisings,
   isLoading,
 }: {
-  fundraisings: FundWithOwner[];
+  fundraisings: FundWithOwner[] | undefined;
   isLoading: boolean;
 }) => {
   return (
     <>
       {!isLoading ? (
         <SimpleGrid spacing={20}>
-          {fundraisings.map((item, i) => (
-            <FundraisingCard
-              key={i}
-              fundraising={item as unknown as Fundraising}
-            />
-          ))}
+          {fundraisings && fundraisings.length > 0
+            ? fundraisings?.map((item, i) => (
+                <FundraisingCard
+                  key={i}
+                  fundraising={item as unknown as Fundraising}
+                />
+              ))
+            : 'No fundraisings'}
         </SimpleGrid>
       ) : (
         <SimpleGrid>
           {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} height={40} />
+            <Skeleton key={i} height={100} />
           ))}
         </SimpleGrid>
       )}

@@ -1,5 +1,4 @@
-import { AlignLeft, AlignRight, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
+import { AlignLeft, AlignRight } from 'lucide-react';
 import { useRouter } from 'next/router';
 import {
   useEffect,
@@ -9,8 +8,7 @@ import {
   type SetStateAction,
 } from 'react';
 
-import { cn } from '@/lib/utils';
-
+import { NavLink } from '@mantine/core';
 import { Button } from '../ui/button';
 interface SidebarProps {
   title: string;
@@ -34,13 +32,11 @@ export default function Sidebar({
   useEffect(() => {
     const currentPath = router.asPath.split('?')[0]?.split('/')[2];
 
-    console.log(currentPath);
     const activeItem = sidebarNav.find(item => {
       console.log(item.slug);
       console.log(currentPath);
       return item.slug === currentPath;
     });
-    console.log(activeItem);
 
     if (activeItem) {
       setActive(activeItem.title);
@@ -79,26 +75,34 @@ export default function Sidebar({
         {sidebarNav &&
           sidebarNav?.map((item, index) => {
             return item.href ? (
-              <Link
-                key={index}
+              <NavLink
+                label={item.title}
                 href={item.href}
-                target={item.external ? '_blank  ' : ''}
-                rel={item.external ? 'noreferrer' : ''}
-              >
-                <span
-                  className={cn(
-                    `group flex w-full items-center gap-2 rounded-md border border-transparent px-2 py-2 hover:bg-muted`,
-                    active == item.title
-                      ? 'bg-primary font-medium text-popover'
-                      : 'text-sidebar-foreground'
-                  )}
-                >
-                  {/* <Icon className="mr-2 h-4 w-4" aria-hidden="true" /> */}
-                  {item.icon ?? <ChevronRight className="mr-2 h-10 w-10" />}
-                  {open && <span>{item.title}</span>}
-                </span>
-              </Link>
+                active={active == item.title}
+                p={10}
+                key={index}
+                leftSection={item.icon}
+              />
             ) : (
+              // <Link
+              //   key={index}
+              //   href={item.href}
+              //   target={item.external ? '_blank  ' : ''}
+              //   rel={item.external ? 'noreferrer' : ''}
+              // >
+              //   <span
+              //     className={cn(
+              //       `group flex w-full items-center gap-2 rounded-md border border-transparent px-2 py-2 hover:bg-muted`,
+              //       active == item.title
+              //         ? 'bg-primary font-medium text-popover'
+              //         : 'text-sidebar-foreground'
+              //     )}
+              //   >
+              //     {/* <Icon className="mr-2 h-4 w-4" aria-hidden="true" /> */}
+              //     {item.icon ?? <ChevronRight className="mr-2 h-10 w-10" />}
+              //     {open && <span>{item.title}</span>}
+              //   </span>
+              // </Link>
               <span
                 key={index}
                 className="flex w-full cursor-not-allowed items-center rounded-md p-2 text-gray-100 hover:underline"

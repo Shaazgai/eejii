@@ -7,19 +7,21 @@ export const GrantFundraisingListPrivate = ({
   grantFundraisings,
   isLoading,
 }: {
-  grantFundraisings: GrantFundWithOwner[];
+  grantFundraisings: GrantFundWithOwner[] | undefined;
   isLoading: boolean;
 }) => {
   return (
     <>
       {!isLoading ? (
         <SimpleGrid spacing={20}>
-          {grantFundraisings.map((item, i) => (
-            <GrantFundraisingCard
-              key={i}
-              grantFundraising={item as unknown as GrantFundraising}
-            />
-          ))}
+          {grantFundraisings && grantFundraisings.length > 0
+            ? grantFundraisings?.map((item, i) => (
+                <GrantFundraisingCard
+                  key={i}
+                  grantFundraising={item as unknown as GrantFundraising}
+                />
+              ))
+            : 'No grant fundraisings'}
         </SimpleGrid>
       ) : (
         <SimpleGrid>
