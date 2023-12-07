@@ -5,12 +5,12 @@ import { ArrowUpDown, CheckCheck, XIcon } from 'lucide-react';
 import type { User } from '@/lib/db/types';
 
 // import type { User } from '@/lib/types';
+import { RequestType } from '@/lib/db/enums';
+import { api } from '@/utils/api';
+import type { Dispatch, SetStateAction } from 'react';
 import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
 import { DataTablePagination } from '../table-pagination';
-import type { Dispatch, SetStateAction } from 'react';
-import { RequestType } from '@/lib/db/enums';
-import { api } from '@/utils/api';
 
 const SupporterTable = ({
   data,
@@ -93,7 +93,7 @@ const SupporterTable = ({
       accessorKey: 'id',
       header: 'Action',
       cell: ({ row }) => {
-        const context = api.useContext();
+        const context = api.useUtils();
         const { mutate, isLoading } = api.user.changeStatus.useMutation({
           onSuccess: _ => {
             context.supporter.findAll.invalidate();

@@ -23,12 +23,12 @@ import { FormStep } from './form-stepper';
 
 const GrantFundraisingForm = ({
   data,
-  isPending,
+  isLoading,
   handleSubmit,
   setFiles,
 }: {
   data: z.infer<typeof fundraisingSchema> | undefined;
-  isPending: boolean;
+  isLoading: boolean;
   handleSubmit: (values: z.infer<typeof fundraisingSchema>) => void;
   setFiles: (files: FileWithPath[]) => void;
 }) => {
@@ -200,7 +200,7 @@ const GrantFundraisingForm = ({
                 ТОХИОЛДОЛД ХҮЛЭЭЛГИЙН ГОРИМД ОРЖ НИЙТЛЭГДЭНЭ.
               </Text>
               <div className="flex gap-4 pt-4">
-                <Button type="submit" loading={isPending}>
+                <Button type="submit" loading={isLoading}>
                   Submit
                 </Button>
                 <Button>Cancel</Button>

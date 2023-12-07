@@ -60,7 +60,7 @@ const EditEvent = () => {
         {!isLoading && data ? (
           <EventForm
             data={data}
-            isPending={isPending}
+            isLoading={isPending}
             handleSubmit={handleSubmit}
             setFiles={setFiles}
           />

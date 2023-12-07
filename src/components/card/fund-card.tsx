@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 import type { FundWithOwner } from '@/lib/types';
 
+import { IconPlaceholder } from '@tabler/icons-react';
 import { FallbackImage } from '../common/fallback-image';
-import { Icons } from '../icons';
 
 export default function FundCardPublic({
   fund,
@@ -38,10 +38,7 @@ export default function FundCardPublic({
           <h2 className="font-bold">{fund?.title}</h2>
           <div className="my-4 flex items-center rounded-full border text-sm">
             <div className="mr-2 flex h-full items-center rounded-full bg-slate-400 p-2">
-              <Icons.placeholder
-                className="h-4 w-4 text-muted-foreground"
-                aria-hidden="true"
-              />
+              <IconPlaceholder />
             </div>
             Project name
           </div>

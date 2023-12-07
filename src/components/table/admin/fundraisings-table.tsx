@@ -6,12 +6,12 @@ import Link from 'next/link';
 import type { User } from '@/lib/db/types';
 import type { FundWithOwner } from '@/lib/types';
 
+import { ProjectStatus } from '@/lib/db/enums';
+import { api } from '@/utils/api';
+import type { Dispatch, SetStateAction } from 'react';
 import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
 import { DataTablePagination } from '../table-pagination';
-import type { Dispatch, SetStateAction } from 'react';
-import { api } from '@/utils/api';
-import { ProjectStatus } from '@/lib/db/enums';
 
 const FundraisingsTable = ({
   data,
