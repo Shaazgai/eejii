@@ -3,10 +3,10 @@ import { z } from 'zod';
 import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { supporterSchema } from '@/lib/validation/partner-validation-schema';
 
-import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
-import type { ListResponse, Pagination } from '@/lib/types';
 import type { User } from '@/lib/db/types';
+import type { ListResponse, Pagination } from '@/lib/types';
 import { getPaginationInfo } from '../helper/paginationInfo';
+import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const supporterRouter = createTRPCRouter({
   getById: publicProcedure

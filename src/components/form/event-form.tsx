@@ -29,12 +29,12 @@ import { FormStep } from './form-stepper';
 
 const EventForm = ({
   data,
-  isPending,
+  isLoading,
   handleSubmit,
   setFiles,
 }: {
   data: EventWithOwner | undefined;
-  isPending: boolean;
+  isLoading: boolean;
   handleSubmit: (values: z.infer<typeof eventSchema>) => void;
   setFiles: (files: FileWithPath[]) => void;
 }) => {
@@ -306,7 +306,7 @@ const EventForm = ({
                 <Button
                   type="submit"
                   disabled={!form.isValid}
-                  loading={isPending}
+                  loading={isLoading}
                 >
                   Submit
                 </Button>

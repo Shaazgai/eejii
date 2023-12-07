@@ -166,8 +166,8 @@ export const fundAssociationRouter = createTRPCRouter({
         fundAssociation.User?.type === UserType.USER_PARTNER
           ? '/p/collabration'
           : fundAssociation.User?.type === UserType.USER_SUPPORTER
-          ? '/s/collabration'
-          : 'unknown';
+            ? '/s/collabration'
+            : 'unknown';
       sendNotification({
         title: `'${ownerName}' wants you to join '${fundraisingTitle}'`,
         body: fundDetail,

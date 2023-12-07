@@ -1,56 +1,71 @@
 import { useRouter } from 'next/router';
 
-import SectionHeader from '@/components/common/section-header';
 import PartnerLayout from '@/components/layout/partner-layout';
-import { LinkTabs } from '@/components/pagers/link-tabs';
-import { EventCard } from '@/components/partner/event/card';
-import { Shell } from '@/components/shells/shell';
-import { Button } from '@/components/ui/button';
-import type { Event } from '@/lib/db/types';
+import { EventListPrivate } from '@/components/partner/event/list';
+import tabsClasses from '@/styles/Tabs.module.css';
 import { api } from '@/utils/api';
+import {
+  BackgroundImage,
+  Button,
+  Container,
+  Flex,
+  Space,
+  Tabs,
+  Text,
+} from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
+import Link from 'next/link';
 
 export default function Volunteers() {
   const router = useRouter();
-  const tabs = [
-    {
-      title: `Сайн дурын арга хэмжээ`,
-      href: '/p/volunteering',
-    },
-    {
-      title: `Сайн дурын ажилчид`,
-      href: '/p/volunteering/volunteers',
-    },
-  ];
-
   const { data: events, isLoading } = api.event.getMyEvents.useQuery({});
 
   return (
     <PartnerLayout>
-      <Shell>
-        <SectionHeader
-          src={'/images/placeholder.svg'}
-          variant="dark"
-          className=""
+      <Container fluid p={'xl'}>
+        <BackgroundImage
+          src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80"
+          radius="sm"
+          h={300}
         >
-          <div className="flex w-full items-center justify-between pl-4 pr-7 pt-4">
-            <h2 className="text-3xl  font-semibold text-brand400">
-              Сайн дурынхан
-            </h2>
+          <Flex p="md" justify={'space-between'} align={'center'}>
+            <Text c="white" fz={'xl'} fw={700}>
+              Voluneering
+            </Text>
             <Button
-              className="hover:bg-primarySecond"
-              onClick={() => router.push('/p/manage/new')}
+              component={Link}
+              href={'/p/manage/new'}
+              size="lg"
+              radius={'xl'}
+              c="white"
+              fz={'lg'}
+              leftSection={<IconPlus />}
             >
-              Эвэнт нэмэх
+              Add project
             </Button>
-          </div>
-        </SectionHeader>
-        <LinkTabs tabs={tabs} />
-      </Shell>
-      {!isLoading && events
-        ? events.map((event, i) => (
-            <EventCard event={event as unknown as Event} key={i} />
-          ))
-        : '...Loading'}
+          </Flex>
+        </BackgroundImage>
+        <Space h={'md'} />
+        <Tabs
+          defaultValue="events"
+          classNames={{
+            list: tabsClasses.list,
+            tab: tabsClasses.tab,
+          }}
+        >
+          <Tabs.List>
+            <Tabs.Tab value="events">Events</Tabs.Tab>
+            <Tabs.Tab
+              value="volunteers"
+              onClick={() => router.push('/p/volunteering/volunteers')}
+            >
+              Volunteers
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs>
+        <Space h={'lg'} />
+        <EventListPrivate events={events} isLoading={isLoading} />
+      </Container>
     </PartnerLayout>
   );
 }

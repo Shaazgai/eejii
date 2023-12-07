@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import { NavLink } from '@mantine/core';
+import Link from 'next/link';
 import { Button } from '../ui/button';
 interface SidebarProps {
   title: string;
@@ -76,6 +77,7 @@ export default function Sidebar({
           sidebarNav?.map((item, index) => {
             return item.href ? (
               <NavLink
+                component={Link}
                 label={item.title}
                 href={item.href}
                 active={active == item.title}

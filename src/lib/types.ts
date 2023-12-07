@@ -43,7 +43,7 @@ export type EventWithOwner = Event & {
       type: string;
       eventId: string;
       categoryId: string;
-    }
+    },
   ];
   Images: EventImage[];
 };
@@ -113,4 +113,18 @@ export type Pagination = {
   hasPrevPage: boolean;
   totalPages: number;
   totalCount: number;
+};
+
+export type MyVolunteer = {
+  id: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  EventAssociation: EventAssociation;
+};
+
+export type MyDonation = Donation & {
+  Fundraising: FundWithOwner;
 };

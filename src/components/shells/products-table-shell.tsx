@@ -32,7 +32,7 @@
 //   pageCount,
 //   storeId,
 // }: ProductsTableShellProps) {
-//   const [isPending, startTransition] = React.useTransition();
+//   const [isLoading, startTransition] = React.useTransition();
 //   const [selectedRowIds, setSelectedRowIds] = React.useState<number[]>([]);
 
 //   // Memoize the columns so they don't re-render on every render
@@ -165,7 +165,7 @@
 //                     );
 //                   });
 //                 }}
-//                 disabled={isPending}
+//                 disabled={isLoading}
 //               >
 //                 Delete
 //                 <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
@@ -175,7 +175,7 @@
 //         ),
 //       },
 //     ],
-//     [data, isPending, storeId]
+//     [data, isLoading, storeId]
 //   );
 
 //   function deleteSelectedRows() {

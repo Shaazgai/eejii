@@ -29,7 +29,7 @@ const NewEvent = () => {
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const { mutate: createPresignedUrl } =
     api.event.createPresignedUrl.useMutation();
-  const { mutate, isLoading: isPending } = api.event.create.useMutation({
+  const { mutate, isLoading } = api.event.create.useMutation({
     onSuccess: newEvent => {
       if (files.length > 0) {
         files.map(file => {
@@ -57,7 +57,7 @@ const NewEvent = () => {
     <EventForm
       data={undefined}
       handleSubmit={handleSubmit}
-      isPending={isPending}
+      isLoading={isLoading}
       setFiles={setFiles}
     />
   );
@@ -69,7 +69,7 @@ const NewFundraising = () => {
 
   const { mutate: createPresignedUrl } =
     api.fundraising.createPresignedUrl.useMutation();
-  const { mutate, isLoading: isPending } = api.fundraising.create.useMutation({
+  const { mutate, isLoading } = api.fundraising.create.useMutation({
     onSuccess: newFundraising => {
       if (files.length > 0) {
         files.map(file => {
@@ -96,7 +96,7 @@ const NewFundraising = () => {
       data={undefined}
       handleSubmit={handleSubmit}
       setFiles={setFiles}
-      isPending={isPending}
+      isLoading={isLoading}
     />
   );
 };
@@ -107,26 +107,25 @@ const NewGrantFundraising = () => {
 
   const { mutate: createPresignedUrl } =
     api.grantFundraising.createPresignedUrl.useMutation();
-  const { mutate, isLoading: isPending } =
-    api.grantFundraising.create.useMutation({
-      onSuccess: newGrantFundraising => {
-        if (files.length > 0) {
-          files.map(file => {
-            const res = createPresignedUrl({
-              grantId: newGrantFundraising.id,
-              name: file?.name as string,
-              contentType: file?.type as string,
-            });
-            const { url, fields } = res as unknown as {
-              url: string;
-              fields: S3ParamType;
-            };
-            handleImageUpload(url, fields, file as File);
+  const { mutate, isLoading } = api.grantFundraising.create.useMutation({
+    onSuccess: newGrantFundraising => {
+      if (files.length > 0) {
+        files.map(file => {
+          const res = createPresignedUrl({
+            grantId: newGrantFundraising.id,
+            name: file?.name as string,
+            contentType: file?.type as string,
           });
-        }
-        router.push(`/p/manage/grant/${newGrantFundraising.id}`);
-      },
-    });
+          const { url, fields } = res as unknown as {
+            url: string;
+            fields: S3ParamType;
+          };
+          handleImageUpload(url, fields, file as File);
+        });
+      }
+      router.push(`/p/manage/grant/${newGrantFundraising.id}`);
+    },
+  });
 
   function handleSubmit(values: z.infer<typeof fundraisingSchema>) {
     mutate(values);
@@ -136,7 +135,7 @@ const NewGrantFundraising = () => {
       data={undefined}
       handleSubmit={handleSubmit}
       setFiles={setFiles}
-      isPending={isPending}
+      isLoading={isLoading}
     />
   );
 };

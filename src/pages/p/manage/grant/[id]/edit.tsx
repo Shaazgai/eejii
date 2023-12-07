@@ -60,7 +60,7 @@ const EditGrantFundraising = () => {
           <GrantFundraisingForm
             data={data as z.infer<typeof fundraisingSchema> | undefined}
             handleSubmit={handleSubmit}
-            isPending={isPending}
+            isLoading={isPending}
             setFiles={setFiles}
           />
         ) : (

@@ -12,7 +12,7 @@ export default function NewProject() {
         <GrantFundraisingForm
           data={undefined}
           handleSubmit={() => {}}
-          isPending={true}
+          isLoading={true}
           setFiles={() => {}}
         />
       </Shell>

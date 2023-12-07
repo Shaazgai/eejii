@@ -2,12 +2,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import PartnerLayout from '@/components/layout/partner-layout';
+import { UserList } from '@/components/list/invite-user-list';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Button } from '@/components/ui/button';
 import { UserType } from '@/lib/db/enums';
-import { api } from '@/utils/api';
-import { UserList } from '@/components/list/invite-user-list';
 import type { User } from '@/lib/db/types';
+import { api } from '@/utils/api';
 
 const Invite = () => {
   const router = useRouter();
