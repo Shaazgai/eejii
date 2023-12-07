@@ -114,3 +114,17 @@ export type Pagination = {
   totalPages: number;
   totalCount: number;
 };
+
+export type MyVolunteer = {
+  id: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  EventAssociation: EventAssociation;
+};
+
+export type MyDonation = Donation & {
+  Fundraising: FundWithOwner;
+};

@@ -1,9 +1,8 @@
 import PartnerLayout from '@/components/layout/partner-layout';
 import { FundraisingListPrivate } from '@/components/partner/fundraising/list';
+import { ProjectStatus } from '@/lib/db/enums';
 import segmentClasses from '@/styles/SegmentedControl.module.css';
 import tabsClasses from '@/styles/Tabs.module.css';
-
-import { ProjectStatus } from '@/lib/db/enums';
 import { api } from '@/utils/api';
 import {
   BackgroundImage,

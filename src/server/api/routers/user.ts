@@ -6,6 +6,7 @@ import { userSignUpSchema } from '@/lib/validation/user-schema';
 
 import { RequestType, Role } from '@/lib/db/enums';
 import { ServerSettings } from '@/lib/server-settings';
+import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import {
   adminProcedure,
   createTRPCRouter,
@@ -30,7 +31,23 @@ export const userRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const donations = await ctx.db
         .selectFrom('Donation')
-        .selectAll()
+        .select(['Donation.id', 'Donation.amount', 'Donation.createdAt'])
+        .select(eb => [
+          jsonObjectFrom(
+            eb
+              .selectFrom('Fundraising')
+              .selectAll()
+              .select(eb2 => [
+                jsonObjectFrom(
+                  eb2
+                    .selectFrom('User')
+                    .selectAll()
+                    .whereRef('User.id', '=', 'Fundraising.ownerId')
+                ).as('Owner'),
+              ])
+              .whereRef('Fundraising.id', '=', 'Donation.fundraisingId')
+          ).as('Fundraising'),
+        ])
         .where('userId', '=', ctx.userId)
         .limit(input.limit)
         .execute();
