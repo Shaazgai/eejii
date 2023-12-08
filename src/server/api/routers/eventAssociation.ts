@@ -168,10 +168,10 @@ export const eventAssociationRouter = createTRPCRouter({
         eventAssociation.User?.type === UserType.USER_PARTNER
           ? '/p/collabration'
           : eventAssociation.User?.type === UserType.USER_SUPPORTER
-          ? '/s/collabration'
-          : eventAssociation.User?.type === UserType.USER_VOLUNTEER
-          ? '/v/events'
-          : null;
+            ? '/s/collabration'
+            : eventAssociation.User?.type === UserType.USER_VOLUNTEER
+              ? '/v/events'
+              : null;
       sendNotification({
         title: `'${ownerName}' wants you to join '${title}'`,
         body: detail,
