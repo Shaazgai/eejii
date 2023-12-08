@@ -66,7 +66,7 @@ export default function Index() {
               <CardContent className="pl-0">
                 <div className="flex h-[276px] w-[830px] flex-col items-center justify-around bg-[url('/images/projectss/specialBG.png')] pb-12 pt-12 text-brand450">
                   <h2 className="text-lg font-semibold">
-                    Mother project Hospice
+                    'Mother project Hospice'
                   </h2>
                   <h1 className="pb-12 text-3xl font-semibold">
                     "Mother" Hospice and Palliative Care Center

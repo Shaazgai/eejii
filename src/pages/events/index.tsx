@@ -67,7 +67,7 @@ export default function Index() {
                     Урлагийн багийн бүртгэл
                   </h2>
                   <h1 className="pb-12 text-3xl font-semibold">
-                    12 сарын шидтэн
+                    12 сарын шидтэнүүд
                   </h1>
                   <Button className="h-[44px] w-[144px] rounded-none bg-primary">
                     Оролцох
