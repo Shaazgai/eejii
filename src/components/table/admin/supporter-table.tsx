@@ -93,7 +93,7 @@ const SupporterTable = ({
       accessorKey: 'id',
       header: 'Action',
       cell: ({ row }) => {
-        const context = api.useUtils();
+        const context = api.useContext();
         const { mutate, isLoading } = api.user.changeStatus.useMutation({
           onSuccess: _ => {
             context.supporter.findAll.invalidate();

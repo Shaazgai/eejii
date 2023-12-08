@@ -176,8 +176,8 @@ export const grantAssociationRouter = createTRPCRouter({
         grantAssociation.User?.type === UserType.USER_PARTNER
           ? '/p/collabration'
           : grantAssociation.User?.type === UserType.USER_SUPPORTER
-            ? '/s/collabration'
-            : null;
+          ? '/s/collabration'
+          : null;
       sendNotification({
         title: `'${ownerName}' wants you to join '${title}'`,
         body: detail,

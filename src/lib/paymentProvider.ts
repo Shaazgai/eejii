@@ -31,7 +31,7 @@ type PaymentCheckResponse = {
       payment_currency: string;
       payment_wallet: string;
       transaction_type: string;
-    },
+    }
   ];
 };
 let authObj: AuthObjectType;

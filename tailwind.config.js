@@ -130,6 +130,8 @@ module.exports = {
         projectBG: "url('/images/projectss/projectBG.png')",
         volunteerBG: "url('/images/volunteer/volunteerBG.png')",
         donationBG: "url('/images/donation/donationBG.png')",
+        specialBG: "url('/images/eventss/speacialBG.png')",
+        specialBG: "url('/images/projectss/speacialBG.png')",
       },
     },
   },

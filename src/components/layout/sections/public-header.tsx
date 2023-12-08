@@ -22,7 +22,7 @@ const components: {
   {
     title: 'Төсөл хөтөлбөрүүд',
     imagePath: '/images/projectss/projectsIcon.png',
-    href: '/docs/primitives/alert-dialog',
+    href: '/fundraising',
   },
   {
     title: 'Дэмжигч',
@@ -32,7 +32,7 @@ const components: {
   {
     title: 'Арга хэмжээ',
     imagePath: '/images/eventss/calendar.png',
-    href: '/docs/primitives/hover-card',
+    href: '/events',
   },
   {
     title: 'Хамтрагч',

@@ -43,7 +43,7 @@ export type EventWithOwner = Event & {
       type: string;
       eventId: string;
       categoryId: string;
-    },
+    }
   ];
   Images: EventImage[];
 };

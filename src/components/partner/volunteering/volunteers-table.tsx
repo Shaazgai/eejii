@@ -34,10 +34,10 @@ export const VolunteersTable = ({
                       v.EventAssociation.status === 'pending'
                         ? 'yellow'
                         : v.EventAssociation.status === 'approved'
-                          ? 'green'
-                          : v.EventAssociation.status === 'cancelled'
-                            ? 'red'
-                            : 'gray'
+                        ? 'green'
+                        : v.EventAssociation.status === 'cancelled'
+                        ? 'red'
+                        : 'gray'
                     }
                   >
                     {v.EventAssociation.status}
