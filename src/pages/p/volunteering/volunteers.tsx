@@ -9,7 +9,6 @@ import {
   Container,
   Flex,
   Paper,
-  Select,
   Space,
   Tabs,
   Text,
@@ -17,8 +16,14 @@ import {
 } from '@mantine/core';
 import { IconPlus, IconSearch } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+
+const Select = dynamic(() => import('@mantine/core').then(el => el.Select), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
 export default function Volunteers() {
   const router = useRouter();
@@ -79,11 +84,7 @@ export default function Volunteers() {
               placeholder="Search"
               w={'100%'}
             />
-            <Select
-              data={['By event', 'By name']}
-              placeholder="Select search type"
-            />
-            <Select data={['By level', 'By name']} placeholder="Sort" />
+            <Select data={['', 'By name']} placeholder="Sort" />
           </Flex>
           <VolunteersTable
             volunteers={volunteers as unknown as MyVolunteer[]}

@@ -48,3 +48,10 @@
         var(--mantine-color-orange-6));
   }
 }
+
+.control {
+  background-color: none;
+  &::hover {
+    background-color: none !important
+  }
+}

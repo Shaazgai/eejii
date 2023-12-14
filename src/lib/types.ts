@@ -4,6 +4,7 @@ import type {
   UserType as UserTypeConst,
 } from './db/enums';
 import type {
+  Address,
   Donation,
   Event,
   EventAssociation,
@@ -121,7 +122,10 @@ export type MyVolunteer = {
   firstName: string;
   lastName: string;
   email: string;
+  skills: string[];
+  bio: string;
   phoneNumber: string;
+  Address: Address;
   EventAssociation: EventAssociation;
 };
 

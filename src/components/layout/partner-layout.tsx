@@ -1,7 +1,6 @@
 import {
   CalendarCheck,
   Heart,
-  HeartHandshake,
   LayoutDashboard,
   Newspaper,
   Settings,
@@ -42,14 +41,14 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       items: [],
       external: '',
     },
-    {
-      title: 'Collaboration',
-      href: '/p/collaboration',
-      slug: 'collaboration',
-      icon: <HeartHandshake className="ml-1 mr-1 h-7 w-7" />,
-      items: [],
-      external: '',
-    },
+    // {
+    //   title: 'Collaboration',
+    //   href: '/p/collaboration',
+    //   slug: 'collaboration',
+    //   icon: <HeartHandshake className="ml-1 mr-1 h-7 w-7" />,
+    //   items: [],
+    //   external: '',
+    // },
     {
       title: 'Donations',
       href: '/p/donations',
