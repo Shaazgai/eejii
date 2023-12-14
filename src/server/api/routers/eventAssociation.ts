@@ -244,6 +244,16 @@ export const eventAssociationRouter = createTRPCRouter({
           'User.email',
           'User.firstName',
           'User.lastName',
+          'User.bio',
+          'User.skills',
+        ])
+        .select(eb => [
+          jsonObjectFrom(
+            eb
+              .selectFrom('Address')
+              .selectAll()
+              .whereRef('User.id', '=', 'Address.userId')
+          ).as('Address'),
         ])
         .select(eb => [
           jsonObjectFrom(

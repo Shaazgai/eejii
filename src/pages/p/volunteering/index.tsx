@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 
 import PartnerLayout from '@/components/layout/partner-layout';
-import { EventListPrivate } from '@/components/partner/event/list';
+import { EventListPrivateV2 } from '@/components/partner/event/list-v2';
 import tabsClasses from '@/styles/Tabs.module.css';
 import { api } from '@/utils/api';
 import {
@@ -64,7 +64,7 @@ export default function Volunteers() {
           </Tabs.List>
         </Tabs>
         <Space h={'lg'} />
-        <EventListPrivate events={events} isLoading={isLoading} />
+        <EventListPrivateV2 events={events} isLoading={isLoading} />
       </Container>
     </PartnerLayout>
   );
