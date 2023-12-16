@@ -34,6 +34,11 @@ export type CategoryGrantFundraising = {
   grantFundraisingId: string | null;
   categoryId: string | null;
 };
+export type CategoryMedia = {
+  id: Generated<string>;
+  mediaId: string | null;
+  categoryId: string | null;
+};
 export type Certificate = {
   id: Generated<string>;
   name: string;
@@ -132,6 +137,17 @@ export type GrantImage = {
   path: string;
   type: string | null;
 };
+export type Media = {
+  id: Generated<string>;
+  title: string;
+  body: string;
+};
+export type MediaImage = {
+  id: Generated<string>;
+  ownerId: string;
+  path: string;
+  type: string | null;
+};
 export type Notification = {
   id: Generated<string>;
   receiverId: string;
@@ -167,6 +183,7 @@ export type User = {
   type: Generated<UserType>;
   requestSend: Generated<boolean>;
   password: string | null;
+  addressShort: string | null;
   requestStatus: RequestType | null;
   firstName: string | null;
   lastName: string | null;
@@ -189,6 +206,7 @@ export type DB = {
   CategoryEvent: CategoryEvent;
   CategoryFundraising: CategoryFundraising;
   CategoryGrantFundraising: CategoryGrantFundraising;
+  CategoryMedia: CategoryMedia;
   Certificate: Certificate;
   Donation: Donation;
   Event: Event;
@@ -200,6 +218,8 @@ export type DB = {
   GrantAssociation: GrantAssociation;
   GrantFundraising: GrantFundraising;
   GrantImage: GrantImage;
+  Media: Media;
+  MediaImage: MediaImage;
   Notification: Notification;
   Payment: Payment;
   Skill: Skill;

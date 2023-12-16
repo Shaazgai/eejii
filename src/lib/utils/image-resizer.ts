@@ -18,18 +18,14 @@ async function resize(
   }
 }
 
-export default function imageResizer(
-  file: File,
-  width: number,
-  height: number
-) {
+export default function imageResizer(file: File) {
   return new Promise((resolve, reject) => {
     Resizer.imageFileResizer(
       file,
-      width,
-      height,
+      1200,
+      800,
       'WEBP',
-      100,
+      85,
       0,
       base64Uri => {
         try {

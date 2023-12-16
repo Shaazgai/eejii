@@ -5,6 +5,7 @@ import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
 import type { User } from '@/lib/db/types';
 import type { ListResponse, Pagination } from '@/lib/types';
+import { createPresignedUrl } from '../helper/imageHelper';
 import { getPaginationInfo } from '../helper/paginationInfo';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
@@ -95,5 +96,86 @@ export const partnerRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       return partner;
+    }),
+  updateBio: privateProcedure
+    .input(
+      z.object({
+        organization: z.string(),
+        address: z.string(),
+        bio: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.db
+        .updateTable('User')
+        .where('User.id', '=', ctx.userId)
+        .set({
+          organization: input.organization,
+          bio: input.bio,
+          addressShort: input.address,
+        })
+        .returning(['User.id'])
+        .executeTakeFirstOrThrow();
+      return user;
+    }),
+  updateContact: privateProcedure
+    .input(
+      z.object({
+        contact: z.object({
+          phone: z.string().nullish(),
+          email: z.string().nullish(),
+          facebookUrl: z.string().nullish(),
+          instagramUrl: z.string().nullish(),
+        }),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.db
+        .updateTable('User')
+        .where('User.id', '=', ctx.userId)
+        .set({
+          contact: input.contact,
+        })
+        .execute();
+    }),
+  createPresignedUrl: privateProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        name: z.string(),
+        type: z.string(),
+        contentType: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const exists = await ctx.db
+        .selectFrom('UserImage')
+        .select('id')
+        .where('UserImage.ownerId', '=', ctx.userId)
+        .where('UserImage.type', '=', input.type)
+        .executeTakeFirst();
+
+      if (exists) {
+        ctx.db
+          .deleteFrom('UserImage')
+          .where('UserImage.id', '=', exists.id)
+          .execute();
+      }
+      const userImage = await ctx.db
+        .insertInto('UserImage')
+        .values({
+          ownerId: input.userId,
+          type: input.type,
+          path: `uploads/user/${input.name}`,
+        })
+        .returning(['path'])
+        .executeTakeFirstOrThrow();
+
+      const res = await createPresignedUrl(userImage.path, input.contentType);
+
+      return {
+        data: res,
+        fileName: input.name,
+      };
     }),
 });
