@@ -6,7 +6,7 @@ import { userSignUpSchema } from '@/lib/validation/user-schema';
 
 import { RequestType, Role } from '@/lib/db/enums';
 import { ServerSettings } from '@/lib/server-settings';
-import { jsonObjectFrom } from 'kysely/helpers/postgres';
+import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import {
   adminProcedure,
   createTRPCRouter,
@@ -15,6 +15,24 @@ import {
 } from '../trpc';
 
 export const userRouter = createTRPCRouter({
+  getMe: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db
+      .selectFrom('User')
+      .selectAll('User')
+      .select(eb => [
+        jsonArrayFrom(
+          eb
+            .selectFrom('UserImage')
+            .selectAll()
+            .whereRef('User.id', '=', 'UserImage.ownerId')
+        ).as('Image'),
+      ])
+      .where('id', '=', ctx.userId)
+      .executeTakeFirstOrThrow();
+
+    return user;
+  }),
+
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {

@@ -5,6 +5,6 @@ export const inputStyle = {
     borderTop: '0',
     borderLeft: '0',
     borderRight: '0',
-    borderBottom: '1px solid #ccc',
+    borderBottom: '1px solid var(--mantine-color-gray-4)',
   },
 };

@@ -29,6 +29,7 @@ model User {
   type          UserType      @default(USER_VOLUNTEER)
   requestSend   Boolean       @default(false)
   password      String?
+  addressShort  String?
   //changed user request status boolean to 3 state
   requestStatus RequestType?
   // Volunteer fields
@@ -249,6 +250,7 @@ model Category {
   CategoryFundraising      CategoryFundraising[]
   CategoryEvent            CategoryEvent[]
   CategoryGrantFundraising CategoryGrantFundraising[]
+  CategoryMedia            CategoryMedia[]
 }
 
 model CategoryFundraising {
@@ -332,4 +334,31 @@ model Notification {
 
   @@index([receiverId])
   @@index([senderId])
+}
+
+model Media {
+  id            String          @id @default(dbgenerated("gen_random_uuid()"))
+  title         String
+  body          String          @db.Text
+  CategoryMedia CategoryMedia[]
+  MediaImage    MediaImage[]
+}
+
+model CategoryMedia {
+  id         String    @id @default(dbgenerated("gen_random_uuid()"))
+  Media      Media?    @relation(fields: [mediaId], references: [id])
+  mediaId    String?
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  @@index([mediaId])
+  @@index([categoryId])
+}
+
+model MediaImage {
+  id      String  @id @default(dbgenerated("gen_random_uuid()"))
+  owner   Media   @relation(fields: [ownerId], references: [id])
+  ownerId String
+  path    String
+  type    String?
 }

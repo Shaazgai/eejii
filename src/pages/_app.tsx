@@ -2,6 +2,8 @@ import '@/styles/globals.css';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/dropzone/styles.css';
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 
 import { MantineProvider, createTheme } from '@mantine/core';
 
@@ -24,6 +26,7 @@ const theme = createTheme({
 const CustomApp = ({ Component, pageProps }: CustomAppProps) => {
   return (
     <MantineProvider theme={theme}>
+      <Notifications />
       <SessionProvider session={pageProps.session}>
         <Component {...pageProps} />
       </SessionProvider>

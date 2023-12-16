@@ -15,7 +15,8 @@ import type {
   GrantAssociation,
   GrantFundraising,
   GrantImage,
-  User,
+  User as UserDB,
+  UserImage,
 } from './db/types';
 
 export type Role = (typeof RoleConst)[keyof typeof RoleConst];
@@ -36,7 +37,7 @@ export type VolunteerTableProps = {
 };
 
 export type EventWithOwner = Event & {
-  Owner: User;
+  Owner: UserDB;
   Categories: [
     {
       id: string;
@@ -50,13 +51,13 @@ export type EventWithOwner = Event & {
 };
 
 export type FundWithOwner = Fundraising & {
-  Owner: User;
+  Owner: UserDB;
   Images: FundImage[];
   Donation: Donation[];
 };
 
 export type GrantFundWithOwner = GrantFundraising & {
-  Owner: User;
+  Owner: UserDB;
   Images: GrantImage[];
 };
 
@@ -84,8 +85,10 @@ export type S3ParamType = {
 };
 
 export type Contact = {
-  phone: string;
-  email: string;
+  phone?: string;
+  email?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
 };
 
 export type PaymentDetails = {
@@ -131,4 +134,8 @@ export type MyVolunteer = {
 
 export type MyDonation = Donation & {
   Fundraising: FundWithOwner;
+};
+
+export type User = UserDB & {
+  Image: UserImage[];
 };
