@@ -184,4 +184,12 @@ export const userRouter = createTRPCRouter({
         })
         .execute();
     }),
+  deleteImage: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .deleteFrom('UserImage')
+        .where('UserImage.id', '=', input.id)
+        .execute();
+    }),
 });

@@ -38,7 +38,7 @@ export const BioForm = ({ user }: { user: User }) => {
   async function handleSetFiles(images: FileWithPath[]) {
     const resizedFiles = await Promise.all(
       images.map(async file => {
-        const resizedFile = await imageResizer(file);
+        const resizedFile = await imageResizer(file, 300, 300);
         return resizedFile;
       })
     );
@@ -74,6 +74,12 @@ export const BioForm = ({ user }: { user: User }) => {
         title: 'Success',
         message: 'Successfully updated bio',
       });
+    },
+  });
+
+  const { mutate: deleteImage } = api.user.deleteImage.useMutation({
+    onSuccess: () => {
+      context.user.getMe.invalidate();
     },
   });
 
@@ -139,7 +145,9 @@ export const BioForm = ({ user }: { user: User }) => {
                   alt="image"
                 />
                 <ActionIcon
-                  // onClick={}
+                  onClick={() =>
+                    deleteImage({ id: profileImage.id as unknown as string })
+                  }
                   pos={'absolute'}
                   top={0}
                   color="red"

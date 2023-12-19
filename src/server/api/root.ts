@@ -8,6 +8,7 @@ import { fundAssociationRouter } from './routers/fundAssociation';
 import { fundraisingRouter } from './routers/fundraising';
 import { grantFundraisingRouter } from './routers/grant-fundraising';
 import { grantAssociationRouter } from './routers/grantAssociation';
+import { mediaRouter } from './routers/media';
 import { partnerRouter } from './routers/partner';
 import { userRouter } from './routers/user';
 import { volunteerRouter } from './routers/volunteer';
@@ -29,6 +30,7 @@ export const appRouter = createTRPCRouter({
   grantAssociation: grantAssociationRouter,
   fundAssociation: fundAssociationRouter,
   user: userRouter,
+  media: mediaRouter,
 });
 
 // export type definition of API

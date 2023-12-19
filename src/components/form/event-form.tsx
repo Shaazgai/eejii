@@ -9,13 +9,14 @@ import { api } from '@/utils/api';
 
 import { inputStyle } from '@/styles/inputStyle';
 import {
+  ActionIcon,
   Button,
   Chip,
   Flex,
   Group,
+  Image,
   InputLabel,
   Paper,
-  SimpleGrid,
   Skeleton,
   Stack,
   Text,
@@ -25,6 +26,7 @@ import {
 import { DateTimePicker } from '@mantine/dates';
 import type { FileWithPath } from '@mantine/dropzone';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { IconX } from '@tabler/icons-react';
 import { FormStep } from './form-stepper';
 
 const EventForm = ({
@@ -32,11 +34,15 @@ const EventForm = ({
   isLoading,
   handleSubmit,
   setFiles,
+  files,
+  handleSetFiles,
 }: {
   data: EventWithOwner | undefined;
   isLoading: boolean;
   handleSubmit: (values: z.infer<typeof eventSchema>) => void;
-  setFiles: (files: FileWithPath[]) => void;
+  setFiles: (files: File[]) => void;
+  files: File[];
+  handleSetFiles: (images: FileWithPath[]) => void;
 }) => {
   const { data: categories, isLoading: isCategoryLoading } =
     api.category.getAll.useQuery({ name: null, type: null });
@@ -64,23 +70,23 @@ const EventForm = ({
     },
     validate: zodResolver(eventSchema),
   });
-  // const [file, setFile] = useState<File | null>(null);
-
-  // async function handleImage(event: FormEvent<HTMLInputElement>) {
-  //   const selectedFile = event.currentTarget.files?.[0] as File;
-  //   if (selectedFile) {
-  //     const resizedFile = await imageResizer(selectedFile, 300, 300);
-  //     setFile(resizedFile as unknown as File);
-  //   }
-  // }
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   function handleSelectCategory(values: string[]) {
     setSelectedCategories(values);
     form.setFieldValue('categories', values);
   }
-  // console.log(selectedCategories);
-  // console.log(data);
+
+  const mainImage = data?.Images?.find(i => i.type === 'main');
+
+  const context = api.useContext();
+  const { mutate: deleteImage } = api.event.deleteImage.useMutation({
+    onSuccess: () => {
+      context.event.getById.invalidate({
+        id: data?.id as unknown as string,
+      });
+    },
+  });
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -144,16 +150,73 @@ const EventForm = ({
           <Stack w={'100%'}>
             <InputLabel size="xl">Images</InputLabel>
             <Paper withBorder p={20} radius={'xl'} py={30}>
-              <Dropzone accept={IMAGE_MIME_TYPE} h={100} onDrop={setFiles}>
-                <Text ta="center">Drop images here</Text>
-              </Dropzone>
-
-              <SimpleGrid
-                cols={{ base: 1, sm: 4 }}
-                // mt={previews.length > 0 ? 'xl' : 0}
-              >
-                {/* {previews} */}
-              </SimpleGrid>
+              {mainImage ? (
+                <Paper pos={'relative'}>
+                  <Image
+                    height={200}
+                    width={320}
+                    radius={'md'}
+                    fit="contain"
+                    placeholder="/placeholder.svg"
+                    src={
+                      process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path
+                    }
+                    onLoad={() =>
+                      URL.revokeObjectURL(
+                        process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path
+                      )
+                    }
+                    alt="image"
+                  />
+                  <ActionIcon
+                    onClick={() =>
+                      deleteImage({ id: mainImage.id as unknown as string })
+                    }
+                    pos={'absolute'}
+                    top={0}
+                    color="red"
+                    right={0}
+                  >
+                    <IconX />
+                  </ActionIcon>
+                </Paper>
+              ) : files.length > 0 ? (
+                <Paper>
+                  {files.map((file, i) => {
+                    const imageUrl = URL.createObjectURL(file);
+                    return (
+                      <Paper key={i} pos={'relative'}>
+                        <Image
+                          height={200}
+                          width={320}
+                          radius={'md'}
+                          fit="contain"
+                          src={imageUrl}
+                          onLoad={() => URL.revokeObjectURL(imageUrl)}
+                          alt="image"
+                        />
+                        <ActionIcon
+                          onClick={() => setFiles([])}
+                          pos={'absolute'}
+                          top={0}
+                          color="red"
+                          right={0}
+                        >
+                          <IconX />
+                        </ActionIcon>
+                      </Paper>
+                    );
+                  })}
+                </Paper>
+              ) : (
+                <Dropzone
+                  accept={IMAGE_MIME_TYPE}
+                  h={100}
+                  onDrop={handleSetFiles}
+                >
+                  <Text ta="center">Drop images here</Text>
+                </Dropzone>
+              )}
             </Paper>
           </Stack>
         </div>

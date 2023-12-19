@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.fundraising.getById.prefetch({ id });
+  await helpers.fundraising.getById.prefetch({ id: id });
 
   return {
     props: {

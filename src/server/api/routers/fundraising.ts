@@ -33,20 +33,7 @@ export const fundraisingRouter = createTRPCRouter({
       const result = await ctx.db.transaction().execute(async trx => {
         let query = trx
           .selectFrom('Fundraising')
-          .select([
-            'Fundraising.id',
-            'Fundraising.title',
-            'Fundraising.description',
-            'Fundraising.currentAmount',
-            'Fundraising.goalAmount',
-            'Fundraising.contact',
-            'Fundraising.location',
-            'Fundraising.startTime',
-            'Fundraising.endTime',
-            'Fundraising.createdAt',
-            'Fundraising.status',
-            'Fundraising.enabled',
-          ])
+          .selectAll('Fundraising')
           .select(eb => [
             jsonObjectFrom(
               eb
@@ -136,21 +123,7 @@ export const fundraisingRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       let query = ctx.db
         .selectFrom('Fundraising')
-        .select([
-          'Fundraising.id',
-          'Fundraising.title',
-          'Fundraising.description',
-          'Fundraising.currentAmount',
-          'Fundraising.goalAmount',
-          'Fundraising.contact',
-          'Fundraising.location',
-          'Fundraising.startTime',
-          'Fundraising.endTime',
-          'Fundraising.createdAt',
-          'Fundraising.ownerId',
-          'Fundraising.status',
-          'Fundraising.enabled',
-        ])
+        .selectAll('Fundraising')
         .select(eb => [
           jsonArrayFrom(
             eb
@@ -183,18 +156,7 @@ export const fundraisingRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const fundraising = await ctx.db
         .selectFrom('Fundraising')
-        .select([
-          'Fundraising.id',
-          'Fundraising.title',
-          'Fundraising.description',
-          'Fundraising.currentAmount',
-          'Fundraising.goalAmount',
-          'Fundraising.contact',
-          'Fundraising.location',
-          'Fundraising.startTime',
-          'Fundraising.endTime',
-          'Fundraising.createdAt',
-        ])
+        .selectAll('Fundraising')
         .select(eb => [
           jsonObjectFrom(
             eb
@@ -345,21 +307,40 @@ export const fundraisingRouter = createTRPCRouter({
       z.object({
         fundId: z.string(),
         name: z.string(),
+        type: z.string(),
         contentType: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const fundImage = await ctx.db
+      const exists = await ctx.db
+        .selectFrom('FundImage')
+        .select('id')
+        .where('FundImage.ownerId', '=', ctx.userId)
+        .where('FundImage.type', '=', input.type)
+        .executeTakeFirst();
+
+      if (exists) {
+        ctx.db
+          .deleteFrom('FundImage')
+          .where('FundImage.id', '=', exists.id)
+          .execute();
+      }
+      const image = await ctx.db
         .insertInto('FundImage')
         .values({
           ownerId: input.fundId,
-          type: 'main',
+          type: input.type,
           path: `uploads/fund/${input.name}`,
         })
         .returning(['path'])
         .executeTakeFirstOrThrow();
 
-      return createPresignedUrl(fundImage.path, input.contentType);
+      const res = await createPresignedUrl(image.path, input.contentType);
+
+      return {
+        data: res,
+        fileName: input.name,
+      };
     }),
 
   changeStatus: adminProcedure
@@ -398,5 +379,14 @@ export const fundraisingRouter = createTRPCRouter({
         type: 'project_request',
       });
       return fund;
+    }),
+
+  deleteImage: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .deleteFrom('FundImage')
+        .where('FundImage.id', '=', input.id)
+        .execute();
     }),
 });
