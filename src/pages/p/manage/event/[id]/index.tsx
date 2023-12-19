@@ -37,6 +37,13 @@ export default function EventViewPage(
   const { id } = props;
   const { data, isLoading } = api.event.getById.useQuery({ id: id as string });
 
+  const mainImage =
+    process.env.NEXT_PUBLIC_AWS_PATH +
+    '/' +
+    data?.Images?.find(f => f.type === 'main')?.path;
+  console.log(data);
+  console.log(mainImage);
+
   return (
     <PartnerLayout>
       {!isLoading && data ? (
@@ -74,7 +81,8 @@ export default function EventViewPage(
               <Paper withBorder radius="lg" style={{ overflow: 'hidden' }}>
                 <Image
                   alt="image"
-                  src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80"
+                  src={mainImage}
+                  placeholder="/images/placeholder.svg"
                 />
                 <Flex p={'lg'} gap={10}>
                   {data.Categories &&
@@ -206,7 +214,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.event.getById.prefetch({ id });
+  await helpers.event.getById.prefetch({ id: id });
 
   return {
     props: {

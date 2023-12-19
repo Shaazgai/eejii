@@ -22,7 +22,7 @@ const config = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'example.s3.amazonaws.com',
+        hostname: 'eejii.s3.amazonaws.com',
       },
     ],
   },

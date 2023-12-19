@@ -141,6 +141,8 @@ export type Media = {
   id: Generated<string>;
   title: string;
   body: string;
+  ownerId: string;
+  createdAt: Generated<Timestamp>;
 };
 export type MediaImage = {
   id: Generated<string>;

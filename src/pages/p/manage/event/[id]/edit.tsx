@@ -5,16 +5,29 @@ import EventForm from '@/components/form/event-form';
 import PartnerLayout from '@/components/layout/partner-layout';
 import handleImageUpload from '@/lib/hooks/upload-image';
 import type { S3ParamType } from '@/lib/types';
+import imageResizer from '@/lib/utils/image-resizer';
 import type { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
 import { Container, LoadingOverlay } from '@mantine/core';
 import type { FileWithPath } from '@mantine/dropzone';
+import { notifications } from '@mantine/notifications';
 import type { z } from 'zod';
 
 const EditEvent = () => {
+  const router = useRouter();
+
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [eventId, setEventId] = useState('');
-  const router = useRouter();
+
+  async function handleSetFiles(images: FileWithPath[]) {
+    const resizedFiles = await Promise.all(
+      images.map(async file => {
+        const resizedFile = await imageResizer(file, 300, 300);
+        return resizedFile;
+      })
+    );
+    setFiles(resizedFiles as unknown as File[]);
+  }
 
   useEffect(() => {
     if (router.query.id) {
@@ -22,28 +35,39 @@ const EditEvent = () => {
     }
   }, [router.isReady]);
 
+  const context = api.useContext();
   const { data, isLoading } = api.event.getById.useQuery({
     id: eventId,
   });
 
   const { mutate: createPresignedUrl } =
-    api.event.createPresignedUrl.useMutation();
+    api.event.createPresignedUrl.useMutation({
+      onSuccess: res => {
+        const { url, fields } = res.data as unknown as {
+          url: string;
+          fields: S3ParamType;
+        };
+        const file = files.find(f => f.name === res.fileName);
+        handleImageUpload(url, fields, file as File);
+      },
+    });
   const { mutate, isLoading: isPending } = api.event.update.useMutation({
     onSuccess: newEvent => {
       if (files.length > 0) {
         files.map(file => {
-          const res = createPresignedUrl({
+          createPresignedUrl({
             eventId: newEvent.id,
             name: file?.name as string,
+            type: 'main',
             contentType: file?.type as string,
           });
-          const { url, fields } = res as unknown as {
-            url: string;
-            fields: S3ParamType;
-          };
-          handleImageUpload(url, fields, file as File);
         });
       }
+      context.event.getById.invalidate({ id: newEvent.id });
+      notifications.show({
+        title: 'Success',
+        message: 'Successfully updated event',
+      });
 
       router.push(`/p/manage/event/${newEvent.id}/invite`);
     },
@@ -63,6 +87,8 @@ const EditEvent = () => {
             isLoading={isPending}
             handleSubmit={handleSubmit}
             setFiles={setFiles}
+            handleSetFiles={handleSetFiles}
+            files={files}
           />
         ) : (
           <LoadingOverlay visible />

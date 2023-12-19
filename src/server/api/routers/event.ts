@@ -145,21 +145,7 @@ export const eventRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const event = await ctx.db
         .selectFrom('Event')
-        .select([
-          'Event.id',
-          'Event.title',
-          'Event.description',
-          'Event.location',
-          'Event.startTime',
-          'Event.endTime',
-          'Event.requiredTime',
-          'Event.roles',
-          'Event.contact',
-          'Event.enabled',
-          'Event.ownerId',
-          'Event.createdAt',
-          'Event.status',
-        ])
+        .selectAll('Event')
         .select(eb => [
           jsonArrayFrom(
             eb
@@ -170,6 +156,12 @@ export const eventRouter = createTRPCRouter({
               )
               .whereRef('CategoryEvent.categoryId', '=', 'Category.id')
           ).as('Categories'),
+          jsonArrayFrom(
+            eb
+              .selectFrom('EventImage')
+              .selectAll()
+              .whereRef('Event.id', '=', 'EventImage.ownerId')
+          ).as('Images'),
         ])
         .where('Event.id', '=', input.id)
         .executeTakeFirstOrThrow();
@@ -329,22 +321,41 @@ export const eventRouter = createTRPCRouter({
     .input(
       z.object({
         eventId: z.string(),
+        type: z.string(),
         name: z.string(),
         contentType: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const exists = await ctx.db
+        .selectFrom('EventImage')
+        .select('id')
+        .where('EventImage.ownerId', '=', ctx.userId)
+        .where('EventImage.type', '=', input.type)
+        .executeTakeFirst();
+
+      if (exists) {
+        ctx.db
+          .deleteFrom('EventImage')
+          .where('EventImage.id', '=', exists.id)
+          .execute();
+      }
       const eventImage = await ctx.db
         .insertInto('EventImage')
         .values({
           ownerId: input.eventId,
-          type: 'main',
+          type: input.type,
           path: `uploads/event/${input.name}`,
         })
         .returning(['path'])
         .executeTakeFirstOrThrow();
 
-      return createPresignedUrl(eventImage.path, input.contentType);
+      const res = await createPresignedUrl(eventImage.path, input.contentType);
+
+      return {
+        data: res,
+        fileName: input.name,
+      };
     }),
 
   changeStatus: adminProcedure
@@ -383,5 +394,13 @@ export const eventRouter = createTRPCRouter({
         type: 'project_request',
       });
       return event;
+    }),
+  deleteImage: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .deleteFrom('EventImage')
+        .where('EventImage.id', '=', input.id)
+        .execute();
     }),
 });

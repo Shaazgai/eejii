@@ -34,11 +34,17 @@ import Link from 'next/link';
 export default function FundraisingViewPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  if (!props) return <>Loading...</>;
   const { id } = props;
+  if (!id) <LoadingOverlay visible />;
+
   const { data, isLoading } = api.fundraising.getById.useQuery({
     id: id as string,
   });
+
+  const mainImage =
+    process.env.NEXT_PUBLIC_AWS_PATH +
+    '/' +
+    data?.Images?.find(f => f.type === 'main')?.path;
 
   return (
     <PartnerLayout>
@@ -74,11 +80,7 @@ export default function FundraisingViewPage(
           <Space h={'lg'} />
           <SimpleGrid cols={{ base: 1, lg: 2 }}>
             <Paper withBorder radius="lg" className={classes.cardTopBorder}>
-              <Image
-                alt="image"
-                src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80"
-                radius={12}
-              />
+              <Image alt="image" src={mainImage} radius={12} />
               <Space h={'lg'} />
               <Table>
                 <Table.Tbody>
@@ -196,7 +198,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.event.getById.prefetch({ id });
+  await helpers.event.getById.prefetch({ id: id });
   // await helpers.partner.getMytProjectsJoinRequestsOrInvitations.prefetch({
   //   projectType: 'fundraising',
   //   status: null,

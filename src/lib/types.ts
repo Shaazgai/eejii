@@ -15,6 +15,8 @@ import type {
   GrantAssociation,
   GrantFundraising,
   GrantImage,
+  Media as MediaDB,
+  MediaImage as MediaImageDB,
   User as UserDB,
   UserImage,
 } from './db/types';
@@ -138,4 +140,16 @@ export type MyDonation = Donation & {
 
 export type User = UserDB & {
   Image: UserImage[];
+};
+
+export type Media = MediaDB & {
+  Images: MediaImageDB[];
+  Categories: {
+    name: string;
+    type: string;
+    path: string;
+    categoryId: string;
+    mediaId: string;
+  }[];
+  Owner: UserDB;
 };

@@ -4,13 +4,16 @@ import type { z } from 'zod';
 
 import { fundraisingSchema } from '@/lib/validation/fundraising-schema';
 
+import type { Contact, GrantFundWithOwner } from '@/lib/types';
 import { inputStyle } from '@/styles/inputStyle';
+import { api } from '@/utils/api';
 import {
+  ActionIcon,
   Button,
   Flex,
+  Image,
   InputLabel,
   Paper,
-  SimpleGrid,
   Stack,
   Text,
   TextInput,
@@ -19,6 +22,7 @@ import {
 import { DateTimePicker } from '@mantine/dates';
 import type { FileWithPath } from '@mantine/dropzone';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { IconX } from '@tabler/icons-react';
 import { FormStep } from './form-stepper';
 
 const GrantFundraisingForm = ({
@@ -26,37 +30,43 @@ const GrantFundraisingForm = ({
   isLoading,
   handleSubmit,
   setFiles,
+  files,
+  handleSetFiles,
 }: {
-  data: z.infer<typeof fundraisingSchema> | undefined;
+  data: GrantFundWithOwner | undefined;
   isLoading: boolean;
   handleSubmit: (values: z.infer<typeof fundraisingSchema>) => void;
-  setFiles: (files: FileWithPath[]) => void;
+  setFiles: (files: File[]) => void;
+  files: File[];
+  handleSetFiles: (images: FileWithPath[]) => void;
 }) => {
   const form = useForm<z.infer<typeof fundraisingSchema>>({
     validateInputOnChange: true,
     initialValues: {
       title: data?.title ?? '',
       description: data?.description ?? '',
-      startTime: data?.startTime ?? new Date(),
-      endTime: data?.endTime ?? new Date(),
+      startTime: (data?.startTime as unknown as Date) ?? new Date(),
+      endTime: (data?.endTime as unknown as Date) ?? new Date(),
       goalAmount: data?.goalAmount ?? 0,
       currentAmount: data?.currentAmount ?? 0,
       contact: {
-        phone: data?.contact.phone ?? '',
-        email: data?.contact.email ?? '',
+        phone: (data?.contact as Contact)?.phone ?? '',
+        email: (data?.contact as Contact)?.email ?? '',
       },
     },
     validate: zodResolver(fundraisingSchema),
   });
 
-  // const [file, setFile] = useState<File | null>(null);
-  // async function handleImage(event: FormEvent<HTMLInputElement>) {
-  //   const selectedFile = event.currentTarget.files?.[0] as File;
-  //   if (selectedFile) {
-  //     const resizedFile = await imageResizer(selectedFile, 300, 300);
-  //     setFile(resizedFile as unknown as File);
-  //   }
-  // }
+  const mainImage = data?.Images?.find(i => i.type === 'main');
+
+  const context = api.useContext();
+  const { mutate: deleteImage } = api.grantFundraising.deleteImage.useMutation({
+    onSuccess: () => {
+      context.grantFundraising.getById.invalidate({
+        id: data?.id as unknown as string,
+      });
+    },
+  });
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -98,16 +108,77 @@ const GrantFundraisingForm = ({
           <Stack w={'100%'}>
             <InputLabel size="xl">Images</InputLabel>
             <Paper withBorder p={20} radius={'xl'} py={30}>
-              <Dropzone accept={IMAGE_MIME_TYPE} h={100} onDrop={setFiles}>
-                <Text ta="center">Drop images here</Text>
-              </Dropzone>
-
-              <SimpleGrid
-                cols={{ base: 1, sm: 4 }}
-                // mt={previews.length > 0 ? 'xl' : 0}
-              >
-                {/* {previews} */}
-              </SimpleGrid>
+              <Paper withBorder p={20} radius={'xl'} py={30}>
+                {mainImage ? (
+                  <Paper pos={'relative'}>
+                    <Image
+                      height={200}
+                      width={320}
+                      radius={'md'}
+                      fit="contain"
+                      placeholder="/placeholder.svg"
+                      src={
+                        process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path
+                      }
+                      onLoad={() =>
+                        URL.revokeObjectURL(
+                          process.env.NEXT_PUBLIC_AWS_PATH +
+                            '/' +
+                            mainImage.path
+                        )
+                      }
+                      alt="image"
+                    />
+                    <ActionIcon
+                      onClick={() =>
+                        deleteImage({ id: mainImage.id as unknown as string })
+                      }
+                      pos={'absolute'}
+                      top={0}
+                      color="red"
+                      right={0}
+                    >
+                      <IconX />
+                    </ActionIcon>
+                  </Paper>
+                ) : files.length > 0 ? (
+                  <Paper>
+                    {files.map((file, i) => {
+                      const imageUrl = URL.createObjectURL(file);
+                      return (
+                        <Paper key={i} pos={'relative'}>
+                          <Image
+                            height={200}
+                            width={320}
+                            radius={'md'}
+                            fit="contain"
+                            src={imageUrl}
+                            onLoad={() => URL.revokeObjectURL(imageUrl)}
+                            alt="image"
+                          />
+                          <ActionIcon
+                            onClick={() => setFiles([])}
+                            pos={'absolute'}
+                            top={0}
+                            color="red"
+                            right={0}
+                          >
+                            <IconX />
+                          </ActionIcon>
+                        </Paper>
+                      );
+                    })}
+                  </Paper>
+                ) : (
+                  <Dropzone
+                    accept={IMAGE_MIME_TYPE}
+                    h={100}
+                    onDrop={handleSetFiles}
+                  >
+                    <Text ta="center">Drop images here</Text>
+                  </Dropzone>
+                )}
+              </Paper>
             </Paper>
           </Stack>
         </div>

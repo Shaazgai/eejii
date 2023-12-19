@@ -86,7 +86,7 @@ const EventRequestCard = ({
   isOwner: boolean;
 }) => {
   const event = eventAssociation.Event;
-  const context = api.useContext();
+  const context = api.useUtils();
   const { mutate } = api.eventAssociation.handleEventRequest.useMutation({
     onSuccess: () => context.eventAssociation.findAll.invalidate(),
   });

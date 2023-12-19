@@ -147,18 +147,7 @@ export const grantFundraisingRouter = createTRPCRouter({
       const grantFundraising = await ctx.db
         .selectFrom('GrantFundraising')
         .where('id', '=', input.id)
-        .select([
-          'GrantFundraising.id',
-          'GrantFundraising.title',
-          'GrantFundraising.description',
-          'GrantFundraising.currentAmount',
-          'GrantFundraising.goalAmount',
-          'GrantFundraising.contact',
-          'GrantFundraising.location',
-          'GrantFundraising.startTime',
-          'GrantFundraising.endTime',
-          'GrantFundraising.createdAt',
-        ])
+        .selectAll('GrantFundraising')
         .select(eb => [
           jsonObjectFrom(
             eb
@@ -309,22 +298,41 @@ export const grantFundraisingRouter = createTRPCRouter({
     .input(
       z.object({
         grantId: z.string(),
+        type: z.string(),
         name: z.string(),
         contentType: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const grantImage = await ctx.db
+      const exists = await ctx.db
+        .selectFrom('GrantImage')
+        .select('id')
+        .where('GrantImage.ownerId', '=', ctx.userId)
+        .where('GrantImage.type', '=', input.type)
+        .executeTakeFirst();
+
+      if (exists) {
+        ctx.db
+          .deleteFrom('GrantImage')
+          .where('GrantImage.id', '=', exists.id)
+          .execute();
+      }
+      const image = await ctx.db
         .insertInto('GrantImage')
         .values({
           ownerId: input.grantId,
-          type: 'main',
+          type: input.type,
           path: `uploads/grant/${input.name}`,
         })
         .returning(['path'])
         .executeTakeFirstOrThrow();
 
-      return createPresignedUrl(grantImage.path, input.contentType);
+      const res = await createPresignedUrl(image.path, input.contentType);
+
+      return {
+        data: res,
+        fileName: input.name,
+      };
     }),
 
   changeStatus: publicProcedure
@@ -363,5 +371,13 @@ export const grantFundraisingRouter = createTRPCRouter({
         type: 'project_request',
       });
       return grant;
+    }),
+  deleteImage: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .deleteFrom('GrantImage')
+        .where('GrantImage.id', '=', input.id)
+        .execute();
     }),
 });
