@@ -5,7 +5,6 @@ const phoneRegex = new RegExp(
 );
 
 export const volunteerSchema = z.object({
-  id: z.string(),
   firstName: z.string().min(2, {
     message: 'Fist name must be at least 2 characters.',
   }),
@@ -13,8 +12,13 @@ export const volunteerSchema = z.object({
     message: 'Last name must be at least 2 characters.',
   }),
   email: z.string().email(),
+  password: z.string().min(3, {
+    message: 'Password must be at least 3 characters.',
+  }),
+
+  registerCode: z.string(),
   phoneNumber: z.string().regex(phoneRegex).length(8),
-  birthday: z.date({
+  birthDate: z.date({
     required_error: 'A birth data is required',
   }),
   gender: z.string({
@@ -26,7 +30,6 @@ export const volunteerSchema = z.object({
       message: 'Bio must be at least 10 characters.',
     })
     .max(160, {
-      message: 'Bio must not be longer than 30 characters.',
+      message: 'Bio must not be longer than 160 characters.',
     }),
-  skills: z.unknown(),
 });

@@ -1,10 +1,7 @@
 import { TRPCError } from '@trpc/server';
-import { hash } from 'argon2';
 import { z } from 'zod';
 
-import { userSignUpSchema } from '@/lib/validation/user-schema';
-
-import { RequestType, Role } from '@/lib/db/enums';
+import { RequestType } from '@/lib/db/enums';
 import { ServerSettings } from '@/lib/server-settings';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import {
@@ -13,6 +10,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from '../trpc';
+// import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
 
 export const userRouter = createTRPCRouter({
   getMe: privateProcedure.query(async ({ ctx }) => {
@@ -72,60 +70,55 @@ export const userRouter = createTRPCRouter({
 
       return donations;
     }),
-  insertUser: publicProcedure
-    .input(userSignUpSchema)
-    .mutation(async ({ ctx, input }) => {
-      const { phoneNumber, email, password } = input;
+  // insertUser: publicProcedure
+  //   .input(volunteerSchema)
+  //   .mutation(async ({ ctx, input }) => {
+  //     const { email, password } = input;
 
-      const exists = await ctx.db
-        .selectFrom('User')
-        .where('email', '=', email)
-        .selectAll()
-        .executeTakeFirst();
+  //     const exists = await ctx.db
+  //       .selectFrom('User')
+  //       .where('email', '=', email)
+  //       .selectAll()
+  //       .executeTakeFirst();
 
-      if (exists) {
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: 'User already exists.',
-        });
-      }
+  //     if (exists) {
+  //       throw new TRPCError({
+  //         code: 'CONFLICT',
+  //         message: 'User already exists.',
+  //       });
+  //     }
 
-      const hashedPassword = await hash(password);
+  //     const hashedPassword = await hash(password);
 
-      const user = await ctx.db
-        .insertInto('User')
-        .values({
-          email: email,
-          password: hashedPassword,
-          phoneNumber,
-          role: Role.ROLE_USER,
-          requestStatus: RequestType.REQUEST_PENDING,
-          type: input.userType as
-            | 'USER_VOLUNTEER'
-            | 'USER_PARTNER'
-            | 'USER_SUPPORTER',
-        })
-        .returning(['email', 'type', 'id'])
-        .executeTakeFirstOrThrow();
+  //     const user = await ctx.db
+  //       .insertInto('User')
+  //       .values({
+  //         ...input,
+  //         password: hashedPassword,
+  //         role: Role.ROLE_USER,
+  //         requestStatus: RequestType.REQUEST_PENDING,
+  //       })
+  //       .returning(['email', 'password', 'type', 'id'])
+  //       .executeTakeFirstOrThrow();
 
-      ctx.db
-        .insertInto('Notification')
-        .values({
-          title: user.email + ' wants to join Eejii.org',
-          link: '/admin/users',
-          receiverId: user.id,
-          senderId: user.id,
-          status: 'new',
-          type: 'request',
-        })
-        .execute();
+  //     ctx.db
+  //       .insertInto('Notification')
+  //       .values({
+  //         title: user.email + ' wants to join Eejii.org',
+  //         link: '/admin/users',
+  //         receiverId: user.id,
+  //         senderId: user.id,
+  //         status: 'new',
+  //         type: 'request',
+  //       })
+  //       .execute();
 
-      return {
-        status: 201,
-        message: 'Account created successfully',
-        result: user,
-      };
-    }),
+  //     return {
+  //       status: 201,
+  //       message: 'Account created successfully',
+  //       result: user,
+  //     };
+  //   }),
   changeStatus: adminProcedure
     .input(z.object({ userId: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {

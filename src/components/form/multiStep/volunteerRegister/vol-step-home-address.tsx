@@ -69,7 +69,7 @@ export default function HomeAddress() {
             name="country"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-c-primary-marine-blue flex items-center justify-between">
+                <FormLabel className="flex items-center justify-between text-c-primary-marine-blue">
                   Day
                   <FormMessage>{errors.country?.message}</FormMessage>
                 </FormLabel>
@@ -100,7 +100,7 @@ export default function HomeAddress() {
             name="homeAddress"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-c-primary-marine-blue flex items-center justify-between">
+                <FormLabel className="flex items-center justify-between text-c-primary-marine-blue">
                   First name
                   <FormMessage>{errors.homeAddress?.message}</FormMessage>
                 </FormLabel>

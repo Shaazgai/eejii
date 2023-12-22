@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { addressSchema } from '@/lib/validation/address-validation-schema';
+// import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
 import type { User } from '@/lib/db/types';
@@ -8,6 +8,8 @@ import type { ListResponse, Pagination } from '@/lib/types';
 import { createPresignedUrl } from '../helper/imageHelper';
 import { getPaginationInfo } from '../helper/paginationInfo';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
+import { hash } from 'argon2';
 
 export const partnerRouter = createTRPCRouter({
   getById: publicProcedure
@@ -60,47 +62,77 @@ export const partnerRouter = createTRPCRouter({
       };
       return response;
     }),
-  register: privateProcedure
-    .input(partnerSchema.merge(addressSchema))
+  register: publicProcedure
+    .input(partnerSchema)
     .mutation(async ({ input, ctx }) => {
+      const { email, password } = input;
+
+      const exists = await ctx.db
+        .selectFrom('User')
+        .where('email', '=', email)
+        .selectAll()
+        .executeTakeFirst();
+
+      if (exists) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'User already exists.',
+        });
+      }
+      const hashedPassword = await hash(password);
+
       const partner = await ctx.db
-        .updateTable('User')
-        .where('id', '=', input.id)
-        .set({
-          organization: input.organization,
-          email: input.email,
-          bio: input.bio,
+        .insertInto('User')
+        .values({
+          ...input,
+          phoneNumber: input.contact.phoneNumber1,
           type: 'USER_PARTNER',
           contact: {
-            twitter: input.contact.twitter,
-            facebook: input.contact.facebook,
-            instagram: input.contact.instagram,
-            phone_primary: input.contact.phone_secondary,
-            phone_secondary: input.contact.phone_secondary,
+            // twitter: input.contact.twitter,
+            // facebook: input.contact.facebook,
+            // instagram: input.contact.instagram,
+            phone_primary: input.contact.phoneNumber1,
+            phone_secondary: input.contact.phoneNumber2,
           },
-          phoneNumber: input.phoneNumber,
+          password: hashedPassword,
         })
-        .returning('id')
+        .returning(['id', 'password', 'email', 'type'])
         .executeTakeFirstOrThrow();
 
-      await ctx.db
-        .insertInto('Address')
+      ctx.db
+        .insertInto('Notification')
         .values({
-          id: partner.id,
-          country: input.country,
-          city: input.city,
-          street: input.street,
-          provinceName: input.provinceName,
+          title: partner.email + ' wants to join Eejii.org',
+          link: '/admin/users',
+          receiverId: partner.id,
+          senderId: partner.id,
+          status: 'new',
+          type: 'request',
         })
-        .returning('id')
-        .executeTakeFirstOrThrow();
+        .execute();
 
-      return partner;
+      // await ctx.db
+      //   .insertInto('Address')
+      //   .values({
+      //     id: partner.id,
+      //     country: input.country,
+      //     city: input.city,
+      //     street: input.street,
+      //     provinceName: input.provinceName,
+      //   })
+      //   .returning('id')
+      //   .executeTakeFirstOrThrow();
+
+      return {
+        status: 201,
+        message: 'Account created successfully',
+        result: partner,
+      };
     }),
   updateBio: privateProcedure
     .input(
       z.object({
-        organization: z.string(),
+        organizationName: z.string(),
         address: z.string(),
         bio: z.string(),
       })
@@ -110,7 +142,7 @@ export const partnerRouter = createTRPCRouter({
         .updateTable('User')
         .where('User.id', '=', ctx.userId)
         .set({
-          organization: input.organization,
+          organizationName: input.organizationName,
           bio: input.bio,
           addressShort: input.address,
         })
