@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
+import type { volunteerSchema } from '@/lib/validation/volunteer-validation-schema';
 import { DatePicker } from '@mantine/dates';
 
 const VolunteerBioFields = ({
@@ -90,7 +90,7 @@ const VolunteerBioFields = ({
           control={form.control}
           name="gender"
           render={({ field }) => (
-            <FormItem className="flex grow flex-col">
+            <FormItem className="flex flex-col grow">
               <FormLabel>Gender</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>

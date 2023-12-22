@@ -193,7 +193,10 @@ export type User = {
   bio: string | null;
   birthDate: Timestamp | null;
   skills: string | null;
-  organization: string | null;
+  registerCode: string | null;
+  organizationName: string | null;
+  organizationType: string | null;
+  introduction: string | null;
   contact: unknown | null;
 };
 export type UserImage = {

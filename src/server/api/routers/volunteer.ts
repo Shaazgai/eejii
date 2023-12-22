@@ -1,12 +1,15 @@
 import { z } from 'zod';
 
-import { addressSchema } from '@/lib/validation/address-validation-schema';
-import { volunteerSchema } from '@/lib/validation/volunteer-registration-schema';
+import { volunteerSchema } from '@/lib/validation/volunteer-validation-schema';
 
 import type { User } from '@/lib/db/types';
 import type { ListResponse, Pagination } from '@/lib/types';
 import { getPaginationInfo } from '../helper/paginationInfo';
-import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
+import { hash } from 'argon2';
+
+import { RequestType, Role } from '@/lib/db/enums';
+import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const volunteerRouter = createTRPCRouter({
   getById: publicProcedure
@@ -19,6 +22,55 @@ export const volunteerRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       return volunteer;
+    }),
+  register: publicProcedure
+    .input(volunteerSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { email, password } = input;
+
+      const exists = await ctx.db
+        .selectFrom('User')
+        .where('email', '=', email)
+        .selectAll()
+        .executeTakeFirst();
+
+      if (exists) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'User already exists.',
+        });
+      }
+
+      const hashedPassword = await hash(password);
+
+      const user = await ctx.db
+        .insertInto('User')
+        .values({
+          ...input,
+          password: hashedPassword,
+          role: Role.ROLE_USER,
+          requestStatus: RequestType.REQUEST_PENDING,
+        })
+        .returning(['email', 'password', 'type', 'id'])
+        .executeTakeFirstOrThrow();
+
+      ctx.db
+        .insertInto('Notification')
+        .values({
+          title: user.email + ' wants to join Eejii.org',
+          link: '/admin/users',
+          receiverId: user.id,
+          senderId: user.id,
+          status: 'new',
+          type: 'request',
+        })
+        .execute();
+
+      return {
+        status: 201,
+        message: 'Account created successfully',
+        result: user,
+      };
     }),
   findAll: publicProcedure
     .input(
@@ -58,39 +110,5 @@ export const volunteerRouter = createTRPCRouter({
         pagination: paginationInfo,
       };
       return response;
-    }),
-  register: privateProcedure
-    .input(volunteerSchema.merge(addressSchema))
-    .mutation(async ({ input, ctx }) => {
-      const volunteer = await ctx.db
-        .updateTable('User')
-        .where('id', '=', input.id)
-        .set({
-          firstName: input.firstName,
-          lastName: input.lastName,
-          bio: input.bio,
-          birthDate: input.birthday,
-          gender: input.gender,
-          type: 'USER_VOLUNTEER',
-          email: input.email,
-          // skills: Object.assign({}, input.skills as string[]),
-          phoneNumber: input.phoneNumber,
-        })
-        .returning('id')
-        .executeTakeFirstOrThrow();
-
-      await ctx.db
-        .insertInto('Address')
-        .values({
-          userId: volunteer.id,
-          country: input.country,
-          city: input.city,
-          street: input.street,
-          provinceName: input.provinceName,
-        })
-        .returning('id')
-        .executeTakeFirstOrThrow();
-
-      return volunteer;
     }),
 });

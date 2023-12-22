@@ -39,9 +39,13 @@ model User {
   bio           String?
   birthDate     DateTime?
   skills        String?
+  registerCode String?
   // Partner, Supporter fields + bio
-  organization  String?
+  organizationName  String?
+  organizationType String?
+  introduction String?
   contact       Json?
+
   // Relations
   Donation      Donation[]
   Addresses     Address[]

@@ -5,22 +5,31 @@ const phoneRegex = new RegExp(
 );
 
 export const partnerSchema = z.object({
-  id: z.string(),
-  organization: z.string().min(2, {
-    message: 'Fist name must be at least 2 characters.',
-  }),
+  // id: z.string(),
+  organizationType: z.string(),
+  organizationName: z.string(),
   email: z.string().email({
     message: 'Please provide email',
   }),
-  bio: z.string(),
-  contact: z.object({
-    phone_primary: z.string().regex(phoneRegex).length(8),
-    phone_secondary: z.string().regex(phoneRegex).length(8),
-    facebook: z.string().url().optional().or(z.literal('')),
-    twitter: z.string().url().optional().or(z.literal('')),
-    instagram: z.string().url().optional().or(z.literal('')),
+  addressShort: z.string(),
+  password: z.string().min(3, {
+    message: 'Password must be at least 3 characters.',
   }),
-  phoneNumber: z.string().regex(phoneRegex).length(8),
+  // phoneNumber1: z.string(),
+  // phoneNumber2: z.string(),
+
+  bio: z.string(),
+  introduction: z.string(),
+  contact: z.object({
+    phoneNumber1: z.string(),
+    phoneNumber2: z.string(),
+    // phone_primary: z.string().regex(phoneRegex).length(8),
+    // phone_secondary: z.string().regex(phoneRegex).length(8),
+    // facebook: z.string().url().optional().or(z.literal('')),
+    // twitter: z.string().url().optional().or(z.literal('')),
+    // instagram: z.string().url().optional().or(z.literal('')),
+  }),
+  // phoneNumber: z.string().regex(phoneRegex).length(8),
 });
 
 export const supporterSchema = partnerSchema;
