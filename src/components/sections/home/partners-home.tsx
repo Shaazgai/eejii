@@ -1,26 +1,43 @@
-import React from 'react';
+import { Center, Container, Flex, Image, Title } from '@mantine/core';
 
 export default function PartnersHome() {
   return (
-    <section className="h-[410px] w-full bg-white pt-16">
-      <h1 className="h-12 text-center text-3xl font-bold">Манай хамрагчид</h1>
-      <div className="flex justify-around pt-24">
-        <img
+    <Container size={'xl'}>
+      <Center pt={40}>
+        <Title>Манай хамрагчид</Title>
+      </Center>
+      <Flex
+        w={'100%'}
+        justify="space-around"
+        align="flex-start"
+        direction="row"
+        wrap="wrap"
+        gap={20}
+        p={50}
+      >
+        <Image
           src="/images/partner/partner1.png"
           alt="airTour"
-          className="h-[99px] w-[202px] object-cover"
+          h={100}
+          w={200}
+          fit="contain"
         />
-        <img
+        <Image
+          h={100}
+          w={200}
+          fit="contain"
           src="/images/partner/partner2.png"
           alt="ttr"
-          className="h-[99px] w-[202px]"
         />
-        <img
+        <Image
+          h={100}
+          w={200}
+          miw={200}
+          fit="contain"
           src="/images/partner/partner3.png"
           alt="Lotus"
-          className="h-[99px] w-[202px]"
         />
-      </div>
-    </section>
+      </Flex>
+    </Container>
   );
 }

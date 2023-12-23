@@ -10,6 +10,7 @@ export const mediaRouter = createTRPCRouter({
         search: z.string().nullish(),
         ownerId: z.string().nullish(),
         category: z.string().nullish(),
+        limit: z.number().nullish(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -60,7 +61,11 @@ export const mediaRouter = createTRPCRouter({
       if (input.ownerId) {
         query = query.where('Media.ownerId', '=', input.ownerId);
       }
-      const res = await query.execute();
+      if (input.limit) {
+        query = query.limit(input.limit);
+      }
+
+      const res = await query.orderBy('Media.createdAt desc').execute();
       return res;
     }),
   getById: publicProcedure
