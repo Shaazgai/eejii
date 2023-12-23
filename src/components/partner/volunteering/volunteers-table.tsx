@@ -33,16 +33,16 @@ const VolunteerRow = ({ v }: { v: MyVolunteer }) => {
         <Text
           tt="capitalize"
           c={
-            v.EventAssociation.status === 'pending'
+            v.EventUser.status === 'pending'
               ? 'yellow'
-              : v.EventAssociation.status === 'approved'
+              : v.EventUser.status === 'approved'
                 ? 'green'
-                : v.EventAssociation.status === 'cancelled'
+                : v.EventUser.status === 'cancelled'
                   ? 'red'
                   : 'gray'
           }
         >
-          {v.EventAssociation.status}
+          {v.EventUser.status}
         </Text>
       </Table.Td>
       <Table.Td>{v.email}</Table.Td>

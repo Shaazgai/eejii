@@ -4,7 +4,7 @@ import { ArrowUpDown, CheckCheck, XIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import type { User } from '@/lib/db/types';
-import type { EventWithOwner } from '@/lib/types';
+import type { Event } from '@/lib/types';
 
 import { ProjectStatus } from '@/lib/db/enums';
 import { api } from '@/utils/api';
@@ -22,7 +22,7 @@ const EventsTable = ({
   hasNextPage,
   hasPrevPage,
 }: {
-  data: EventWithOwner[];
+  data: Event[];
   page: number;
   setPage: Dispatch<SetStateAction<number>>;
   totalPage: number;
@@ -30,7 +30,7 @@ const EventsTable = ({
   hasNextPage: boolean;
   hasPrevPage: boolean;
 }) => {
-  const columns: ColumnDef<EventWithOwner>[] = [
+  const columns: ColumnDef<Event>[] = [
     {
       accessorKey: 'title',
       header: ({ column }) => {

@@ -5,7 +5,7 @@ import { ArrowUpDown, CheckCheck, XIcon } from 'lucide-react';
 import type { User } from '@/lib/db/types';
 
 // import type { User } from '@/lib/types';
-import { RequestType } from '@/lib/db/enums';
+import { UserStatus } from '@/lib/db/enums';
 import { api } from '@/utils/api';
 import type { Dispatch, SetStateAction } from 'react';
 import { Button } from '../../ui/button';
@@ -111,7 +111,7 @@ const PartnerTable = ({
               onClick={() =>
                 mutate({
                   userId: requestId,
-                  status: RequestType.REQUEST_APPROVED,
+                  status: UserStatus.REQUEST_APPROVED,
                 })
               }
             >
@@ -124,7 +124,7 @@ const PartnerTable = ({
               onClick={() =>
                 mutate({
                   userId: requestId,
-                  status: RequestType.REQUEST_DENIED,
+                  status: UserStatus.REQUEST_DENIED,
                 })
               }
             >

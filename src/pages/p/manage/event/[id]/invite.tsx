@@ -22,7 +22,7 @@ const Invite = () => {
       userType: userType as string,
     });
   const { mutate: invite, isLoading: isInviteLoading } =
-    api.eventAssociation.inviteToEvent.useMutation({
+    api.eventUser.inviteToEvent.useMutation({
       onSuccess: () => {
         context.event.findUsersToInvite.invalidate();
       },

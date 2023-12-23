@@ -29,10 +29,11 @@ export default function Volunteers() {
   const router = useRouter();
   const session = useSession();
 
-  const { data: volunteers, isLoading } =
-    api.eventAssociation.getMyVolunteer.useQuery({
+  const { data: volunteers, isLoading } = api.eventUser.getMyVolunteer.useQuery(
+    {
       partnerId: session.data?.user.id as string,
-    });
+    }
+  );
   return (
     <PartnerLayout>
       <Container fluid p={'xl'}>

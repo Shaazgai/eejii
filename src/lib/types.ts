@@ -1,30 +1,30 @@
 import type {
-  RequestType as RequestTypeConst,
   Role as RoleConst,
+  UserStatus as UserStatusConst,
   UserType as UserTypeConst,
 } from './db/enums';
 import type {
   Address,
+  Category,
+  CategoryEvent,
+  CategoryMedia,
+  CategoryProject,
   Donation,
-  Event,
-  EventAssociation,
+  Event as EventDB,
   EventImage,
-  FundAssociation,
-  FundImage,
-  Fundraising,
-  GrantAssociation,
-  GrantFundraising,
-  GrantImage,
+  EventUser as EventUserDB,
   Media as MediaDB,
   MediaImage as MediaImageDB,
+  Project as ProjectDB,
+  ProjectImage,
+  ProjectUser as ProjectUserDB,
   User as UserDB,
   UserImage,
 } from './db/types';
 
 export type Role = (typeof RoleConst)[keyof typeof RoleConst];
 export type UserType = (typeof UserTypeConst)[keyof typeof UserTypeConst];
-export type RequestType =
-  (typeof RequestTypeConst)[keyof typeof RequestTypeConst];
+export type UserStatus = (typeof UserStatusConst)[keyof typeof UserStatusConst];
 
 export type VolunteerTableProps = {
   email: string;
@@ -38,7 +38,7 @@ export type VolunteerTableProps = {
   id: string;
 };
 
-export type EventWithOwner = Event & {
+export type Event = EventDB & {
   Owner: UserDB;
   Categories: [
     {
@@ -52,27 +52,18 @@ export type EventWithOwner = Event & {
   Images: EventImage[];
 };
 
-export type FundWithOwner = Fundraising & {
+export type Project = ProjectDB & {
   Owner: UserDB;
-  Images: FundImage[];
+  Images: ProjectImage[];
   Donation: Donation[];
 };
 
-export type GrantFundWithOwner = GrantFundraising & {
-  Owner: UserDB;
-  Images: GrantImage[];
+export type EventUser = EventUserDB & {
+  Event: EventDB;
 };
 
-export type EventAssociationWithEvent = EventAssociation & {
-  Event: Event;
-};
-
-export type FundAssociationWithFund = FundAssociation & {
-  Fundraising: Fundraising;
-};
-
-export type GrantAssociationWithGrant = GrantAssociation & {
-  Grant: GrantFundraising;
+export type ProjectUser = ProjectUserDB & {
+  Project: ProjectDB;
 };
 
 export type S3ParamType = {
@@ -131,11 +122,11 @@ export type MyVolunteer = {
   bio: string;
   phoneNumber: string;
   Address: Address;
-  EventAssociation: EventAssociation;
+  EventUser: EventUser;
 };
 
 export type MyDonation = Donation & {
-  Fundraising: FundWithOwner;
+  Project: Project;
 };
 
 export type User = UserDB & {
@@ -152,4 +143,14 @@ export type Media = MediaDB & {
     mediaId: string;
   }[];
   Owner: UserDB;
+};
+
+export type MediaCategory = CategoryMedia & {
+  Category: Category;
+};
+export type EventCategory = CategoryEvent & {
+  Category: Category;
+};
+export type ProjectCategory = CategoryProject & {
+  Category: Category;
 };

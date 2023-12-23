@@ -1,30 +1,28 @@
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Role, UserType } from '@/lib/db/enums';
-import { api } from '@/utils/api';
-import VolunteerRegisterForm from '@/components/volunteer/register/volunteer-register-form';
 import PartnerRegisterForm from '@/components/partner/register/partner-register-form';
+import { Button } from '@/components/ui/button';
+import VolunteerRegisterForm from '@/components/volunteer/register/volunteer-register-form';
+import { Role, UserType } from '@/lib/db/enums';
 
 export default function Signup() {
   const session = useSession();
   const router = useRouter();
 
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState<string>('');
+  // const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedUserType, setSelectedUserType] = useState<UserType | ''>('');
 
   const handleUserTypeSelection = (type: UserType) => {
     setSelectedUserType(type);
   };
-  const resetUserType = () => {
-    setSelectedUserType('');
-  };
+  // const resetUserType = () => {
+  //   setSelectedUserType('');
+  // };
   // const { mutate } = api.user.insertUser.useMutation({
   //   onSuccess: data => {
   //     console.log('🚀 ~ file: signup.tsx:12 ~ Signup ~ data:', data);

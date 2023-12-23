@@ -4,7 +4,14 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-import type { Role, UserType, RequestType, ProjectStatus } from './enums';
+import type {
+  Role,
+  UserType,
+  ProjectType,
+  EventType,
+  UserStatus,
+  ProjectStatus,
+} from './enums';
 
 export type Address = {
   id: Generated<string>;
@@ -13,6 +20,20 @@ export type Address = {
   provinceName: string;
   street: string;
   userId: string | null;
+};
+export type Banner = {
+  id: Generated<string>;
+  path: string;
+  mobilePath: string;
+  title: string | null;
+  description: string | null;
+  link: string | null;
+  bannerPositionId: string | null;
+};
+export type BannerPosition = {
+  id: Generated<string>;
+  code: string;
+  label: string;
 };
 export type Category = {
   id: Generated<string>;
@@ -24,19 +45,14 @@ export type CategoryEvent = {
   eventId: string | null;
   categoryId: string | null;
 };
-export type CategoryFundraising = {
-  id: Generated<string>;
-  fundraisingId: string | null;
-  categoryId: string | null;
-};
-export type CategoryGrantFundraising = {
-  id: Generated<string>;
-  grantFundraisingId: string | null;
-  categoryId: string | null;
-};
 export type CategoryMedia = {
   id: Generated<string>;
   mediaId: string | null;
+  categoryId: string | null;
+};
+export type CategoryProject = {
+  id: Generated<string>;
+  projectId: string | null;
   categoryId: string | null;
 };
 export type Certificate = {
@@ -50,11 +66,12 @@ export type Donation = {
   amount: number;
   userId: string | null;
   isPublicName: Generated<boolean>;
-  fundraisingId: string | null;
+  projectId: string | null;
   createdAt: Generated<Timestamp>;
 };
 export type Event = {
   id: Generated<string>;
+  type: Generated<EventType>;
   title: string;
   description: string;
   location: string;
@@ -68,73 +85,17 @@ export type Event = {
   contact: unknown | null;
   ownerId: string | null;
 };
-export type EventAssociation = {
-  id: Generated<string>;
-  userId: string | null;
-  eventId: string | null;
-  status: string | null;
-  type: string | null;
-};
 export type EventImage = {
   id: Generated<string>;
   ownerId: string;
   path: string;
   type: string | null;
 };
-export type FundAssociation = {
+export type EventUser = {
   id: Generated<string>;
   userId: string | null;
-  fundraisingId: string | null;
+  eventId: string | null;
   status: string | null;
-  type: string | null;
-};
-export type FundImage = {
-  id: Generated<string>;
-  ownerId: string;
-  path: string;
-  type: string | null;
-};
-export type Fundraising = {
-  id: Generated<string>;
-  title: string;
-  description: string;
-  goalAmount: number;
-  currentAmount: number;
-  contact: unknown | null;
-  location: string | null;
-  startTime: Timestamp | null;
-  endTime: Timestamp | null;
-  enabled: boolean;
-  status: ProjectStatus | null;
-  createdAt: Generated<Timestamp>;
-  ownerId: string | null;
-};
-export type GrantAssociation = {
-  id: Generated<string>;
-  userId: string | null;
-  grantId: string | null;
-  status: string | null;
-  type: string | null;
-};
-export type GrantFundraising = {
-  id: Generated<string>;
-  title: string;
-  description: string;
-  goalAmount: number;
-  currentAmount: number;
-  contact: unknown | null;
-  location: string | null;
-  enabled: boolean;
-  status: ProjectStatus | null;
-  startTime: Timestamp | null;
-  endTime: Timestamp | null;
-  createdAt: Generated<Timestamp>;
-  ownerId: string | null;
-};
-export type GrantImage = {
-  id: Generated<string>;
-  ownerId: string;
-  path: string;
   type: string | null;
 };
 export type Media = {
@@ -172,6 +133,35 @@ export type Payment = {
   donationId: string;
   details: unknown | null;
 };
+export type Project = {
+  id: Generated<string>;
+  type: Generated<ProjectType>;
+  title: string;
+  description: string;
+  goalAmount: number;
+  currentAmount: number;
+  contact: unknown | null;
+  location: string | null;
+  startTime: Timestamp | null;
+  endTime: Timestamp | null;
+  enabled: boolean;
+  status: ProjectStatus | null;
+  createdAt: Generated<Timestamp>;
+  ownerId: string | null;
+};
+export type ProjectImage = {
+  id: Generated<string>;
+  ownerId: string;
+  path: string;
+  type: string | null;
+};
+export type ProjectUser = {
+  id: Generated<string>;
+  userId: string | null;
+  projectId: string | null;
+  status: string | null;
+  type: string | null;
+};
 export type Skill = {
   id: Generated<string>;
   name: string;
@@ -186,7 +176,7 @@ export type User = {
   requestSend: Generated<boolean>;
   password: string | null;
   addressShort: string | null;
-  requestStatus: RequestType | null;
+  requestStatus: UserStatus | null;
   firstName: string | null;
   lastName: string | null;
   gender: string | null;
@@ -207,26 +197,24 @@ export type UserImage = {
 };
 export type DB = {
   Address: Address;
+  Banner: Banner;
+  BannerPosition: BannerPosition;
   Category: Category;
   CategoryEvent: CategoryEvent;
-  CategoryFundraising: CategoryFundraising;
-  CategoryGrantFundraising: CategoryGrantFundraising;
   CategoryMedia: CategoryMedia;
+  CategoryProject: CategoryProject;
   Certificate: Certificate;
   Donation: Donation;
   Event: Event;
-  EventAssociation: EventAssociation;
   EventImage: EventImage;
-  FundAssociation: FundAssociation;
-  FundImage: FundImage;
-  Fundraising: Fundraising;
-  GrantAssociation: GrantAssociation;
-  GrantFundraising: GrantFundraising;
-  GrantImage: GrantImage;
+  EventUser: EventUser;
   Media: Media;
   MediaImage: MediaImage;
   Notification: Notification;
   Payment: Payment;
+  Project: Project;
+  ProjectImage: ProjectImage;
+  ProjectUser: ProjectUser;
   Skill: Skill;
   User: User;
   UserImage: UserImage;

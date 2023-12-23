@@ -4,7 +4,7 @@ import { ArrowUpDown, CheckCheck, XIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import type { User } from '@/lib/db/types';
-import type { FundWithOwner } from '@/lib/types';
+import type { Project } from '@/lib/types';
 
 import { ProjectStatus } from '@/lib/db/enums';
 import { api } from '@/utils/api';
@@ -13,7 +13,7 @@ import { Button } from '../../ui/button';
 import { IndexTable } from '../table';
 import { DataTablePagination } from '../table-pagination';
 
-const FundraisingsTable = ({
+const ProjectsTable = ({
   data,
   page,
   setPage,
@@ -22,7 +22,7 @@ const FundraisingsTable = ({
   hasNextPage,
   hasPrevPage,
 }: {
-  data: FundWithOwner[];
+  data: Project[];
   page: number;
   setPage: Dispatch<SetStateAction<number>>;
   totalPage: number;
@@ -30,7 +30,7 @@ const FundraisingsTable = ({
   hasNextPage: boolean;
   hasPrevPage: boolean;
 }) => {
-  const columns: ColumnDef<FundWithOwner>[] = [
+  const columns: ColumnDef<Project>[] = [
     {
       accessorKey: 'title',
       header: ({ column }) => {
@@ -96,9 +96,9 @@ const FundraisingsTable = ({
       header: 'Action',
       cell: ({ row }) => {
         const context = api.useContext();
-        const { mutate, isLoading } = api.fundraising.changeStatus.useMutation({
+        const { mutate, isLoading } = api.project.changeStatus.useMutation({
           onSuccess: _ => {
-            context.fundraising.getAll.invalidate();
+            context.project.getAll.invalidate();
           },
         });
 
@@ -168,4 +168,4 @@ const FundraisingsTable = ({
   );
 };
 
-export default FundraisingsTable;
+export default ProjectsTable;

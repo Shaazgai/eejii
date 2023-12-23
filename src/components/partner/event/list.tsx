@@ -1,5 +1,4 @@
 import type { Event } from '@/lib/db/types';
-import type { EventWithOwner } from '@/lib/types';
 import { SimpleGrid, Skeleton } from '@mantine/core';
 import { EventCard } from './card';
 
@@ -7,7 +6,7 @@ export const EventListPrivate = ({
   events,
   isLoading,
 }: {
-  events: EventWithOwner[] | undefined;
+  events: Event[] | undefined;
   isLoading: boolean;
 }) => {
   return (

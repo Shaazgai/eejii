@@ -1,14 +1,26 @@
 // import NoImage from '@public/images/placeholder.webp';
+import { Image, Paper } from '@mantine/core';
 import type { ImageProps } from 'next/image';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import { useEffect, useState } from 'react';
 
-interface FallbackImageProps extends ImageProps {
+type FallbackImageProps = ImageProps & {
   fallbackSrc?: string;
-}
+  w?: number | string;
+  h?: number | string;
+  width?: number;
+  height?: number;
+  radius?: number | string;
+  fit?: 'contain' | 'cover';
+};
 export const FallbackImage: React.FC<FallbackImageProps> = ({
   src,
-  ...rest
+  width,
+  height,
+  w,
+  h,
+  radius,
+  fit,
 }) => {
   const [imgSrc, setImgSrc] = useState(src);
   useEffect(() => {
@@ -16,13 +28,27 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
   }, [src]);
 
   return (
-    <Image
-      {...rest}
-      src={imgSrc || '/images/placeholder.svg'}
-      onError={() => {
-        setImgSrc('/images/placeholder.svg');
-      }}
-      alt={'image'}
-    />
+    <Paper
+      w={w}
+      h={h}
+      mah={h}
+      maw={w}
+      radius={radius}
+      style={{ overflow: 'hidden' }}
+    >
+      <Image
+        component={NextImage}
+        loading="lazy"
+        src={imgSrc}
+        radius={radius}
+        fit={fit}
+        fallbackSrc="/images/placeholder.svg"
+        width={width}
+        w={w}
+        h={h}
+        height={height}
+        alt="img"
+      />
+    </Paper>
   );
 };

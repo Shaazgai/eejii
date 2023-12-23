@@ -10,12 +10,22 @@ export const UserType = {
   USER_SUPPORTER: 'USER_SUPPORTER',
 } as const;
 export type UserType = (typeof UserType)[keyof typeof UserType];
-export const RequestType = {
+export const ProjectType = {
+  FUNDRAISING: 'FUNDRAISING',
+  GRANT_FUNDRAISING: 'GRANT_FUNDRAISING',
+} as const;
+export type ProjectType = (typeof ProjectType)[keyof typeof ProjectType];
+export const EventType = {
+  EVENT: 'EVENT',
+  VOLUNTEERING: 'VOLUNTEERING',
+} as const;
+export type EventType = (typeof EventType)[keyof typeof EventType];
+export const UserStatus = {
   REQUEST_PENDING: 'REQUEST_PENDING',
   REQUEST_DENIED: 'REQUEST_DENIED',
   REQUEST_APPROVED: 'REQUEST_APPROVED',
 } as const;
-export type RequestType = (typeof RequestType)[keyof typeof RequestType];
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 export const ProjectStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

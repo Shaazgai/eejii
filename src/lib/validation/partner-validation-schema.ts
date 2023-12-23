@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-const phoneRegex = new RegExp(
-  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
-);
+// const phoneRegex = new RegExp(
+//   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+// );
 
 export const partnerSchema = z.object({
-  // id: z.string(),
+  id: z.string().nullish(),
   organizationType: z.string(),
   organizationName: z.string(),
   email: z.string().email({
@@ -31,5 +31,3 @@ export const partnerSchema = z.object({
   }),
   // phoneNumber: z.string().regex(phoneRegex).length(8),
 });
-
-export const supporterSchema = partnerSchema;

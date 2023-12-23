@@ -13,15 +13,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ProjectStatus } from '@/lib/db/enums';
-import type { EventWithOwner, FundWithOwner } from '@/lib/types';
+import type { Event, Project } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
   const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
     { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
   );
-  const { data: fundraisings, isLoading: isFundLoading } =
-    api.fundraising.getAll.useQuery({
+  const { data: projects, isLoading: isFundLoading } =
+    api.project.getAll.useQuery({
       page: 1,
       limit: 10,
       enabled: true,
@@ -76,13 +76,13 @@ export default function Index() {
         </div>
         <div className="-translate-y-10">
           <EventSlider
-            events={events?.items as unknown as EventWithOwner[]}
+            events={events?.items as unknown as Event[]}
             isEventLoading={isEventLoading}
           />
         </div>
         <div className="-translate-y-10">
           <FundSlider
-            fundraisings={fundraisings?.items as unknown as FundWithOwner[]}
+            projects={projects?.items as unknown as Project[]}
             isFundLoading={isFundLoading}
           />
         </div>
@@ -93,7 +93,7 @@ export default function Index() {
 
 // export const getServerSideProps: GetServerSideProps = async context => {
 //   const events = await api.event.getAll.useQuery();
-//   const fundraising = await api.fundraising.getAll.useQuery();
+//   const project = await api.project.getAll.useQuery();
 
 //   return {
 //     props: {

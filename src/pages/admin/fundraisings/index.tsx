@@ -2,20 +2,18 @@ import { useState } from 'react';
 
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
-import FundraisingsTable from '@/components/table/admin/fundraisings-table';
-import type { FundWithOwner } from '@/lib/types';
+import ProjectsTable from '@/components/table/admin/fundraisings-table';
+import type { Project } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
   const [page, setPage] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const { data: fundraisingsData, isLoading } = api.fundraising.getAll.useQuery(
-    {
-      page: page,
-      limit: 10,
-    }
-  );
+  const { data: projectsData, isLoading } = api.project.getAll.useQuery({
+    page: page,
+    limit: 10,
+  });
 
   const tabs = [
     {
@@ -48,14 +46,14 @@ export default function Index() {
         </div>
         <div>
           {!isLoading && (
-            <FundraisingsTable
-              data={fundraisingsData?.items as unknown as FundWithOwner[]}
+            <ProjectsTable
+              data={projectsData?.items as unknown as Project[]}
               page={page}
               setPage={setPage}
-              totalPage={fundraisingsData?.pagination.totalPages as number}
-              totalCount={fundraisingsData?.pagination.totalCount as number}
-              hasNextPage={fundraisingsData?.pagination.hasNextPage as boolean}
-              hasPrevPage={fundraisingsData?.pagination.hasPrevPage as boolean}
+              totalPage={projectsData?.pagination.totalPages as number}
+              totalCount={projectsData?.pagination.totalCount as number}
+              hasNextPage={projectsData?.pagination.hasNextPage as boolean}
+              hasPrevPage={projectsData?.pagination.hasPrevPage as boolean}
             />
           )}
         </div>

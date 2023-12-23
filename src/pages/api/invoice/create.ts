@@ -7,7 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { userId, fundId, amount } = req.body;
+  const { userId, projectId, amount } = req.body;
   const response = await db.transaction().execute(async trx => {
     const donation = await trx
       .insertInto('Donation')
@@ -15,7 +15,7 @@ export default async function handler(
         amount: amount,
         userId: userId,
         isPublicName: true,
-        fundraisingId: fundId,
+        projectId: projectId,
       })
       .returning('id')
       .executeTakeFirstOrThrow();

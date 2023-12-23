@@ -1,10 +1,11 @@
+import { Container, SimpleGrid } from '@mantine/core';
 import { Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
 
 export default function PublicFooter() {
   return (
-    <section className="h-64 p-20">
-      <div className="flex h-[244px] justify-around">
+    <Container p={20} size={'xl'}>
+      <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} pt={40}>
         <div>
           <img src="/images/homie/proLogo.png" alt="mainLogo" />
         </div>
@@ -56,7 +57,7 @@ export default function PublicFooter() {
             <ul>volunteermongolia.com</ul>
           </Link>
         </div>
-      </div>
+      </SimpleGrid>
       <div>
         <div className="m-auto flex w-24 items-center justify-between pb-9 pt-20">
           <Link
@@ -80,6 +81,6 @@ export default function PublicFooter() {
           </p>
         </div>
       </div>
-    </section>
+    </Container>
   );
 }

@@ -51,14 +51,14 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       items: [],
     },
     {
-      title: 'Fundraisings',
-      href: '/admin/fundraisings',
+      title: 'Projects',
+      href: '/admin/projects',
       icon: <HeartHandshake />,
       items: [],
     },
     {
-      title: 'Grant Fundraisings',
-      href: '/admin/grant-fundraisings',
+      title: 'Grant Projects',
+      href: '/admin/grant-projects',
       icon: <Anchor />,
       items: [],
     },

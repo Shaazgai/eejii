@@ -1,6 +1,6 @@
 import React from 'react';
-import PublicHeader from './sections/public-header';
 import PublicFooter from './sections/public-footer';
+import { PublicHeader } from './sections/public-header';
 
 interface PublicLayoutProps {
   children: React.ReactNode;

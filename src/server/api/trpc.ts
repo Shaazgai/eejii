@@ -15,8 +15,8 @@ import { ZodError } from 'zod';
 
 import { nextAuthOptions } from '@/lib/auth';
 
-import { db } from '../db';
 import { Role } from '@/lib/db/enums';
+import { db } from '../db';
 /**
  * 1. CONTEXT
  *

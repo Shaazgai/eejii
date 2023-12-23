@@ -1,6 +1,6 @@
-import { Button } from '../ui/button';
 import { UserType } from '@/lib/db/enums';
 import type { User } from '@/lib/db/types';
+import { Button } from '../ui/button';
 
 export const UserList = ({
   users,
@@ -37,7 +37,7 @@ export const UserList = ({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                    {user.organization}
+                    {user.organizationName}
                   </p>
                   <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                     {user.email}

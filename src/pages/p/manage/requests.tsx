@@ -1,38 +1,29 @@
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import EventRequestCard from '@/components/card/request/event-request-card';
 import FundRequestCard from '@/components/card/request/fund-request-card';
-import GrantRequestCard from '@/components/card/request/grant-request-card';
 import PartnerLayout from '@/components/layout/partner-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
-import type {
-  EventAssociationWithEvent,
-  FundAssociationWithFund,
-  GrantAssociationWithGrant,
-} from '@/lib/types';
+import type { EventUser, ProjectUser } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Requests = () => {
   const session = useSession();
   const [activeIndex, setActiveIndex] = useState(0);
   const [status, setStatus] = useState('approved');
-  const { data: eventAssociation, isLoading: isEventLoading } =
-    api.eventAssociation.findAll.useQuery({
+  const { data: eventUser, isLoading: isEventLoading } =
+    api.eventUser.findAll.useQuery({
       eventsOwnerId: session.data?.user.id,
       status: status,
     });
-  const { data: fundAssociation, isLoading: isFundLoading } =
-    api.fundAssociation.findAll.useQuery({
+  const { data: projectUser, isLoading: isFundLoading } =
+    api.projectUser.findAll.useQuery({
       fundsOwnerId: session.data?.user.id,
       status: status,
     });
-  const { data: grantAssociation, isLoading: isGrantLoading } =
-    api.grantAssociation.findAll.useQuery({
-      grantsOwnerId: session.data?.user.id,
-      status: status,
-    });
+
   useEffect(() => {
     if (activeIndex === 0) {
       setStatus('approved');
@@ -77,45 +68,28 @@ const Requests = () => {
           <div className="space-y-2">
             <h3>Events</h3>
             {!isEventLoading
-              ? eventAssociation?.map((event, i) => (
+              ? eventUser?.map((event, i) => (
                   <EventRequestCard
                     isOwner={true}
-                    eventAssociation={
-                      event as unknown as EventAssociationWithEvent
-                    }
+                    eventUser={event as unknown as EventUser}
                     key={i}
                   />
                 ))
               : '..Loading'}
-            {eventAssociation?.length === 0 && 'No result'}
+            {eventUser?.length === 0 && 'No result'}
           </div>
           <div className="space-y-2">
-            <h3>Fundraisings</h3>
+            <h3>Projects</h3>
             {!isFundLoading
-              ? fundAssociation?.map((fund, i) => (
+              ? projectUser?.map((fund, i) => (
                   <FundRequestCard
                     isOwner={true}
-                    fundAssociation={fund as unknown as FundAssociationWithFund}
+                    projectUser={fund as unknown as ProjectUser}
                     key={i}
                   />
                 ))
               : '..Loading'}
-            {fundAssociation?.length === 0 && 'No result'}
-          </div>
-          <div>
-            <h3>Grant Fundraisings</h3>
-            {!isGrantLoading
-              ? grantAssociation?.map((grant, i) => (
-                  <GrantRequestCard
-                    isOwner={true}
-                    grantAssociation={
-                      grant as unknown as GrantAssociationWithGrant
-                    }
-                    key={i}
-                  />
-                ))
-              : '..Loading'}
-            {grantAssociation?.length === 0 && 'No result'}
+            {projectUser?.length === 0 && 'No result'}
           </div>
         </div>
       </Shell>

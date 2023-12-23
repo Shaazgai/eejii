@@ -1,0 +1,259 @@
+import EventForm from '@/components/form/event-form';
+import GrantProjectForm from '@/components/form/grant-project-form';
+import ProjectForm from '@/components/form/project-form';
+import PartnerLayout from '@/components/layout/partner-layout';
+import handleImageUpload from '@/lib/hooks/upload-image';
+import type { S3ParamType } from '@/lib/types';
+import imageResizer from '@/lib/utils/image-resizer';
+import type { eventSchema } from '@/lib/validation/event-schema';
+import type { projectSchema } from '@/lib/validation/project-schema';
+import tabsClasses from '@/styles/Tabs.module.css';
+import { api } from '@/utils/api';
+import {
+  ActionIcon,
+  Container,
+  Flex,
+  Paper,
+  Space,
+  Tabs,
+  Title,
+} from '@mantine/core';
+import type { FileWithPath } from '@mantine/dropzone';
+import { notifications } from '@mantine/notifications';
+import { IconArrowLeft } from '@tabler/icons-react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import type { z } from 'zod';
+
+const NewEvent = () => {
+  const router = useRouter();
+  const [files, setFiles] = useState<File[]>([]);
+
+  async function handleSetFiles(images: FileWithPath[]) {
+    const resizedFiles = await Promise.all(
+      images.map(async file => {
+        const resizedFile = await imageResizer(file, 300, 300);
+        return resizedFile;
+      })
+    );
+    setFiles(resizedFiles as unknown as File[]);
+  }
+
+  const { mutate: createPresignedUrl } =
+    api.event.createPresignedUrl.useMutation({
+      onSuccess: res => {
+        const { url, fields } = res.data as unknown as {
+          url: string;
+          fields: S3ParamType;
+        };
+        const file = files.find(f => f.name === res.fileName);
+        handleImageUpload(url, fields, file as File);
+      },
+    });
+  const { mutate, isLoading } = api.event.create.useMutation({
+    onSuccess: newEvent => {
+      if (files.length > 0) {
+        files.map(file => {
+          createPresignedUrl({
+            eventId: newEvent.id,
+            type: 'main',
+            name: file?.name as string,
+            contentType: file?.type as string,
+          });
+        });
+      }
+
+      notifications.show({
+        title: 'Success',
+        message: 'Successfully created event',
+      });
+      router.push(`/p/manage/event/${newEvent.id}/invite`);
+    },
+  });
+
+  function handleSubmit(values: z.infer<typeof eventSchema>) {
+    mutate(values);
+  }
+  return (
+    <EventForm
+      data={undefined}
+      handleSubmit={handleSubmit}
+      isLoading={isLoading}
+      handleSetFiles={handleSetFiles}
+      setFiles={setFiles}
+      files={files}
+    />
+  );
+};
+
+const NewProject = () => {
+  const router = useRouter();
+  const [files, setFiles] = useState<File[]>([]);
+
+  async function handleSetFiles(images: FileWithPath[]) {
+    const resizedFiles = await Promise.all(
+      images.map(async file => {
+        const resizedFile = await imageResizer(file, 300, 300);
+        return resizedFile;
+      })
+    );
+    setFiles(resizedFiles as unknown as File[]);
+  }
+
+  const { mutate: createPresignedUrl } =
+    api.project.createPresignedUrl.useMutation({
+      onSuccess: res => {
+        const { url, fields } = res.data as unknown as {
+          url: string;
+          fields: S3ParamType;
+        };
+        const file = files.find(f => f.name === res.fileName);
+        handleImageUpload(url, fields, file as File);
+      },
+    });
+  const { mutate, isLoading } = api.project.create.useMutation({
+    onSuccess: newProject => {
+      if (files.length > 0) {
+        files.map(file => {
+          createPresignedUrl({
+            projectId: newProject.id,
+            name: file?.name as string,
+            type: 'main',
+            contentType: file?.type as string,
+          });
+        });
+      }
+      notifications.show({
+        title: 'Success',
+        message: 'Successfully created project',
+      });
+      router.push(`/p/manage/${newProject.id}/invite`);
+    },
+  });
+  function handleSubmit(values: z.infer<typeof projectSchema>) {
+    mutate(values);
+  }
+  return (
+    <ProjectForm
+      data={undefined}
+      handleSubmit={handleSubmit}
+      setFiles={setFiles}
+      handleSetFiles={handleSetFiles}
+      isLoading={isLoading}
+      files={files}
+    />
+  );
+};
+
+const NewGrantProject = () => {
+  const router = useRouter();
+  const [files, setFiles] = useState<File[]>([]);
+
+  async function handleSetFiles(images: FileWithPath[]) {
+    const resizedFiles = await Promise.all(
+      images.map(async file => {
+        const resizedFile = await imageResizer(file, 300, 300);
+        return resizedFile;
+      })
+    );
+    setFiles(resizedFiles as unknown as File[]);
+  }
+
+  const { mutate: createPresignedUrl } =
+    api.project.createPresignedUrl.useMutation({
+      onSuccess: res => {
+        const { url, fields } = res.data as unknown as {
+          url: string;
+          fields: S3ParamType;
+        };
+        const file = files.find(f => f.name === res.fileName);
+        handleImageUpload(url, fields, file as File);
+      },
+    });
+  const { mutate, isLoading } = api.project.create.useMutation({
+    onSuccess: newGrantProject => {
+      if (files.length > 0) {
+        files.map(file => {
+          createPresignedUrl({
+            projectId: newGrantProject.id,
+            name: file?.name as string,
+            type: 'main',
+            contentType: file?.type as string,
+          });
+        });
+      }
+      notifications.show({
+        title: 'Success',
+        message: 'Successfully created grant project',
+      });
+      router.push(`/p/manage/grant/${newGrantProject.id}`);
+    },
+  });
+
+  function handleSubmit(values: z.infer<typeof projectSchema>) {
+    mutate(values);
+  }
+  return (
+    <GrantProjectForm
+      data={undefined}
+      handleSubmit={handleSubmit}
+      setFiles={setFiles}
+      handleSetFiles={handleSetFiles}
+      isLoading={isLoading}
+      files={files}
+    />
+  );
+};
+export default function New() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <PartnerLayout>
+      <Container fluid p={'xl'}>
+        <Tabs
+          defaultValue="project"
+          classNames={{
+            list: tabsClasses.list,
+            tab: tabsClasses.tab,
+          }}
+        >
+          <Tabs.List defaultValue={'project'}>
+            <Tabs.Tab value="project" onClick={() => setActiveIndex(0)}>
+              Project
+            </Tabs.Tab>
+            <Tabs.Tab value="grant_project" onClick={() => setActiveIndex(1)}>
+              Grant project
+            </Tabs.Tab>
+            <Tabs.Tab value="event" onClick={() => setActiveIndex(2)}>
+              Event
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs>
+        <Space h={'lg'} />
+        <Paper withBorder p={20} radius={'md'}>
+          <Flex justify={'start'} align={'center'} gap={20}>
+            <ActionIcon
+              component={Link}
+              href={'/p/manage'}
+              radius={'xl'}
+              size={'lg'}
+              variant="light"
+            >
+              <IconArrowLeft />
+            </ActionIcon>
+            <Title order={2}>
+              {activeIndex == 0 && 'Project'}
+              {activeIndex == 1 && 'Grant project'}
+              {activeIndex == 2 && 'Event'}
+            </Title>
+          </Flex>
+        </Paper>
+        <Space h={'lg'} />
+        {activeIndex == 0 && <NewProject />}
+        {activeIndex == 1 && <NewGrantProject />}
+        {activeIndex == 2 && <NewEvent />}
+      </Container>
+    </PartnerLayout>
+  );
+}

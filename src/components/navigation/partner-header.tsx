@@ -52,9 +52,9 @@ const PartnerHeader = () => {
           <li>
             <Button
               variant={'link'}
-              className={`${pathname === '/fundraising' ? 'underline' : ''}`}
+              className={`${pathname === '/project' ? 'underline' : ''}`}
             >
-              <Link href={'/fundraising'}>Fundraising</Link>
+              <Link href={'/project'}>Project</Link>
             </Button>
           </li>
         </ul>
