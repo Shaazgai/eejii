@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import type { EventAssociationWithEvent } from '@/lib/types';
+import type { EventUser } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const ProjectOwnerAction = ({
@@ -79,21 +79,21 @@ const ParticipantAction = ({
 };
 
 const EventRequestCard = ({
-  eventAssociation,
+  eventUser,
   isOwner,
 }: {
-  eventAssociation: EventAssociationWithEvent;
+  eventUser: EventUser;
   isOwner: boolean;
 }) => {
-  const event = eventAssociation.Event;
+  const event = eventUser.Event;
   const context = api.useUtils();
-  const { mutate } = api.eventAssociation.handleEventRequest.useMutation({
-    onSuccess: () => context.eventAssociation.findAll.invalidate(),
+  const { mutate } = api.eventUser.handleEventRequest.useMutation({
+    onSuccess: () => context.eventUser.findAll.invalidate(),
   });
 
   function handleRequest(status: string) {
     mutate({
-      id: eventAssociation.id as unknown as string,
+      id: eventUser.id as unknown as string,
       status: status,
     });
   }
@@ -108,23 +108,23 @@ const EventRequestCard = ({
           <div>{event?.description}</div>
         </div>
         <div className="flex items-center border-r p-4">
-          <div>{eventAssociation.type}</div>
+          <div>{eventUser.type}</div>
         </div>
         <div className="flex items-center border-r p-4">
-          <div>{eventAssociation.id as unknown as string}</div>
+          <div>{eventUser.id as unknown as string}</div>
         </div>
       </div>
       <div className="flex items-center justify-center p-4">
         {isOwner ? (
           <ProjectOwnerAction
-            type={eventAssociation.type as string}
-            status={eventAssociation.status as string}
+            type={eventUser.type as string}
+            status={eventUser.status as string}
             handleRequest={handleRequest}
           />
         ) : (
           <ParticipantAction
-            type={eventAssociation.type as string}
-            status={eventAssociation.status as string}
+            type={eventUser.type as string}
+            status={eventUser.status as string}
             handleRequest={handleRequest}
           />
         )}

@@ -1,12 +1,12 @@
-import type { GrantFundraising } from '@/lib/db/types';
+import type { Project } from '@/lib/types';
 
 import GrantCardPublic from '../card/grant-card';
 
-const GrantFundraisingList = ({
+const GrantProjectList = ({
   grants,
   isLoading,
 }: {
-  grants: GrantFundraising[];
+  grants: Project[];
   isLoading: boolean;
 }) => {
   return (
@@ -26,4 +26,4 @@ const GrantFundraisingList = ({
   );
 };
 
-export default GrantFundraisingList;
+export default GrantProjectList;

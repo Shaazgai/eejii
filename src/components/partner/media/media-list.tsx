@@ -2,7 +2,7 @@ import type { Media } from '@/lib/types';
 import { api } from '@/utils/api';
 import { SimpleGrid, Skeleton } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { MediaCart } from './card';
+import { MediaCard } from './card';
 
 export const MediaList = () => {
   const session = useSession();
@@ -14,7 +14,7 @@ export const MediaList = () => {
       {!isLoading ? (
         medias && medias?.length > 0 ? (
           medias?.map((media, i) => (
-            <MediaCart media={media as unknown as Media} key={i} />
+            <MediaCard media={media as unknown as Media} key={i} />
           ))
         ) : (
           'No media'

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import type { EventWithOwner } from '@/lib/types';
+import type { Event } from '@/lib/types';
 
 import { IconPlaceholder } from '@tabler/icons-react';
 import { FallbackImage } from '../common/fallback-image';
@@ -9,7 +9,7 @@ export default function EventCardPublic({
   event,
   isVolunteer,
 }: {
-  event: EventWithOwner;
+  event: Event;
   isVolunteer: boolean;
 }) {
   const image =
@@ -41,7 +41,7 @@ export default function EventCardPublic({
             <div className="mr-2 flex h-full items-center rounded-full bg-slate-400 p-2">
               <IconPlaceholder />
             </div>
-            {event?.Owner?.organization}
+            {event?.Owner?.organizationName}
           </div>
         </div>
       </div>

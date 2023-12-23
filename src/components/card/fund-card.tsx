@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import type { FundWithOwner } from '@/lib/types';
+import type { Project } from '@/lib/types';
 
 import { IconPlaceholder } from '@tabler/icons-react';
 import { FallbackImage } from '../common/fallback-image';
@@ -9,7 +9,7 @@ export default function FundCardPublic({
   fund,
   isVolunteer,
 }: {
-  fund: FundWithOwner;
+  fund: Project;
   isVolunteer: boolean;
 }) {
   const image =
@@ -19,7 +19,7 @@ export default function FundCardPublic({
         fund.Images.find(i => i.type === 'main')?.path
       : null;
   return (
-    <Link href={`/${isVolunteer ? 'v/' : ''}fundraising/${fund.id}`}>
+    <Link href={`/${isVolunteer ? 'v/' : ''}project/${fund.id}`}>
       <div className="md:w-70 flex w-full flex-col rounded-xl  border bg-brand450 ">
         <div
           aria-label="Product Placeholder"

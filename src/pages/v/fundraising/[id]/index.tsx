@@ -9,19 +9,19 @@ import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
 import { api } from '@/utils/api';
 
-export default function FundraisingViewPage(
+export default function ProjectViewPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   if (!props) return <div>Loading...</div>;
   const { id } = props;
-  const { data } = api.fundraising.getById.useQuery({ id: id as string });
+  const { data } = api.project.getById.useQuery({ id: id as string });
   if (!data) return <div>404</div>;
 
-  // const { mutate } = api.fundAssociation.sendRequest.useMutation({
+  // const { mutate } = api.projectUser.sendRequest.useMutation({
   //   onSuccess: newReq => console.log(newReq),
   // });
   // function handleSendRequest() {
-  //   mutate({ fundraisingId: data?.id as string });
+  //   mutate({ projectId: data?.id as string });
   // }
   return (
     <VolunteerLayout>
@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.fundraising.getById.prefetch({ id: id });
+  await helpers.project.getById.prefetch({ id: id });
 
   return {
     props: {

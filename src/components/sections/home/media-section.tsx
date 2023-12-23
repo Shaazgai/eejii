@@ -1,11 +1,10 @@
+import { MediaCard } from '@/components/media/card';
+import type { Media } from '@/lib/types';
 import { api } from '@/utils/api';
 import {
-  Badge,
   Button,
   Container,
   Flex,
-  Image,
-  Paper,
   SimpleGrid,
   Skeleton,
   Space,
@@ -14,7 +13,6 @@ import {
   Title,
 } from '@mantine/core';
 import { IconArrowUpRight } from '@tabler/icons-react';
-import { format } from 'date-fns';
 import Link from 'next/link';
 
 export default function MediaSection() {
@@ -47,44 +45,9 @@ export default function MediaSection() {
       {!isLoading ? (
         medias && medias.length > 0 ? (
           <SimpleGrid cols={{ base: 2, lg: 4 }}>
-            {medias.map((media, i) => {
-              const image =
-                process.env.NEXT_PUBLIC_AWS_PATH +
-                '/' +
-                media?.Images?.[0]?.path;
-              return (
-                <Paper key={i}>
-                  <Image
-                    src={image}
-                    fallbackSrc="/images/placeholder.svg"
-                    alt="mediaIMG"
-                    radius={'lg'}
-                    height={180}
-                    w={'100%'}
-                  />
-                  <Badge mt={'sm'} color="gray.3" c={'gray.8'} radius={'xl'}>
-                    {format(media.createdAt, 'yyyy-MM-dd HH:mm:ss')}
-                  </Badge>
-                  <Text fw={600} mt={'sm'}>
-                    {media.title}
-                  </Text>
-                  <Text lineClamp={4} mt={5} c="dimmed">
-                    {media.body}
-                  </Text>
-                  <Button
-                    component={Link}
-                    mt={'lg'}
-                    fullWidth
-                    variant="outline"
-                    href={`/media/${media.id}`}
-                    radius={'lg'}
-                    rightSection={<IconArrowUpRight />}
-                  >
-                    Унших
-                  </Button>
-                </Paper>
-              );
-            })}
+            {medias.map((media, i) => (
+              <MediaCard key={i} media={media as unknown as Media} />
+            ))}
           </SimpleGrid>
         ) : (
           <></>

@@ -16,7 +16,7 @@ export default function EventViewPage(
   const { id } = props;
   const { data } = api.event.getById.useQuery({ id: id as string });
 
-  // const { mutate } = api.eventAssociation.sendRequest.useMutation({
+  // const { mutate } = api.eventUser.sendRequest.useMutation({
   //   onSuccess: newReq => console.log(newReq),
   // });
   // function handleSendRequest() {

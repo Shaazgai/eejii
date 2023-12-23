@@ -3,7 +3,7 @@ import { useState } from 'react';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import EventsTable from '@/components/table/admin/events-table';
-import type { EventWithOwner } from '@/lib/types';
+import type { Event } from '@/lib/types';
 import { api } from '@/utils/api';
 
 export default function Index() {
@@ -47,7 +47,7 @@ export default function Index() {
         <div>
           {!isLoading && (
             <EventsTable
-              data={eventsData?.items as unknown as EventWithOwner[]}
+              data={eventsData?.items as unknown as Event[]}
               page={page}
               setPage={setPage}
               totalPage={eventsData?.pagination.totalPages as number}

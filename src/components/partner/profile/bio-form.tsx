@@ -28,7 +28,7 @@ export const BioForm = ({ user }: { user: User }) => {
   const form = useForm({
     initialValues: {
       address: user.addressShort ?? '',
-      organization: user.organization ?? '',
+      organizationName: user.organizationName ?? '',
       bio: user.bio ?? '',
     },
   });
@@ -87,7 +87,7 @@ export const BioForm = ({ user }: { user: User }) => {
     mutate({
       bio: values.bio,
       address: values.address,
-      organization: values.organization,
+      organizationName: values.organizationName,
     });
   }
 
@@ -98,7 +98,7 @@ export const BioForm = ({ user }: { user: User }) => {
           <Stack w={'100%'}>
             <Title order={3}>Bio</Title>
             <TextInput
-              {...form.getInputProps('organization')}
+              {...form.getInputProps('organizationName')}
               placeholder="Name"
               description="Your name here"
               inputWrapperOrder={['label', 'error', 'input', 'description']}

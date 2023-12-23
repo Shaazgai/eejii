@@ -1,4 +1,4 @@
-import type { EventWithOwner } from '@/lib/types';
+import type { Event } from '@/lib/types';
 
 import EventCard from '../card/event-card';
 
@@ -7,7 +7,7 @@ const EventList = ({
   isLoading,
   isVolunteer,
 }: {
-  events: EventWithOwner[];
+  events: Event[];
   isLoading: boolean;
   isVolunteer: boolean;
 }) => {
@@ -24,7 +24,7 @@ const EventList = ({
             return (
               <EventCard
                 key={i}
-                event={event as EventWithOwner}
+                event={event as Event}
                 isVolunteer={isVolunteer}
               />
             );

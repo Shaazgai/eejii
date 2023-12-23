@@ -48,7 +48,7 @@ export default function Features() {
                 variant="subtle"
                 color="var(--mantine-color-teal-8)"
                 component={Link}
-                href={'/fundraisings'}
+                href={'/projects'}
                 rightSection={<IconArrowRight />}
               >
                 Бүгд
@@ -85,7 +85,7 @@ export default function Features() {
                 variant="subtle"
                 color="var(--mantine-color-teal-8)"
                 component={Link}
-                href={'/fundraisings'}
+                href={'/projects'}
                 rightSection={<IconArrowRight />}
               >
                 Бүгд
@@ -121,7 +121,7 @@ export default function Features() {
                 variant="subtle"
                 color="var(--mantine-color-teal-8)"
                 component={Link}
-                href={'/fundraisings'}
+                href={'/projects'}
                 rightSection={<IconArrowRight />}
               >
                 Бүгд

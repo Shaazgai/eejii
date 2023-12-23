@@ -3,7 +3,7 @@ import { useForm, zodResolver } from '@mantine/form';
 import { useState } from 'react';
 import type { z } from 'zod';
 
-import type { Contact, EventRole, EventWithOwner } from '@/lib/types';
+import type { Contact, Event, EventRole } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
 
@@ -37,7 +37,7 @@ const EventForm = ({
   files,
   handleSetFiles,
 }: {
-  data: EventWithOwner | undefined;
+  data: Event | undefined;
   isLoading: boolean;
   handleSubmit: (values: z.infer<typeof eventSchema>) => void;
   setFiles: (files: File[]) => void;

@@ -1,16 +1,11 @@
 import Link from 'next/link';
 
-import type { GrantFundraising } from '@/lib/db/types';
-
+import type { Project } from '@/lib/types';
 import { IconPlaceholder } from '@tabler/icons-react';
 
-export default function GrantCardPublic({
-  grant,
-}: {
-  grant: GrantFundraising;
-}) {
+export default function GrantCardPublic({ grant }: { grant: Project }) {
   return (
-    <Link href={`/grant-fundraising/${grant?.id}`}>
+    <Link href={`/grant-project/${grant?.id}`}>
       <div className="flex w-96 flex-col rounded-xl  border">
         <div
           aria-label="Product Placeholder"

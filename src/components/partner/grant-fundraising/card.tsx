@@ -1,4 +1,4 @@
-import type { GrantFundraising } from '@/lib/db/types';
+import type { Project } from '@/lib/db/types';
 import cardClasses from '@/styles/CardGradient.module.css';
 import {
   ActionIcon,
@@ -14,10 +14,10 @@ import { IconChevronRight } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 
-export const GrantFundraisingCard = ({
-  grantFundraising,
+export const GrantProjectCard = ({
+  grantProject,
 }: {
-  grantFundraising: GrantFundraising;
+  grantProject: Project;
 }) => {
   return (
     <Paper display={'flex'} withBorder radius="md" className={cardClasses.card}>
@@ -32,13 +32,13 @@ export const GrantFundraisingCard = ({
             style={{ borderRight: '1px solid var(--mantine-color-gray-3)' }}
           >
             <Text fz="24">
-              {format(grantFundraising?.createdAt as unknown as Date, 'MMM')}
+              {format(grantProject?.createdAt as unknown as Date, 'MMM')}
             </Text>
             <Text fz="38">
-              {format(grantFundraising?.createdAt as unknown as Date, 'd')}
+              {format(grantProject?.createdAt as unknown as Date, 'd')}
             </Text>
             <Text c={'dimmed'}>
-              {format(grantFundraising?.createdAt as unknown as Date, 'yyyy')}
+              {format(grantProject?.createdAt as unknown as Date, 'yyyy')}
             </Text>
           </Flex>
           <Flex justify={'around'} direction={'column'}>
@@ -52,10 +52,10 @@ export const GrantFundraisingCard = ({
               Хандив өгөх төсөл
             </Text>
             <Text size="xl" fw={500} mt="md">
-              {grantFundraising?.title}
+              {grantProject?.title}
             </Text>
             <Text size="sm" mt="sm" c="dimmed">
-              {(grantFundraising?.startTime as unknown as Date)?.toLocaleString(
+              {(grantProject?.startTime as unknown as Date)?.toLocaleString(
                 'default',
                 {
                   year: 'numeric',
@@ -64,7 +64,7 @@ export const GrantFundraisingCard = ({
                 }
               )}{' '}
               -{' '}
-              {(grantFundraising?.endTime as unknown as Date)?.toLocaleString(
+              {(grantProject?.endTime as unknown as Date)?.toLocaleString(
                 'default',
                 {
                   year: 'numeric',
@@ -103,7 +103,7 @@ export const GrantFundraisingCard = ({
           <Flex align={'center'} justify={'center'} p={10}>
             <ActionIcon
               component={Link}
-              href={`/p/manage/grant/${grantFundraising?.id}`}
+              href={`/p/manage/grant/${grantProject?.id}`}
               radius={'xl'}
               variant="subtle"
               size={'xl'}

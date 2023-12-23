@@ -1,163 +1,240 @@
-import React from 'react';
 // import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 
-import Image from 'next/image';
+import classes from '@/styles/Header.module.css';
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
-import { cn } from '@/lib/utils';
+  Box,
+  Burger,
+  Button,
+  Center,
+  Collapse,
+  Container,
+  Divider,
+  Drawer,
+  Group,
+  Image,
+  ScrollArea,
+  SimpleGrid,
+  Text,
+  ThemeIcon,
+  UnstyledButton,
+  rem,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import {
+  IconBalloon,
+  IconCalendarCheck,
+  IconCertificate,
+  IconChevronDown,
+  IconUserHeart,
+  IconUserHexagon,
+  IconUsersGroup,
+} from '@tabler/icons-react';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 
-const components: {
-  title: string;
-  imagePath: string;
-  href: string;
-}[] = [
+const HoverCard = dynamic(
+  () => import('@mantine/core').then(el => el.HoverCard),
   {
-    title: 'Төсөл хөтөлбөрүүд',
-    imagePath: '/images/projectss/projectsIcon.png',
-    href: '/fundraising',
-  },
-  {
-    title: 'Дэмжигч',
-    imagePath: '/images/supporter/supporterIcon.png',
-    href: '/docs/primitives/scroll-area',
-  },
-  {
-    title: 'Арга хэмжээ',
-    imagePath: '/images/eventss/calendar.png',
-    href: '/events',
-  },
-  {
-    title: 'Хамтрагч',
-    imagePath: '/images/homie/chairity.png',
-    href: '/docs/primitives/tabs',
-  },
-  {
-    title: 'Сайн дурын ажил',
-    imagePath: '/images/volunteer/volunteerIcon.png',
-    href: '/docs/primitives/progress',
-  },
-  {
-    title: 'Сайн дурын ажилтан',
-    imagePath: '/images/homie/Vector.png',
-    href: '/docs/primitives/tooltip',
-  },
-];
-
-interface ListItemProps extends React.ComponentPropsWithoutRef<'a'> {
-  imagePath: string; // Add this line to include the imagePath prop
-  title: string;
-}
-const ListItem = React.forwardRef<React.ElementRef<'a'>, ListItemProps>(
-  ({ className, imagePath, title, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <a
-            ref={ref}
-            className={cn(
-              'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-              className
-            )}
-            {...props}
-          >
-            <div className="flex items-center gap-2">
-              <Image
-                src={imagePath}
-                alt="Prjects"
-                className="h-[24px] w-[29px]"
-                height={24}
-                width={30}
-              />
-              <div className="text-md font-semibold leading-none">{title}</div>
-            </div>
-          </a>
-        </NavigationMenuLink>
-      </li>
-    );
+    loading: () => <p>Loading...</p>,
+    ssr: false,
   }
 );
-ListItem.displayName = 'ListItem';
+const HoverCardTarget = dynamic(
+  () => import('@mantine/core').then(el => el.HoverCardTarget),
+  {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+  }
+);
+const HoverCardDropdown = dynamic(
+  () => import('@mantine/core').then(el => el.HoverCardDropdown),
+  {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+  }
+);
 
-export default function PublicHeader() {
+const links = [
+  {
+    link: '#1',
+    label: 'Platform',
+    links: [
+      { link: '/projects', label: 'Projects', icon: IconCalendarCheck },
+      { link: '/events', label: 'Events', icon: IconBalloon },
+      { link: '/volunteering', label: 'Volunteering', icon: IconCertificate },
+      { link: '/supporters', label: 'Supporters', icon: IconUserHexagon },
+      { link: '/partners', label: 'Partners', icon: IconUsersGroup },
+      { link: '/volunteers', label: 'Volunteers', icon: IconUserHeart },
+    ],
+  },
+  {
+    link: '/media',
+    label: 'Media',
+  },
+  { link: '/about', label: 'About' },
+  { link: '/auth', label: 'Login' },
+  { link: '/projects', label: 'Donate' },
+];
+
+export const PublicHeader = () => {
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+
+  const items = links.map(link => {
+    const menuItems = link.links?.map(item => (
+      <UnstyledButton
+        component={Link}
+        href={item.link}
+        className={classes.subLink}
+        key={item.label}
+      >
+        <Group wrap="nowrap" align="flex-start">
+          <ThemeIcon size={34} variant="default" radius="md">
+            <item.icon style={{ width: rem(22), height: rem(22) }} />
+          </ThemeIcon>
+          <div>
+            <Text size="sm" fw={500}>
+              {item.label}
+            </Text>
+          </div>
+        </Group>
+      </UnstyledButton>
+    ));
+
+    if (menuItems) {
+      return (
+        <HoverCard
+          width={600}
+          key={link.label}
+          position="bottom"
+          radius="md"
+          shadow="md"
+          withinPortal
+        >
+          <HoverCardTarget>
+            <a href="#" className={classes.link}>
+              <Center inline>
+                <Box component="span" mr={5}>
+                  {link.label}
+                </Box>
+                <IconChevronDown style={{ width: rem(16), height: rem(16) }} />
+              </Center>
+            </a>
+          </HoverCardTarget>
+
+          <HoverCardDropdown style={{ overflow: 'hidden' }}>
+            <SimpleGrid cols={2} spacing={0}>
+              {menuItems}
+            </SimpleGrid>
+          </HoverCardDropdown>
+        </HoverCard>
+      );
+    }
+
+    if (link.label === 'Donate') {
+      return (
+        <Button key={link.label} component={Link} href={link.label}>
+          {link.label}
+        </Button>
+      );
+    }
+    return (
+      <Link key={link.label} href={link.link} className={classes.link}>
+        {link.label}
+      </Link>
+    );
+  });
+
   return (
-    <nav className="bg-white">
-      <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
-        <Link href="/" className="flex h-[72px] w-[215px] items-center">
-          <Image
-            src="/images/homie/foundation_logo.jpg"
-            className="h-[72px] w-[215px]"
-            alt="foundation Logo"
-            height={72}
-            width={72}
-            quality={100}
+    <header className={classes.header}>
+      <Container size="xl">
+        <div className={classes.inner}>
+          <Link href={'/'}>
+            <Image
+              src="/images/homie/foundation_logo.jpg"
+              alt="foundation Logo"
+              h={70}
+              w={200}
+              fit="contain"
+            />
+          </Link>
+          <Group gap={5} visibleFrom="sm">
+            {items}
+          </Group>
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            size="sm"
+            hiddenFrom="sm"
           />
-        </Link>
-        <div className="hidden h-[72px] w-full items-center justify-between font-medium md:order-1 md:flex md:w-auto">
-          <ul className="mt-4 flex h-full flex-col items-center rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 md:dark:bg-gray-900">
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Платформ</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                      {components.map(component => (
-                        <ListItem
-                          key={component.title}
-                          title={component.title}
-                          href={component.href}
-                          imagePath={component.imagePath}
-                        />
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            <li>
-              <Link
-                href="/medium"
-                className="block rounded py-2 pl-3 pr-4 font-bold text-gray-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-blue-500 md:p-0 md:hover:bg-transparent md:hover:text-primary md:dark:hover:bg-transparent"
-              >
-                Медиа
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className="block rounded py-2 pl-3 pr-4 font-bold text-gray-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 md:p-0 md:hover:bg-transparent md:hover:text-primary md:dark:hover:bg-transparent"
-              >
-                Бидний тухай
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/auth"
-                className="block rounded py-2 pl-3 pr-4 font-bold text-gray-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 md:p-0 md:hover:bg-transparent md:hover:text-primary md:dark:hover:bg-transparent"
-              >
-                Нэвтрэх
-              </Link>
-            </li>
-            <li>
-              <Button className="h-[48px] w-[106px] rounded-sm">
-                <Link
-                  href="/#"
-                  className="block text-lg font-bold text-brand450"
-                >
-                  Donate
-                </Link>
-              </Button>
-            </li>
-          </ul>
         </div>
-      </div>
-    </nav>
+      </Container>
+      <Drawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        size="100%"
+        padding="md"
+        title="Navigation"
+        hiddenFrom="sm"
+        zIndex={1000000}
+      >
+        <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
+          <Divider my="sm" />
+          {links.map(link => {
+            if (link.links) {
+              return (
+                <UnstyledButton key={link.label} w={'100%'}>
+                  <UnstyledButton
+                    className={classes.link}
+                    onClick={toggleLinks}
+                  >
+                    <Center inline>
+                      <Box component="span" mr={5}>
+                        {link.label}
+                      </Box>
+                      <IconChevronDown
+                        style={{ width: rem(16), height: rem(16) }}
+                      />
+                    </Center>
+                  </UnstyledButton>
+                  <Collapse in={linksOpened}>
+                    {link.links.map(l => (
+                      <UnstyledButton className={classes.subLink} key={l.label}>
+                        <Group wrap="nowrap" align="flex-start">
+                          <ThemeIcon size={34} variant="default" radius="md">
+                            <l.icon
+                              style={{ width: rem(22), height: rem(22) }}
+                            />
+                          </ThemeIcon>
+                          <div>
+                            <Text size="sm" fw={500}>
+                              {l.label}
+                            </Text>
+                            {/* <Text size="xs" c="dimmed">
+                              {item.description}
+                            </Text> */}
+                          </div>
+                        </Group>
+                      </UnstyledButton>
+                    ))}
+                  </Collapse>
+                </UnstyledButton>
+              );
+            }
+            return (
+              <Link key={link.label} href={link.link} className={classes.link}>
+                {link.label}
+              </Link>
+            );
+          })}
+          <Divider my="sm" />
+          <Group justify="center" grow pb="xl" px="md">
+            <Button variant="default">Log in</Button>
+            <Button>Sign up</Button>
+          </Group>
+        </ScrollArea>
+      </Drawer>
+    </header>
   );
-}
+};

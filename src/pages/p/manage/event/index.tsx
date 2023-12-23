@@ -62,17 +62,14 @@ export default function ManageProjects() {
           }}
         >
           <Tabs.List>
-            <Tabs.Tab
-              value="fundraising"
-              onClick={() => router.push('/p/manage')}
-            >
-              Fundraising
+            <Tabs.Tab value="project" onClick={() => router.push('/p/manage')}>
+              Project
             </Tabs.Tab>
             <Tabs.Tab
-              value="grant_fundraising"
+              value="grant_project"
               onClick={() => router.push('/p/manage/grant')}
             >
-              Grant fundraising
+              Grant project
             </Tabs.Tab>
             <Tabs.Tab value="event">Event</Tabs.Tab>
           </Tabs.List>

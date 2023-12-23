@@ -4,16 +4,16 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import type { FundWithOwner } from '@/lib/types';
+import type { Project } from '@/lib/types';
 
 import FundCardPublic from '../../card/fund-card';
 import { DotButton } from './slider-button-dots';
 
 const FundSlider = ({
-  fundraisings,
+  projects,
   isFundLoading,
 }: {
-  fundraisings: FundWithOwner[];
+  projects: Project[];
   isFundLoading: boolean;
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -66,7 +66,7 @@ const FundSlider = ({
     <>
       <div className="">
         <div className="mx-6 flex items-center justify-between">
-          <h3 className="text-2xl">Fundraising</h3>
+          <h3 className="text-2xl">Project</h3>
           <div className="flex gap-2">
             <Button
               onClick={scrollPrev}
@@ -88,8 +88,8 @@ const FundSlider = ({
           <div className="embla__viewport w-[1300px]" ref={emblaRef}>
             <div className="embla__container">
               {!isFundLoading &&
-                fundraisings &&
-                fundraisings.slice(0, 6).map((fund, i) => {
+                projects &&
+                projects.slice(0, 6).map((fund, i) => {
                   return (
                     <div className="embla__slide" key={i}>
                       <FundCardPublic fund={fund} isVolunteer={true} />

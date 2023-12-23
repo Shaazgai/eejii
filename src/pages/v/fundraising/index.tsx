@@ -4,7 +4,7 @@ import countries from 'src/data/city.json';
 
 import { FallbackImage } from '@/components/common/fallback-image';
 import VolunteerLayout from '@/components/layout/volunteer-layout';
-import FundraisingList from '@/components/list/fund-list';
+import ProjectList from '@/components/list/fund-list';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -25,14 +25,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ProjectStatus } from '@/lib/db/enums';
-import type { FundWithOwner } from '@/lib/types';
+import type { Project } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Donate = () => {
   const { data: categories, isFetching: isCategoryFetching } =
     api.category.getAll.useQuery({ type: 'event' });
-  const { data: fundraisings, isLoading: isFundLoading } =
-    api.fundraising.getAll.useQuery({
+  const { data: projects, isLoading: isFundLoading } =
+    api.project.getAll.useQuery({
       page: 1,
       limit: 20,
       enabled: true,
@@ -177,8 +177,8 @@ const Donate = () => {
           </Card>
         </div>
         <div className="-translate-y-10">
-          <FundraisingList
-            fundraisings={fundraisings?.items as unknown as FundWithOwner[]}
+          <ProjectList
+            projects={projects?.items as unknown as Project[]}
             isLoading={isFundLoading}
           />
           {/* <EventSlider
@@ -186,7 +186,7 @@ const Donate = () => {
             isEventLoading={isEventLoading}
           />
           <FundSlider
-            fundraisings={fundraisings as FundraisingType[]}
+            projects={projects as ProjectType[]}
             isFundLoading={isFundLoading}
           /> */}
         </div>

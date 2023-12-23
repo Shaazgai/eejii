@@ -35,7 +35,7 @@ export default function New() {
               label="Type"
               placeholder="Choose type"
               {...form.getInputProps('type')}
-              data={['Event', 'Fundraising', 'GrantFundraising']}
+              data={['Event', 'Project', 'GrantProject']}
             />
             <Button loading={isLoading} fullWidth type="submit">
               Submit

@@ -20,13 +20,13 @@ const Index = () => {
   const router = useRouter();
   // const [status, setStatus] = useState('approved');
 
-  // const { data: eventAssociation, isLoading: isEventLoading } =
-  //   api.eventAssociation.findAll.useQuery({
+  // const { data: eventUser, isLoading: isEventLoading } =
+  //   api.eventUser.findAll.useQuery({
   //     userId: session.data?.user.id,
   //     status: status,
   //   });
-  // const { data: fundAssociation, isLoading: isFundLoading } =
-  //   api.fundAssociation.findAll.useQuery({
+  // const { data: projectUser, isLoading: isFundLoading } =
+  //   api.projectUser.findAll.useQuery({
   //     userId: session.data?.user.id,
   //     status: status,
   //   });
@@ -63,19 +63,19 @@ const Index = () => {
         </BackgroundImage>
         <Space h={'md'} />
         <Tabs
-          defaultValue="fundraising"
+          defaultValue="project"
           classNames={{
             list: tabsClasses.list,
             tab: tabsClasses.tab,
           }}
         >
           <Tabs.List>
-            <Tabs.Tab value="fundraising">Fundraising</Tabs.Tab>
+            <Tabs.Tab value="project">Project</Tabs.Tab>
             <Tabs.Tab
-              value="grant_fundraising"
+              value="grant_project"
               onClick={() => router.push('/p/manage/grant')}
             >
-              Grant fundraising
+              Grant project
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>

@@ -1,27 +1,26 @@
-import type { GrantFundraising } from '@/lib/db/types';
-import type { GrantFundWithOwner } from '@/lib/types';
+import type { Project } from '@/lib/db/types';
 import { SimpleGrid, Skeleton } from '@mantine/core';
-import { GrantFundraisingCard } from './card';
+import { GrantProjectCard } from './card';
 
-export const GrantFundraisingListPrivate = ({
-  grantFundraisings,
+export const GrantProjectListPrivate = ({
+  grantProjects,
   isLoading,
 }: {
-  grantFundraisings: GrantFundWithOwner[] | undefined;
+  grantProjects: Project[] | undefined;
   isLoading: boolean;
 }) => {
   return (
     <>
       {!isLoading ? (
         <SimpleGrid spacing={20}>
-          {grantFundraisings && grantFundraisings.length > 0
-            ? grantFundraisings?.map((item, i) => (
-                <GrantFundraisingCard
+          {grantProjects && grantProjects.length > 0
+            ? grantProjects?.map((item, i) => (
+                <GrantProjectCard
                   key={i}
-                  grantFundraising={item as unknown as GrantFundraising}
+                  grantProject={item as unknown as Project}
                 />
               ))
-            : 'No grant fundraisings'}
+            : 'No grant projects'}
         </SimpleGrid>
       ) : (
         <SimpleGrid>

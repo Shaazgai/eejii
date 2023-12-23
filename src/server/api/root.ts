@@ -1,17 +1,14 @@
-import { supporterRouter } from '@/server/api/routers/supporter';
 import { createTRPCRouter } from '@/server/api/trpc';
 
-import { categoryRouter } from './routers/category';
-import { eventRouter } from './routers/event';
-import { eventAssociationRouter } from './routers/eventAssociation';
-import { fundAssociationRouter } from './routers/fundAssociation';
-import { fundraisingRouter } from './routers/fundraising';
-import { grantFundraisingRouter } from './routers/grant-fundraising';
-import { grantAssociationRouter } from './routers/grantAssociation';
-import { mediaRouter } from './routers/media';
-import { partnerRouter } from './routers/partner';
-import { userRouter } from './routers/user';
-import { volunteerRouter } from './routers/volunteer';
+import { categoryRouter } from './routers/category-router';
+import { eventRouter } from './routers/event-router';
+import { eventUserRouter } from './routers/event-user-router';
+import { mediaRouter } from './routers/media-router';
+import { partnerRouter } from './routers/partner-router';
+import { projectRouter } from './routers/project-router';
+import { projectUserRouter } from './routers/project-user-router';
+import { userRouter } from './routers/user-router';
+import { volunteerRouter } from './routers/volunteer-router';
 
 /**
  * This is the primary router for your server.
@@ -19,16 +16,13 @@ import { volunteerRouter } from './routers/volunteer';
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  supporter: supporterRouter,
   volunteer: volunteerRouter,
   partner: partnerRouter,
   event: eventRouter,
-  fundraising: fundraisingRouter,
-  grantFundraising: grantFundraisingRouter,
+  eventUser: eventUserRouter,
+  project: projectRouter,
+  projectUser: projectUserRouter,
   category: categoryRouter,
-  eventAssociation: eventAssociationRouter,
-  grantAssociation: grantAssociationRouter,
-  fundAssociation: fundAssociationRouter,
   user: userRouter,
   media: mediaRouter,
 });

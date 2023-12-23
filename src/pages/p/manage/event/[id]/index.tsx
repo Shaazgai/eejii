@@ -114,7 +114,7 @@ export default function EventViewPage(
                         </Text>
                       </Table.Td>
                       <Table.Td>
-                        <Text>{data?.Owner?.organization}</Text>
+                        <Text>{data?.Owner?.organizationName}</Text>
                       </Table.Td>
                     </Table.Tr>
                     <Table.Tr>

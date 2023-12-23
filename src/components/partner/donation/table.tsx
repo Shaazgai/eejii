@@ -15,7 +15,7 @@ export const DonationTable = ({
     <Table>
       <Table.Thead>
         <Table.Tr>
-          <Table.Th>Fundraising</Table.Th>
+          <Table.Th>Project</Table.Th>
           <Table.Th>Amount</Table.Th>
           <Table.Th>Date</Table.Th>
           <Table.Th>Organization</Table.Th>
@@ -26,12 +26,12 @@ export const DonationTable = ({
           donations && donations.length > 0 ? (
             donations.map((d, i) => (
               <Table.Tr key={i}>
-                <Table.Td>{d.Fundraising.title}</Table.Td>
+                <Table.Td>{d.Project.title}</Table.Td>
                 <Table.Td>{priceFormat(d.amount, 'MNT')}</Table.Td>
                 <Table.Td>
                   {format(d.createdAt as unknown as Date, 'Y/M/d')}
                 </Table.Td>
-                <Table.Td>{d.Fundraising?.Owner?.organization}</Table.Td>
+                <Table.Td>{d.Project?.Owner?.organizationName}</Table.Td>
               </Table.Tr>
             ))
           ) : (

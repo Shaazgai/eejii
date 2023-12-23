@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import type { FundAssociationWithFund } from '@/lib/types';
+import type { ProjectUser } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const ProjectOwnerAction = ({
@@ -79,22 +79,22 @@ const ParticipantAction = ({
 };
 
 const FundRequestCard = ({
-  fundAssociation,
+  projectUser,
   isOwner,
 }: {
-  fundAssociation: FundAssociationWithFund;
+  projectUser: ProjectUser;
   isOwner: boolean;
 }) => {
-  const fundraising = fundAssociation.Fundraising;
-  console.log(fundAssociation);
+  const project = projectUser.Project;
+  console.log(projectUser);
   const context = api.useContext();
-  const { mutate } = api.fundAssociation.handleFundRequest.useMutation({
-    onSuccess: () => context.fundAssociation.findAll.invalidate(),
+  const { mutate } = api.projectUser.handleFundRequest.useMutation({
+    onSuccess: () => context.projectUser.findAll.invalidate(),
   });
 
   function handleRequest(status: string) {
     mutate({
-      id: fundAssociation.id as unknown as string,
+      id: projectUser.id as unknown as string,
       status: status,
     });
   }
@@ -105,24 +105,24 @@ const FundRequestCard = ({
           2022.10.10
         </div>
         <div className="flex flex-col border-r p-4">
-          <div>{fundraising?.title}</div>
-          <div>{fundraising?.description}</div>
+          <div>{project?.title}</div>
+          <div>{project?.description}</div>
         </div>
         <div className="flex items-center border-r p-4">
-          <div>{fundAssociation.type}</div>
+          <div>{projectUser.type}</div>
         </div>
       </div>
       <div className="flex items-center justify-center p-4">
         {isOwner ? (
           <ProjectOwnerAction
-            type={fundAssociation.type as string}
-            status={fundAssociation.status as string}
+            type={projectUser.type as string}
+            status={projectUser.status as string}
             handleRequest={handleRequest}
           />
         ) : (
           <ParticipantAction
-            type={fundAssociation.type as string}
-            status={fundAssociation.status as string}
+            type={projectUser.type as string}
+            status={projectUser.status as string}
             handleRequest={handleRequest}
           />
         )}

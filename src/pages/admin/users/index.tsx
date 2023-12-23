@@ -3,7 +3,6 @@ import { useState } from 'react';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import PartnerTable from '@/components/table/admin/partner-table';
-import SupporterTable from '@/components/table/admin/supporter-table';
 import VolunteerTable from '@/components/table/admin/volunteer-table';
 import type { User } from '@/lib/db/types';
 import { api } from '@/utils/api';
@@ -37,35 +36,6 @@ export const Partners = () => {
   );
 };
 
-export const Supporters = () => {
-  const [page, setPage] = useState(1);
-  const {
-    data: supportersData,
-    isLoading: isSupporterLoading,
-    isFetching: isSupporterFetching,
-  } = api.supporter.findAll.useQuery({
-    page: page,
-    limit: 10,
-  });
-
-  return (
-    <div>
-      {!isSupporterLoading && !isSupporterFetching ? (
-        <SupporterTable
-          data={supportersData?.items as unknown as User[]}
-          page={page}
-          setPage={setPage}
-          totalPage={supportersData?.pagination.totalPages as number}
-          hasNextPage={supportersData?.pagination.hasNextPage as boolean}
-          hasPrevPage={supportersData?.pagination.hasPrevPage as boolean}
-          count={supportersData?.pagination.totalCount as number}
-        />
-      ) : (
-        'Loading'
-      )}
-    </div>
-  );
-};
 export const Volunteers = () => {
   const [page, setPage] = useState(1);
   const {
@@ -107,10 +77,6 @@ export default function Index() {
       title: 'Partner',
       index: 1,
     },
-    {
-      title: 'Supporter',
-      index: 2,
-    },
   ];
 
   return (
@@ -126,7 +92,6 @@ export default function Index() {
         <div>
           {activeIndex === 0 && <Volunteers />}
           {activeIndex === 1 && <Partners />}
-          {activeIndex === 2 && <Supporters />}
         </div>
       </div>
     </DashboardLayout>
