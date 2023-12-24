@@ -1,6 +1,6 @@
 import PartnerLayout from '@/components/layout/partner-layout';
 import { ProjectListPrivate } from '@/components/partner/project/list';
-import { ProjectStatus } from '@/lib/db/enums';
+import { ProjectStatus, ProjectType } from '@/lib/db/enums';
 import type { Project } from '@/lib/types';
 import segmentClasses from '@/styles/SegmentedControl.module.css';
 import tabsClasses from '@/styles/Tabs.module.css';
@@ -22,10 +22,11 @@ import { useRouter } from 'next/router';
 
 export default function ManageProjects() {
   const router = useRouter();
-  const { name, status } = router.query;
+  const { name, type, status } = router.query;
 
   const { data: projects, isLoading: isProjectLoading } =
-    api.project.getMyFunds.useQuery({
+    api.project.getMyProjects.useQuery({
+      type: (type as ProjectType) ?? ProjectType.FUNDRAISING,
       name: name as string,
       status: status as ProjectStatus,
     });
@@ -44,7 +45,7 @@ export default function ManageProjects() {
             </Text>
             <Button
               component={Link}
-              href={'/p/manage/new'}
+              href={'/p/manage/project/new'}
               size="lg"
               radius={'xl'}
               c="white"
@@ -64,10 +65,37 @@ export default function ManageProjects() {
           }}
         >
           <Tabs.List>
-            <Tabs.Tab value="project">Project</Tabs.Tab>
+            <Tabs.Tab
+              value="project"
+              onClick={() =>
+                router.push(
+                  {
+                    pathname: router.pathname,
+                    query: {
+                      type: ProjectType.FUNDRAISING,
+                    },
+                  },
+                  undefined,
+                  { scroll: false }
+                )
+              }
+            >
+              Project
+            </Tabs.Tab>
             <Tabs.Tab
               value="grant_project"
-              onClick={() => router.push('/p/manage/grant')}
+              onClick={() =>
+                router.push(
+                  {
+                    pathname: router.pathname,
+                    query: {
+                      type: ProjectType.GRANT_FUNDRAISING,
+                    },
+                  },
+                  undefined,
+                  { scroll: false }
+                )
+              }
             >
               Grant project
             </Tabs.Tab>
@@ -91,10 +119,14 @@ export default function ManageProjects() {
           onChange={e => {
             e.preventDefault();
             const value = e.currentTarget.value;
-            router.push({
-              pathname: router.pathname,
-              query: { ...router.query, name: value },
-            });
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, name: value },
+              },
+              undefined,
+              { scroll: false }
+            );
           }}
           styles={{
             input: {
@@ -118,10 +150,14 @@ export default function ManageProjects() {
           ]}
           defaultValue={status as string}
           onChange={value => {
-            router.push({
-              pathname: router.pathname,
-              query: { ...router.query, status: value },
-            });
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, status: value },
+              },
+              undefined,
+              { scroll: false }
+            );
           }}
           styles={{
             root: {

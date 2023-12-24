@@ -3,14 +3,25 @@ import { useEffect, useState } from 'react';
 
 import EventForm from '@/components/form/event-form';
 import PartnerLayout from '@/components/layout/partner-layout';
+import { EventType } from '@/lib/db/enums';
 import handleImageUpload from '@/lib/hooks/upload-image';
 import type { S3ParamType } from '@/lib/types';
 import imageResizer from '@/lib/utils/image-resizer';
 import type { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
-import { Container, LoadingOverlay } from '@mantine/core';
+import {
+  ActionIcon,
+  Container,
+  Flex,
+  LoadingOverlay,
+  Paper,
+  Space,
+  Title,
+} from '@mantine/core';
 import type { FileWithPath } from '@mantine/dropzone';
 import { notifications } from '@mantine/notifications';
+import { IconArrowLeft } from '@tabler/icons-react';
+import Link from 'next/link';
 import type { z } from 'zod';
 
 const EditEvent = () => {
@@ -69,7 +80,7 @@ const EditEvent = () => {
         message: 'Successfully updated event',
       });
 
-      router.push(`/p/manage/event/${newEvent.id}/invite`);
+      router.push(`/p/manage/event/${newEvent.id}`);
     },
   });
 
@@ -81,8 +92,28 @@ const EditEvent = () => {
   return (
     <PartnerLayout>
       <Container fluid p={'xl'}>
+        <Paper withBorder p={20} radius={'md'}>
+          <Flex justify={'start'} align={'center'} gap={20}>
+            <ActionIcon
+              component={Link}
+              href={`/p/manage/event/${data?.id}`}
+              radius={'xl'}
+              size={'lg'}
+              variant="light"
+            >
+              <IconArrowLeft />
+            </ActionIcon>
+            <Title order={2}>
+              {(data?.type as unknown as EventType) === EventType.EVENT
+                ? 'Event project'
+                : 'Volunteering event'}
+            </Title>
+          </Flex>
+        </Paper>
+        <Space h="lg" />
         {!isLoading && data ? (
           <EventForm
+            type={data.type as unknown as EventType}
             data={data}
             isLoading={isPending}
             handleSubmit={handleSubmit}

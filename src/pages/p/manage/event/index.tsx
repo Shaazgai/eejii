@@ -42,7 +42,7 @@ export default function ManageProjects() {
             </Text>
             <Button
               component={Link}
-              href={'/p/manage/new'}
+              href={'/p/manage/project/new'}
               size="lg"
               radius={'xl'}
               c="white"
@@ -62,12 +62,17 @@ export default function ManageProjects() {
           }}
         >
           <Tabs.List>
-            <Tabs.Tab value="project" onClick={() => router.push('/p/manage')}>
+            <Tabs.Tab
+              value="project"
+              onClick={() => router.push('/p/manage/project?type=FUNDRAISING')}
+            >
               Project
             </Tabs.Tab>
             <Tabs.Tab
               value="grant_project"
-              onClick={() => router.push('/p/manage/grant')}
+              onClick={() =>
+                router.push('/p/manage/project?type=GRANT_FUNDRAISING')
+              }
             >
               Grant project
             </Tabs.Tab>
@@ -91,10 +96,14 @@ export default function ManageProjects() {
           onChange={e => {
             e.preventDefault();
             const value = e.currentTarget.value;
-            router.push({
-              pathname: router.pathname,
-              query: { ...router.query, name: value },
-            });
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, name: value },
+              },
+              undefined,
+              { scroll: false }
+            );
           }}
         />
 
@@ -113,10 +122,14 @@ export default function ManageProjects() {
           ]}
           defaultValue={status as string}
           onChange={value => {
-            router.push({
-              pathname: router.pathname,
-              query: { ...router.query, status: value },
-            });
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, status: value },
+              },
+              undefined,
+              { scroll: false }
+            );
           }}
           styles={{
             root: {

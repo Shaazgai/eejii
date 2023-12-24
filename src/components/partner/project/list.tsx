@@ -22,7 +22,7 @@ export const ProjectListPrivate = ({
       ) : (
         <SimpleGrid>
           {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} height={100} />
+            <Skeleton key={i} height={200} />
           ))}
         </SimpleGrid>
       )}

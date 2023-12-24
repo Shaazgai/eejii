@@ -1,17 +1,17 @@
-import 'swiper/css';
-import 'swiper/css/navigation';
-
-// import Swiper core and required modules
-// import { FallbackImage } from '@/components/common/fallback-image';
-// import VolunteerLayout from '@/components/layout/volunteer-layout';
 import { FallbackImage } from '@/components/common/fallback-image';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
+import { ProjectList } from '@/components/list/project-list';
+import { ProjectStatus, ProjectType } from '@/lib/db/enums';
+import type { Project } from '@/lib/types';
+import { api } from '@/utils/api';
 import {
   BackgroundImage,
   Button,
+  Center,
   Container,
   Flex,
   Grid,
+  Pagination,
   Paper,
   Space,
   Tabs,
@@ -19,33 +19,55 @@ import {
   Title,
 } from '@mantine/core';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Index() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<string | null>('project');
+  const { type, q, page } = router.query;
+
+  const [activePage, setPage] = useState(page ? +page : 1);
+  const [search, setSearch] = useState(q);
+  const [activeTab, setActiveTab] = useState<string | null>(
+    (type as string) ?? ProjectType.FUNDRAISING
+  );
+
+  function handleSetPage(value: number) {
+    setPage(value);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page: value },
+    });
+  }
 
   function handleActiveTab(value: string | null) {
     router.push(
       {
-        pathname: router.pathname,
         query: { ...router.query, type: value },
       },
       undefined,
-      { shallow: true }
+      { scroll: false }
     );
     setActiveTab(value);
   }
 
-  // const { data: projects, isLoading: isFundLoading } =
-  //   api.project.getAll.useQuery({
-  //     page: 1,
-  //     limit: 10,
-  //     enabled: true,
-  //     status: ProjectStatus.APPROVED,
-  //   });
-  console.log(activeTab);
+  const {
+    data: projects,
+    isLoading,
+    refetch,
+  } = api.project.getAll.useQuery({
+    page: activePage,
+    limit: 10,
+    enabled: true,
+    status: ProjectStatus.APPROVED,
+    type: type as ProjectType,
+    title: q as string,
+  });
 
+  useEffect(() => {
+    refetch();
+  }, [q]);
+
+  const totalPages = projects?.pagination.totalPages;
   return (
     <BasicBaseLayout>
       <FallbackImage
@@ -66,10 +88,25 @@ export default function Index() {
                   w={'100%'}
                   placeholder="Нэр"
                   required
+                  defaultValue={q}
+                  onChange={e => {
+                    e.preventDefault();
+                    setSearch(e.currentTarget.value);
+                  }}
                   size="lg"
                   radius={'xl'}
                 />
-                <Button radius={'xl'} size="lg" miw={150}>
+                <Button
+                  onClick={() =>
+                    router.push({
+                      pathname: router.pathname,
+                      query: { ...router.query, q: search },
+                    })
+                  }
+                  radius={'xl'}
+                  size="lg"
+                  miw={150}
+                >
                   Төсөл хайх
                 </Button>
               </Flex>
@@ -112,45 +149,40 @@ export default function Index() {
           <Grid.Col span={{ base: 12, md: 5, lg: 4 }}>
             <Paper
               withBorder
-              shadow="md"
+              // shadow="md"
               radius={'lg'}
-              h={{ base: 300, md: 640, lg: 600 }}
+              h={{ base: 300, md: 640, lg: 598 }}
             >
               <div>hi</div>
             </Paper>
           </Grid.Col>
         </Grid>
-
-        <Tabs value={activeTab} onChange={handleActiveTab}>
+        <Tabs
+          className="-translate-y-8"
+          value={activeTab}
+          onChange={handleActiveTab}
+        >
           <Tabs.List>
-            <Tabs.Tab value="project">Project</Tabs.Tab>
-            <Tabs.Tab value="grant-project">Grant Project</Tabs.Tab>
+            <Tabs.Tab value={ProjectType.FUNDRAISING}>Project</Tabs.Tab>
+            <Tabs.Tab value={ProjectType.GRANT_FUNDRAISING}>
+              Grant Project
+            </Tabs.Tab>
           </Tabs.List>
         </Tabs>
-        {/* <div className="-translate-y-10">
-          <EventSlider
-            events={events?.items as unknown as Event[]}
-            isEventLoading={isEventLoading}
+        <ProjectList
+          projects={projects?.items as Project[]}
+          isLoading={isLoading}
+        />
+        <Space h={'lg'} />
+        <Center>
+          <Pagination
+            radius="xl"
+            value={activePage}
+            onChange={handleSetPage}
+            total={totalPages ?? 1}
           />
-        </div>
-        <div className="-translate-y-10">
-          <FundSlider
-            projects={projects?.items as unknown as Project[]}
-            isFundLoading={isFundLoading}
-          />
-        </div> */}
+        </Center>
       </Container>
     </BasicBaseLayout>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async context => {
-//   const events = await api.event.getAll.useQuery();
-//   const project = await api.project.getAll.useQuery();
-
-//   return {
-//     props: {
-//       events: null,
-//     },
-//   };
-// };

@@ -22,7 +22,7 @@ export const EventListPrivate = ({
       ) : (
         <SimpleGrid>
           {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} height={40} />
+            <Skeleton key={i} height={200} />
           ))}
         </SimpleGrid>
       )}

@@ -96,19 +96,23 @@ enum ProjectStatus {
 }
 
 model Event {
-  id            String          @id @default(dbgenerated("gen_random_uuid()"))
-  type          EventType       @default(VOLUNTEERING)
-  title         String
-  description   String
-  location      String
-  roles         Json?
-  enabled       Boolean
-  status        ProjectStatus?
-  createdAt     DateTime        @default(now())
-  startTime     DateTime?
-  endTime       DateTime?
-  requiredTime  String?
-  contact       Json?
+  //General
+  id          String         @id @default(dbgenerated("gen_random_uuid()"))
+  type        EventType      @default(VOLUNTEERING)
+  title       String
+  description String
+  location    String
+  status      ProjectStatus?
+  createdAt   DateTime       @default(now())
+  enabled     Boolean
+  startTime   DateTime?
+  endTime     DateTime?
+  contact     Json?
+
+  //Only on Volunteering event
+  roles Json?
+
+  //Relatoin
   Owner         User?           @relation(fields: [ownerId], references: [id])
   ownerId       String?
   CategoryEvent CategoryEvent[]
@@ -132,19 +136,23 @@ model EventUser {
 }
 
 model Project {
-  id              String            @id @default(dbgenerated("gen_random_uuid()"))
-  type            ProjectType       @default(FUNDRAISING)
-  title           String
-  description     String
-  goalAmount      Int
-  currentAmount   Int
-  contact         Json?
-  location        String?
-  startTime       DateTime?
-  endTime         DateTime?
-  enabled         Boolean
-  status          ProjectStatus?
-  createdAt       DateTime          @default(now())
+  // General
+  id            String         @id @default(dbgenerated("gen_random_uuid()"))
+  type          ProjectType    @default(FUNDRAISING)
+  title         String
+  description   String
+  contact       Json?
+  startTime     DateTime?
+  endTime       DateTime?
+  enabled       Boolean
+  status        ProjectStatus?
+  createdAt     DateTime       @default(now())
+  //fundraising (Handiv oloh)
+  link          String?
+  goalAmount    Int?
+  currentAmount Int?
+
+  //Relation
   Owner           User?             @relation(fields: [ownerId], references: [id])
   ownerId         String?
   Users           ProjectUser[]

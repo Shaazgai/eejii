@@ -1,12 +1,12 @@
-import type { Event } from '@/lib/types';
+import ProjectCardPublic from '@/components/card/project-card';
+import type { Project } from '@/lib/types';
 import { Alert, SimpleGrid, Skeleton } from '@mantine/core';
-import EventCardPublic from '../card/event-card';
 
-export const EventList = ({
-  events,
+export const ProjectList = ({
+  projects,
   isLoading,
 }: {
-  events: Event[];
+  projects: Project[];
   isLoading: boolean;
 }) => {
   if (isLoading) {
@@ -20,8 +20,10 @@ export const EventList = ({
   }
   return (
     <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }}>
-      {events?.length > 0 ? (
-        events.map((event, i) => <EventCardPublic key={i} event={event} />)
+      {projects?.length > 0 ? (
+        projects.map((project, i) => (
+          <ProjectCardPublic key={i} fund={project} />
+        ))
       ) : (
         <Alert title="No result">No fundraisings to show</Alert>
       )}

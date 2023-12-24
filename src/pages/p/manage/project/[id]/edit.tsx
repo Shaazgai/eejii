@@ -4,14 +4,25 @@ import type { z } from 'zod';
 
 import ProjectForm from '@/components/form/project-form';
 import PartnerLayout from '@/components/layout/partner-layout';
+import { ProjectType } from '@/lib/db/enums';
 import handleImageUpload from '@/lib/hooks/upload-image';
 import type { Project, S3ParamType } from '@/lib/types';
 import imageResizer from '@/lib/utils/image-resizer';
 import type { projectSchema } from '@/lib/validation/project-schema';
 import { api } from '@/utils/api';
-import { Container, LoadingOverlay } from '@mantine/core';
+import {
+  ActionIcon,
+  Container,
+  Flex,
+  LoadingOverlay,
+  Paper,
+  Space,
+  Title,
+} from '@mantine/core';
 import type { FileWithPath } from '@mantine/dropzone';
 import { notifications } from '@mantine/notifications';
+import { IconArrowLeft } from '@tabler/icons-react';
+import Link from 'next/link';
 
 const EditProject = () => {
   const router = useRouter();
@@ -21,7 +32,7 @@ const EditProject = () => {
   async function handleSetFiles(images: FileWithPath[]) {
     const resizedFiles = await Promise.all(
       images.map(async file => {
-        const resizedFile = await imageResizer(file, 300, 300);
+        const resizedFile = await imageResizer(file, 800, 600);
         return resizedFile;
       })
     );
@@ -44,6 +55,9 @@ const EditProject = () => {
           url: string;
           fields: S3ParamType;
         };
+        console.log(url);
+        console.log(fields);
+        console.log(res.fileName);
         const file = files.find(f => f.name === res.fileName);
         handleImageUpload(url, fields, file as File);
       },
@@ -65,7 +79,7 @@ const EditProject = () => {
         title: 'Success',
         message: 'Successfully updated fund',
       });
-      router.push(`/p/manage/${newProject.id}/invite`);
+      router.push(`/p/manage/project/${newProject.id}`);
     },
   });
   function handleSubmit(values: z.infer<typeof projectSchema>) {
@@ -76,8 +90,28 @@ const EditProject = () => {
   return (
     <PartnerLayout>
       <Container fluid p={'xl'}>
+        <Paper withBorder p={20} radius={'md'}>
+          <Flex justify={'start'} align={'center'} gap={20}>
+            <ActionIcon
+              component={Link}
+              href={`/p/manage/project/${data?.id}`}
+              radius={'xl'}
+              size={'lg'}
+              variant="light"
+            >
+              <IconArrowLeft />
+            </ActionIcon>
+            <Title order={2}>
+              {data?.type === ProjectType.FUNDRAISING
+                ? 'Fundraising'
+                : 'Grant fundraising'}
+            </Title>
+          </Flex>
+        </Paper>
+        <Space h={'lg'} />
         {!isLoading && data ? (
           <ProjectForm
+            type={data.type as ProjectType}
             data={data as unknown as Project | undefined}
             handleSubmit={handleSubmit}
             isLoading={isPending}

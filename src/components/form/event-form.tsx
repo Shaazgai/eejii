@@ -1,36 +1,33 @@
 /* eslint-disable unused-imports/no-unused-vars */
+import type { UseFormReturnType } from '@mantine/form';
 import { useForm, zodResolver } from '@mantine/form';
-import { useState } from 'react';
 import type { z } from 'zod';
 
 import type { Contact, Event, EventRole } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 import { api } from '@/utils/api';
 
-import { inputStyle } from '@/styles/inputStyle';
+import { EventType } from '@/lib/db/enums';
 import {
   ActionIcon,
   Button,
-  Chip,
-  Flex,
-  Group,
-  Image,
   InputLabel,
   Paper,
-  Skeleton,
+  Space,
   Stack,
   Text,
-  TextInput,
-  Textarea,
 } from '@mantine/core';
-import { DateTimePicker } from '@mantine/dates';
 import type { FileWithPath } from '@mantine/dropzone';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconX } from '@tabler/icons-react';
+import { FallbackImage } from '../common/fallback-image';
+import { EventFormFields } from './fields/event-form-fields';
+import { VolunteeringEventFormFields } from './fields/volunteering-event-form-fields';
 import { FormStep } from './form-stepper';
 
 const EventForm = ({
   data,
+  type,
   isLoading,
   handleSubmit,
   setFiles,
@@ -38,15 +35,13 @@ const EventForm = ({
   handleSetFiles,
 }: {
   data: Event | undefined;
+  type: EventType;
   isLoading: boolean;
   handleSubmit: (values: z.infer<typeof eventSchema>) => void;
   setFiles: (files: File[]) => void;
   files: File[];
   handleSetFiles: (images: FileWithPath[]) => void;
 }) => {
-  const { data: categories, isLoading: isCategoryLoading } =
-    api.category.getAll.useQuery({ name: null, type: null });
-
   const eventCategories = data?.Categories.map(c => c.categoryId) ?? [''];
   const form = useForm({
     validateInputOnChange: true,
@@ -56,7 +51,6 @@ const EventForm = ({
       location: data?.location ?? '',
       startTime: (data?.startTime as unknown as Date) ?? new Date(),
       endTime: (data?.endTime as unknown as Date) ?? new Date(),
-      requiredTime: data?.requiredTime ?? '',
       categories: eventCategories,
       contact: {
         phone: (data?.contact as Contact)?.phone ?? '',
@@ -71,12 +65,6 @@ const EventForm = ({
     validate: zodResolver(eventSchema),
   });
 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  function handleSelectCategory(values: string[]) {
-    setSelectedCategories(values);
-    form.setFieldValue('categories', values);
-  }
-
   const mainImage = data?.Images?.find(i => i.type === 'main');
 
   const context = api.useContext();
@@ -90,294 +78,127 @@ const EventForm = ({
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <div className="space-y-4">
-        <div className="flex gap-4">
-          <FormStep step={1} line />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Title</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              <TextInput
-                {...form.getInputProps('title')}
-                placeholder="Title"
-                w={'100%'}
-                size="lg"
-                description="DESC here"
-                inputWrapperOrder={['label', 'error', 'input', 'description']}
-                styles={inputStyle}
-              />
-            </Paper>
-          </Stack>
-        </div>
-        <div>
-          <div className="flex gap-4">
-            <FormStep line step={2} />
-            <Stack w={'100%'}>
-              <InputLabel size="xl">Roles</InputLabel>
-              <Paper withBorder p={20} radius={'xl'} py={30}>
-                <TextInput
-                  {...form.getInputProps('roles.duties')}
-                  placeholder="duties"
-                  w={'100%'}
-                  size="lg"
-                  description="DESC here"
-                  inputWrapperOrder={['label', 'error', 'input', 'description']}
-                  styles={inputStyle}
-                />
-                <TextInput
-                  {...form.getInputProps('roles.skills')}
-                  placeholder="Skills"
-                  w={'100%'}
-                  size="lg"
-                  description="DESC here"
-                  inputWrapperOrder={['label', 'error', 'input', 'description']}
-                  styles={inputStyle}
-                />
-                <TextInput
-                  {...form.getInputProps('roles.number')}
-                  placeholder="How many volunteers neeeded"
-                  w={'100%'}
-                  size="lg"
-                  description="DESC here"
-                  inputWrapperOrder={['label', 'error', 'input', 'description']}
-                  styles={inputStyle}
-                />
-              </Paper>
-            </Stack>
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <FormStep line step={3} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Images</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              {mainImage ? (
-                <Paper pos={'relative'}>
-                  <Image
-                    height={200}
-                    width={320}
-                    radius={'md'}
-                    fit="contain"
-                    placeholder="/placeholder.svg"
-                    src={
+      {type === EventType.EVENT ? (
+        <EventFormFields
+          data={data}
+          form={
+            form as unknown as UseFormReturnType<z.infer<typeof eventSchema>>
+          }
+        />
+      ) : (
+        <VolunteeringEventFormFields
+          data={data}
+          form={
+            form as unknown as UseFormReturnType<z.infer<typeof eventSchema>>
+          }
+        />
+      )}
+      <Space h={'lg'} />
+      <div className="flex gap-4">
+        <FormStep line step={3} />
+        <Stack w={'100%'}>
+          <InputLabel size="xl">Images</InputLabel>
+          <Paper
+            withBorder
+            radius={'xl'}
+            p={20}
+            mih={300}
+            py={20}
+            style={{
+              overflow: 'hidden',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            {mainImage ? (
+              <Paper w={400} h={300} shadow="sm" pos={'relative'}>
+                <FallbackImage
+                  height={300}
+                  width={400}
+                  h={300}
+                  w={400}
+                  fit="cover"
+                  src={process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path}
+                  onLoad={() =>
+                    URL.revokeObjectURL(
                       process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path
-                    }
-                    onLoad={() =>
-                      URL.revokeObjectURL(
-                        process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path
-                      )
-                    }
-                    alt="image"
-                  />
-                  <ActionIcon
-                    onClick={() =>
-                      deleteImage({ id: mainImage.id as unknown as string })
-                    }
-                    pos={'absolute'}
-                    top={0}
-                    color="red"
-                    right={0}
-                  >
-                    <IconX />
-                  </ActionIcon>
-                </Paper>
-              ) : files.length > 0 ? (
-                <Paper>
-                  {files.map((file, i) => {
-                    const imageUrl = URL.createObjectURL(file);
-                    return (
-                      <Paper key={i} pos={'relative'}>
-                        <Image
-                          height={200}
-                          width={320}
-                          radius={'md'}
-                          fit="contain"
-                          src={imageUrl}
-                          onLoad={() => URL.revokeObjectURL(imageUrl)}
-                          alt="image"
-                        />
-                        <ActionIcon
-                          onClick={() => setFiles([])}
-                          pos={'absolute'}
-                          top={0}
-                          color="red"
-                          right={0}
-                        >
-                          <IconX />
-                        </ActionIcon>
-                      </Paper>
-                    );
-                  })}
-                </Paper>
-              ) : (
-                <Dropzone
-                  accept={IMAGE_MIME_TYPE}
-                  h={100}
-                  onDrop={handleSetFiles}
-                >
-                  <Text ta="center">Drop images here</Text>
-                </Dropzone>
-              )}
-            </Paper>
-          </Stack>
-        </div>
-        <div className="flex gap-4">
-          <FormStep line step={3} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Category</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              {!isCategoryLoading && categories ? (
-                <Chip.Group
-                  multiple
-                  value={selectedCategories}
-                  onChange={handleSelectCategory}
-                >
-                  <Group justify="center" mt="md">
-                    {categories.map(c => (
-                      <Chip value={c.id} key={c.id}>
-                        {c.name}
-                      </Chip>
-                    ))}
-                  </Group>
-                </Chip.Group>
-              ) : (
-                <Flex gap={10}>
-                  <Skeleton h={30} w={90} radius="xl" />
-                  <Skeleton h={30} w={110} radius={'xl'} />
-                  <Skeleton h={30} w={70} radius={'xl'} />
-                  <Skeleton h={30} w={90} radius={'xl'} />
-                </Flex>
-              )}
-            </Paper>
-          </Stack>
-        </div>
-        <div className="flex gap-4">
-          <FormStep line step={4} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Contact</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              <span>
-                Энэхүү үйл ажиллагаан холбогдох хүний талаар мэдээллйиг
-                оруулаарай
-              </span>
-              <Flex gap={20}>
-                <TextInput
-                  {...form.getInputProps('contact.phone')}
-                  placeholder="Phone"
-                  w={'100%'}
-                  size="lg"
-                  styles={inputStyle}
-                />
-                <TextInput
-                  {...form.getInputProps('contact.email')}
-                  placeholder="Email"
-                  w={'100%'}
-                  size="lg"
-                  styles={inputStyle}
-                />
-              </Flex>
-            </Paper>
-          </Stack>
-        </div>
-        <div className="flex gap-4">
-          <FormStep line step={5} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">
-              Арга хэмжээ эхлэх болон дуусах хугацаа
-            </InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              <Flex gap={20}>
-                <DateTimePicker
-                  defaultValue={
-                    data?.startTime !== undefined
-                      ? (data?.startTime as unknown as Date)
-                      : null
+                    )
                   }
-                  {...form.getInputProps('startTime')}
-                  valueFormat="YYYY-M-DD hh:mm:ss"
-                  label="Pick date and time"
-                  placeholder="Pick start time"
-                  w={'100%'}
+                  alt="image"
                 />
-                <DateTimePicker
-                  defaultValue={
-                    data?.endTime !== undefined
-                      ? (data?.endTime as unknown as Date)
-                      : null
+                <ActionIcon
+                  onClick={() =>
+                    deleteImage({ id: mainImage.id as unknown as string })
                   }
-                  {...form.getInputProps('endTime')}
-                  valueFormat="YYYY-M-DD hh:mm:ss"
-                  label="Pick date and time"
-                  placeholder="Pick end time"
-                  w={'100%'}
-                />
-              </Flex>
-            </Paper>
-          </Stack>
-        </div>
-        <div className="flex gap-4">
-          <FormStep line step={6} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Description</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              <Textarea
-                {...form.getInputProps('description')}
-                placeholder="Write description"
-                w={'100%'}
-                size="md"
-              />
-            </Paper>
-          </Stack>
-        </div>
-        <div className="flex gap-4">
-          <FormStep line step={6} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Location</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              <Textarea
-                {...form.getInputProps('location')}
-                placeholder="Write description"
-                w={'100%'}
-                size="md"
-              />
-            </Paper>
-          </Stack>
-        </div>
-        <div className="flex gap-4">
-          <FormStep line step={6} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Required time</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              <Textarea
-                {...form.getInputProps('requiredTime')}
-                placeholder="Write description"
-                w={'100%'}
-                size="md"
-              />
-            </Paper>
-          </Stack>
-        </div>
-        <div className="flex gap-4">
-          <FormStep step={7} />
-          <Stack w={'100%'}>
-            <InputLabel size="xl">Check</InputLabel>
-            <Paper withBorder p={20} radius={'xl'} py={30}>
-              <Text fz="18" c={'dimmed'}>
-                ОРУУЛСАН МЭДЭЭЛЛҮҮДЭЭ ШАЛГААРАЙ. БҮХ ХЭСГИЙГ ЗӨВ БӨГЛӨСӨН
-                ТОХИОЛДОЛД ХҮЛЭЭЛГИЙН ГОРИМД ОРЖ НИЙТЛЭГДЭНЭ.
-              </Text>
-              <div className="flex gap-4 pt-4">
-                <Button
-                  type="submit"
-                  disabled={!form.isValid}
-                  loading={isLoading}
+                  pos={'absolute'}
+                  top={0}
+                  color="red"
+                  right={0}
                 >
-                  Submit
-                </Button>
-                <Button>Cancel</Button>
-              </div>
-            </Paper>
-          </Stack>
-        </div>
+                  <IconX />
+                </ActionIcon>
+              </Paper>
+            ) : files.length > 0 ? (
+              files.map((file, i) => {
+                const imageUrl = URL.createObjectURL(file);
+                return (
+                  <Paper key={i} pos={'relative'}>
+                    <FallbackImage
+                      w={400}
+                      h={300}
+                      width={400}
+                      height={300}
+                      radius={'md'}
+                      fit="cover"
+                      src={imageUrl}
+                      onLoad={() => URL.revokeObjectURL(imageUrl)}
+                      alt="image"
+                    />
+                    <ActionIcon
+                      onClick={() => setFiles([])}
+                      pos={'absolute'}
+                      top={0}
+                      color="red"
+                      right={0}
+                    >
+                      <IconX />
+                    </ActionIcon>
+                  </Paper>
+                );
+              })
+            ) : (
+              <Dropzone
+                accept={IMAGE_MIME_TYPE}
+                h={100}
+                onDrop={handleSetFiles}
+              >
+                <Text ta="center">Drop images here</Text>
+              </Dropzone>
+            )}
+          </Paper>
+        </Stack>
+      </div>
+      <div className="flex gap-4">
+        <FormStep step={7} />
+        <Stack w={'100%'}>
+          <InputLabel size="xl">Check</InputLabel>
+          <Paper withBorder p={20} radius={'xl'} py={30}>
+            <Text fz="18" c={'dimmed'}>
+              ОРУУЛСАН МЭДЭЭЛЛҮҮДЭЭ ШАЛГААРАЙ. БҮХ ХЭСГИЙГ ЗӨВ БӨГЛӨСӨН
+              ТОХИОЛДОЛД ХҮЛЭЭЛГИЙН ГОРИМД ОРЖ НИЙТЛЭГДЭНЭ.
+            </Text>
+            <div className="flex gap-4 pt-4">
+              <Button
+                type="submit"
+                disabled={!form.isValid}
+                loading={isLoading}
+              >
+                Submit
+              </Button>
+              <Button>Cancel</Button>
+            </div>
+          </Paper>
+        </Stack>
       </div>
     </form>
   );

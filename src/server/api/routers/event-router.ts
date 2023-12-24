@@ -7,7 +7,7 @@ import type { User } from '@/lib/db/types';
 import type { Event, ListResponse, Pagination } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
-import { ProjectStatus } from '@/lib/db/enums';
+import { EventType, ProjectStatus } from '@/lib/db/enums';
 import { createPresignedUrl } from '../helper/imageHelper';
 import { sendNotification } from '../helper/notification';
 import { getPaginationInfo } from '../helper/paginationInfo';
@@ -27,25 +27,14 @@ export const eventRouter = createTRPCRouter({
         title: z.string().nullish(),
         status: z.string().nullish(),
         enabled: z.boolean().nullish(),
+        type: z.string().nullish().default(EventType.EVENT),
       })
     )
     .query(async ({ input, ctx }) => {
       const result = await ctx.db.transaction().execute(async trx => {
         let query = trx
           .selectFrom('Event')
-          .select([
-            'Event.id',
-            'Event.title',
-            'Event.description',
-            'Event.location',
-            'Event.startTime',
-            'Event.endTime',
-            'Event.requiredTime',
-            'Event.roles',
-            'Event.contact',
-            'Event.status',
-            'Event.enabled',
-          ])
+          .selectAll('Event')
           .select(eb => [
             jsonObjectFrom(
               eb
@@ -59,7 +48,8 @@ export const eventRouter = createTRPCRouter({
                 .selectAll()
                 .whereRef('Event.id', '=', 'EventImage.ownerId')
             ).as('Images'),
-          ]);
+          ])
+          .where('Event.type', '=', input.type as EventType);
         if (input.title) {
           query = query.where('title', 'like', '%' + input.title + '%');
         }
@@ -79,6 +69,7 @@ export const eventRouter = createTRPCRouter({
           .select(expressionBuilder => {
             return expressionBuilder.fn.countAll().as('count');
           })
+          .where('Event.type', '=', input.type as EventType)
           .executeTakeFirstOrThrow();
 
         return {
@@ -106,21 +97,7 @@ export const eventRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       let query = ctx.db
         .selectFrom('Event')
-        .select([
-          'Event.id',
-          'Event.title',
-          'Event.description',
-          'Event.location',
-          'Event.startTime',
-          'Event.endTime',
-          'Event.requiredTime',
-          'Event.roles',
-          'Event.contact',
-          'Event.enabled',
-          'Event.ownerId',
-          'Event.createdAt',
-          'Event.status',
-        ])
+        .selectAll('Event')
         .select(eb => [
           jsonArrayFrom(
             eb
@@ -234,9 +211,9 @@ export const eventRouter = createTRPCRouter({
       const event = await ctx.db
         .insertInto('Event')
         .values({
+          type: input.type as EventType,
           title: input.title,
           description: input.description,
-          requiredTime: input.requiredTime,
           contact: {
             phone: input.contact.phone,
             email: input.contact.email,
@@ -278,7 +255,6 @@ export const eventRouter = createTRPCRouter({
           .set({
             title: input.title,
             description: input.description,
-            requiredTime: input.requiredTime,
             contact: {
               phone: input.contact.phone,
               email: input.contact.email,

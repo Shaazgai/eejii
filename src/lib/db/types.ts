@@ -75,14 +75,13 @@ export type Event = {
   title: string;
   description: string;
   location: string;
-  roles: unknown | null;
-  enabled: boolean;
   status: ProjectStatus | null;
   createdAt: Generated<Timestamp>;
+  enabled: boolean;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
-  requiredTime: string | null;
   contact: unknown | null;
+  roles: unknown | null;
   ownerId: string | null;
 };
 export type EventImage = {
@@ -138,15 +137,15 @@ export type Project = {
   type: Generated<ProjectType>;
   title: string;
   description: string;
-  goalAmount: number;
-  currentAmount: number;
   contact: unknown | null;
-  location: string | null;
   startTime: Timestamp | null;
   endTime: Timestamp | null;
   enabled: boolean;
   status: ProjectStatus | null;
   createdAt: Generated<Timestamp>;
+  link: string | null;
+  goalAmount: number | null;
+  currentAmount: number | null;
   ownerId: string | null;
 };
 export type ProjectImage = {

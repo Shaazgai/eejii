@@ -50,7 +50,7 @@ const Index = () => {
             </Text>
             <Button
               component={Link}
-              href={'/p/manage/new'}
+              href={'/p/manage/project/new'}
               size="lg"
               radius={'xl'}
               c="white"

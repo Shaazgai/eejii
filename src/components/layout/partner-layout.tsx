@@ -27,7 +27,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     },
     {
       title: 'Manage Projects',
-      href: '/p/manage',
+      href: '/p/manage/project',
       slug: 'manage',
       icon: <CalendarCheck className="ml-1 mr-1 h-7 w-7" />,
       items: [],

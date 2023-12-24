@@ -51,8 +51,8 @@ export const EventCard = ({ event }: { event: Event }) => {
               {event?.title}
             </Text>
             <Text size="sm" mt="sm" c="dimmed">
-              {format(event?.startTime as unknown as Date, 'E MMMM-d, yyy')}
-              {format(event?.endTime as unknown as Date, 'E MMMM-d, yyy')}
+              {format(event?.startTime as unknown as Date, 'E MMMM-d yyy')}{' '}
+              {format(event?.endTime as unknown as Date, 'E MMMM-d yyy')}
             </Text>
           </Flex>
         </Group>
