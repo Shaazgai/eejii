@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import VolunteerLayout from '@/components/layout/volunteer-layout';
-import EventList from '@/components/list/event-list';
-import ProjectList from '@/components/list/fund-list';
+import { EventList } from '@/components/list/event-list';
+import { ProjectList } from '@/components/list/project-list';
 import { NormalTabs } from '@/components/pagers/normal-tabs';
 import { Shell } from '@/components/shells/shell';
 import { ProjectStatus } from '@/lib/db/enums';
@@ -46,7 +46,6 @@ const Volunteer = () => {
         {activeIndex === 0 && (
           <EventList
             events={events?.items as unknown as Event[]}
-            isVolunteer={true}
             isLoading={isEventLoading}
           />
         )}

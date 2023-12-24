@@ -29,7 +29,7 @@ export default function imageResizer(
       width,
       height,
       'WEBP',
-      75,
+      100,
       0,
       base64Uri => {
         try {

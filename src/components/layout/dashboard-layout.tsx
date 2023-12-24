@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Bell,
   ChevronRight,
   HeartHandshake,
@@ -14,18 +13,7 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
-  // const [isDark, setIsDark] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-  // const setDark = (val: string) => {
-  //   if (val === 'dark') {
-  //     setIsDark(true);
-  //     document.documentElement.classList.add('dark');
-  //   } else {
-  //     setIsDark(false);
-  //     document.documentElement.classList.remove('dark');
-  //   }
-  // };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
@@ -54,12 +42,6 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       title: 'Projects',
       href: '/admin/projects',
       icon: <HeartHandshake />,
-      items: [],
-    },
-    {
-      title: 'Grant Projects',
-      href: '/admin/grant-projects',
-      icon: <Anchor />,
       items: [],
     },
     {

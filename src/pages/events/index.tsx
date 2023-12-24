@@ -1,109 +1,185 @@
-import 'swiper/css';
-import 'swiper/css/navigation';
-
-// import Swiper core and required modules
-// import { FallbackImage } from '@/components/common/fallback-image';
-// import VolunteerLayout from '@/components/layout/volunteer-layout';
+import { FallbackImage } from '@/components/common/fallback-image';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import EventSlider from '@/components/list/slider/event-slider';
-import FundSlider from '@/components/list/slider/fund-slider';
-import { Shell } from '@/components/shells/shell';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ProjectStatus } from '@/lib/db/enums';
-import type { Event, Project } from '@/lib/types';
+import { EventList } from '@/components/list/event-list';
+import { EventType, ProjectStatus } from '@/lib/db/enums';
+import type { Event } from '@/lib/types';
 import { api } from '@/utils/api';
+import {
+  BackgroundImage,
+  Button,
+  Center,
+  Container,
+  Flex,
+  Grid,
+  Pagination,
+  Paper,
+  Space,
+  Tabs,
+  TextInput,
+  Title,
+} from '@mantine/core';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 export default function Index() {
-  const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
-    { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
-  );
-  const { data: projects, isLoading: isFundLoading } =
-    api.project.getAll.useQuery({
-      page: 1,
-      limit: 10,
-      enabled: true,
-      status: ProjectStatus.APPROVED,
-    });
+  const router = useRouter();
+  const { type, q, page } = router.query;
 
+  const [activePage, setPage] = useState(page ? +page : 1);
+  const [search, setSearch] = useState(q);
+  const [activeTab, setActiveTab] = useState<string | null>(
+    (type as string) ?? EventType.EVENT
+  );
+
+  function handleSetPage(value: number) {
+    setPage(value);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page: value },
+    });
+  }
+
+  function handleActiveTab(value: string | null) {
+    router.push(
+      {
+        query: { ...router.query, type: value },
+      },
+      undefined,
+      { scroll: false }
+    );
+    setActiveTab(value);
+  }
+
+  const {
+    data: events,
+    isLoading,
+    refetch,
+  } = api.event.getAll.useQuery({
+    page: activePage,
+    limit: 10,
+    enabled: true,
+    status: ProjectStatus.APPROVED,
+    type: type as EventType,
+    title: q as string,
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [q]);
+
+  const totalPages = events?.pagination.totalPages;
   return (
     <BasicBaseLayout>
-      <div className="h-[376px] w-full bg-[#3c888D]">
-        <img
-          src="/images/eventss/main.png"
-          alt="main"
-          className="h-[376px] w-full object-cover"
-        />
-      </div>
-      <Shell>
-        <div className="flex space-x-5  pl-12 md:w-full">
-          <Card className="h-[180px] w-[830px] -translate-y-20 border-transparent">
-            <CardHeader className="text-3xl font-semibold">
-              Арга хэмжэээ хайх
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-5 pl-7 pt-3">
-                <Input
-                  placeholder="Хайх"
+      <FallbackImage
+        w={'100%'}
+        width={1600}
+        radius={0}
+        height={400}
+        src="/images/eventss/main.png"
+        alt="main"
+      />
+      <Container size={'xl'}>
+        <Grid gutter={'xl'} columns={12} className="-translate-y-16">
+          <Grid.Col span={{ base: 12, md: 7, lg: 8 }}>
+            <Paper shadow="md" py={30} px={40} radius={'lg'}>
+              <Title mb={10}>Та ямар төсөл дэмжихийг хүсч байна вэ?</Title>
+              <Flex justify={'space-between'} gap={10}>
+                <TextInput
+                  w={'100%'}
+                  placeholder="Нэр"
                   required
-                  className="h-[48px] w-[270px] rounded-full bg-brand450"
+                  defaultValue={q}
+                  onChange={e => {
+                    e.preventDefault();
+                    setSearch(e.currentTarget.value);
+                  }}
+                  size="lg"
+                  radius={'xl'}
                 />
-                <Input
-                  placeholder="Төрөл сонгох"
-                  required
-                  className="h-[48px] w-[270px] rounded-full bg-brand450"
-                />
-                <Button className="h-[44px] w-[144px] bg-primary">Хайх</Button>
-              </div>
-            </CardContent>
-            <div className="pl-0 pr-10 pt-20">
-              <CardHeader className="pl-0 text-2xl font-semibold">
-                Онцлох арга хэмжээ
-              </CardHeader>
-              <CardContent className="pl-0">
-                <div className="flex h-[276px] w-[830px] flex-col items-center justify-around bg-[url('/images/eventss/specialBG.png')] pb-12 pt-12 text-brand450">
+                <Button
+                  onClick={() =>
+                    router.push({
+                      pathname: router.pathname,
+                      query: { ...router.query, q: search },
+                    })
+                  }
+                  radius={'xl'}
+                  size="lg"
+                  miw={150}
+                >
+                  Төсөл хайх
+                </Button>
+              </Flex>
+            </Paper>
+            <Space h={'xl'} />
+            <Title order={3} mb={10}>
+              Онцгой төсөл
+            </Title>
+            <Paper>
+              <BackgroundImage
+                h={360}
+                src="/images/eventss/main.png"
+                radius={'lg'}
+                style={{ overflow: 'hidden' }}
+              >
+                <Flex
+                  direction={'column'}
+                  align={'center'}
+                  c={'white'}
+                  h={'100%'}
+                  justify={'center'}
+                  style={{
+                    backdropFilter: 'blur(10px)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  }}
+                >
                   <h2 className="text-lg font-semibold">
-                    Урлагийн багийн бүртгэл
+                    'Mother event Hospice'
                   </h2>
                   <h1 className="pb-12 text-3xl font-semibold">
-                    12 сарын шидтэнүүд
+                    "Mother" Hospice and Palliative Care Center
                   </h1>
                   <Button className="h-[44px] w-[144px] rounded-none bg-primary">
-                    Оролцох
+                    Хандив өгөх
                   </Button>
-                </div>
-              </CardContent>
-            </div>
-          </Card>
-          <Card className="h-[600px] w-[345px] -translate-y-20 border-transparent bg-primary">
-            Ad space 6
-          </Card>
-        </div>
-        <div className="-translate-y-10">
-          <EventSlider
-            events={events?.items as unknown as Event[]}
-            isEventLoading={isEventLoading}
+                </Flex>
+              </BackgroundImage>
+            </Paper>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 5, lg: 4 }}>
+            <Paper
+              withBorder
+              // shadow="md"
+              radius={'lg'}
+              h={{ base: 300, md: 640, lg: 598 }}
+            >
+              <div>hi</div>
+            </Paper>
+          </Grid.Col>
+        </Grid>
+        <Tabs
+          className="-translate-y-8"
+          value={activeTab}
+          onChange={handleActiveTab}
+        >
+          <Tabs.List>
+            <Tabs.Tab value={EventType.EVENT}>Event</Tabs.Tab>
+            <Tabs.Tab value={EventType.VOLUNTEERING}>
+              Volunteering event
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs>
+        <EventList events={events?.items as Event[]} isLoading={isLoading} />
+        <Space h={'lg'} />
+        <Center>
+          <Pagination
+            radius="xl"
+            value={activePage}
+            onChange={handleSetPage}
+            total={totalPages ?? 1}
           />
-        </div>
-        <div className="-translate-y-10">
-          <FundSlider
-            projects={projects?.items as unknown as Project[]}
-            isFundLoading={isFundLoading}
-          />
-        </div>
-      </Shell>
+        </Center>
+      </Container>
     </BasicBaseLayout>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async context => {
-//   const events = await api.event.getAll.useQuery();
-//   const project = await api.project.getAll.useQuery();
-
-//   return {
-//     props: {
-//       events: null,
-//     },
-//   };
-// };

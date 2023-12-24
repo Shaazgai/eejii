@@ -1,7 +1,7 @@
 import EventForm from '@/components/form/event-form';
-import GrantProjectForm from '@/components/form/grant-project-form';
 import ProjectForm from '@/components/form/project-form';
 import PartnerLayout from '@/components/layout/partner-layout';
+import { EventType, ProjectType } from '@/lib/db/enums';
 import handleImageUpload from '@/lib/hooks/upload-image';
 import type { S3ParamType } from '@/lib/types';
 import imageResizer from '@/lib/utils/image-resizer';
@@ -26,14 +26,14 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import type { z } from 'zod';
 
-const NewEvent = () => {
+const NewEvent = ({ type }: { type: EventType }) => {
   const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
 
   async function handleSetFiles(images: FileWithPath[]) {
     const resizedFiles = await Promise.all(
       images.map(async file => {
-        const resizedFile = await imageResizer(file, 300, 300);
+        const resizedFile = await imageResizer(file, 800, 600);
         return resizedFile;
       })
     );
@@ -68,15 +68,17 @@ const NewEvent = () => {
         title: 'Success',
         message: 'Successfully created event',
       });
-      router.push(`/p/manage/event/${newEvent.id}/invite`);
+      router.push(`/p/manage/event/${newEvent.id}`);
     },
   });
 
   function handleSubmit(values: z.infer<typeof eventSchema>) {
-    mutate(values);
+    const formValues = { ...values, type: type };
+    mutate(formValues);
   }
   return (
     <EventForm
+      type={type}
       data={undefined}
       handleSubmit={handleSubmit}
       isLoading={isLoading}
@@ -87,14 +89,14 @@ const NewEvent = () => {
   );
 };
 
-const NewProject = () => {
+const NewProject = ({ type }: { type: ProjectType }) => {
   const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
 
   async function handleSetFiles(images: FileWithPath[]) {
     const resizedFiles = await Promise.all(
       images.map(async file => {
-        const resizedFile = await imageResizer(file, 300, 300);
+        const resizedFile = await imageResizer(file, 800, 600);
         return resizedFile;
       })
     );
@@ -108,7 +110,9 @@ const NewProject = () => {
           url: string;
           fields: S3ParamType;
         };
+        console.log(url);
         const file = files.find(f => f.name === res.fileName);
+        console.log(file);
         handleImageUpload(url, fields, file as File);
       },
     });
@@ -128,14 +132,16 @@ const NewProject = () => {
         title: 'Success',
         message: 'Successfully created project',
       });
-      router.push(`/p/manage/${newProject.id}/invite`);
+      router.push(`/p/manage/project/${newProject.id}`);
     },
   });
   function handleSubmit(values: z.infer<typeof projectSchema>) {
-    mutate(values);
+    const formValues = { ...values, type: type };
+    mutate(formValues);
   }
   return (
     <ProjectForm
+      type={type}
       data={undefined}
       handleSubmit={handleSubmit}
       setFiles={setFiles}
@@ -146,65 +152,6 @@ const NewProject = () => {
   );
 };
 
-const NewGrantProject = () => {
-  const router = useRouter();
-  const [files, setFiles] = useState<File[]>([]);
-
-  async function handleSetFiles(images: FileWithPath[]) {
-    const resizedFiles = await Promise.all(
-      images.map(async file => {
-        const resizedFile = await imageResizer(file, 300, 300);
-        return resizedFile;
-      })
-    );
-    setFiles(resizedFiles as unknown as File[]);
-  }
-
-  const { mutate: createPresignedUrl } =
-    api.project.createPresignedUrl.useMutation({
-      onSuccess: res => {
-        const { url, fields } = res.data as unknown as {
-          url: string;
-          fields: S3ParamType;
-        };
-        const file = files.find(f => f.name === res.fileName);
-        handleImageUpload(url, fields, file as File);
-      },
-    });
-  const { mutate, isLoading } = api.project.create.useMutation({
-    onSuccess: newGrantProject => {
-      if (files.length > 0) {
-        files.map(file => {
-          createPresignedUrl({
-            projectId: newGrantProject.id,
-            name: file?.name as string,
-            type: 'main',
-            contentType: file?.type as string,
-          });
-        });
-      }
-      notifications.show({
-        title: 'Success',
-        message: 'Successfully created grant project',
-      });
-      router.push(`/p/manage/grant/${newGrantProject.id}`);
-    },
-  });
-
-  function handleSubmit(values: z.infer<typeof projectSchema>) {
-    mutate(values);
-  }
-  return (
-    <GrantProjectForm
-      data={undefined}
-      handleSubmit={handleSubmit}
-      setFiles={setFiles}
-      handleSetFiles={handleSetFiles}
-      isLoading={isLoading}
-      files={files}
-    />
-  );
-};
 export default function New() {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -235,7 +182,7 @@ export default function New() {
           <Flex justify={'start'} align={'center'} gap={20}>
             <ActionIcon
               component={Link}
-              href={'/p/manage'}
+              href={'/p/manage/project'}
               radius={'xl'}
               size={'lg'}
               variant="light"
@@ -250,9 +197,11 @@ export default function New() {
           </Flex>
         </Paper>
         <Space h={'lg'} />
-        {activeIndex == 0 && <NewProject />}
-        {activeIndex == 1 && <NewGrantProject />}
-        {activeIndex == 2 && <NewEvent />}
+        {activeIndex == 0 && <NewProject type={ProjectType.FUNDRAISING} />}
+        {activeIndex == 1 && (
+          <NewProject type={ProjectType.GRANT_FUNDRAISING} />
+        )}
+        {activeIndex == 2 && <NewEvent type={EventType.EVENT} />}
       </Container>
     </PartnerLayout>
   );

@@ -54,7 +54,7 @@ export default function ProjectViewPage(
             <Group>
               <ActionIcon
                 component={Link}
-                href={'/p/manage'}
+                href={'/p/manage/project'}
                 radius={'xl'}
                 size={'lg'}
                 variant="light"
@@ -71,7 +71,7 @@ export default function ProjectViewPage(
             </Group>
             <Button
               component={Link}
-              href={`/p/manage/${data.id}/edit`}
+              href={`/p/manage/project/${data.id}/edit`}
               radius={'xl'}
             >
               Edit details

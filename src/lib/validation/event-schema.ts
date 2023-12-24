@@ -6,14 +6,9 @@ const phoneRegex = new RegExp(
 
 export const roleSchema = z.string();
 
-// if (typeof window === 'undefined') {
-//   // eslint-disable-next-line @typescript-eslint/no-var-requires
-//   const undici = require('undici');
-//   globalThis.File = undici.File;
-// }
-
 export const eventSchema = z.object({
-  id: z.string().nullish().nullable(),
+  id: z.string().nullish(),
+  type: z.string().nullish(),
   title: z.string().min(2, {
     message: 'Country must have at least 2 characters.',
   }),
@@ -33,17 +28,16 @@ export const eventSchema = z.object({
     }),
   startTime: z.date(),
   endTime: z.date(),
-  requiredTime: z.string(),
-  roles: z.object({
-    skills: z.string(),
-    duties: z.string(),
-    number: z.string(),
-  }),
+  roles: z
+    .object({
+      skills: z.string(),
+      duties: z.string(),
+      number: z.string(),
+    })
+    .nullish(),
   contact: z.object({
     phone: z.string().regex(phoneRegex).length(8),
     email: z.string().email(),
   }),
   categories: z.array(z.string().nullable()),
-
-  // image: z.string(),
 });

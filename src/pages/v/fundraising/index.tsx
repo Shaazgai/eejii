@@ -4,7 +4,7 @@ import countries from 'src/data/city.json';
 
 import { FallbackImage } from '@/components/common/fallback-image';
 import VolunteerLayout from '@/components/layout/volunteer-layout';
-import ProjectList from '@/components/list/fund-list';
+import { ProjectList } from '@/components/list/project-list';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -181,14 +181,6 @@ const Donate = () => {
             projects={projects?.items as unknown as Project[]}
             isLoading={isFundLoading}
           />
-          {/* <EventSlider
-            events={events as EventType[]}
-            isEventLoading={isEventLoading}
-          />
-          <FundSlider
-            projects={projects as ProjectType[]}
-            isFundLoading={isFundLoading}
-          /> */}
         </div>
       </Shell>
     </VolunteerLayout>

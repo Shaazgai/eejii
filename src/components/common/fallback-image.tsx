@@ -38,7 +38,6 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
     >
       <Image
         component={NextImage}
-        loading="lazy"
         src={imgSrc}
         radius={radius}
         fit={fit}

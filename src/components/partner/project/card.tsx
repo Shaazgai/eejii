@@ -52,8 +52,8 @@ export const ProjectCard = ({ project }: { project: Project }) => {
               {project?.title}
             </Text>
             <Text size="sm" mt="sm" c="dimmed">
-              {format(project?.startTime as unknown as Date, 'E MMMM-d, yyy')}
-              {format(project?.endTime as unknown as Date, 'E MMMM-d, yyy')}
+              {format(project?.startTime as unknown as Date, 'E MMMM-d yyy')}{' '}
+              {format(project?.endTime as unknown as Date, 'E MMMM-d yyy')}
             </Text>
           </Flex>
         </Group>
@@ -85,7 +85,7 @@ export const ProjectCard = ({ project }: { project: Project }) => {
           <Flex align={'center'} justify={'center'} p={10}>
             <ActionIcon
               component={Link}
-              href={`/p/manage/${project?.id}`}
+              href={`/p/manage/project/${project?.id}`}
               radius={'xl'}
               variant="subtle"
               size={'xl'}

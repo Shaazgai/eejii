@@ -1,32 +1,21 @@
-// import { FallbackImage } from '@/components/common/fallback-image';
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-
-// import Swiper core and required modules
 import { FallbackImage } from '@/components/common/fallback-image';
 import VolunteerLayout from '@/components/layout/volunteer-layout';
-import EventSlider from '@/components/list/slider/event-slider';
-import FundSlider from '@/components/list/slider/fund-slider';
 import { Shell } from '@/components/shells/shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ProjectStatus } from '@/lib/db/enums';
-import type { Event, Project } from '@/lib/types';
-import { api } from '@/utils/api';
 
 export default function Index() {
-  const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
-    { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
-  );
-  const { data: projects, isLoading: isFundLoading } =
-    api.project.getAll.useQuery({
-      page: 1,
-      limit: 10,
-      enabled: true,
-      status: ProjectStatus.APPROVED,
-    });
+  // const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
+  //   { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
+  // );
+  // const { data: projects, isLoading: isFundLoading } =
+  //   api.project.getAll.useQuery({
+  //     page: 1,
+  //     limit: 10,
+  //     enabled: true,
+  //     status: ProjectStatus.APPROVED,
+  //   });
 
   return (
     <VolunteerLayout>
@@ -74,30 +63,7 @@ export default function Index() {
             </CardContent>
           </Card>
         </div>
-        <div className="-translate-y-10">
-          <EventSlider
-            events={events?.items as unknown as Event[]}
-            isEventLoading={isEventLoading}
-          />
-        </div>
-        <div className="-translate-y-10">
-          <FundSlider
-            projects={projects?.items as unknown as Project[]}
-            isFundLoading={isFundLoading}
-          />
-        </div>
       </Shell>
     </VolunteerLayout>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async context => {
-//   const events = await api.event.getAll.useQuery();
-//   const project = await api.project.getAll.useQuery();
-
-//   return {
-//     props: {
-//       events: null,
-//     },
-//   };
-// };

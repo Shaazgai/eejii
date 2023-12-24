@@ -6,7 +6,7 @@ import { z } from 'zod';
 import type { Project, User } from '@/lib/db/types';
 import { projectSchema } from '@/lib/validation/project-schema';
 
-import { ProjectStatus } from '@/lib/db/enums';
+import { ProjectStatus, ProjectType } from '@/lib/db/enums';
 import type { ListResponse, Pagination } from '@/lib/types';
 import { createPresignedUrl } from '../helper/imageHelper';
 import { sendNotification } from '../helper/notification';
@@ -27,6 +27,7 @@ export const projectRouter = createTRPCRouter({
         title: z.string().nullish(),
         enabled: z.boolean().nullish(),
         status: z.string().nullish(),
+        type: z.string().nullish().default(ProjectType.FUNDRAISING),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -47,7 +48,8 @@ export const projectRouter = createTRPCRouter({
                 .selectAll()
                 .whereRef('Project.id', '=', 'ProjectImage.ownerId')
             ).as('Images'),
-          ]);
+          ])
+          .where('Project.type', '=', input.type as ProjectType);
         if (input.title) {
           query = query.where('title', 'like', '%' + input.title + '%');
         }
@@ -66,7 +68,8 @@ export const projectRouter = createTRPCRouter({
           .selectFrom('Project')
           .select(expressionBuilder => {
             return expressionBuilder.fn.countAll().as('count');
-          });
+          })
+          .where('Project.type', '=', input.type as ProjectType);
         if (input.title) {
           paginationQuery = paginationQuery.where(
             'title',
@@ -89,6 +92,7 @@ export const projectRouter = createTRPCRouter({
           );
         }
         const { count } = await paginationQuery.executeTakeFirstOrThrow();
+        console.log(count);
         return {
           data: queryResult,
           count,
@@ -106,10 +110,14 @@ export const projectRouter = createTRPCRouter({
       };
       return response;
     }),
-  getMyFunds: privateProcedure
+  getMyProjects: privateProcedure
     .input(
       z.object({
         name: z.string().nullish(),
+        type: z
+          .enum([ProjectType.FUNDRAISING, ProjectType.GRANT_FUNDRAISING])
+          .default(ProjectType.FUNDRAISING)
+          .nullish(),
         status: z
           .enum([
             ProjectStatus.APPROVED,
@@ -132,7 +140,8 @@ export const projectRouter = createTRPCRouter({
               .whereRef('Project.id', '=', 'ProjectImage.ownerId')
           ).as('Images'),
         ])
-        .where('ownerId', '=', ctx.userId);
+        .where('ownerId', '=', ctx.userId)
+        .where('type', '=', input.type as ProjectType);
       if (input.name) {
         query = query.where('Project.title', 'like', '%' + input.name + '%');
       }
@@ -238,10 +247,12 @@ export const projectRouter = createTRPCRouter({
   create: privateProcedure
     .input(projectSchema)
     .mutation(async ({ input, ctx }) => {
-      const fund = await ctx.db
+      const project = await ctx.db
         .insertInto('Project')
         .values({
+          type: input.type as ProjectType,
           title: input.title,
+          link: input.link,
           description: input.description,
           contact: {
             phone: input.contact.phone,
@@ -250,7 +261,6 @@ export const projectRouter = createTRPCRouter({
           startTime: input.startTime,
           endTime: input.endTime,
           goalAmount: input.goalAmount,
-          currentAmount: input.currentAmount,
           ownerId: ctx.userId,
           enabled: false,
           status: ProjectStatus.PENDING,
@@ -259,14 +269,14 @@ export const projectRouter = createTRPCRouter({
         .executeTakeFirstOrThrow();
 
       sendNotification({
-        title: `New project request: ${fund.title} Eejii.org`,
-        link: `/admin/projects/${fund.id}`,
-        body: fund.description,
+        title: `New project request: ${project.title} Eejii.org`,
+        link: `/admin/projects/${project.id}`,
+        body: project.description,
         receiverId: ctx.userId,
         senderId: ctx.userId,
         type: 'project_request',
       });
-      return fund;
+      return project;
     }),
   update: privateProcedure
     .input(projectSchema)
@@ -277,12 +287,13 @@ export const projectRouter = createTRPCRouter({
           code: 'BAD_REQUEST',
         });
       }
-      const fund = await ctx.db
+      const project = await ctx.db
         .updateTable('Project')
         .where('id', '=', input.id as string)
         .set({
           title: input.title,
           description: input.description,
+          link: input.link,
           contact: {
             phone: input.contact.phone,
             email: input.contact.email,
@@ -290,13 +301,12 @@ export const projectRouter = createTRPCRouter({
           startTime: input.startTime,
           endTime: input.endTime,
           goalAmount: input.goalAmount,
-          currentAmount: input.currentAmount,
           ownerId: ctx.userId,
         })
         .returning(['id'])
         .executeTakeFirstOrThrow();
 
-      return fund;
+      return project;
     }),
   createPresignedUrl: privateProcedure
     .input(
@@ -326,7 +336,7 @@ export const projectRouter = createTRPCRouter({
         .values({
           ownerId: input.projectId,
           type: input.type,
-          path: `uploads/fund/${input.name}`,
+          path: `uploads/project/${input.name}`,
         })
         .returning(['path'])
         .executeTakeFirstOrThrow();
@@ -355,26 +365,27 @@ export const projectRouter = createTRPCRouter({
           message: 'NOT VALID REQUEST TYPE',
         });
       }
-      const fund = await ctx.db
+      const project = await ctx.db
         .updateTable('Project')
         .where('Project.id', '=', input.id)
         .set({
           status: state as ProjectStatus,
+          enabled: state === ProjectStatus.APPROVED ? true : false,
         })
         .returning(['id', 'title', 'ownerId'])
         .executeTakeFirstOrThrow();
 
       sendNotification({
-        title: `Your request to create '#${fund.title}' has been ${
+        title: `Your request to create '#${project.title}' has been ${
           input.status === ProjectStatus.APPROVED ? 'approved' : 'denied'
         }`,
         body: null,
-        link: `/p/manage/${fund.id}`,
-        receiverId: fund.ownerId as string,
+        link: `/p/manage/${project.id}`,
+        receiverId: project.ownerId as string,
         senderId: ctx.userId as string,
         type: 'project_request',
       });
-      return fund;
+      return project;
     }),
 
   deleteImage: privateProcedure
