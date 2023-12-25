@@ -5,6 +5,8 @@ import type {
 } from './db/enums';
 import type {
   Address,
+  Banner as BannerDB,
+  BannerPosition,
   Category,
   CategoryEvent,
   CategoryMedia,
@@ -153,4 +155,8 @@ export type EventCategory = CategoryEvent & {
 };
 export type ProjectCategory = CategoryProject & {
   Category: Category;
+};
+
+export type Banner = BannerDB & {
+  Position: BannerPosition;
 };

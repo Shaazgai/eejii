@@ -66,7 +66,7 @@ const ProjectForm = ({
   const context = api.useContext();
   const { mutate: deleteImage } = api.project.deleteImage.useMutation({
     onSuccess: () => {
-      context.project.getById.invalidate({
+      context.project.findById.invalidate({
         id: data?.id as unknown as string,
       });
     },

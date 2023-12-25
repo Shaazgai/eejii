@@ -46,7 +46,7 @@ const EditProject = () => {
   }, [router.isReady]);
 
   const context = api.useContext();
-  const { data, isLoading } = api.project.getById.useQuery({ id: projectId });
+  const { data, isLoading } = api.project.findById.useQuery({ id: projectId });
 
   const { mutate: createPresignedUrl } =
     api.project.createPresignedUrl.useMutation({
@@ -74,7 +74,7 @@ const EditProject = () => {
           });
         });
       }
-      context.project.getById.invalidate({ id: newProject.id });
+      context.project.findById.invalidate({ id: newProject.id });
       notifications.show({
         title: 'Success',
         message: 'Successfully updated fund',

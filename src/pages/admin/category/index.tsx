@@ -4,7 +4,7 @@ import { Button, Flex, LoadingOverlay, Table } from '@mantine/core';
 import Link from 'next/link';
 
 export default function Index() {
-  const { data, isLoading } = api.category.getAll.useQuery({
+  const { data, isLoading } = api.category.findAll.useQuery({
     type: null,
     name: null,
   });

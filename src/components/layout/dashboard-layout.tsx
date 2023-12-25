@@ -1,13 +1,13 @@
+import { Container } from '@mantine/core';
 import {
-  Bell,
-  ChevronRight,
-  HeartHandshake,
-  Home,
-  LayoutGrid,
-  PartyPopper,
-  Tag,
-  Users,
-} from 'lucide-react';
+  IconCalendarCheck,
+  IconCamera,
+  IconConfetti,
+  IconHome,
+  IconTag,
+  IconUsers,
+} from '@tabler/icons-react';
+import { Bell, ChevronRight, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
@@ -23,31 +23,37 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
     {
       title: 'Dashboard',
       href: '/admin',
-      icon: <Home />,
+      icon: <IconHome />,
       items: [],
     },
     {
       title: 'Users',
       href: '/admin/users',
-      icon: <Users />,
+      icon: <IconUsers />,
       items: [],
     },
     {
       title: 'Events',
       href: '/admin/events',
-      icon: <PartyPopper />,
+      icon: <IconConfetti />,
       items: [],
     },
     {
       title: 'Projects',
       href: '/admin/projects',
-      icon: <HeartHandshake />,
+      icon: <IconCalendarCheck />,
       items: [],
     },
     {
       title: 'Category',
       href: '/admin/category',
-      icon: <Tag />,
+      icon: <IconTag />,
+      items: [],
+    },
+    {
+      title: 'Banner',
+      href: '/admin/banner',
+      icon: <IconCamera />,
       items: [],
     },
   ];
@@ -169,7 +175,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
           isSidebarOpen ? 'ml-12 md:ml-60' : 'ml-12'
         } ml-12 transform px-2 pb-4 pt-20 duration-300 ease-in-out md:px-5 `}
       >
-        {children}
+        <Container size={'xl'}>{children}</Container>
       </div>
     </>
   );

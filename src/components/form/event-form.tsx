@@ -70,7 +70,7 @@ const EventForm = ({
   const context = api.useContext();
   const { mutate: deleteImage } = api.event.deleteImage.useMutation({
     onSuccess: () => {
-      context.event.getById.invalidate({
+      context.event.findById.invalidate({
         id: data?.id as unknown as string,
       });
     },

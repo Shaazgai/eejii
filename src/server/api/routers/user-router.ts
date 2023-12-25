@@ -31,7 +31,7 @@ export const userRouter = createTRPCRouter({
     return user;
   }),
 
-  getById: publicProcedure
+  findById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const volunteer = await ctx.db

@@ -14,7 +14,7 @@ export default function ProjectViewPage(
 ) {
   if (!props) return <div>Loading...</div>;
   const { id } = props;
-  const { data } = api.project.getById.useQuery({ id: id as string });
+  const { data } = api.project.findById.useQuery({ id: id as string });
   if (!data) return <div>404</div>;
 
   // const { mutate } = api.projectUser.sendRequest.useMutation({
@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.project.getById.prefetch({ id: id });
+  await helpers.project.findById.prefetch({ id: id });
 
   return {
     props: {

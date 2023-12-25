@@ -54,7 +54,7 @@ export default function Index() {
     data: events,
     isLoading,
     refetch,
-  } = api.event.getAll.useQuery({
+  } = api.event.findAll.useQuery({
     page: activePage,
     limit: 10,
     enabled: true,

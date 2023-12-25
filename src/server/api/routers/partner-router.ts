@@ -3,6 +3,7 @@ import { z } from 'zod';
 // import { addressSchema } from '@/lib/validation/address-validation-schema';
 import { partnerSchema } from '@/lib/validation/partner-validation-schema';
 
+import type { UserStatus } from '@/lib/db/enums';
 import type { User } from '@/lib/db/types';
 import type { ListResponse, Pagination } from '@/lib/types';
 import { TRPCError } from '@trpc/server';
@@ -12,7 +13,7 @@ import { getPaginationInfo } from '../helper/paginationInfo';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const partnerRouter = createTRPCRouter({
-  getById: publicProcedure
+  findById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const partner = await ctx.db
@@ -25,16 +26,42 @@ export const partnerRouter = createTRPCRouter({
     }),
   findAll: publicProcedure
     .input(
-      z.object({ page: z.number().default(1), limit: z.number().default(20) })
+      z.object({
+        page: z.number().default(1),
+        limit: z.number().default(20),
+        search: z.string().nullish(),
+        status: z.string().nullish(),
+      })
     )
     .query(async ({ ctx, input }) => {
       const result = await ctx.db.transaction().execute(async trx => {
-        const partners = await trx
+        let query = trx
           .selectFrom('User')
           .where('User.type', '=', 'USER_PARTNER')
-          .selectAll()
+          .selectAll();
+
+        if (input.status) {
+          query = query.where(
+            'User.requestStatus',
+            '=',
+            input.status as UserStatus
+          );
+        }
+        if (input.search) {
+          query = query.where(eb =>
+            eb.or([
+              eb('User.email', 'like', '%' + input.search + '%'),
+              eb('User.phoneNumber', 'like', '%' + input.search + '%'),
+              eb('User.organizationName', 'like', '%' + input.search + '%'),
+              eb('User.firstName', 'like', '%' + input.search + '%'),
+              eb('User.lastName', 'like', '%' + input.search + '%'),
+            ])
+          );
+        }
+        const partners = await query
           .limit(input.limit)
           .offset(input.limit * (input.page - 1))
+          .orderBy('User.createdAt desc')
           .execute();
 
         const { count } = await trx

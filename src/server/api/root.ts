@@ -1,5 +1,6 @@
 import { createTRPCRouter } from '@/server/api/trpc';
 
+import { bannerRouter } from './routers/banner-router';
 import { categoryRouter } from './routers/category-router';
 import { eventRouter } from './routers/event-router';
 import { eventUserRouter } from './routers/event-user-router';
@@ -25,6 +26,7 @@ export const appRouter = createTRPCRouter({
   category: categoryRouter,
   user: userRouter,
   media: mediaRouter,
+  banner: bannerRouter,
 });
 
 // export type definition of API

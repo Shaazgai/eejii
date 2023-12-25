@@ -5,7 +5,7 @@ import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc';
 
 export const categoryRouter = createTRPCRouter({
-  getAll: publicProcedure
+  findAll: publicProcedure
     .input(z.object({ type: z.string().nullish(), name: z.string().nullish() }))
     .query(async opts => {
       const query = opts.ctx.db.selectFrom('Category').selectAll();

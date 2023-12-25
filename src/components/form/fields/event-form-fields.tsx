@@ -27,7 +27,7 @@ export const EventFormFields = ({
   form: UseFormReturnType<z.infer<typeof eventSchema>>;
 }) => {
   const { data: categories, isLoading: isCategoryLoading } =
-    api.category.getAll.useQuery({ name: null, type: null });
+    api.category.findAll.useQuery({ name: null, type: null });
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   function handleSelectCategory(values: string[]) {

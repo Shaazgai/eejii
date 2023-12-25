@@ -42,7 +42,7 @@ export const MediaForm = ({
   isPending: boolean;
 }) => {
   const { data: categories, isLoading: isCategoryLoading } =
-    api.category.getAll.useQuery({ type: 'media' });
+    api.category.findAll.useQuery({ type: 'media' });
 
   const mediaCategories = media?.Categories?.map(
     c => c.categoryId as string

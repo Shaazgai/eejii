@@ -35,7 +35,7 @@ export default function EventViewPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const { id } = props;
-  const { data, isLoading } = api.event.getById.useQuery({ id: id as string });
+  const { data, isLoading } = api.event.findById.useQuery({ id: id as string });
 
   const mainImage =
     process.env.NEXT_PUBLIC_AWS_PATH +
@@ -214,7 +214,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.event.getById.prefetch({ id: id });
+  await helpers.event.findById.prefetch({ id: id });
 
   return {
     props: {

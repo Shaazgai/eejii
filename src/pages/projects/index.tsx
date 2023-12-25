@@ -54,7 +54,7 @@ export default function Index() {
     data: projects,
     isLoading,
     refetch,
-  } = api.project.getAll.useQuery({
+  } = api.project.findAll.useQuery({
     page: activePage,
     limit: 10,
     enabled: true,

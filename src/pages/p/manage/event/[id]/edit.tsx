@@ -47,7 +47,7 @@ const EditEvent = () => {
   }, [router.isReady]);
 
   const context = api.useContext();
-  const { data, isLoading } = api.event.getById.useQuery({
+  const { data, isLoading } = api.event.findById.useQuery({
     id: eventId,
   });
 
@@ -74,7 +74,7 @@ const EditEvent = () => {
           });
         });
       }
-      context.event.getById.invalidate({ id: newEvent.id });
+      context.event.findById.invalidate({ id: newEvent.id });
       notifications.show({
         title: 'Success',
         message: 'Successfully updated event',

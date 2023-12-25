@@ -110,9 +110,7 @@ const NewProject = ({ type }: { type: ProjectType }) => {
           url: string;
           fields: S3ParamType;
         };
-        console.log(url);
         const file = files.find(f => f.name === res.fileName);
-        console.log(file);
         handleImageUpload(url, fields, file as File);
       },
     });
