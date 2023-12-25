@@ -24,7 +24,8 @@
         "endOfLine": "auto"
       }
     ],
-    "@typescript-eslint/no-redeclare": "off"
+    "@typescript-eslint/no-redeclare": "off",
+    "@typescript-eslint/no-explicit-any": "off"
 
   },
   "overrides": [
@@ -42,6 +43,7 @@
       },
       "rules": {
         "@typescript-eslint/no-redeclare": "off",
+        "@typescript-eslint/no-explicit-any": "off",
         "prettier/prettier": [
           "error",
           {

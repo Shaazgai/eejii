@@ -1,97 +1,222 @@
 import { useState } from 'react';
 
+import { PartnerTable } from '@/components/admin/table/partner-table';
+import { VolunteerTable } from '@/components/admin/table/volunteer-table';
 import DashboardLayout from '@/components/layout/dashboard-layout';
-import { NormalTabs } from '@/components/pagers/normal-tabs';
-import PartnerTable from '@/components/table/admin/partner-table';
-import VolunteerTable from '@/components/table/admin/volunteer-table';
-import type { User } from '@/lib/db/types';
+import { UserStatus, UserType } from '@/lib/db/enums';
+import type { User } from '@/lib/types';
 import { api } from '@/utils/api';
+import {
+  ActionIcon,
+  Alert,
+  Center,
+  Group,
+  LoadingOverlay,
+  Pagination,
+  SegmentedControl,
+  Stack,
+  TextInput,
+} from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+
+const Select = dynamic(() => import('@mantine/core').then(el => el.Select), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
 export const Partners = () => {
-  const [page, setPage] = useState(1);
-  const {
-    data: partnersData,
-    isLoading: isPartnerLoading,
-    isFetching: isPartnerFetching,
-  } = api.partner.findAll.useQuery({
-    page: page,
+  const router = useRouter();
+  const { q, page, status } = router.query;
+
+  const [search, setSearch] = useState(q ?? '');
+  const [activePage, setPage] = useState(page ? +page : 1);
+
+  const { data: volunteersData, isLoading } = api.partner.findAll.useQuery({
+    search: q as string,
+    status: status as string,
+    page: activePage,
     limit: 10,
   });
+
   return (
-    <div>
-      {!isPartnerLoading && !isPartnerFetching ? (
-        <PartnerTable
-          data={partnersData?.items as unknown as User[]}
-          page={page}
-          setPage={setPage}
-          totalPage={partnersData?.pagination.totalPages as number}
-          hasNextPage={partnersData?.pagination.hasNextPage as boolean}
-          hasPrevPage={partnersData?.pagination.hasPrevPage as boolean}
-          count={partnersData?.pagination.totalCount as number}
+    <Stack>
+      {isLoading && <LoadingOverlay visible />}
+      <Group gap="md" justify="space-between" grow>
+        <TextInput
+          miw={500}
+          placeholder="Search"
+          onChange={e => {
+            e.preventDefault();
+            setSearch(e.currentTarget.value);
+          }}
+          rightSection={
+            <ActionIcon
+              variant="transparent"
+              onClick={() => {
+                router.push({
+                  pathname: router.pathname,
+                  query: { ...router.query, q: search },
+                });
+              }}
+            >
+              <IconSearch />
+            </ActionIcon>
+          }
         />
-      ) : (
-        'Loading'
-      )}
-    </div>
+        <Select
+          defaultValue={(status as string) ?? ''}
+          placeholder="Status"
+          onChange={value => {
+            router.push({
+              pathname: router.pathname,
+              query: { ...router.query, status: value },
+            });
+          }}
+          data={[
+            UserStatus.REQUEST_APPROVED,
+            UserStatus.REQUEST_DENIED,
+            UserStatus.REQUEST_PENDING,
+          ]}
+        />
+      </Group>
+      <div>
+        {volunteersData && volunteersData?.items.length > 0 ? (
+          <PartnerTable data={volunteersData?.items as unknown as User[]} />
+        ) : (
+          <Alert>No projects to show</Alert>
+        )}
+      </div>
+      <Center mt={10}>
+        <Pagination
+          total={volunteersData ? volunteersData?.pagination.totalPages : 1}
+          radius="xl"
+          value={activePage}
+          onChange={value => {
+            setPage(value);
+            router.push({
+              pathname: router.pathname,
+              query: { ...router.query, page: value },
+            });
+          }}
+        />
+      </Center>
+    </Stack>
   );
 };
 
 export const Volunteers = () => {
-  const [page, setPage] = useState(1);
-  const {
-    data: volunteersData,
-    isLoading: isVolunteerLoading,
-    isFetching: isVolunteerFetching,
-  } = api.volunteer.findAll.useQuery({
-    page: page,
-    limit: 10,
+  const router = useRouter();
+  const { q, page, status } = router.query;
+
+  const [search, setSearch] = useState(q ?? '');
+  const [activePage, setPage] = useState(page ? +page : 1);
+
+  const { data: volunteersData, isLoading } = api.volunteer.findAll.useQuery({
+    search: q as string,
+    status: status as string,
+    page: activePage,
+    limit: 20,
   });
+
   return (
-    <div>
-      {!isVolunteerLoading && !isVolunteerFetching ? (
-        <VolunteerTable
-          data={volunteersData?.items as unknown as User[]}
-          page={page}
-          setPage={setPage}
-          totalPage={volunteersData?.pagination.totalPages as number}
-          hasNextPage={volunteersData?.pagination.hasNextPage as boolean}
-          hasPrevPage={volunteersData?.pagination.hasPrevPage as boolean}
-          count={volunteersData?.pagination.totalCount as number}
+    <Stack>
+      {isLoading && <LoadingOverlay visible />}
+      <Group gap="md" justify="space-between" grow>
+        <TextInput
+          miw={500}
+          placeholder="Search"
+          onChange={e => {
+            e.preventDefault();
+            setSearch(e.currentTarget.value);
+          }}
+          rightSection={
+            <ActionIcon
+              variant="transparent"
+              onClick={() => {
+                router.push({
+                  pathname: router.pathname,
+                  query: { ...router.query, q: search },
+                });
+              }}
+            >
+              <IconSearch />
+            </ActionIcon>
+          }
         />
-      ) : (
-        'Loading'
-      )}
-    </div>
+        <Select
+          defaultValue={(status as string) ?? ''}
+          placeholder="Status"
+          onChange={value => {
+            router.push({
+              pathname: router.pathname,
+              query: { ...router.query, status: value },
+            });
+          }}
+          data={[
+            UserStatus.REQUEST_APPROVED,
+            UserStatus.REQUEST_DENIED,
+            UserStatus.REQUEST_PENDING,
+          ]}
+        />
+      </Group>
+      <div>
+        {volunteersData && volunteersData?.items.length > 0 ? (
+          <VolunteerTable data={volunteersData?.items as unknown as User[]} />
+        ) : (
+          <Alert>No projects to show</Alert>
+        )}
+      </div>
+      <Center mt={10}>
+        <Pagination
+          total={volunteersData ? volunteersData?.pagination.totalPages : 1}
+          radius="xl"
+          value={activePage}
+          onChange={value => {
+            setPage(value);
+            router.push({
+              pathname: router.pathname,
+              query: { ...router.query, page: value },
+            });
+          }}
+        />
+      </Center>
+    </Stack>
   );
 };
 
 export default function Index() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const router = useRouter();
+  const { type } = router.query;
+  const [activeTab, setActiveTab] = useState<string | null>(
+    (type as string) ?? UserType.USER_PARTNER
+  );
 
-  const tabs = [
-    {
-      title: 'Volunteer',
-      index: 0,
-    },
-    {
-      title: 'Partner',
-      index: 1,
-    },
-  ];
+  function handleActiveTab(value: string | null) {
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { type: value },
+      },
+      undefined,
+      { scroll: false }
+    );
+    setActiveTab(value);
+  }
 
   return (
     <DashboardLayout>
       <div className="space-y-4">
+        <SegmentedControl
+          fullWidth
+          miw={400}
+          value={activeTab as string}
+          onChange={handleActiveTab}
+          data={[UserType.USER_PARTNER, UserType.USER_VOLUNTEER]}
+        />
         <div>
-          <NormalTabs
-            tabs={tabs}
-            setActiveIndex={setActiveIndex}
-            activeIndex={activeIndex}
-          />
-        </div>
-        <div>
-          {activeIndex === 0 && <Volunteers />}
-          {activeIndex === 1 && <Partners />}
+          {activeTab === UserType.USER_PARTNER ? <Partners /> : <Volunteers />}
         </div>
       </div>
     </DashboardLayout>

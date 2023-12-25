@@ -10,11 +10,15 @@ import type { Event, Project } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const Volunteer = () => {
-  const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
-    { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
-  );
+  const { data: events, isLoading: isEventLoading } =
+    api.event.findAll.useQuery({
+      page: 1,
+      limit: 10,
+      enabled: true,
+      status: ProjectStatus.APPROVED,
+    });
   const { data: project, isLoading: isFundLoading } =
-    api.project.getAll.useQuery({
+    api.project.findAll.useQuery({
       page: 1,
       limit: 10,
       enabled: true,

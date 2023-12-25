@@ -6,11 +6,11 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
 export default function Index() {
-  // const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
+  // const { data: events, isLoading: isEventLoading } = api.event.findAll.useQuery(
   //   { page: 1, limit: 10, enabled: true, status: ProjectStatus.APPROVED }
   // );
   // const { data: projects, isLoading: isFundLoading } =
-  //   api.project.getAll.useQuery({
+  //   api.project.findAll.useQuery({
   //     page: 1,
   //     limit: 10,
   //     enabled: true,

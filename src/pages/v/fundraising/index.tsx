@@ -30,9 +30,9 @@ import { api } from '@/utils/api';
 
 const Donate = () => {
   const { data: categories, isFetching: isCategoryFetching } =
-    api.category.getAll.useQuery({ type: 'event' });
+    api.category.findAll.useQuery({ type: 'event' });
   const { data: projects, isLoading: isFundLoading } =
-    api.project.getAll.useQuery({
+    api.project.findAll.useQuery({
       page: 1,
       limit: 20,
       enabled: true,

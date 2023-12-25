@@ -19,7 +19,7 @@ import {
 } from '../trpc';
 
 export const eventRouter = createTRPCRouter({
-  getAll: publicProcedure
+  findAll: publicProcedure
     .input(
       z.object({
         page: z.number().default(1),
@@ -104,7 +104,7 @@ export const eventRouter = createTRPCRouter({
               .selectFrom('EventImage')
               .selectAll()
               .whereRef('Event.id', '=', 'EventImage.ownerId')
-          ).as('Images'),
+          ).as('CategoryImages'),
         ])
         .where('ownerId', '=', ctx.userId);
       if (input.name) {
@@ -117,7 +117,7 @@ export const eventRouter = createTRPCRouter({
 
       return events as unknown as Event[];
     }),
-  getById: publicProcedure
+  findById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const event = await ctx.db

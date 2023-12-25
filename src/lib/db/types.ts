@@ -23,8 +23,8 @@ export type Address = {
 };
 export type Banner = {
   id: Generated<string>;
-  path: string;
-  mobilePath: string;
+  path: string | null;
+  mobilePath: string | null;
   title: string | null;
   description: string | null;
   link: string | null;

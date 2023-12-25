@@ -15,7 +15,7 @@ export default function Detail(
 ) {
   const { id } = props;
   if (!id) <LoadingOverlay visible />;
-  const { data: media } = api.media.getById.useQuery({ id: id as string });
+  const { data: media } = api.media.findById.useQuery({ id: id as string });
   return (
     <PublicLayout>
       <Space h={'xl'} />
@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.media.getById.prefetch({ id: id });
+  await helpers.media.findById.prefetch({ id: id });
 
   return {
     props: {

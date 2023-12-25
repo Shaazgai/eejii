@@ -37,7 +37,7 @@ export default function ProjectViewPage(
   const { id } = props;
   if (!id) <LoadingOverlay visible />;
 
-  const { data, isLoading } = api.project.getById.useQuery({
+  const { data, isLoading } = api.project.findById.useQuery({
     id: id as string,
   });
 
@@ -198,7 +198,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.event.getById.prefetch({ id: id });
+  await helpers.event.findById.prefetch({ id: id });
   // await helpers.partner.getMytProjectsJoinRequestsOrInvitations.prefetch({
   //   projectType: 'project',
   //   status: null,

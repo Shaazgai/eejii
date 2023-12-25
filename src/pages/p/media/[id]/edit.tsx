@@ -32,7 +32,7 @@ export default function EditMedia(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const { id } = props;
-  const { data: media, isLoading } = api.media.getById.useQuery({ id: id });
+  const { data: media, isLoading } = api.media.findById.useQuery({ id: id });
   const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
 
@@ -141,7 +141,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.media.getById.prefetch({ id: id });
+  await helpers.media.findById.prefetch({ id: id });
 
   return {
     props: {

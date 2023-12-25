@@ -12,7 +12,7 @@ import { Role, UserStatus } from '@/lib/db/enums';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const volunteerRouter = createTRPCRouter({
-  getById: publicProcedure
+  findById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const volunteer = await ctx.db
@@ -74,16 +74,42 @@ export const volunteerRouter = createTRPCRouter({
     }),
   findAll: publicProcedure
     .input(
-      z.object({ page: z.number().default(1), limit: z.number().default(20) })
+      z.object({
+        page: z.number().default(1),
+        limit: z.number().default(20),
+        search: z.string().nullish(),
+        status: z.string().nullish(),
+      })
     )
     .query(async ({ ctx, input }) => {
       const result = await ctx.db.transaction().execute(async trx => {
-        const volunteers = await trx
+        let query = trx
           .selectFrom('User')
           .selectAll()
-          .where('User.type', '=', 'USER_VOLUNTEER')
+          .where('User.type', '=', 'USER_VOLUNTEER');
+
+        if (input.status) {
+          query = query.where(
+            'User.requestStatus',
+            '=',
+            input.status as UserStatus
+          );
+        }
+        if (input.search) {
+          query = query.where(eb =>
+            eb.or([
+              eb('User.email', 'like', '%' + input.search + '%'),
+              eb('User.phoneNumber', 'like', '%' + input.search + '%'),
+              eb('User.organizationName', 'like', '%' + input.search + '%'),
+              eb('User.firstName', 'like', '%' + input.search + '%'),
+              eb('User.lastName', 'like', '%' + input.search + '%'),
+            ])
+          );
+        }
+        const volunteers = await query
           .limit(input.limit)
           .offset(input.limit * (input.page - 1))
+          .orderBy('User.createdAt desc')
           .execute();
 
         const { count } = await trx

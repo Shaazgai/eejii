@@ -8,14 +8,13 @@ import { api } from '@/utils/api';
 
 const Volunteer = () => {
   const [page] = useState(1);
-  const { data: events, isLoading: isEventLoading } = api.event.getAll.useQuery(
-    {
+  const { data: events, isLoading: isEventLoading } =
+    api.event.findAll.useQuery({
       page: page,
       limit: 20,
       enabled: true,
       status: ProjectStatus.APPROVED,
-    }
-  );
+    });
 
   return (
     <VolunteerLayout>

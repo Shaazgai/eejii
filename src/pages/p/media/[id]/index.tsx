@@ -29,7 +29,7 @@ export default function MediaDetail(
 ) {
   const { id } = props;
   console.log(id);
-  const { data: media, isLoading } = api.media.getById.useQuery({ id: id });
+  const { data: media, isLoading } = api.media.findById.useQuery({ id: id });
   console.log(media);
   const image =
     process.env.NEXT_PUBLIC_AWS_PATH +
@@ -138,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.media.getById.prefetch({ id: id });
+  await helpers.media.findById.prefetch({ id: id });
 
   return {
     props: {

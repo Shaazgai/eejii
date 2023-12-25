@@ -19,7 +19,7 @@ import {
 } from '../trpc';
 
 export const projectRouter = createTRPCRouter({
-  getAll: publicProcedure
+  findAll: publicProcedure
     .input(
       z.object({
         page: z.number().default(1),
@@ -156,7 +156,7 @@ export const projectRouter = createTRPCRouter({
 
       return projects as unknown as Project[];
     }),
-  getById: publicProcedure
+  findById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const project = await ctx.db

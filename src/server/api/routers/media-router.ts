@@ -76,7 +76,7 @@ export const mediaRouter = createTRPCRouter({
         .execute();
       return res;
     }),
-  getById: publicProcedure
+  findById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const media = await ctx.db

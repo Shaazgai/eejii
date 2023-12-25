@@ -14,7 +14,7 @@ export default function EventViewPage(
 ) {
   if (!props) return <>Loading...</>;
   const { id } = props;
-  const { data } = api.event.getById.useQuery({ id: id as string });
+  const { data } = api.event.findById.useQuery({ id: id as string });
 
   // const { mutate } = api.eventUser.sendRequest.useMutation({
   //   onSuccess: newReq => console.log(newReq),
@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   if (typeof id !== 'string') throw new Error('no id');
 
-  await helpers.event.getById.prefetch({ id: id });
+  await helpers.event.findById.prefetch({ id: id });
 
   return {
     props: {
