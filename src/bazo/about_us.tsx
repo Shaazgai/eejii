@@ -1,88 +1,94 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Grid, Image, Text, BackgroundImage, Tabs } from '@mantine/core';
+import {
+  Grid,
+  Image,
+  Text,
+  BackgroundImage,
+  Tabs,
+  Center,
+} from '@mantine/core';
 
 export const About = () => {
   return (
     <>
-      <section className="h-[914px] w-full bg-brand450 pt-20">
-        <div className="flex justify-around pl-24">
-          <div className="h-[264px] w-[741px] text-lg">
-            <h2 className="text-center font-bold text-primary">
-              "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
-            </h2>
-            <p className="pt-5 font-semibold text-brand400">
-              {' '}
-              Бид хэдий чинээ эрт хамтран ажиллана, төдий чинээ эрт зөв тусыг
-              хэрэгтэй хүнд нь <br /> хүргэх, нийгмийн хэт туйлшрал, бэлэнчлэх
-              сэтгэлгээ, ядуурал, өвчлөлөөс хүн амыг <br /> хамгаалах боломжтой.{' '}
-              <br /> Иймд бид НҮТББ, хувь хүн, энэ төрлийн үйл ажиллагаа
-              явуулдаг олон улсын салбар <br /> байгууллага, дотоод, гадаад сайн
-              дурынхны зохион байгуулдаг хүмүүнлэг болон сайн <br /> үйлсийн
-              аян, төсөл, хөтөлбөрийг нэгтгэсэн Mонголын анхны ALL IN ONE олон
-              талт дэмжих <br /> системийг хайр түгээгч та бүхэндээ зориулан
-              хөгжүүлж байна. <br /> Уг сангийн одоогийн хувилбар нь эцсийн
-              хувилбар биш бөгөөд цаашид та бүхний саналын <br /> дагуу 4 талт
-              оролцогчдод давуу байдлаар тасралтгүй хөгжүүлсээр байх болно.
-            </p>
-          </div>
-          <div className="flex">
-            <img
-              src="/images/about/aboutIMG3.png"
-              alt="aboutIMG"
-              className="relative right-44 top-5 h-[192px] w-[197px] p-3"
-            />
-            <img
-              src="/images/about/aboutIMG4.png"
-              alt="aboutIMG"
-              className="relative right-40 top-20 h-[192px] w-[192px] p-3"
-            />
-          </div>
-        </div>
-        <div className="flex justify-around pl-10 pr-10 pt-16">
-          <div className="flex">
-            <img
-              src="/images/about/aboutIMG1.png"
-              alt="aboutIMG"
-              className="h-[197px] w-[209px]"
-            />
-            <img
-              src="/images/about/aboutIMG2.png"
-              alt="aboutIMG"
-              className="relative left-14 top-16 h-[240px] w-[238px]"
-            />
-          </div>
-          <div className="h-[306px] w-[726px] text-lg">
-            <h2 className="text-center font-bold text-primary">
-              "Сайхан ирээдүйг сайн хүн биш сайн хүмүүс бүтээдэг"
-            </h2>
-            <p className="pt-5 font-semibold text-brand400">
-              {' '}
-              Одоогийн хувилбар дээр Дэмжих тал санд байршсан дурын хөтөлбөрийг
-              дэмжсэнээр хүмүүнлэгийн модонд мөчир эзэмших ба тухайн модонд таны
-              дэмжсэн хөтөлбөрийн <br /> тоогоор навч ургах байдлаар нийгмийн
-              хариуцлагаа тодотгуулах түүхчилсэн самбар <br /> эзэмших болно.
-              Хамтрагч байгууллагын тухайд өөрийн нэр, логогоор төсөл хөтөлбөрөө
-              байршуулж, хандив босгох, өгөх, сургалт, арга хэмжээ зохион
-              байгуулахаас гадна <br /> сайн дурын ажилтнуудад хамтарсан
-              сертификат, дэмжигчдэдээ талархлын навч өгөх боломжтой. Харин сайн
-              дурын ажилчдадаа бид үнэ цэнэтэй сайн дурын ажилд хувь <br />{' '}
-              нэмрээ оруулах, олон төрлийн сургалт, лекц, арга хэмжээнд үнэ
-              төлбөргүй хамрагдах, <br />
-              бие даан хүмүүнлэгийн болон сургалтын арга хэмжээг санаачлан
-              зохион байгуулах, XP волунтурын 4 эрэмбэ ахин, үнэ цэнэтэй
-              хосолсон сертификаттай болох гэх мэт <br />
-              боломжуудыг олгохоор уг санг хөгжүүлж байна.
-            </p>
-          </div>
-        </div>
-        <div>
-          <h2 className="pt-24 text-center font-semibold  text-primary">
+      <Grid justify="center" align="flex-start">
+        <Grid.Col span={6.5} pl={20}>
+          <Text pl={110} c="#3c888d" pt={20} pb={15} fw={700}>
             "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
-          </h2>
-        </div>
-      </section>
+          </Text>
+          <Text fw={500}>
+            Бид хэдий чинээ эрт хамтран ажиллана, төдий чинээ эрт зөв тусыг
+            хэрэгтэй хүнд нь <br /> хүргэх, нийгмийн хэт туйлшрал, бэлэнчлэх
+            сэтгэлгээ, ядуурал, өвчлөлөөс хүн амыг <br /> хамгаалах боломжтой.{' '}
+            <br /> Иймд бид НҮТББ, хувь хүн, энэ төрлийн үйл ажиллагаа явуулдаг
+            олон улсын салбар <br /> байгууллага, дотоод, гадаад сайн дурынхны
+            зохион байгуулдаг хүмүүнлэг болон сайн <br /> үйлсийн аян, төсөл,
+            хөтөлбөрийг нэгтгэсэн Mонголын анхны ALL IN ONE олон талт дэмжих{' '}
+            <br /> системийг хайр түгээгч та бүхэндээ зориулан хөгжүүлж байна.{' '}
+            <br /> Уг сангийн одоогийн хувилбар нь эцсийн хувилбар биш бөгөөд
+            цаашид та бүхний саналын <br /> дагуу 4 талт оролцогчдод давуу
+            байдлаар тасралтгүй хөгжүүлсээр байх болно.
+          </Text>
+        </Grid.Col>
+        <Grid.Col span={1.5} pt={20}>
+          <Image
+            radius="md"
+            src="/images/about/aboutIMG3.png"
+            alt="Random unsplash image"
+          />
+        </Grid.Col>
+        <Grid.Col span={2} pt={70}>
+          <Image
+            radius="md"
+            src="/images/about/aboutIMG4.png"
+            alt="Random unsplash image"
+          />
+        </Grid.Col>
+      </Grid>
+      <Grid justify="center" align="flex-start" pl={10}>
+        <Grid.Col span={1.5} pt={40}>
+          <Image
+            radius="md"
+            src="/images/about/aboutIMG1.png"
+            alt="Random unsplash image"
+          />
+        </Grid.Col>
+        <Grid.Col span={2} pt={90}>
+          <Image
+            radius="md"
+            src="/images/about/aboutIMG2.png"
+            alt="Random unsplash image"
+          />
+        </Grid.Col>
+        <Grid.Col span={6} pl={50} pt={20}>
+          <Text c="#3c888d" pt={20} pb={15} fw={700} ta="center">
+            "Сайхан ирээдүйг сайн хүн биш сайн хүмүүс бүтээдэг"
+          </Text>
+          <Text fw={500} pl={20}>
+            Одоогийн хувилбар дээр Дэмжих тал санд байршсан дурын хөтөлбөрийг
+            дэмжсэнээр хүмүүнлэгийн модонд мөчир эзэмших ба тухайн модонд таны
+            дэмжсэн хөтөлбөрийн <br /> тоогоор навч ургах байдлаар нийгмийн
+            хариуцлагаа тодотгуулах түүхчилсэн самбар <br /> эзэмших болно.
+            Хамтрагч байгууллагын тухайд өөрийн нэр, логогоор төсөл хөтөлбөрөө
+            байршуулж, хандив босгох, өгөх, сургалт, арга хэмжээ зохион
+            байгуулахаас гадна <br /> сайн дурын ажилтнуудад хамтарсан
+            сертификат, дэмжигчдэдээ талархлын навч өгөх боломжтой. Харин сайн
+            дурын ажилчдадаа бид үнэ цэнэтэй сайн дурын ажилд хувь <br /> нэмрээ
+            оруулах, олон төрлийн сургалт, лекц, арга хэмжээнд үнэ төлбөргүй
+            хамрагдах, <br />
+            бие даан хүмүүнлэгийн болон сургалтын арга хэмжээг санаачлан зохион
+            байгуулах, XP волунтурын 4 эрэмбэ ахин, үнэ цэнэтэй хосолсон
+            сертификаттай болох гэх мэт <br />
+            боломжуудыг олгохоор уг санг хөгжүүлж байна.
+          </Text>
+        </Grid.Col>
+      </Grid>
+      <Text pl={110} c="#3c888d" pt={70} pb={70} fw={500} ta="center" size="lg">
+        "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
+      </Text>
 
+      {/* second section */}
       <section className="h-[1128px] bg-[url('/images/media/firstBG.png')] bg-cover  p-16">
         <div>
           <Text fw={700} size="34px" p={10} ta="center">
@@ -212,13 +218,13 @@ export const About = () => {
             </div>
           </div>
         </div> */}
-        <Tabs color="teal" defaultValue="partner" pt={20}>
-          <Tabs.List>
-            <Tabs.Tab value="partner">Хамтрагч</Tabs.Tab>
-            <Tabs.Tab value="supporter" color="blue">
-              Дэмжигч
-            </Tabs.Tab>
-          </Tabs.List>
+        <Tabs color="#3c888d" defaultValue="partner" pt={40}>
+          <Center>
+            <Tabs.List>
+              <Tabs.Tab value="partner">Хамтрагч</Tabs.Tab>
+              <Tabs.Tab value="supporter">Дэмжигч</Tabs.Tab>
+            </Tabs.List>
+          </Center>
 
           <Tabs.Panel value="partner">
             <section className="flex justify-around pt-14">
