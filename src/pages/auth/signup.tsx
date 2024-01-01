@@ -11,7 +11,6 @@ import Image from 'next/image';
 
 interface Option {
   name: string;
-  description: string;
   image: string;
   value: UserType;
 }
@@ -47,13 +46,11 @@ export default function Signup() {
   const options = [
     {
       name: 'Partner',
-      description: 'Join us as a partner and collaborate on projects.',
       image: '/icons/handshake.svg',
       value: UserType.USER_PARTNER,
     },
     {
       name: 'Volunteer',
-      description: 'Become a volunteer and help us with various tasks.',
       image: '/icons/volunteer.svg',
       value: UserType.USER_VOLUNTEER,
     },
@@ -67,7 +64,7 @@ export default function Signup() {
   // Define a custom component for the card
   const Card = ({ option }: { option: Option }) => {
     // Destructure the option object
-    const { name, description, image, value } = option;
+    const { name, image, value } = option;
 
     // Return the JSX for the card
     return (
