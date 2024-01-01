@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-
-import Sign from '@/bazo/login-next';
-import BasicBaseLayout from '@/components/layout/basic-base-layout';
+import LoginForm from '@/components/form/login-form';
 import { UserType } from '@/lib/db/enums';
+import AuthLayout from '@/components/layout/auth-layout';
+
 export default function Auth() {
   const session = useSession();
   const router = useRouter();
@@ -23,27 +23,8 @@ export default function Auth() {
   }, [session]);
 
   return (
-    <BasicBaseLayout>
-      <div className="flex h-screen w-full items-center justify-center">
-        {/* {selectedUserType ? (
-          <Sign userTypeProp={selectedUserType} onBack={resetUserType} />
-        ) : ( */}
-        {/* <div className="flex flex-col gap-4">
-          <div>Login as a</div>
-          <Button
-            onClick={() => handleUserTypeSelection(UserType.USER_PARTNER)}
-          >
-            Partner
-          </Button>
-          <Button
-            onClick={() => handleUserTypeSelection(UserType.USER_VOLUNTEER)}
-          >
-            Volunteer
-          </Button>
-        </div> */}
-        {/* )} */}
-        <Sign />
-      </div>
-    </BasicBaseLayout>
+    <AuthLayout>
+      <LoginForm />
+    </AuthLayout>
   );
 }
