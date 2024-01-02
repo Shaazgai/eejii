@@ -7,17 +7,106 @@ import {
   BackgroundImage,
   Tabs,
   Center,
+  SimpleGrid,
+  Group,
 } from '@mantine/core';
 
 export const About = () => {
   return (
     <>
-      <Grid justify="center" align="flex-start">
-        <Grid.Col span={6.5} pl={20}>
-          <Text pl={110} c="#3c888d" pt={20} pb={15} fw={700}>
+      {/* <SimpleGrid cols={{ base: 1, md: 1, lg: 1 }}>
+        <Grid justify="center" align="flex-start">
+          <SimpleGrid cols={{ base: 1, md: 1, lg: 3 }}>
+            <Grid.Col>
+              <Text pl={110} c="#3c888d" pt={20} pb={15} fw={700}>
+                "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
+              </Text>
+              <Text fw={500}>
+                Бид хэдий чинээ эрт хамтран ажиллана, төдий чинээ эрт зөв тусыг
+                хэрэгтэй хүнд нь <br /> хүргэх, нийгмийн хэт туйлшрал, бэлэнчлэх
+                сэтгэлгээ, ядуурал, өвчлөлөөс хүн амыг <br /> хамгаалах
+                боломжтой. <br /> Иймд бид НҮТББ, хувь хүн, энэ төрлийн үйл
+                ажиллагаа явуулдаг олон улсын салбар <br /> байгууллага, дотоод,
+                гадаад сайн дурынхны зохион байгуулдаг хүмүүнлэг болон сайн{' '}
+                <br /> үйлсийн аян, төсөл, хөтөлбөрийг нэгтгэсэн Mонголын анхны
+                ALL IN ONE олон талт дэмжих <br /> системийг хайр түгээгч та
+                бүхэндээ зориулан хөгжүүлж байна. <br /> Уг сангийн одоогийн
+                хувилбар нь эцсийн хувилбар биш бөгөөд цаашид та бүхний саналын{' '}
+                <br /> дагуу 4 талт оролцогчдод давуу байдлаар тасралтгүй
+                хөгжүүлсээр байх болно.
+              </Text>
+            </Grid.Col>
+            <Grid.Col>
+              <Image
+                radius="md"
+                src="/images/about/aboutIMG3.png"
+                alt="Random unsplash image"
+                className="w-[197px] h-[192px]"
+              />
+            </Grid.Col>
+            <Grid.Col>
+              <Image
+                radius="md"
+                src="/images/about/aboutIMG4.png"
+                alt="Random unsplash image"
+                className="w-[192px] h-[192px]"
+              />
+            </Grid.Col>
+          </SimpleGrid>
+        </Grid>
+        <Grid justify="center" align="flex-start" pl={10}>
+          <Grid.Col span={1.5} pt={40}>
+            <Image
+              radius="md"
+              src="/images/about/aboutIMG1.png"
+              alt="Random unsplash image"
+            />
+          </Grid.Col>
+          <Grid.Col span={2} pt={90}>
+            <Image
+              radius="md"
+              src="/images/about/aboutIMG2.png"
+              alt="Random unsplash image"
+            />
+          </Grid.Col>
+          <Grid.Col span={6} pl={50} pt={20}>
+            <Text c="#3c888d" pt={20} pb={15} fw={700} ta="center">
+              "Сайхан ирээдүйг сайн хүн биш сайн хүмүүс бүтээдэг"
+            </Text>
+            <Text fw={500} pl={20}>
+              Одоогийн хувилбар дээр Дэмжих тал санд байршсан дурын хөтөлбөрийг
+              дэмжсэнээр хүмүүнлэгийн модонд мөчир эзэмших ба тухайн модонд таны
+              дэмжсэн хөтөлбөрийн <br /> тоогоор навч ургах байдлаар нийгмийн
+              хариуцлагаа тодотгуулах түүхчилсэн самбар <br /> эзэмших болно.
+              Хамтрагч байгууллагын тухайд өөрийн нэр, логогоор төсөл хөтөлбөрөө
+              байршуулж, хандив босгох, өгөх, сургалт, арга хэмжээ зохион
+              байгуулахаас гадна <br /> сайн дурын ажилтнуудад хамтарсан
+              сертификат, дэмжигчдэдээ талархлын навч өгөх боломжтой. Харин сайн
+              дурын ажилчдадаа бид үнэ цэнэтэй сайн дурын ажилд хувь <br />{' '}
+              нэмрээ оруулах, олон төрлийн сургалт, лекц, арга хэмжээнд үнэ
+              төлбөргүй хамрагдах, <br />
+              бие даан хүмүүнлэгийн болон сургалтын арга хэмжээг санаачлан
+              зохион байгуулах, XP волунтурын 4 эрэмбэ ахин, үнэ цэнэтэй
+              хосолсон сертификаттай болох гэх мэт <br />
+              боломжуудыг олгохоор уг санг хөгжүүлж байна.
+            </Text>
+          </Grid.Col>
+        </Grid>
+      </SimpleGrid>
+      <Text pl={110} c="#3c888d" pt={70} pb={70} fw={500} ta="center" size="lg">
+        "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
+      </Text> */}
+
+      {/* <SimpleGrid
+        cols={{ base: 1, md: 1, lg: 2 }}
+        className="flex flex-col justify-around pt-20 bg-brand450 "
+      >
+        <div className="h-[264px] w-[741px] text-lg">
+          <h2 className="text-center font-bold text-primary">
             "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
-          </Text>
-          <Text fw={500}>
+          </h2>
+          <p className="pt-5 font-semibold text-brand400">
+            {' '}
             Бид хэдий чинээ эрт хамтран ажиллана, төдий чинээ эрт зөв тусыг
             хэрэгтэй хүнд нь <br /> хүргэх, нийгмийн хэт туйлшрал, бэлэнчлэх
             сэтгэлгээ, ядуурал, өвчлөлөөс хүн амыг <br /> хамгаалах боломжтой.{' '}
@@ -29,43 +118,79 @@ export const About = () => {
             <br /> Уг сангийн одоогийн хувилбар нь эцсийн хувилбар биш бөгөөд
             цаашид та бүхний саналын <br /> дагуу 4 талт оролцогчдод давуу
             байдлаар тасралтгүй хөгжүүлсээр байх болно.
-          </Text>
-        </Grid.Col>
-        <Grid.Col span={1.5} pt={20}>
-          <Image
-            radius="md"
+          </p>
+        </div>
+        <div className="flex justify-end">
+          <img
             src="/images/about/aboutIMG3.png"
-            alt="Random unsplash image"
+            alt="aboutIMG"
+            className="relative right-44 top-5 h-[192px] w-[197px] p-3"
           />
-        </Grid.Col>
-        <Grid.Col span={2} pt={70}>
-          <Image
-            radius="md"
+          <img
             src="/images/about/aboutIMG4.png"
-            alt="Random unsplash image"
+            alt="aboutIMG"
+            className="relative right-40 top-20 h-[192px] w-[192px] p-3"
           />
-        </Grid.Col>
-      </Grid>
-      <Grid justify="center" align="flex-start" pl={10}>
-        <Grid.Col span={1.5} pt={40}>
-          <Image
-            radius="md"
+        </div>
+      </SimpleGrid> */}
+      <SimpleGrid
+        cols={{ base: 1, md: 1, lg: 2 }}
+        className="flex w-full justify-around p-16"
+      >
+        <div className="text-lg">
+          <h2 className="text-center font-bold text-primary">
+            "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
+          </h2>
+          <p className="pt-5 font-semibold text-brand400 flex justify-center">
+            {' '}
+            Бид хэдий чинээ эрт хамтран ажиллана, төдий чинээ эрт зөв тусыг
+            хэрэгтэй хүнд нь <br /> хүргэх, нийгмийн хэт туйлшрал, бэлэнчлэх
+            сэтгэлгээ, ядуурал, өвчлөлөөс хүн амыг <br /> хамгаалах боломжтой.{' '}
+            <br /> Иймд бид НҮТББ, хувь хүн, энэ төрлийн үйл ажиллагаа явуулдаг
+            олон улсын салбар <br /> байгууллага, дотоод, гадаад сайн дурынхны
+            зохион байгуулдаг хүмүүнлэг болон сайн <br /> үйлсийн аян, төсөл,
+            хөтөлбөрийг нэгтгэсэн Mонголын анхны ALL IN ONE олон талт дэмжих{' '}
+            <br /> системийг хайр түгээгч та бүхэндээ зориулан хөгжүүлж байна.{' '}
+            <br /> Уг сангийн одоогийн хувилбар нь эцсийн хувилбар биш бөгөөд
+            цаашид та бүхний саналын <br /> дагуу 4 талт оролцогчдод давуу
+            байдлаар тасралтгүй хөгжүүлсээр байх болно.
+          </p>
+        </div>
+        <div className="flex justify-center h-[300px]">
+          <img
+            src="/images/about/aboutIMG3.png"
+            alt="aboutIMG"
+            className="h-[197px] "
+          />
+          <img
+            src="/images/about/aboutIMG4.png"
+            alt="aboutIMG"
+            className="relative left-14 top-16 h-[240px]"
+          />
+        </div>
+      </SimpleGrid>
+      <SimpleGrid
+        cols={{ base: 1, md: 1, lg: 2 }}
+        className="flex w-full justify-around p-10"
+      >
+        <div className="flex justify-center h-[300px]">
+          <img
             src="/images/about/aboutIMG1.png"
-            alt="Random unsplash image"
+            alt="aboutIMG"
+            className="h-[197px] w-[209px]"
           />
-        </Grid.Col>
-        <Grid.Col span={2} pt={90}>
-          <Image
-            radius="md"
+          <img
             src="/images/about/aboutIMG2.png"
-            alt="Random unsplash image"
+            alt="aboutIMG"
+            className="relative left-14 top-16 h-[240px] w-[238px] "
           />
-        </Grid.Col>
-        <Grid.Col span={6} pl={50} pt={20}>
-          <Text c="#3c888d" pt={20} pb={15} fw={700} ta="center">
+        </div>
+        <div className="text-lg">
+          <h2 className="text-center font-bold text-primary">
             "Сайхан ирээдүйг сайн хүн биш сайн хүмүүс бүтээдэг"
-          </Text>
-          <Text fw={500} pl={20}>
+          </h2>
+          <p className="flex justify-center pt-5 font-semibold text-brand400 pl-10">
+            {' '}
             Одоогийн хувилбар дээр Дэмжих тал санд байршсан дурын хөтөлбөрийг
             дэмжсэнээр хүмүүнлэгийн модонд мөчир эзэмших ба тухайн модонд таны
             дэмжсэн хөтөлбөрийн <br /> тоогоор навч ургах байдлаар нийгмийн
@@ -81,15 +206,17 @@ export const About = () => {
             байгуулах, XP волунтурын 4 эрэмбэ ахин, үнэ цэнэтэй хосолсон
             сертификаттай болох гэх мэт <br />
             боломжуудыг олгохоор уг санг хөгжүүлж байна.
-          </Text>
-        </Grid.Col>
-      </Grid>
-      <Text pl={110} c="#3c888d" pt={70} pb={70} fw={500} ta="center" size="lg">
-        "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
-      </Text>
+          </p>
+        </div>
+      </SimpleGrid>
+      <div>
+        <h2 className="pt-16 pb-16 text-center font-semibold  text-primary">
+          "Хамгийн агуу сэтгэл бол бусдын төлөө сэтгэл"
+        </h2>{' '}
+      </div>
 
       {/* second section */}
-      <section className="h-[1128px] bg-[url('/images/media/firstBG.png')] bg-cover  p-16">
+      <section className="bg-[url('/images/media/firstBG.png')] bg-cover w-full pt-16 pb-16">
         <div>
           <Text fw={700} size="34px" p={10} ta="center">
             Яагаад хураамж төлөх ёстой вэ?
@@ -227,7 +354,136 @@ export const About = () => {
           </Center>
 
           <Tabs.Panel value="partner">
-            <section className="flex justify-around pt-14">
+            <SimpleGrid
+              cols={{ base: 1, md: 2, lg: 3 }}
+              className="flex w-full justify-around pt-10"
+            >
+              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 before:rounded-sm pt-5 bg-[url('/images/about/blueBG.png')]">
+                <h2 className="relative flex bottom-12 left-7 text-3xl font-black text-brand450">
+                  ₮0
+                  <h5 className="pl-2 pt-3 text-sm text-gray-200">1 жил</h5>
+                </h2>
+                <span className="relative bottom-14 left-7 text-start text-xl font-extrabold text-brand450">
+                  Basic Plan
+                </span>
+                <ul className="relative bottom-14 w-[322px] text-md pl-7 text-start text-gray-200">
+                  Та санд төсөл хөтөлбөр болон арга хэмжээ оруулах,сурталчилгаа
+                  байршуулах болон өөрийн нэр дээрх хуудсыг хөгжүүлээрэй
+                </ul>
+                <Link href="#">
+                  <Button className="relative right-16 bottom-5 h-[48px] w-[182px] rounded-xl bg-[#0356b2] border-1.5 border-[#0356b2] font-bold text-lg text-brand450  hover:bg-transparent">
+                    Гишүүн болох
+                  </Button>
+                </Link>
+              </div>
+              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 pt-5 before:rounded-sm bg-[url('/images/about/primaryBG.png')]">
+                <h2 className="relative flex bottom-12 left-7 text-3xl font-black text-brand450">
+                  ₮3'000'000
+                  <h5 className="pl-2 pt-3 text-sm text-gray-200">1 жил</h5>
+                </h2>
+                <span className="relative bottom-14 left-7 text-start text-xl font-extrabold text-brand450">
+                  Standart Plan
+                </span>
+                <ul className="relative bottom-14 w-[322px] text-md pl-7 text-start text-gray-200">
+                  Та санд төсөл хөтөлбөр болон арга хэмжээ оруулах,сурталчилгаа
+                  байршуулах болон өөрийн нэр дээрх хуудсыг хөгжүүлээрэй
+                </ul>
+                <Link href="#">
+                  <Button className="relative right-16 bottom-5 h-[48px] w-[182px] rounded-xl bg-primary border-1.5 border-primary font-bold text-lg text-brand450  hover:bg-transparent">
+                    Гишүүн болох
+                  </Button>
+                </Link>
+              </div>
+              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 pt-5 before:rounded-sm bg-[url('/images/about/cyanBG.png')]">
+                <h2 className="relative flex bottom-12 left-7 text-3xl font-black text-brand450">
+                  Premium Plan
+                </h2>
+                <span className="relative bottom-16 left-7 text-start text-xl font-extrabold text-brand450">
+                  Coming soon...
+                </span>
+                <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
+                  <img
+                    src="/images/about/woman.png"
+                    alt="woman"
+                    className="h-[100px] w-[116px]"
+                  />
+                </ul>
+                {/* <Link href="#">
+                  <Button className="relative right-16 bottom-5 h-[48px] w-[182px] rounded-xl bg-primary font-bold text-lg text-brand450  hover:bg-primarySecond">
+                    Гишүүн болох
+                  </Button>
+                </Link> */}
+              </div>
+            </SimpleGrid>
+          </Tabs.Panel>
+
+          <Tabs.Panel value="supporter">
+            <SimpleGrid
+              cols={{ base: 1, md: 2, lg: 3 }}
+              className="flex w-full justify-around pt-10"
+            >
+              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 pt-5 before:rounded-sm bg-[url('/images/about/cyanBG.png')]">
+                <h2 className="relative flex bottom-12 left-7 text-3xl font-black text-brand450">
+                  Premium Plan
+                </h2>
+                <span className="relative bottom-16 left-7 text-start text-xl font-extrabold text-brand450">
+                  Coming soon...
+                </span>
+                <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
+                  <img
+                    src="/images/about/woman.png"
+                    alt="woman"
+                    className="h-[100px] w-[116px]"
+                  />
+                </ul>
+                {/* <Link href="#">
+                  <Button className="relative right-16 bottom-5 h-[48px] w-[182px] rounded-xl bg-primary font-bold text-lg text-brand450  hover:bg-primarySecond">
+                    Гишүүн болох
+                  </Button>
+                </Link> */}
+              </div>{' '}
+              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 pt-5 before:rounded-sm bg-[url('/images/about/cyanBG.png')]">
+                <h2 className="relative flex bottom-12 left-7 text-3xl font-black text-brand450">
+                  Premium Plan
+                </h2>
+                <span className="relative bottom-16 left-7 text-start text-xl font-extrabold text-brand450">
+                  Coming soon...
+                </span>
+                <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
+                  <img
+                    src="/images/about/woman.png"
+                    alt="woman"
+                    className="h-[100px] w-[116px]"
+                  />
+                </ul>
+                {/* <Link href="#">
+                  <Button className="relative right-16 bottom-5 h-[48px] w-[182px] rounded-xl bg-primary font-bold text-lg text-brand450  hover:bg-primarySecond">
+                    Гишүүн болох
+                  </Button>
+                </Link> */}
+              </div>
+              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 pt-5 before:rounded-sm bg-[url('/images/about/cyanBG.png')]">
+                <h2 className="relative flex bottom-12 left-7 text-3xl font-black text-brand450">
+                  Premium Plan
+                </h2>
+                <span className="relative bottom-16 left-7 text-start text-xl font-extrabold text-brand450">
+                  Coming soon...
+                </span>
+                <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
+                  <img
+                    src="/images/about/woman.png"
+                    alt="woman"
+                    className="h-[100px] w-[116px]"
+                  />
+                </ul>
+                {/* <Link href="#">
+                  <Button className="relative right-16 bottom-5 h-[48px] w-[182px] rounded-xl bg-primary font-bold text-lg text-brand450  hover:bg-primarySecond">
+                    Гишүүн болох
+                  </Button>
+                </Link> */}
+              </div>
+            </SimpleGrid>
+            {/* <section className="flex justify-around pt-14">
               <div className="m-auto flex h-[706px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand750">
                 <h5 className="relative bottom-11 text-2xl font-semibold text-brand750">
                   Basic
@@ -313,183 +569,104 @@ export const About = () => {
                   </Button>
                 </Link>
               </div>
-            </section>
-          </Tabs.Panel>
-
-          <Tabs.Panel value="supporter">
-            <section className="flex justify-around pt-14">
-              <div className="m-auto flex h-[706px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand750">
-                <h5 className="relative bottom-11 text-2xl font-semibold text-brand750">
-                  Basic
-                </h5>
-                <span className="relative bottom-10 flex justify-center text-xl font-bold">
-                  ₮0/<h2 className="pt-1.5 text-sm text-brand700">1 жил</h2>
-                </span>
-                <ul className="relative bottom-8 w-[254px] list-disc pl-16 text-start">
-                  <li>Нэрийн хуудас /Энгийн загвар/</li>
-                  <li>Хандив өгөх</li>
-                  <li>Сертификат, тодорхойлолт авах /limited/</li>
-                  <li>сургалт зохион байгуулах /limited/</li>
-                  <li>Төсөл оруулах/limited/</li>
-                  <li>Арга хэмжээ зохион байгуулах/limited/</li>
-                  <li>Мэдээ оруулах/limited/</li>
-                  <li>Сайн дурын ажилтан авах/limited/</li>
-                  <div className="text-brand5">
-                    <li>Олон Улсын төсөл</li>
-                    <li>VOI CART</li>
-                    <li>Онцлох мэдээ</li>
-                    <li>Онцлох төсөл</li>
-                    <li>Banner хуудас</li>
-                    <li>Онцлох хамтрагч</li>
-                    <li>Үнэлгээ, сэтгэгдэл</li>
-                  </div>
-                </ul>
-                <Link href="#">
-                  <Button className="relative bottom-5 h-[39px] w-[240px] rounded-xl bg-primarySecond text-lg text-brand450  hover:bg-primarySecond">
-                    Гишүүн болох
-                  </Button>
-                </Link>
-              </div>
-              {/* <div className="m-auto flex h-[706px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand800">
-                <h5 className="relative bottom-11 text-2xl font-semibold text-brand800">
-                  Preimium
-                </h5>
-                <span className="relative bottom-10 flex justify-center text-xl font-bold">
-                  ₮1'000'000/
-                  <h2 className="pt-1.5 text-sm text-brand700">1 жил</h2>
-                </span>
-                <ul className="relative bottom-8 w-[254px] list-disc pl-16 text-start">
-                  <li>Нэрийн хуудас /Энгийн загвар/</li>
-                  <li>Хандив өгөх</li>
-                  <li>Сертификат, тодорхойлолт авах /limited/</li>
-                  <li>сургалт зохион байгуулах /limited/</li>
-                  <li>Төсөл оруулах/limited/</li>
-                  <li>Арга хэмжээ зохион байгуулах/limited/</li>
-                  <li>Мэдээ оруулах/limited/</li>
-                  <li>Сайн дурын ажилтан авах/limited/</li>
-                  <div>
-                    <li>Олон Улсын төсөл</li>
-                    <li>VOI CART</li>
-                    <li>Онцлох мэдээ</li>
-                    <li>Онцлох төсөл</li>
-                    <li>Banner хуудас</li>
-                    <li>Онцлох хамтрагч</li>
-                    <li>Үнэлгээ, сэтгэгдэл</li>
-                  </div>
-                </ul>
-                <Link href="#">
-                  <Button className="relative bottom-5 h-[39px] w-[240px] rounded-xl bg-primarySecond text-lg text-brand450  hover:bg-primarySecond">
-                    Гишүүн болох
-                  </Button>
-                </Link>
-              </div> */}
-              <div className="m-auto flex h-[706px] w-[329px] flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[39px]  before:w-[5px] before:bg-brand850">
-                <h5 className="relative  bottom-[90px] text-2xl font-semibold text-brand850">
-                  Pro
-                </h5>
-                <span className="relative bottom-28 flex justify-center text-xl font-bold">
-                  On Processing
-                </span>
-                <ul className="relative bottom-16 left-10  w-[263px] list-disc bg-[url('/images/about/womanBG.png')] object-cover pl-16 text-start">
-                  <img
-                    src="/images/about/woman.png"
-                    alt="woman"
-                    className="h-[299px] w-[145px]"
-                  />
-                </ul>
-                <Link href="#">
-                  <Button className="relative bottom-0 h-[39px] w-[240px] rounded-xl bg-primarySecond text-lg text-brand450  hover:bg-primarySecond">
-                    Гишүүн болох
-                  </Button>
-                </Link>
-              </div>
-            </section>
+            </section> */}
           </Tabs.Panel>
         </Tabs>
       </section>
 
-      <section className="h-[130vh] bg-brand450 flex flex-col justify-center items-stretch p-32">
-        <div className="flex">
-          <div>
-            <img
-              src="/images/about/AboutFam1.png"
-              alt="all in one"
-              className=""
-            />
+      <SimpleGrid
+        cols={{ base: 1, md: 1, lg: 1 }}
+        className="flex w-full bg-brand450  flex-col justify-around pt-24 pb-24 pr-20 pl-20"
+      >
+        <Group justify="flex-start" gap="xl">
+          <div className="flex justify-end">
+            <div>
+              <img
+                src="/images/about/AboutFam1.png"
+                alt="all in one"
+                className=""
+              />
+            </div>
+            <div className="w-[511px] h-[152px] pl-10 flex flex-col justify-center">
+              <h1 className="h-[32px] text-2xl font-bold">
+                Бүгдийг нэг дороос
+              </h1>
+              <p className="h-[72px] text-md font-semibold text-brand400 pt-3">
+                is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever
+                since the 1500s, when an unknown printer took a galley of type
+                and scrambled it to make a type specimen book
+              </p>
+            </div>
           </div>
-          <div className="pl-10 pt-5">
-            <h1 className="h-10 w-[235px] text-2xl font-bold">
-              Бүгдийг нэг дороос
-            </h1>
-            <p className="h-[72px] w-[475px] text-md font-semibold text-brand400">
-              is simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since
-              the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book
-            </p>
+        </Group>
+        <Group justify="flex-end" gap="xl">
+          <div className="flex justify-end">
+            <div className="w-[511px] h-[152px] pr-10 flex flex-col justify-center">
+              <h1 className="h-[32px] text-2xl font-bold">
+                Таны дэмжлэгийг бид үнэлнэ
+              </h1>
+              <p className="h-[72px] text-md font-semibold text-brand400 pt-3">
+                is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever
+                since the 1500s, when an unknown printer took a galley of type
+                and scrambled it to make a type specimen book
+              </p>
+            </div>
+            <div>
+              <img
+                src="/images/about/AboutFam2.png"
+                alt="all in one"
+                className=""
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex justify-end pt-5">
-          <div className="pr-10 pt-5">
-            <h1 className="h-10 w-[356px] text-2xl font-bold">
-              Таны дэмжлэгийг бид үнэлнэ
-            </h1>
-            <p className="h-[72px] w-[475px] text-md font-semibold text-brand400">
-              is simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since
-              the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book
-            </p>
+        </Group>
+        <Group justify="flex-start" gap="xl">
+          <div className="flex justify-end">
+            <div>
+              <img
+                src="/images/about/AboutFam3.png"
+                alt="all in one"
+                className=""
+              />
+            </div>
+            <div className="w-[511px] h-[152px] pl-10 flex flex-col justify-center">
+              <h1 className="h-[32px] text-2xl font-bold">
+                Эерэг бүхнийг түгээе
+              </h1>
+              <p className="h-[72px] text-md font-semibold text-brand400 pt-3">
+                is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever
+                since the 1500s, when an unknown printer took a galley of type
+                and scrambled it to make a type specimen book
+              </p>
+            </div>
           </div>
-          <div>
-            <img
-              src="/images/about/AboutFam2.png"
-              alt="all in one"
-              className=""
-            />
+        </Group>
+        <Group justify="flex-end" gap="xl">
+          <div className="flex justify-end">
+            <div className="w-[511px] h-[152px] pr-10 flex flex-col justify-center">
+              <h1 className="h-[32px] text-2xl font-bold">
+                Илүү ихийг хамтдаа бүтээцгээе
+              </h1>
+              <p className="h-[72px] text-md font-semibold text-brand400 pt-3">
+                is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever
+                since the 1500s, when an unknown printer took a galley of type
+                and scrambled it to make a type specimen book
+              </p>
+            </div>
+            <div>
+              <img
+                src="/images/about/AboutFam4.png"
+                alt="all in one"
+                className=""
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex pt-16">
-          <div>
-            <img
-              src="/images/about/AboutFam3.png"
-              alt="all in one"
-              className=""
-            />
-          </div>
-          <div className="pl-10 pt-5">
-            <h1 className="h-10 w-[257px] text-2xl font-bold">
-              Эерэг бүхнийг түгээе
-            </h1>
-            <p className="h-[72px] w-[475px] text-md font-semibold text-brand400">
-              is simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since
-              the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-end pt-20">
-          <div className="pr-10 pt-5">
-            <h1 className="h-10 w-[381px] text-2xl font-bold">
-              Илүү ихийг хамтдаа бүтээцгээе
-            </h1>
-            <p className="h-[72px] w-[475px] text-md font-semibold text-brand400">
-              is simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since
-              the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book
-            </p>
-          </div>
-          <div>
-            <img
-              src="/images/about/AboutFam4.png"
-              alt="all in one"
-              className=""
-            />
-          </div>
-        </div>
-      </section>
+        </Group>
+      </SimpleGrid>
 
       {/* used to mantin ui */}
       {/* <section>
