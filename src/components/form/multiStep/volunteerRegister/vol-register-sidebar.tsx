@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function VolRegisterSidebar() {
   return (
-    <aside className="hidden rounded-lg pt-10 lg:flex lg:h-[568px] lg:w-[274px] lg:flex-shrink-0 lg:flex-col lg:gap-8 lg:bg-[url('/images/bg-sidebar-desktop.svg')] lg:px-8">
+    <aside className="hidden rounded-lg pt-10 lg:flex lg:h-[568px] lg:w-[274px] lg:flex-shrink-0 lg:flex-col lg:gap-8 lg:bg-[url('/images/bg-sidebar-desktop.svg')] lg:px-8 bg-primary">
       <VolRegisterStep
         stepNumber={1}
         smallTitle="Алхам 1"

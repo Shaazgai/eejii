@@ -159,11 +159,16 @@ export default function PartnerRegisterForm() {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stepper active={active}>
           <Stepper.Step label="Байгууллагын төрөл">
+            <h1 className="text-[#616161] mb-3">
+              Доор шаардагдах мэдээллийг та үнэн зөв оруулна уу!
+            </h1>
             <Select
-              label="Таны байгууллагын төрөл"
-              placeholder="Pick value"
+              label=""
+              placeholder="Таны Байгууллагын төрөл"
               data={orgTypes}
               defaultValue="React"
+              radius="xl"
+              mt="4"
               {...form.getInputProps('organizationType')}
               clearable
             />
@@ -171,44 +176,58 @@ export default function PartnerRegisterForm() {
 
           <Stepper.Step label="Байгууллагын мэдээлэл">
             <TextInput
-              label="organizationName"
+              label="Байгууллагын нэр:"
               placeholder="organizationName"
+              className="text-start"
+              radius="lg"
               {...form.getInputProps('organizationName')}
             />
             <TextInput
               mt="md"
-              label="Email"
+              label="И-мэйл:"
               placeholder="Email"
+              className="text-start"
+              radius="lg"
               {...form.getInputProps('email')}
             />
             <PasswordInput
               mt="md"
-              label="Password"
+              label="Нууц үг:"
               placeholder="Password"
+              className="text-start"
+              radius="lg"
               {...form.getInputProps('password')}
             />
             <PasswordInput
               mt="md"
-              label="confirmPassword"
+              label="Нууц үг дахин давтах:"
               placeholder="confirmPassword"
+              className="text-start"
+              radius="lg"
               {...form.getInputProps('confirmPassword')}
             />
             <TextInput
               mt="md"
-              label="addressShort"
+              label="Хаяг:"
               placeholder="addressShort"
+              className="text-start"
+              radius="lg"
               {...form.getInputProps('addressShort')}
             />
             <TextInput
               mt="md"
-              label="phoneNumber1"
+              label="Утасны дугаар 1:"
               placeholder="phoneNumber1"
+              className="text-start"
+              radius="lg"
               {...form.getInputProps('contact.phoneNumber1')}
             />
             <TextInput
               mt="md"
-              label="phoneNumber2"
+              label="Утасны дугаар 2:"
               placeholder="phoneNumber2"
+              className="text-start"
+              radius="lg"
               {...form.getInputProps('contact.phoneNumber2')}
             />
           </Stepper.Step>
@@ -216,18 +235,20 @@ export default function PartnerRegisterForm() {
           <Stepper.Step label="Байгууллагын мэдээлэл">
             <Textarea
               placeholder="bio"
-              label="bio"
+              label="Био"
               autosize
               minRows={4}
+              className="text-start"
               {...form.getInputProps('bio')}
             />
           </Stepper.Step>
           <Stepper.Step label="Танилцуулга">
             <Textarea
               placeholder="introduction"
-              label="introduction"
+              label="Танилцуулга"
               autosize
               minRows={4}
+              className="text-start"
               {...form.getInputProps('introduction')}
             />
           </Stepper.Step>
@@ -235,14 +256,18 @@ export default function PartnerRegisterForm() {
 
         <Group justify="flex-end" mt="xl">
           {active !== 0 && (
-            <Button variant="default" onClick={prevStep}>
+            <Button variant="default" onClick={prevStep} radius="xl">
               Back
             </Button>
           )}
           {active !== 3 ? (
-            <Button onClick={nextStep}>Next step</Button>
+            <Button onClick={nextStep} bg="#3c888d" radius="xl">
+              Next step
+            </Button>
           ) : (
-            <Button type="submit">Register</Button>
+            <Button type="submit" bg="#3c888d" radius="xl">
+              Register
+            </Button>
           )}
         </Group>
       </form>

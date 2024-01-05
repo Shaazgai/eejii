@@ -1,6 +1,29 @@
 import { Avatar, Paper, SimpleGrid } from '@mantine/core';
+import { api } from '@/utils/api';
 
 export default function UsertypeExplain() {
+  const { data: banner11 } = api.banner.findAll.useQuery({
+    positionCode: 'supporter_logo_banner',
+    limit: 1,
+  });
+  const userFirst = banner11
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner11[0]?.path
+    : 'null';
+  const { data: banner12 } = api.banner.findAll.useQuery({
+    positionCode: 'partner_logo_banner',
+    limit: 1,
+  });
+  const userSecond = banner12
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner12[0]?.path
+    : 'null';
+  const { data: banner13 } = api.banner.findAll.useQuery({
+    positionCode: 'volunteer_logo_banner',
+    limit: 1,
+  });
+  const userThird = banner13
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner13[0]?.path
+    : 'null';
+
   return (
     <SimpleGrid
       bg={'var(--mantine-color-teal-0)'}
@@ -16,12 +39,7 @@ export default function UsertypeExplain() {
         radius={'md'}
         ta={'center'}
       >
-        <Avatar
-          src="/images/supporter/supporter_logo.png"
-          alt="supporter"
-          size={120}
-          m={'auto'}
-        />
+        <Avatar src={userFirst} alt="supporter" size={120} m={'auto'} />
         <h1 className="pb-3 pt-3 font-bold">Дэмжигч</h1>
         <p>
           Та санд байршсан дурын төсөл хөтөлбөрүүдийг дэмжин, өөрийн нэрийн
@@ -38,12 +56,7 @@ export default function UsertypeExplain() {
         radius={'md'}
         ta={'center'}
       >
-        <Avatar
-          src="/images/partner/partner_logo.png"
-          alt="partner"
-          size={120}
-          m={'auto'}
-        />
+        <Avatar src={userSecond} alt="partner" size={120} m={'auto'} />
         <h1 className="pb-3 pt-3 font-bold">Хамтрагч</h1>
         <p>
           Та мэдээ,төсөл,хөтөлбөрүүдээ энд байршуулснаар олон
@@ -61,12 +74,7 @@ export default function UsertypeExplain() {
         radius={'md'}
         ta={'center'}
       >
-        <Avatar
-          src="/images/volunteer/volunteer_logo.png"
-          alt="volunteer"
-          size={120}
-          m={'auto'}
-        />
+        <Avatar src={userThird} alt="volunteer" size={120} m={'auto'} />
         <h1 className="pb-3 pt-3 font-bold">Сайн дурын ажилтан</h1>
         <p>
           Та өөрийн ур чадвар,хүсэл сонирхолд тулгуурлан санд байршуулсан сайн

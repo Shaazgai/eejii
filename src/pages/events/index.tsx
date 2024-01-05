@@ -68,6 +68,13 @@ export default function Index() {
   }, [q]);
 
   const totalPages = events?.pagination.totalPages;
+  //  const { data: bannerEvent } = api.banner.findAll.useQuery({
+  //   positionCode: 'banner_main_logo',
+  //   limit: 1,
+  // });
+  // const bannerMainImage = bannerEvent
+  //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner[0]?.path
+  //   : 'null';
   return (
     <BasicBaseLayout>
       <FallbackImage

@@ -228,52 +228,69 @@ export default function VolunteerRegisterForm() {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stepper active={active}>
           <Stepper.Step label="Холбоо барих">
+            <h1 className="text-[#616161]">
+              Доор шаардагдах мэдээллийг та үнэн зөв оруулна уу!
+            </h1>
             <TextInput
               mt="md"
-              label="firstName"
-              placeholder="firstName"
-              {...form.getInputProps('firstName')}
-            />
-            <TextInput
-              mt="md"
-              label="lastName"
+              radius="lg"
+              label="Овог:"
               placeholder="lastName"
+              className="text-start border-[#3c888d]"
               {...form.getInputProps('lastName')}
             />
             <TextInput
               mt="md"
-              label="phoneNumber"
+              radius="lg"
+              label="Нэр:"
+              placeholder="firstName"
+              className="text-start border-[#3c888d]"
+              {...form.getInputProps('firstName')}
+            />
+            <TextInput
+              mt="md"
+              radius="lg"
+              label="Утасны дугаар:"
               placeholder="phoneNumber"
+              className="text-start border-[#3c888d]"
               {...form.getInputProps('phoneNumber')}
             />
 
             <TextInput
               mt="md"
-              label="email"
+              radius="lg"
+              label="И-мэйл:"
               placeholder="email"
+              className="text-start border-[#3c888d]"
               {...form.getInputProps('email')}
             />
             <PasswordInput
               mt="md"
-              label="Password"
+              radius="lg"
+              label="Нууц үг:"
               placeholder="Password"
+              className="text-start border-[#3c888d]"
               {...form.getInputProps('password')}
             />
             <PasswordInput
               mt="md"
-              label="confirmPassword"
+              radius="lg"
+              label="Нууц үг дахин давтах:"
               placeholder="confirmPassword"
+              className="text-start border-[#3c888d]"
               {...form.getInputProps('confirmPassword')}
             />
           </Stepper.Step>
 
           <Stepper.Step label="Хувийн мэдээлэл">
+            <InputLabel className="text-start">Төрсөн өдөр</InputLabel>
             <DateInput
               {...form.getInputProps('birthDate')}
               valueFormat="YYYY-M-DD"
-              label="Pick birth date"
               placeholder="Pick birth date"
               w={'100%'}
+              radius="lg"
+              className="text-start"
             />
             <Radio.Group
               name="Gender"
@@ -281,26 +298,29 @@ export default function VolunteerRegisterForm() {
               {...form.getInputProps('gender')}
             >
               <Group mt="xs">
-                <Radio label="Male" value={'male'} />
-                <Radio label="Female" value={'female'} />
+                <Radio label="Эрэгтэй" value={'male'} />
+                <Radio label="Эмэгтэй" value={'female'} />
               </Group>
             </Radio.Group>
             <Stack w={'100%'} mt="md">
-              <InputLabel>Register</InputLabel>
+              <InputLabel className="text-start">Регистрийн дугаар</InputLabel>
               <Flex gap={20}>
                 <Select
                   data={data}
                   {...form.getInputProps('letter1')}
                   placeholder="Select a letter"
+                  radius="xl"
                 />
                 <Select
                   data={data}
                   {...form.getInputProps('letter2')}
                   placeholder="Select a letter"
+                  radius="xl"
                 />
                 <NumberInput
                   {...form.getInputProps('registerNumber')}
                   placeholder="Enter a number"
+                  radius="md"
                 />
               </Flex>
             </Stack>
@@ -332,14 +352,18 @@ export default function VolunteerRegisterForm() {
 
         <Group justify="flex-end" mt="xl">
           {active !== 0 && (
-            <Button variant="default" onClick={prevStep}>
+            <Button variant="default" onClick={prevStep} radius="xl">
               Back
             </Button>
           )}
           {active !== 2 ? (
-            <Button onClick={nextStep}>Next step</Button>
+            <Button onClick={nextStep} bg="#3c888d" radius="xl">
+              Next step
+            </Button>
           ) : (
-            <Button type="submit">Register</Button>
+            <Button type="submit" bg="#3c888d" radius="xl">
+              Register
+            </Button>
           )}
         </Group>
       </form>

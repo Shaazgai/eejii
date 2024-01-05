@@ -1,13 +1,21 @@
 import { Container, SimpleGrid } from '@mantine/core';
 import { Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
+import { api } from '@/utils/api';
 
 export default function PublicFooter() {
+  const { data: bannerLogo } = api.banner.findAll.useQuery({
+    positionCode: 'banner_main_logo',
+    limit: 1,
+  });
+  const bannerMain = bannerLogo
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + bannerLogo[0]?.path
+    : 'null';
   return (
     <Container p={20} size={'xl'}>
       <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} pt={40}>
         <div>
-          <img src="/images/homie/proLogo.png" alt="mainLogo" />
+          <img src={bannerMain} alt="mainLogo" />
         </div>
         <div className="leading-9">
           <h6 className="pb-4 text-xl font-bold">Шуурхай холбоос</h6>
