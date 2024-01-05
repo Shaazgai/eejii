@@ -55,7 +55,7 @@ export default function LoginForm() {
   return (
     <>
       <div className="m-auto h-[577px] w-[854px]">
-        <div className="flex flex-col items-center justify-center pt-10 pb-10 border-2 h-85 w-85 rounded-2xl">
+        <div className="flex w-full flex-col items-center justify-center pt-10 pb-10 border-2 h-85 w-85 rounded-2xl">
           <button className="flex h-12 w-[359px] rounded-full  border-2 border-hidden bg-[#F3F9FA]">
             <span className="flex items-center m-auto">
               <Link className="content-center text-3xl text-brand500" href="/">
@@ -66,13 +66,13 @@ export default function LoginForm() {
           </button>
           <p className="mt-4 h-37">
             By continiung with Facebook Apple, you agree to the{' '}
-            <a href="#" className="text-[#3C888D] hover:underline">
+            <a href="#" className="text-primary hover:underline">
               {' '}
               Terms of <br /> Use{' '}
             </a>{' '}
             and consent the prcoessing of your personal data according <br /> to
             the{' '}
-            <a href="#" className="text-[#3C888D] hover:underline">
+            <a href="#" className="text-primary hover:underline">
               Privacy Policy
             </a>
           </p>
@@ -83,21 +83,25 @@ export default function LoginForm() {
           <form onSubmit={form.onSubmit(signInHandler)}>
             <Flex gap="md" direction="column">
               <TextInput
-                label="Email"
-                placeholder="john@example.com"
+                placeholder="Email"
+                variant="unstyled"
+                className="border-b"
                 {...form.getInputProps('email')}
               />
               <PasswordInput
-                label="Password"
-                placeholder="********"
+                placeholder="Password"
+                variant="unstyled"
+                className="border-b w-[406px]"
                 {...form.getInputProps('password')}
               />
               {error !== '' && <div className="pt-4 text-red-600">{error}</div>}
 
               <Button
                 type="submit"
-                variant="light"
-                color="teal"
+                color="white"
+                bg="#8ab8bb"
+                radius="xl"
+                size="md"
                 loading={loading}
                 loaderProps={{ type: 'dots' }}
               >
@@ -107,6 +111,8 @@ export default function LoginForm() {
                 <Button
                   // className="mt-8 h-[60px] w-72 rounded-full border-2 border-transparent py-0"
                   variant={'secondary'}
+                  bg="#8ab8bb"
+                  radius="xl"
                 >
                   New account
                 </Button>

@@ -143,12 +143,15 @@ export const bannerRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      let mutate = ctx.db.updateTable('Banner').set({
-        title: input.title,
-        description: input.description,
-        link: input.link,
-        bannerPositionId: input.positionCode,
-      });
+      let mutate = ctx.db
+        .updateTable('Banner')
+        .where('Banner.id', '=', input.id)
+        .set({
+          title: input.title,
+          description: input.description,
+          link: input.link,
+          bannerPositionId: input.positionCode,
+        });
       if (input.name && input.contentType) {
         mutate = mutate.set({
           path: `uploads/banner/${input.name}`,

@@ -14,16 +14,20 @@ const AuthLayout = ({
   const router = useRouter();
   return (
     <>
-      <div className="flex flex-col justify-between w-full h-screen p-40 text-center bg-brand450">
-        <div className="relative flex flex-col items-center w-full gap-40 ">
-          <div className="flex flex-col">
-            <div className="absolute left-0 top-3">
-              <Button variant="default" onClick={() => router.back()}>
+      <div className="flex flex-col justify-between w-full h-[100vh] pl-40 pr-40 pt-28 pb-24 text-center bg-brand450">
+        <div className="relative flex flex-col justify-around items-center w-full gap-20">
+          <div className="flex">
+            <div className="absolute left-0 border rounded-full">
+              <Button
+                variant="default"
+                onClick={() => router.back()}
+                className=""
+              >
                 <ArrowLeftCircle />
               </Button>
             </div>
             <Image
-              src="/images/foundation_logo.png"
+              src="/images/login/foundationLogo.png"
               width={189}
               height={60}
               alt="logo"
@@ -37,8 +41,8 @@ const AuthLayout = ({
               </h1>
             </div>
           )}
+          <div className={`w-full`}>{children}</div>
         </div>
-        <div className={`w-full`}>{children}</div>
       </div>
     </>
   );

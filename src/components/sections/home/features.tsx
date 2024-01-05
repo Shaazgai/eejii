@@ -1,3 +1,4 @@
+import { api } from '@/utils/api';
 import {
   BackgroundImage,
   Button,
@@ -12,8 +13,22 @@ import {
 import { IconArrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
 export default function Features() {
+  const { data: banner7 } = api.banner.findAll.useQuery({
+    positionCode: 'home_right_border',
+    limit: 1,
+  });
+  const HomeRightBorder = banner7
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner7[0]?.path
+    : 'null';
+  const { data: banner8 } = api.banner.findAll.useQuery({
+    positionCode: 'home_event_banner',
+    limit: 1,
+  });
+  const HomeEventBanner = banner8
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8[0]?.path
+    : 'null';
   return (
-    <BackgroundImage src="/images/homie/right_Border.png">
+    <BackgroundImage src={HomeRightBorder}>
       <Container fluid p={'lg'}>
         <Title ml={20} order={1}>
           <span className="text-primary">Eejii.org</span>-ийн онцлог
@@ -32,7 +47,7 @@ export default function Features() {
               <Image
                 height={'180'}
                 w={{ base: '200', md: '500', lg: '100%' }}
-                src="/images/eventss/event_img1.png"
+                src={HomeEventBanner}
                 alt="projectIMG"
               />
               <Text p={10}>
@@ -69,7 +84,7 @@ export default function Features() {
               <Image
                 height={'180'}
                 w={{ base: '200', md: '500', lg: '100%' }}
-                src="/images/eventss/event_img1.png"
+                src={HomeEventBanner}
                 alt="projectIMG"
               />
               <Text p={10}>
@@ -105,7 +120,7 @@ export default function Features() {
               <Image
                 height={'180'}
                 w={{ base: '200', md: '500', lg: '100%' }}
-                src="/images/eventss/event_img1.png"
+                src={HomeEventBanner}
                 alt="projectIMG"
               />
               <Text p={10}>

@@ -68,6 +68,13 @@ export default function Index() {
   }, [q]);
 
   const totalPages = projects?.pagination.totalPages;
+  const { data: banner } = api.banner.findAll.useQuery({
+    positionCode: 'project_index_banner',
+    limit: 1,
+  });
+  const bannerImage = banner
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner[0]?.path
+    : 'null';
   return (
     <BasicBaseLayout>
       <FallbackImage
@@ -75,7 +82,7 @@ export default function Index() {
         width={1600}
         radius={0}
         height={400}
-        src="/images/projectss/main.png"
+        src={bannerImage}
         alt="main"
       />
       <Container size={'xl'}>
@@ -118,7 +125,7 @@ export default function Index() {
             <Paper>
               <BackgroundImage
                 h={360}
-                src="/images/projectss/main.png"
+                src={bannerImage}
                 radius={'lg'}
                 style={{ overflow: 'hidden' }}
               >

@@ -48,7 +48,7 @@ export default function New() {
 
   async function handleSetBannerDesktop(files: FileWithPath[]) {
     if (files.length > 0) {
-      const resizedFile = await imageResizer(files[0] as File, 1000, 700);
+      const resizedFile = await imageResizer(files[0] as File, 1440, 700);
       setBannerDesktop(resizedFile as unknown as File);
     }
   }

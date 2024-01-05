@@ -36,6 +36,7 @@ export default function VolRegisterFooter({
         //     step === 4,
         // })}
         // variant={'secondary'}
+        className="bg-primary"
         onClick={onHandleNextStep}
       >
         {step === 4 ? 'Confirm' : 'Next Step'}
