@@ -84,13 +84,20 @@ export type Event = {
   roles: unknown | null;
   ownerId: string | null;
 };
+export type EventCollaborator = {
+  id: Generated<string>;
+  userId: string | null;
+  eventId: string | null;
+  status: string | null;
+  type: string | null;
+};
 export type EventImage = {
   id: Generated<string>;
   ownerId: string;
   path: string;
   type: string | null;
 };
-export type EventUser = {
+export type EventParticipator = {
   id: Generated<string>;
   userId: string | null;
   eventId: string | null;
@@ -148,17 +155,17 @@ export type Project = {
   currentAmount: number | null;
   ownerId: string | null;
 };
-export type ProjectImage = {
-  id: Generated<string>;
-  ownerId: string;
-  path: string;
-  type: string | null;
-};
-export type ProjectUser = {
+export type ProjectCollaborator = {
   id: Generated<string>;
   userId: string | null;
   projectId: string | null;
   status: string | null;
+  type: string | null;
+};
+export type ProjectImage = {
+  id: Generated<string>;
+  ownerId: string;
+  path: string;
   type: string | null;
 };
 export type Skill = {
@@ -205,15 +212,16 @@ export type DB = {
   Certificate: Certificate;
   Donation: Donation;
   Event: Event;
+  EventCollaborator: EventCollaborator;
   EventImage: EventImage;
-  EventUser: EventUser;
+  EventParticipator: EventParticipator;
   Media: Media;
   MediaImage: MediaImage;
   Notification: Notification;
   Payment: Payment;
   Project: Project;
+  ProjectCollaborator: ProjectCollaborator;
   ProjectImage: ProjectImage;
-  ProjectUser: ProjectUser;
   Skill: Skill;
   User: User;
   UserImage: UserImage;

@@ -14,14 +14,15 @@ import type {
   Donation,
   Event as EventDB,
   EventImage,
-  EventUser as EventUserDB,
+  EventParticipator as EventParticipatorDB,
   Media as MediaDB,
   MediaImage as MediaImageDB,
   Project as ProjectDB,
   ProjectImage,
-  ProjectUser as ProjectUserDB,
+  ProjectCollaborator as ProjectCollaboratorDB,
   User as UserDB,
   UserImage,
+  EventCollaborator as EventCollaboratorDB,
 } from './db/types';
 
 export type Role = (typeof RoleConst)[keyof typeof RoleConst];
@@ -52,6 +53,8 @@ export type Event = EventDB & {
     },
   ];
   Images: EventImage[];
+  Collaborators: EventCollaborator[];
+  Participators: EventParticipatorDB[];
 };
 
 export type Project = ProjectDB & {
@@ -60,11 +63,11 @@ export type Project = ProjectDB & {
   Donation: Donation[];
 };
 
-export type EventUser = EventUserDB & {
+export type EventCollaborator = EventCollaboratorDB & {
   Event: EventDB;
 };
 
-export type ProjectUser = ProjectUserDB & {
+export type ProjectCollaborator = ProjectCollaboratorDB & {
   Project: ProjectDB;
 };
 
@@ -124,7 +127,7 @@ export type MyVolunteer = {
   bio: string;
   phoneNumber: string;
   Address: Address;
-  EventUser: EventUser;
+  EventParticipator: EventParticipatorDB;
 };
 
 export type MyDonation = Donation & {

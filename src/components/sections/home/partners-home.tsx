@@ -7,22 +7,22 @@ export default function PartnersHome() {
     limit: 1,
   });
   const PartnerFirst = banner8
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8.banners[0]?.path
+    : '';
   const { data: banner9 } = api.banner.findAll.useQuery({
     positionCode: 'partner_ttr_banner',
     limit: 1,
   });
   const PartnerSecond = banner9
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner9[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner9.banners[0]?.path
+    : '';
   const { data: banner10 } = api.banner.findAll.useQuery({
     positionCode: 'partner_lotus_banner',
     limit: 1,
   });
   const PartnerThird = banner10
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner10[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner10.banners[0]?.path
+    : '';
   return (
     <Container size={'xl'}>
       <Center pt={40}>

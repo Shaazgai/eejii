@@ -24,11 +24,22 @@ module.exports = {
       logoMobile: ['20px', '28px'],
       cartDesktop: ['28px', '40px'],
     },
+    screens: {
+      xs: '576px',
+      sm: '768px',
+      md: '992px',
+      lg: '1200px',
+      xl: '1408px',
+    },
     container: {
       center: true,
       padding: '2rem',
       screens: {
-        '2xl': '1400px',
+        xs: '576px',
+        sm: '768px',
+        md: '992px',
+        lg: '1200px',
+        xl: '1408px',
       },
     },
     extend: {

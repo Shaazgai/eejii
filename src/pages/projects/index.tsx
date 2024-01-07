@@ -73,8 +73,8 @@ export default function Index() {
     limit: 1,
   });
   const bannerImage = banner
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner.banners[0]?.path
+    : '';
   return (
     <BasicBaseLayout>
       <FallbackImage

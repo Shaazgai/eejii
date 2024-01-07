@@ -1,56 +1,34 @@
-import { Button } from '@/components/ui/button';
 import { api } from '@/utils/api';
-import { SimpleGrid, BackgroundImage } from '@mantine/core';
-import { MoveUpRight } from 'lucide-react';
-import Link from 'next/link';
+import {
+  Text,
+  BackgroundImage,
+  Paper,
+  Button,
+  Space,
+  Grid,
+  Flex,
+  Container,
+} from '@mantine/core';
+import { IconArrowUpRight } from '@tabler/icons-react';
 
 export default function Banner() {
-  const { data: banner1 } = api.banner.findAll.useQuery({
-    positionCode: 'home_left_top',
-    limit: 1,
-  });
-  const HomeLeft = banner1
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner1[0]?.path
-    : 'null';
-  const { data: banner2 } = api.banner.findAll.useQuery({
-    positionCode: 'home_right_top',
-    limit: 1,
-  });
-  const HomeRight = banner2
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner2[0]?.path
-    : 'null';
-
-  const { data: banner3 } = api.banner.findAll.useQuery({
-    positionCode: 'home_in_right',
-    limit: 1,
-  });
-  const HomeInRight = banner3
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner3[0]?.path
-    : 'null';
   const { data: banner4 } = api.banner.findAll.useQuery({
     positionCode: 'home_left_middle',
     limit: 1,
   });
   const HomeMiddleLeft = banner4
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner4[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner4.banners[0]?.path
+    : '';
   const { data: banner5 } = api.banner.findAll.useQuery({
     positionCode: 'home_right_middle',
     limit: 1,
   });
   const HomeMiddleRight = banner5
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner5[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner5.banners[0]?.path
+    : '';
 
-  const { data: banner6 } = api.banner.findAll.useQuery({
-    positionCode: 'home_heart_banner',
-    limit: 1,
-  });
-  const HomeHeart = banner6
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner6[0]?.path
-    : 'null';
   return (
-    <section className="w-full bg-white p-16 text-center">
+    <Container ta={'center'} p={20} size={'xl'}>
       <div className="w-full">
         <div>
           <h1 className="h-24 font-serif text-4xl font-extrabold text-primaryDark">
@@ -64,102 +42,151 @@ export default function Banner() {
             All in one
           </h2>
         </div>
-        <SimpleGrid
-          cols={{ base: 1, md: 3, lg: 5 }}
-          className="flex  w-full items-end justify-around"
-        >
-          <div className="flex w-full h-[434.64px] flex-col justify-between">
-            <BackgroundImage src={HomeLeft}>
-              <div className="flex h-[299.64px] flex-col items-start justify-center bg-cover pl-3 text-start">
-                <h4 className="h-[46px] w-[73px] text-3xl text-[34px] font-bold text-[#ffffff] ">
+        <Space h="lg" />
+        <Flex h="100%" direction={{ base: 'column', lg: 'row' }} gap={'md'}>
+          <Grid columns={6} gutter={'md'}>
+            <Grid.Col span={{ base: 6, lg: 3 }}>
+              <Paper bg={'teal.6'} p={10} radius="lg" ta={'start'}>
+                <Text fw={500} fz={30} c={'white'}>
                   55%
-                </h4>
-                <p className="h-[94px] w-[201px] text-[16px] text-[#FFFCF9] ">
+                </Text>
+                <Text c={'white'}>
                   Манай нийт <br /> оролцогчдын 55 хувийг <br /> нь сайн дурын
                   ажилчид эзэлж байна
-                </p>
-                <Link href="#" className="relative top-8">
-                  <Button className="flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-brand40 text-[12px] font-semibold text-white hover:bg-brand40">
-                    Бидэнтэй нэгдэх
-                    <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-brand800 pl-[2px] pt-[2.5px]">
-                      <MoveUpRight />
-                    </span>
-                  </Button>
-                </Link>
-              </div>
-            </BackgroundImage>
-            <div className="flex h-[119px]  items-center justify-center rounded-3xl bg-[#1b2b2c]">
-              {/* <Check className=" bg-primary rounded-full w-[55px] h-[55px] text-white"/> */}
-              <img
-                src="/images/homie/Checkmark.png"
-                alt="chekMarkIMG"
-                className="h-[55px] w-[55px]"
-              />
-              <h1 className="pl-2 font-bold text-white">Be a good Human</h1>
-            </div>
-          </div>
-          <BackgroundImage src={HomeMiddleLeft}>
-            <div className="h-[297.61px] bg-cover">
-              <h6 className="relative left-4 top-52 h-[57px] w-[173px] text-[22px] font-bold text-white">
-                Нийт 20+ cайн дурын ажлууд
-              </h6>
-            </div>
-          </BackgroundImage>
-
-          <div className="flex h-[235px]  flex-col justify-around rounded-3xl border bg-[#e8e8e8] pt-7">
-            <p className="h-[72px] w-[201px]">
-              Бид нийт 4.819.065,00 төгрөгийн хандив цуглуулжээ
-            </p>
-            <Button className="ml-2 flex h-[58px]  justify-between rounded-3xl border-transparent bg-[#cacaca] text-[12px] font-bold text-[#000000] hover:text-white">
-              Хандив өгөх
-              <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-[#000000] pl-[2px] pt-[2.5px] text-white">
-                <MoveUpRight />
-              </span>
-            </Button>
-          </div>
-          <BackgroundImage src={HomeMiddleRight}>
-            <div className="h-[297.61px] bg-cover">
-              <h6 className="relative left-4 top-52 h-[57px] w-[173px] text-start text-[22px] font-bold text-white">
-                Нийт 30+ төсөл хөтөлбөрүүд
-              </h6>
-            </div>
-          </BackgroundImage>
-          <div className="flex h-[434.64px] flex-col justify-between">
-            <BackgroundImage src={HomeRight}>
-              <div className="flex h-[299.64px]  flex-col items-start justify-center bg-cover pl-3 text-start">
+                </Text>
+                <Button
+                  radius={'lg'}
+                  mt={20}
+                  fullWidth
+                  rightSection={<IconArrowUpRight />}
+                >
+                  Бидэнтэй нэгдэх
+                </Button>
+              </Paper>
+              <Space h={{ base: 0, lg: 'md' }} />
+              <div className="hidden lg:flex rounded-2xl bg-[#245255] px-4 py-8 items-center">
                 <img
-                  src={HomeInRight}
-                  alt="suppIMG"
-                  className="h-[94px] w-[191px]"
+                  src="/images/homie/Checkmark.png"
+                  alt="chekMarkIMG"
+                  className="h-[55px] w-[55px]"
                 />
-                <p className="flex h-[94px]  flex-col justify-center text-[16px] text-[#39462a] ">
-                  энэ сард нийт 3 төсөл шинээр нэмэгдлээ
-                </p>
-                <Link href="#" className="relative top-2">
-                  <Button className="flex h-[58px] w-[201px] justify-between rounded-3xl border-transparent bg-brand950 text-[12px] font-bold text-brand400 hover:bg-brand950">
-                    Дэлгэрэнгүй
-                    <span className="h-[31.5px] w-[30.75px] rounded-full border border-transparent bg-brand400 pl-[2px] pt-[2.5px] text-brand800">
-                      <MoveUpRight />
-                    </span>
-                  </Button>
-                </Link>
+                <h1 className="pl-2 font-bold text-white">Be a good Human</h1>
               </div>
-            </BackgroundImage>
-
-            <div className="flex h-[119px]  items-center justify-center rounded-3xl bg-[#245255]">
-              {/* <Check className=" bg-primary rounded-full w-[55px] h-[55px] text-white"/> */}
-              <img
-                src={HomeHeart}
-                alt="heartIMG"
-                className="h-[55px] w-[55px]"
-              />
-              <h1 className="pl-2 font-bold text-brand800">
-                Be someone's <br /> hope today
-              </h1>
-            </div>
-          </div>
-        </SimpleGrid>
+            </Grid.Col>
+            <Grid.Col span={{ base: 6, lg: 3 }}>
+              <Flex h={'100%'} gap="md" w="100%" justify={'space-between'}>
+                <div className="flex lg:hidden rounded-2xl bg-[#245255] w-96 px-4 py-8 items-center justify-center flex-col gap-4">
+                  <img
+                    src="/images/homie/Checkmark.png"
+                    alt="chekMarkIMG"
+                    className="h-[55px] w-[55px]"
+                  />
+                  <h1 className="pl-2 font-bold text-white">Be a good Human</h1>
+                </div>
+                <Paper
+                  w="100%"
+                  bg={'teal.6'}
+                  radius="lg"
+                  style={{
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignSelf: 'end',
+                  }}
+                  h={{ base: '220px', lg: '70%' }}
+                >
+                  <BackgroundImage src={HomeMiddleLeft} h={'100%'}>
+                    <Flex h={'100%'} align={'center'} justify={'center'}>
+                      <Text fw={600} fz={20} c={'white'}>
+                        Нийт 20+ cайн дурын ажлууд
+                      </Text>
+                    </Flex>
+                  </BackgroundImage>
+                </Paper>
+              </Flex>
+            </Grid.Col>
+          </Grid>
+          <Flex mih="100%" align={'end'}>
+            <Paper
+              w="100%"
+              h={'150px'}
+              p="10"
+              pt="30"
+              bg={'gray.4'}
+              radius="lg"
+              style={{
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text fw={500}>
+                Бид нийт 4.819.065,00 төгрөгийн хандив цуглуулжээ
+              </Text>
+              <Button fullWidth rightSection={<IconArrowUpRight />} radius="lg">
+                Хандив өгөх
+              </Button>
+            </Paper>
+          </Flex>
+          <Grid columns={6} gutter={'md'}>
+            <Grid.Col span={{ base: 6, lg: 3 }}>
+              <Flex h={'100%'} gap="md" w="100%" justify={'space-between'}>
+                <Paper
+                  w="100%"
+                  bg={'teal.6'}
+                  radius="lg"
+                  style={{
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignSelf: 'end',
+                  }}
+                  h={{ base: '220px', lg: '70%' }}
+                >
+                  <BackgroundImage src={HomeMiddleRight} h={'100%'}>
+                    <Flex h={'100%'} align={'center'} justify={'center'}>
+                      <Text fw={600} fz={20} c={'white'}>
+                        Нийт 20+ cайн дурын ажлууд
+                      </Text>
+                    </Flex>
+                  </BackgroundImage>
+                </Paper>
+                <div className="flex lg:hidden rounded-2xl bg-[#245255] w-96 px-4 py-8 items-center justify-center flex-col gap-4">
+                  <img src="/images/homie/Checkmark.png" alt="chekMarkIMG" />
+                  <h1 className="pl-2 font-bold text-white">Be a good Human</h1>
+                </div>
+              </Flex>
+            </Grid.Col>
+            <Grid.Col span={{ base: 6, lg: 3 }}>
+              <Paper bg={'teal.6'} p={10} radius="lg" ta={'start'}>
+                <Text fw={500} fz={30} c={'white'}>
+                  55%
+                </Text>
+                <Text c={'white'}>
+                  Манай нийт <br /> оролцогчдын 55 хувийг <br /> нь сайн дурын
+                  ажилчид эзэлж байна
+                </Text>
+                <Button
+                  radius={'lg'}
+                  mt={20}
+                  fullWidth
+                  rightSection={<IconArrowUpRight />}
+                >
+                  Бидэнтэй нэгдэх
+                </Button>
+              </Paper>
+              <Space h={{ base: 0, lg: 'md' }} />
+              <div className="hidden lg:flex rounded-2xl bg-[#245255] px-4 py-8 items-center">
+                <img
+                  src="/images/homie/Checkmark.png"
+                  alt="chekMarkIMG"
+                  className="h-[55px] w-[55px]"
+                />
+                <h1 className="pl-2 font-bold text-white">Be a good Human</h1>
+              </div>
+            </Grid.Col>
+          </Grid>
+        </Flex>
       </div>
-    </section>
+    </Container>
   );
 }

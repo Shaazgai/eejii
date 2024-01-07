@@ -16,47 +16,76 @@ export const bannerRouter = createTRPCRouter({
       z.object({
         positionCode: z.string().nullish(),
         search: z.string().nullish(),
-        limit: z.number().nullish().default(20),
+        limit: z.number().nullish(),
         page: z.number().default(1).nullish(),
       })
     )
-    .query(async opts => {
-      let query = opts.ctx.db
-        .selectFrom('Banner')
-        .selectAll('Banner')
-        .select(eb => [
-          jsonObjectFrom(
-            eb
-              .selectFrom('BannerPosition')
-              .selectAll()
-              .whereRef('BannerPosition.id', '=', 'Banner.bannerPositionId')
-          ).as('Position'),
-        ])
-        .leftJoin('BannerPosition', join =>
-          join.onRef('BannerPosition.id', '=', 'Banner.bannerPositionId')
-        );
-
-      if (opts.input.positionCode) {
-        query = query.where(
-          'BannerPosition.code',
-          '=',
-          opts.input.positionCode
-        );
-      }
-      if (opts.input.search) {
-        query = query.where(eb =>
-          eb.or([
-            eb('Banner.title', 'like', '%' + opts.input.search + '%'),
-            eb('Banner.description', 'like', '%' + opts.input.search + '%'),
+    .query(async ({ input, ctx }) => {
+      const result = await ctx.db.transaction().execute(async trx => {
+        let query = trx
+          .selectFrom('Banner')
+          .selectAll('Banner')
+          .select(eb => [
+            jsonObjectFrom(
+              eb
+                .selectFrom('BannerPosition')
+                .selectAll()
+                .whereRef('BannerPosition.id', '=', 'Banner.bannerPositionId')
+            ).as('Position'),
           ])
-        );
-      }
+          .leftJoin('BannerPosition', join =>
+            join.onRef('BannerPosition.id', '=', 'Banner.bannerPositionId')
+          );
 
-      const banners = await query
-        .limit(opts.input.limit ?? 20)
-        .offset((opts.input.limit ?? 20) * ((opts.input.page ?? 1) - 1))
-        .execute();
-      return banners;
+        if (input.positionCode) {
+          query = query.where('BannerPosition.code', '=', input.positionCode);
+        }
+        if (input.search) {
+          query = query.where(eb =>
+            eb.or([
+              eb('Banner.title', 'like', '%' + input.search + '%'),
+              eb('Banner.description', 'like', '%' + input.search + '%'),
+            ])
+          );
+        }
+        const banners = await query
+          .limit(input.limit ?? 20)
+          .offset((input.limit ?? 20) * ((input.page ?? 1) - 1))
+          .execute();
+
+        let countQuery = trx
+          .selectFrom('Banner')
+          .select(expressionBuilder => {
+            return expressionBuilder.fn.countAll().as('count');
+          })
+          .leftJoin('BannerPosition', join =>
+            join.onRef('BannerPosition.id', '=', 'Banner.bannerPositionId')
+          );
+
+        if (input.positionCode) {
+          countQuery = countQuery.where(
+            'BannerPosition.code',
+            '=',
+            input.positionCode
+          );
+        }
+        if (input.search) {
+          countQuery = countQuery.where(eb =>
+            eb.or([
+              eb('Banner.title', 'like', '%' + input.search + '%'),
+              eb('Banner.description', 'like', '%' + input.search + '%'),
+            ])
+          );
+        }
+        const { count } = await countQuery.executeTakeFirstOrThrow();
+
+        return {
+          banners,
+          total: count,
+        };
+      });
+
+      return result;
     }),
   findById: publicProcedure
     .input(z.object({ id: z.string() }))

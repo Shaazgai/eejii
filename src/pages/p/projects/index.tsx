@@ -45,7 +45,7 @@ export default function ManageProjects() {
             </Text>
             <Button
               component={Link}
-              href={'/p/manage/project/new'}
+              href={'/p/projects/new'}
               size="lg"
               radius={'xl'}
               c="white"
@@ -98,12 +98,6 @@ export default function ManageProjects() {
               }
             >
               Grant project
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="event"
-              onClick={() => router.push('/p/manage/event')}
-            >
-              Event
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>

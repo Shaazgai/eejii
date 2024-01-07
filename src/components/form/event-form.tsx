@@ -43,6 +43,8 @@ const EventForm = ({
   handleSetFiles: (images: FileWithPath[]) => void;
 }) => {
   const eventCategories = data?.Categories.map(c => c.categoryId) ?? [''];
+  const eventCollaborators = data?.Collaborators.map(ec => ec.userId) ?? [''];
+
   const form = useForm({
     validateInputOnChange: true,
     initialValues: {
@@ -52,6 +54,7 @@ const EventForm = ({
       startTime: (data?.startTime as unknown as Date) ?? new Date(),
       endTime: (data?.endTime as unknown as Date) ?? new Date(),
       categories: eventCategories,
+      collaborators: eventCollaborators,
       contact: {
         phone: (data?.contact as Contact)?.phone ?? '',
         email: (data?.contact as Contact)?.email ?? '',

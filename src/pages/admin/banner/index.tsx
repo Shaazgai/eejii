@@ -15,6 +15,7 @@ import {
   Table,
   TextInput,
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconEdit, IconSearch, IconTrash } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -27,6 +28,18 @@ const BannerRow = ({ banner }: { banner: Banner }) => {
   const imageMobile = banner.mobilePath
     ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner.mobilePath
     : '';
+
+  const context = api.useUtils();
+  const { mutate: deleteBanner, isLoading } =
+    api.banner.deleteBanner.useMutation({
+      onSuccess: () => {
+        context.banner.findAll.invalidate({});
+        notifications.show({
+          title: 'Success',
+          message: 'deleted banner',
+        });
+      },
+    });
 
   return (
     <Table.Tr>
@@ -66,7 +79,12 @@ const BannerRow = ({ banner }: { banner: Banner }) => {
           >
             <IconEdit />
           </ActionIcon>
-          <ActionIcon color="red" size={'lg'}>
+          <ActionIcon
+            color="red"
+            size={'lg'}
+            onClick={() => deleteBanner({ id: banner.id as unknown as string })}
+            loading={isLoading}
+          >
             <IconTrash />
           </ActionIcon>
         </ActionIcon.Group>
@@ -79,14 +97,20 @@ const BannerTable = () => {
   const router = useRouter();
   const { page, q } = router.query;
   const [activePage, setPage] = useState(page ? +page : 1);
-  const { data: banners, isLoading } = api.banner.findAll.useQuery({
+  const { data, isLoading } = api.banner.findAll.useQuery({
     page: activePage,
     search: q as string,
     limit: 20,
   });
+  const banners = data?.banners;
   if (isLoading) <LoadingOverlay visible />;
 
-  const totalPages = banners ? Math.ceil(banners?.length / 20) : 1;
+  const { data: total } = api.banner.findAll.useQuery({
+    page: activePage,
+    search: q as string,
+  });
+  const totalPages = total ? Math.ceil((total?.total as number) / 20) : 1;
+  console.log(totalPages);
   return (
     <div>
       {banners ? (

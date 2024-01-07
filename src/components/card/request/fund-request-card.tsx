@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import type { ProjectUser } from '@/lib/types';
+import type { ProjectCollaborator } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const ProjectOwnerAction = ({
@@ -79,14 +79,14 @@ const ParticipantAction = ({
 };
 
 const FundRequestCard = ({
-  projectUser,
+  ProjectCollaborator,
   isOwner,
 }: {
-  projectUser: ProjectUser;
+  ProjectCollaborator: ProjectCollaborator;
   isOwner: boolean;
 }) => {
-  const project = projectUser.Project;
-  console.log(projectUser);
+  const project = ProjectCollaborator.Project;
+  console.log(ProjectCollaborator);
   const context = api.useContext();
   const { mutate } = api.projectUser.handleFundRequest.useMutation({
     onSuccess: () => context.projectUser.findAll.invalidate(),
@@ -94,7 +94,7 @@ const FundRequestCard = ({
 
   function handleRequest(status: string) {
     mutate({
-      id: projectUser.id as unknown as string,
+      id: ProjectCollaborator.id as unknown as string,
       status: status,
     });
   }
@@ -109,20 +109,20 @@ const FundRequestCard = ({
           <div>{project?.description}</div>
         </div>
         <div className="flex items-center border-r p-4">
-          <div>{projectUser.type}</div>
+          <div>{ProjectCollaborator.type}</div>
         </div>
       </div>
       <div className="flex items-center justify-center p-4">
         {isOwner ? (
           <ProjectOwnerAction
-            type={projectUser.type as string}
-            status={projectUser.status as string}
+            type={ProjectCollaborator.type as string}
+            status={ProjectCollaborator.status as string}
             handleRequest={handleRequest}
           />
         ) : (
           <ParticipantAction
-            type={projectUser.type as string}
-            status={projectUser.status as string}
+            type={ProjectCollaborator.type as string}
+            status={ProjectCollaborator.status as string}
             handleRequest={handleRequest}
           />
         )}

@@ -15,37 +15,37 @@ export default function VolunteersMap() {
     limit: 1,
   });
   const levelFirst = banner14
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner14[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner14.banners[0]?.path
+    : '';
   const { data: banner15 } = api.banner.findAll.useQuery({
     positionCode: 'level_second_banner',
     limit: 1,
   });
   const levelSecond = banner15
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner15[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner15.banners[0]?.path
+    : '';
   const { data: banner16 } = api.banner.findAll.useQuery({
     positionCode: 'level_third_banner',
     limit: 1,
   });
   const levelThird = banner16
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner16[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner16.banners[0]?.path
+    : '';
   const { data: banner17 } = api.banner.findAll.useQuery({
     positionCode: 'level_four_banner',
     limit: 1,
   });
   const levelFour = banner17
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner17[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner17.banners[0]?.path
+    : '';
 
   const { data: banner18 } = api.banner.findAll.useQuery({
     positionCode: 'home_map_banner',
     limit: 1,
   });
   const HomeMap = banner18
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner18[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner18.banners[0]?.path
+    : '';
 
   return (
     <Container size={'xl'}>

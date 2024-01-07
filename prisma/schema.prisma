@@ -50,14 +50,15 @@ model User {
   Addresses   Address[]
   Certificate Certificate[]
 
-  MyEvents             Event[]
-  MyProject            Project[]
-  JoinedEvents         EventUser[]
-  JoinedProjects       ProjectUser[]
-  UserImage            UserImage[]
-  receivedNotification Notification[] @relation("receiver")
-  sendNotifications    Notification[] @relation("sender")
-  Medias               Media[]
+  MyEvents              Event[]
+  MyProject             Project[]
+  CollaboratingEvents   EventCollaborator[]
+  CollaboratingProjects ProjectCollaborator[]
+  UserImage             UserImage[]
+  receivedNotification  Notification[]        @relation("receiver")
+  sendNotifications     Notification[]        @relation("sender")
+  Medias                Media[]
+  ParticipatingEvents   EventParticipator[]
 }
 
 enum Role {
@@ -113,16 +114,30 @@ model Event {
   roles Json?
 
   //Relatoin
-  Owner         User?           @relation(fields: [ownerId], references: [id])
+  Owner         User?               @relation(fields: [ownerId], references: [id])
   ownerId       String?
   CategoryEvent CategoryEvent[]
-  Users         EventUser[]
   EventImage    EventImage[]
+  Participators EventParticipator[]
+  Collabrators  EventCollaborator[]
 
   @@index([ownerId])
 }
 
-model EventUser {
+model EventCollaborator {
+  id      String  @id @default(dbgenerated("gen_random_uuid()"))
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  Event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
+  status  String?
+  type    String?
+
+  @@index([userId])
+  @@index([eventId])
+}
+
+model EventParticipator {
   id      String  @id @default(dbgenerated("gen_random_uuid()"))
   User    User?   @relation(fields: [userId], references: [id])
   userId  String?
@@ -153,9 +168,9 @@ model Project {
   currentAmount Int?
 
   //Relation
-  Owner           User?             @relation(fields: [ownerId], references: [id])
+  Owner           User?                 @relation(fields: [ownerId], references: [id])
   ownerId         String?
-  Users           ProjectUser[]
+  Collaborators   ProjectCollaborator[]
   Donation        Donation[]
   CategoryProject CategoryProject[]
   ProjectImage    ProjectImage[]
@@ -163,7 +178,7 @@ model Project {
   @@index([ownerId])
 }
 
-model ProjectUser {
+model ProjectCollaborator {
   id        String   @id @default(dbgenerated("gen_random_uuid()"))
   User      User?    @relation(fields: [userId], references: [id])
   userId    String?

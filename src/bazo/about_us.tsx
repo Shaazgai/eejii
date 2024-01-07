@@ -19,101 +19,101 @@ export const About = () => {
   });
   // const bannerImage = process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner?.[0].path;
   const bannerAbout = banner
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner.banners[0]?.path
+    : '';
 
   const { data: banner1 } = api.banner.findAll.useQuery({
     positionCode: 'about_first_right',
     limit: 1,
   });
   const bannerAbouts = banner1
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner1[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner1.banners[0]?.path
+    : '';
   const { data: banner2 } = api.banner.findAll.useQuery({
     positionCode: 'about_second_left',
     limit: 1,
   });
   const bannerAboutus = banner2
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner2[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner2.banners[0]?.path
+    : '';
   const { data: banner3 } = api.banner.findAll.useQuery({
     positionCode: 'about_second_right',
     limit: 1,
   });
   const bannerThird = banner3
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner3[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner3.banners[0]?.path
+    : '';
   const { data: banner4 } = api.banner.findAll.useQuery({
     positionCode: 'about_plan_woman',
     limit: 1,
   });
   const bannerFour = banner4
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner4[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner4.banners[0]?.path
+    : '';
 
   const { data: banner5 } = api.banner.findAll.useQuery({
     positionCode: 'about_fam_first',
     limit: 1,
   });
   const bannerFamFirst = banner5
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner5[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner5.banners[0]?.path
+    : '';
   const { data: banner6 } = api.banner.findAll.useQuery({
     positionCode: 'about_fam_second',
     limit: 1,
   });
   const bannerFamSecond = banner6
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner6[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner6.banners[0]?.path
+    : '';
   const { data: banner7 } = api.banner.findAll.useQuery({
     positionCode: 'about_fam_third',
     limit: 1,
   });
   const bannerFamThird = banner7
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner7[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner7.banners[0]?.path
+    : '';
   const { data: banner8 } = api.banner.findAll.useQuery({
     positionCode: 'about_fam_four',
     limit: 1,
   });
   const bannerFamFour = banner8
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8.banners[0]?.path
+    : '';
   const { data: banner9 } = api.banner.findAll.useQuery({
     positionCode: 'about_foot_first',
     limit: 1,
   });
   const footAbooutFirst = banner9
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner9[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner9.banners[0]?.path
+    : '';
   const { data: banner10 } = api.banner.findAll.useQuery({
     positionCode: 'about_foot_second',
     limit: 1,
   });
   const footAbooutSecond = banner10
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner10[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner10.banners[0]?.path
+    : '';
   const { data: banner11 } = api.banner.findAll.useQuery({
     positionCode: 'about_foot_third',
     limit: 1,
   });
   const footAbooutThird = banner11
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner11[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner11.banners[0]?.path
+    : '';
   const { data: banner12 } = api.banner.findAll.useQuery({
     positionCode: 'about_foot_four',
     limit: 1,
   });
   const footAbooutFour = banner12
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner12[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner12.banners[0]?.path
+    : '';
   const { data: banner13 } = api.banner.findAll.useQuery({
     positionCode: 'about_woman_bg',
     limit: 1,
   });
   const AboutWomanBG = banner13
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner13[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner13.banners[0]?.path
+    : '';
 
   // const { data: banner14 } = api.banner.findAll.useQuery({
   //   positionCode: 'about_first_bg',
@@ -121,21 +121,21 @@ export const About = () => {
   // });
   // const AboutFirstBg = banner14
   //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner14[0]?.path
-  //   : 'null';
+  //   : '';
   // const { data: banner15 } = api.banner.findAll.useQuery({
   //   positionCode: 'about_second_bg',
   //   limit: 1,
   // });
   // const AboutSecondBg = banner15
   //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner15[0]?.path
-  //   : 'null';
+  //   : '';
   // const { data: banner16 } = api.banner.findAll.useQuery({
   //   positionCode: 'about_third_bg',
   //   limit: 1,
   // });
   // const AboutThirdBg = banner16
   //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner16[0]?.path
-  //   : 'null';
+  //   : '';
 
   return (
     <>
