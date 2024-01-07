@@ -20,12 +20,12 @@ const Index = () => {
   const router = useRouter();
   // const [status, setStatus] = useState('approved');
 
-  // const { data: eventUser, isLoading: isEventLoading } =
+  // const { data: EventCollaborator, isLoading: isEventLoading } =
   //   api.eventUser.findAll.useQuery({
   //     userId: session.data?.user.id,
   //     status: status,
   //   });
-  // const { data: projectUser, isLoading: isFundLoading } =
+  // const { data: ProjectCollaborator, isLoading: isFundLoading } =
   //   api.projectUser.findAll.useQuery({
   //     userId: session.data?.user.id,
   //     status: status,
@@ -50,7 +50,7 @@ const Index = () => {
             </Text>
             <Button
               component={Link}
-              href={'/p/manage/project/new'}
+              href={'/p/projects/new'}
               size="lg"
               radius={'xl'}
               c="white"

@@ -79,7 +79,7 @@ const EditProject = () => {
         title: 'Success',
         message: 'Successfully updated fund',
       });
-      router.push(`/p/manage/project/${newProject.id}`);
+      router.push(`/p/projects/${newProject.id}`);
     },
   });
   function handleSubmit(values: z.infer<typeof projectSchema>) {
@@ -94,7 +94,7 @@ const EditProject = () => {
           <Flex justify={'start'} align={'center'} gap={20}>
             <ActionIcon
               component={Link}
-              href={`/p/manage/project/${data?.id}`}
+              href={`/p/projects/${data?.id}`}
               radius={'xl'}
               size={'lg'}
               variant="light"

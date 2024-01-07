@@ -18,6 +18,7 @@ import type { UseFormReturnType } from '@mantine/form';
 import { useState } from 'react';
 import type { z } from 'zod';
 import { FormStep } from '../form-stepper';
+import { CollaboratorSelectField } from '../CollaboratorSelectField';
 
 export const EventFormFields = ({
   data,
@@ -28,11 +29,23 @@ export const EventFormFields = ({
 }) => {
   const { data: categories, isLoading: isCategoryLoading } =
     api.category.findAll.useQuery({ name: null, type: null });
+  const eventCollaborators =
+    data?.Collaborators.map(ec => ec.userId as unknown as string) ?? [];
+  const eventCategories = data?.Categories.map(c => c.categoryId) ?? [];
 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCollabs, setSelectedCollabs] =
+    useState<string[]>(eventCollaborators);
+  const [selectedCategories, setSelectedCategories] =
+    useState<string[]>(eventCategories);
+
   function handleSelectCategory(values: string[]) {
     setSelectedCategories(values);
     form.setFieldValue('categories', values);
+  }
+
+  function handleSelectCollabs(values: string[]) {
+    setSelectedCollabs(values);
+    form.setFieldValue('collaborators', values);
   }
   return (
     <Stack>
@@ -171,6 +184,18 @@ export const EventFormFields = ({
                 <Skeleton h={30} w={90} radius={'xl'} />
               </Flex>
             )}
+          </Paper>
+        </Stack>
+      </div>
+      <div className="flex gap-4">
+        <FormStep line step={3} />
+        <Stack w={'100%'}>
+          <InputLabel size="xl">Collaborators</InputLabel>
+          <Paper withBorder p={20} radius={'xl'} py={30}>
+            <CollaboratorSelectField
+              handleChange={handleSelectCollabs}
+              defaultValues={selectedCollabs}
+            />
           </Paper>
         </Stack>
       </div>

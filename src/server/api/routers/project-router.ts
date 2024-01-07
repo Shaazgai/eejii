@@ -184,14 +184,14 @@ export const projectRouter = createTRPCRouter({
     const project = await ctx.db
       .selectFrom('Project')
       .selectAll('Project')
-      .leftJoin('ProjectUser', join =>
-        join.onRef('ProjectUser.projectId', '=', 'Project.id')
+      .leftJoin('ProjectCollaborator', join =>
+        join.onRef('ProjectCollaborator.projectId', '=', 'Project.id')
       )
       .leftJoin('User', join =>
-        join.onRef('User.id', '=', 'ProjectUser.userId')
+        join.onRef('User.id', '=', 'ProjectCollaborator.userId')
       )
       .where('User.id', '=', ctx.userId)
-      .where('ProjectUser.status', '=', 'approved')
+      .where('ProjectCollaborator.status', '=', 'approved')
       .execute();
     console.log(project);
     return project;
@@ -200,14 +200,14 @@ export const projectRouter = createTRPCRouter({
     const project = await ctx.db
       .selectFrom('Project')
       .selectAll('Project')
-      .leftJoin('ProjectUser', join =>
-        join.onRef('ProjectUser.projectId', '=', 'Project.id')
+      .leftJoin('ProjectCollaborator', join =>
+        join.onRef('ProjectCollaborator.projectId', '=', 'Project.id')
       )
       .leftJoin('User', join =>
-        join.onRef('User.id', '=', 'ProjectUser.userId')
+        join.onRef('User.id', '=', 'ProjectCollaborator.userId')
       )
       .where('User.id', '=', ctx.userId)
-      .where('ProjectUser.status', '=', 'pending')
+      .where('ProjectCollaborator.status', '=', 'pending')
       .execute();
     // console.log(project);
     return project;
@@ -215,7 +215,7 @@ export const projectRouter = createTRPCRouter({
   getNotRelated: privateProcedure.query(async ({ ctx }) => {
     const query = await sql`
         SELECT f.* FROM "Project" f 
-        LEFT JOIN "ProjectUser" fa ON fa."projectId" = f."id"
+        LEFT JOIN "ProjectCollaborator" fa ON fa."projectId" = f."id"
         WHERE fa."userId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )} OR fa."userId" IS NULL
@@ -231,7 +231,7 @@ export const projectRouter = createTRPCRouter({
       const query = await sql`
         SELECT u.*
         FROM "User" u
-        LEFT JOIN "ProjectUser" as fa ON fa."userId" = u."id"
+        LEFT JOIN "ProjectCollaborator" as fa ON fa."userId" = u."id"
         WHERE (fa."projectId" IS DISTINCT FROM ${
           input.projectId
         } OR fa."projectId" IS NULL)

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import type { EventUser } from '@/lib/types';
+import type { EventCollaborator } from '@/lib/types';
 import { api } from '@/utils/api';
 
 const ProjectOwnerAction = ({
@@ -79,13 +79,13 @@ const ParticipantAction = ({
 };
 
 const EventRequestCard = ({
-  eventUser,
+  EventCollaborator,
   isOwner,
 }: {
-  eventUser: EventUser;
+  EventCollaborator: EventCollaborator;
   isOwner: boolean;
 }) => {
-  const event = eventUser.Event;
+  const event = EventCollaborator.Event;
   const context = api.useUtils();
   const { mutate } = api.eventUser.handleEventRequest.useMutation({
     onSuccess: () => context.eventUser.findAll.invalidate(),
@@ -93,7 +93,7 @@ const EventRequestCard = ({
 
   function handleRequest(status: string) {
     mutate({
-      id: eventUser.id as unknown as string,
+      id: EventCollaborator.id as unknown as string,
       status: status,
     });
   }
@@ -108,23 +108,23 @@ const EventRequestCard = ({
           <div>{event?.description}</div>
         </div>
         <div className="flex items-center border-r p-4">
-          <div>{eventUser.type}</div>
+          <div>{EventCollaborator.type}</div>
         </div>
         <div className="flex items-center border-r p-4">
-          <div>{eventUser.id as unknown as string}</div>
+          <div>{EventCollaborator.id as unknown as string}</div>
         </div>
       </div>
       <div className="flex items-center justify-center p-4">
         {isOwner ? (
           <ProjectOwnerAction
-            type={eventUser.type as string}
-            status={eventUser.status as string}
+            type={EventCollaborator.type as string}
+            status={EventCollaborator.status as string}
             handleRequest={handleRequest}
           />
         ) : (
           <ParticipantAction
-            type={eventUser.type as string}
-            status={eventUser.status as string}
+            type={EventCollaborator.type as string}
+            status={EventCollaborator.status as string}
             handleRequest={handleRequest}
           />
         )}

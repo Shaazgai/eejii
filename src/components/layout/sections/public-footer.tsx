@@ -9,8 +9,8 @@ export default function PublicFooter() {
     limit: 1,
   });
   const bannerMain = bannerLogo
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + bannerLogo[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + bannerLogo.banners[0]?.path
+    : '';
   return (
     <Container p={20} size={'xl'}>
       <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} pt={40}>

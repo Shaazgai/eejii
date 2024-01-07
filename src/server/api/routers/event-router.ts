@@ -3,7 +3,6 @@ import { sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
-import type { User } from '@/lib/db/types';
 import type { Event, ListResponse, Pagination } from '@/lib/types';
 import { eventSchema } from '@/lib/validation/event-schema';
 
@@ -59,6 +58,7 @@ export const eventRouter = createTRPCRouter({
         if (input.status) {
           query = query.where('status', '=', input.status as ProjectStatus);
         }
+        console.log('hi');
 
         const queryResult = await query
           .limit(input.limit)
@@ -92,7 +92,14 @@ export const eventRouter = createTRPCRouter({
     }),
   getMyEvents: privateProcedure
     .input(
-      z.object({ name: z.string().nullish(), status: z.string().nullish() })
+      z.object({
+        name: z.string().nullish(),
+        status: z.string().nullish(),
+        type: z
+          .enum([EventType.EVENT, EventType.VOLUNTEERING])
+          .default(EventType.EVENT)
+          .nullish(),
+      })
     )
     .query(async ({ ctx, input }) => {
       let query = ctx.db
@@ -123,6 +130,14 @@ export const eventRouter = createTRPCRouter({
       const event = await ctx.db
         .selectFrom('Event')
         .selectAll('Event')
+        .select(eb1 => [
+          jsonObjectFrom(
+            eb1
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'Event.ownerId')
+          ).as('Owner'),
+        ])
         .select(eb => [
           jsonArrayFrom(
             eb
@@ -139,6 +154,18 @@ export const eventRouter = createTRPCRouter({
               .selectAll()
               .whereRef('Event.id', '=', 'EventImage.ownerId')
           ).as('Images'),
+          jsonArrayFrom(
+            eb
+              .selectFrom('EventCollaborator')
+              .selectAll()
+              .whereRef('Event.id', '=', 'EventCollaborator.eventId')
+          ).as('Collabrators'),
+          jsonArrayFrom(
+            eb
+              .selectFrom('EventParticipator')
+              .selectAll()
+              .whereRef('Event.id', '=', 'EventParticipator.eventId')
+          ).as('Participators'),
         ])
         .where('Event.id', '=', input.id)
         .executeTakeFirstOrThrow();
@@ -149,12 +176,14 @@ export const eventRouter = createTRPCRouter({
     const events = await ctx.db
       .selectFrom('Event')
       .selectAll('Event')
-      .leftJoin('EventUser', join =>
-        join.onRef('EventUser.eventId', '=', 'Event.id')
+      .leftJoin('EventCollaborator', join =>
+        join.onRef('EventCollaborator.eventId', '=', 'Event.id')
       )
-      .leftJoin('User', join => join.onRef('User.id', '=', 'EventUser.userId'))
+      .leftJoin('User', join =>
+        join.onRef('User.id', '=', 'EventCollaborator.userId')
+      )
       .where('User.id', '=', ctx.userId)
-      .where('EventUser.status', '=', 'approved')
+      .where('EventCollaborator.status', '=', 'approved')
       .execute();
     return events;
   }),
@@ -162,12 +191,14 @@ export const eventRouter = createTRPCRouter({
     const events = await ctx.db
       .selectFrom('Event')
       .selectAll('Event')
-      .leftJoin('EventUser', join =>
-        join.onRef('EventUser.eventId', '=', 'Event.id')
+      .leftJoin('EventCollaborator', join =>
+        join.onRef('EventCollaborator.eventId', '=', 'Event.id')
       )
-      .leftJoin('User', join => join.onRef('User.id', '=', 'EventUser.userId'))
+      .leftJoin('User', join =>
+        join.onRef('User.id', '=', 'EventCollaborator.userId')
+      )
       .where('User.id', '=', ctx.userId)
-      .where('EventUser.status', '=', 'pending')
+      .where('EventCollaborator.status', '=', 'pending')
       .execute();
     // console.log(events);
     return events;
@@ -175,7 +206,7 @@ export const eventRouter = createTRPCRouter({
   getNotRelated: privateProcedure.query(async ({ ctx }) => {
     const query = await sql`
         SELECT e.* FROM "Event" e 
-        LEFT JOIN "EventUser" ea ON ea."eventId" = e."id"
+        LEFT JOIN "EventCollaborator" ea ON ea."eventId" = e."id"
         WHERE ea."userId" != ${sql.raw(
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )} OR ea."userId" IS NULL
@@ -186,25 +217,6 @@ export const eventRouter = createTRPCRouter({
     console.log(query.rows);
     return query.rows;
   }),
-  findUsersToInvite: publicProcedure // Find all partners for event to invite them
-    .input(z.object({ eventId: z.string(), userType: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const query = await sql`
-        SELECT u.*
-        FROM "User" u
-        LEFT JOIN "EventUser" as ea ON ea."userId" = u."id"
-        WHERE (ea."eventId" IS DISTINCT FROM ${
-          input.eventId
-        } OR ea."eventId" IS NULL)
-        AND u."id" != ${sql.raw(
-          `(SELECT e."ownerId" FROM "Event" AS e WHERE e."id" = '${input.eventId}')`
-        )}
-        AND u."type" = ${input.userType}
-        AND u."id" != ${ctx.userId}
-        `.execute(ctx.db);
-
-      return query.rows as User[];
-    }),
   create: privateProcedure
     .input(eventSchema)
     .mutation(async ({ input, ctx }) => {
@@ -374,5 +386,81 @@ export const eventRouter = createTRPCRouter({
         .deleteFrom('EventImage')
         .where('EventImage.id', '=', input.id)
         .execute();
+    }),
+  findRelated: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().nullish(),
+        excludeId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const excludeEvent = await ctx.db
+        .selectFrom('Event')
+        .select(['Event.id', 'Event.ownerId'])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('CategoryEvent')
+              .select(['CategoryEvent.id'])
+              .whereRef('CategoryEvent.eventId', '=', 'Event.id')
+          ).as('Categories'),
+        ])
+        .where('id', '=', input.excludeId)
+        .executeTakeFirst();
+      let query = ctx.db
+        .selectFrom('Event')
+        .selectAll('Event')
+        .select(eb1 => [
+          jsonObjectFrom(
+            eb1
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'Event.ownerId')
+          ).as('Owner'),
+        ])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('Category')
+              .selectAll()
+              .leftJoin('CategoryEvent', join =>
+                join.onRef('CategoryEvent.eventId', '=', 'Event.id')
+              )
+              .whereRef('CategoryEvent.categoryId', '=', 'Category.id')
+          ).as('Categories'),
+          jsonArrayFrom(
+            eb
+              .selectFrom('EventImage')
+              .selectAll()
+              .whereRef('Event.id', '=', 'EventImage.ownerId')
+          ).as('Images'),
+        ])
+        .leftJoin('CategoryEvent', join =>
+          join.onRef('CategoryEvent.eventId', '=', 'Event.id')
+        )
+        .leftJoin('Category', join =>
+          join.onRef('CategoryEvent.categoryId', '=', 'Category.id')
+        )
+        .where('Event.id', '!=', excludeEvent?.id as string);
+
+      if (excludeEvent && excludeEvent?.Categories?.length > 0) {
+        query = query.where(eb =>
+          eb.or(
+            excludeEvent?.Categories?.map(c =>
+              eb('CategoryEvent.id', '=', c.id)
+            )
+          )
+        );
+        query = query.where(eb =>
+          eb.or([eb('Event.ownerId', '=', excludeEvent.ownerId)])
+        );
+      }
+      if (input.limit) {
+        query = query.limit(input.limit);
+      }
+
+      const res = await query.orderBy('Event.createdAt desc').execute();
+      return res;
     }),
 });

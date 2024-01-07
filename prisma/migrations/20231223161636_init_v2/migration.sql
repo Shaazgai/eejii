@@ -64,14 +64,14 @@ CREATE TABLE "Event" (
 );
 
 -- CreateTable
-CREATE TABLE "EventUser" (
+CREATE TABLE "EventCollaborator" (
     "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "userId" TEXT,
     "eventId" TEXT,
     "status" TEXT,
     "type" TEXT,
 
-    CONSTRAINT "EventUser_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "EventCollaborator_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -95,14 +95,14 @@ CREATE TABLE "Project" (
 );
 
 -- CreateTable
-CREATE TABLE "ProjectUser" (
+CREATE TABLE "ProjectCollaborator" (
     "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "userId" TEXT,
     "projectId" TEXT,
     "status" TEXT,
     "type" TEXT,
 
-    CONSTRAINT "ProjectUser_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ProjectCollaborator_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -293,19 +293,19 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE INDEX "Event_ownerId_idx" ON "Event"("ownerId");
 
 -- CreateIndex
-CREATE INDEX "EventUser_userId_idx" ON "EventUser"("userId");
+CREATE INDEX "EventCollaborator_userId_idx" ON "EventCollaborator"("userId");
 
 -- CreateIndex
-CREATE INDEX "EventUser_eventId_idx" ON "EventUser"("eventId");
+CREATE INDEX "EventCollaborator_eventId_idx" ON "EventCollaborator"("eventId");
 
 -- CreateIndex
 CREATE INDEX "Project_ownerId_idx" ON "Project"("ownerId");
 
 -- CreateIndex
-CREATE INDEX "ProjectUser_userId_idx" ON "ProjectUser"("userId");
+CREATE INDEX "ProjectCollaborator_userId_idx" ON "ProjectCollaborator"("userId");
 
 -- CreateIndex
-CREATE INDEX "ProjectUser_projectId_idx" ON "ProjectUser"("projectId");
+CREATE INDEX "ProjectCollaborator_projectId_idx" ON "ProjectCollaborator"("projectId");
 
 -- CreateIndex
 CREATE INDEX "Certificate_volunteerId_idx" ON "Certificate"("volunteerId");
@@ -350,19 +350,19 @@ CREATE UNIQUE INDEX "BannerPosition_code_key" ON "BannerPosition"("code");
 ALTER TABLE "Event" ADD CONSTRAINT "Event_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "EventUser" ADD CONSTRAINT "EventUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "EventCollaborator" ADD CONSTRAINT "EventCollaborator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "EventUser" ADD CONSTRAINT "EventUser_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "EventCollaborator" ADD CONSTRAINT "EventCollaborator_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectUser" ADD CONSTRAINT "ProjectUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectUser" ADD CONSTRAINT "ProjectUser_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Certificate" ADD CONSTRAINT "Certificate_volunteerId_fkey" FOREIGN KEY ("volunteerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

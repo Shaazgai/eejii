@@ -1,6 +1,6 @@
 import PartnerLayout from '@/components/layout/partner-layout';
 import { EventListPrivate } from '@/components/partner/event/list';
-import { ProjectStatus } from '@/lib/db/enums';
+import { EventType, ProjectStatus } from '@/lib/db/enums';
 import segmentClasses from '@/styles/SegmentedControl.module.css';
 import tabsClasses from '@/styles/Tabs.module.css';
 import { api } from '@/utils/api';
@@ -19,13 +19,14 @@ import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-export default function ManageProjects() {
+export default function ManageEvents() {
   const router = useRouter();
-  const { name, status } = router.query;
+  const { name, status, type } = router.query;
 
   const { data: events, isLoading } = api.event.getMyEvents.useQuery({
     name: name as string,
     status: status as ProjectStatus,
+    type: (type as EventType) ?? EventType.EVENT,
   });
 
   return (
@@ -42,7 +43,7 @@ export default function ManageProjects() {
             </Text>
             <Button
               component={Link}
-              href={'/p/manage/project/new'}
+              href={'/p/events/new'}
               size="lg"
               radius={'xl'}
               c="white"
@@ -63,20 +64,39 @@ export default function ManageProjects() {
         >
           <Tabs.List>
             <Tabs.Tab
-              value="project"
-              onClick={() => router.push('/p/manage/project?type=FUNDRAISING')}
-            >
-              Project
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="grant_project"
+              value="event"
               onClick={() =>
-                router.push('/p/manage/project?type=GRANT_FUNDRAISING')
+                router.push(
+                  {
+                    pathname: router.pathname,
+                    query: {
+                      type: EventType.EVENT,
+                    },
+                  },
+                  undefined,
+                  { scroll: false }
+                )
               }
             >
-              Grant project
+              Events
             </Tabs.Tab>
-            <Tabs.Tab value="event">Event</Tabs.Tab>
+            <Tabs.Tab
+              value="volunteering"
+              onClick={() =>
+                router.push(
+                  {
+                    pathname: router.pathname,
+                    query: {
+                      type: EventType.VOLUNTEERING,
+                    },
+                  },
+                  undefined,
+                  { scroll: false }
+                )
+              }
+            >
+              Volunteering events
+            </Tabs.Tab>
           </Tabs.List>
         </Tabs>
         <Space h={'lg'} />

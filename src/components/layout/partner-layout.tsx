@@ -27,8 +27,16 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
     },
     {
       title: 'Manage Projects',
-      href: '/p/manage/project',
-      slug: 'manage',
+      href: '/p/projects',
+      slug: 'projects',
+      icon: <CalendarCheck className="ml-1 mr-1 h-7 w-7" />,
+      items: [],
+      external: '',
+    },
+    {
+      title: 'Manage Events',
+      href: '/p/events',
+      slug: 'events',
       icon: <CalendarCheck className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
@@ -41,14 +49,6 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       items: [],
       external: '',
     },
-    // {
-    //   title: 'Collaboration',
-    //   href: '/p/collaboration',
-    //   slug: 'collaboration',
-    //   icon: <HeartHandshake className="ml-1 mr-1 h-7 w-7" />,
-    //   items: [],
-    //   external: '',
-    // },
     {
       title: 'Donations',
       href: '/p/donations',

@@ -1,4 +1,3 @@
-'use client';
 import type { Project } from '@/lib/db/types';
 import cardClasses from '@/styles/CardGradient.module.css';
 import {
@@ -85,7 +84,7 @@ export const ProjectCard = ({ project }: { project: Project }) => {
           <Flex align={'center'} justify={'center'} p={10}>
             <ActionIcon
               component={Link}
-              href={`/p/manage/project/${project?.id}`}
+              href={`/p/projects/${project?.id}`}
               radius={'xl'}
               variant="subtle"
               size={'xl'}

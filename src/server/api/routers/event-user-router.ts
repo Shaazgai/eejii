@@ -18,44 +18,44 @@ export const eventUserRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       let query = ctx.db
-        .selectFrom('EventUser')
+        .selectFrom('EventCollaborator')
         .select([
-          'EventUser.id',
-          'EventUser.type',
-          'EventUser.userId',
-          'EventUser.status',
-          'EventUser.eventId',
+          'EventCollaborator.id',
+          'EventCollaborator.type',
+          'EventCollaborator.userId',
+          'EventCollaborator.status',
+          'EventCollaborator.eventId',
         ])
         .select(eb => [
           jsonObjectFrom(
             eb
               .selectFrom('Event')
               .selectAll()
-              .whereRef('Event.id', '=', 'EventUser.eventId')
+              .whereRef('Event.id', '=', 'EventCollaborator.eventId')
           ).as('Event'),
         ]);
       if (input.type) {
-        query = query.where('EventUser.type', '=', input.type);
+        query = query.where('EventCollaborator.type', '=', input.type);
       }
 
       if (input.status) {
-        query = query.where('EventUser.status', '=', input.status);
+        query = query.where('EventCollaborator.status', '=', input.status);
       }
 
       if (input.userId) {
-        query = query.where('EventUser.userId', '=', input.userId);
+        query = query.where('EventCollaborator.userId', '=', input.userId);
       }
 
       if (input.eventsOwnerId) {
         query = query
           .leftJoin('Event', join =>
-            join.onRef('Event.id', '=', 'EventUser.eventId')
+            join.onRef('Event.id', '=', 'EventCollaborator.eventId')
           )
           .where('Event.ownerId', '=', input.eventsOwnerId);
       }
 
       if (input.eventId) {
-        query = query.where('EventUser.eventId', '=', input.eventId);
+        query = query.where('EventCollaborator.eventId', '=', input.eventId);
       }
 
       const result = await query.execute();
@@ -64,8 +64,8 @@ export const eventUserRouter = createTRPCRouter({
   sendRequest: privateProcedure
     .input(z.object({ eventId: z.string(), role: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const eventUser = await ctx.db
-        .insertInto('EventUser')
+      const EventCollaborator = await ctx.db
+        .insertInto('EventCollaborator')
         .values(({ selectFrom }) => ({
           eventId: selectFrom('Event')
             .select('id')
@@ -88,28 +88,34 @@ export const eventUserRouter = createTRPCRouter({
                     .whereRef('User.id', '=', 'Event.ownerId')
                 ).as('Owner'),
               ])
-              .whereRef('Event.id', '=', 'EventUser.eventId')
+              .whereRef('Event.id', '=', 'EventCollaborator.eventId')
           ).as('Event'),
           jsonObjectFrom(
             expressionBuilder
               .selectFrom('User')
               .selectAll()
-              .whereRef('User.id', '=', 'EventUser.userId')
+              .whereRef('User.id', '=', 'EventCollaborator.userId')
           ).as('User'),
         ])
         .executeTakeFirstOrThrow();
-      const userEmail = eventUser.User ? eventUser.User.email : 'User';
-      const title = eventUser.Event ? eventUser.Event.title : 'your project';
-      const eventId = eventUser.Event ? eventUser.Event.id : null;
+      const userEmail = EventCollaborator.User
+        ? EventCollaborator.User.email
+        : 'User';
+      const title = EventCollaborator.Event
+        ? EventCollaborator.Event.title
+        : 'your project';
+      const eventId = EventCollaborator.Event
+        ? EventCollaborator.Event.id
+        : null;
       sendNotification({
         title: `${userEmail} wants to join ${title}`,
         body: null,
         link: `/p/manage/${eventId}`,
-        receiverId: eventUser.Event?.Owner?.id as string,
+        receiverId: EventCollaborator.Event?.Owner?.id as string,
         senderId: ctx.userId,
         type: 'join_request',
       });
-      return eventUser;
+      return EventCollaborator;
     }),
   inviteToEvent: privateProcedure // Owner of the fund will invite partner
     .input(
@@ -119,8 +125,8 @@ export const eventUserRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const eventUser = await ctx.db
-        .insertInto('EventUser')
+      const EventCollaborator = await ctx.db
+        .insertInto('EventCollaborator')
         .values({
           status: 'pending',
           type: 'invitation',
@@ -140,28 +146,32 @@ export const eventUserRouter = createTRPCRouter({
                     .whereRef('User.id', '=', 'Event.ownerId')
                 ).as('Owner'),
               ])
-              .whereRef('Event.id', '=', 'EventUser.eventId')
+              .whereRef('Event.id', '=', 'EventCollaborator.eventId')
           ).as('Event'),
           jsonObjectFrom(
             expressionBuilder
               .selectFrom('User')
               .selectAll()
-              .whereRef('User.id', '=', 'EventUser.userId')
+              .whereRef('User.id', '=', 'EventCollaborator.userId')
           ).as('User'),
         ])
         .executeTakeFirstOrThrow();
-      const ownerName = eventUser.Event?.Owner
-        ? eventUser.Event.Owner.organizationName
+      const ownerName = EventCollaborator.Event?.Owner
+        ? EventCollaborator.Event.Owner.organizationName
         : 'User';
-      const title = eventUser.Event ? eventUser.Event.title : 'your project';
-      const detail = eventUser.Event ? eventUser.Event.description : null;
+      const title = EventCollaborator.Event
+        ? EventCollaborator.Event.title
+        : 'your project';
+      const detail = EventCollaborator.Event
+        ? EventCollaborator.Event.description
+        : null;
 
       const link =
-        eventUser.User?.type === UserType.USER_PARTNER
+        EventCollaborator.User?.type === UserType.USER_PARTNER
           ? '/p/collabration'
-          : eventUser.User?.type === UserType.USER_SUPPORTER
+          : EventCollaborator.User?.type === UserType.USER_SUPPORTER
             ? '/s/collabration'
-            : eventUser.User?.type === UserType.USER_VOLUNTEER
+            : EventCollaborator.User?.type === UserType.USER_VOLUNTEER
               ? '/v/events'
               : null;
       sendNotification({
@@ -177,8 +187,8 @@ export const eventUserRouter = createTRPCRouter({
   handleEventRequest: privateProcedure // Owner of the event will handle the request of it's invitation
     .input(z.object({ id: z.string(), status: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const eventUser = await ctx.db
-        .updateTable('EventUser')
+      const EventCollaborator = await ctx.db
+        .updateTable('EventCollaborator')
         .where('id', '=', input.id)
         .set({
           status: input.status,
@@ -196,19 +206,23 @@ export const eventUserRouter = createTRPCRouter({
                     .whereRef('User.id', '=', 'Event.ownerId')
                 ).as('Owner'),
               ])
-              .whereRef('Event.id', '=', 'EventUser.eventId')
+              .whereRef('Event.id', '=', 'EventCollaborator.eventId')
           ).as('Event'),
           jsonObjectFrom(
             expressionBuilder
               .selectFrom('User')
               .selectAll()
-              .whereRef('User.id', '=', 'EventUser.userId')
+              .whereRef('User.id', '=', 'EventCollaborator.userId')
           ).as('User'),
         ])
         .executeTakeFirstOrThrow();
 
-      const title = eventUser.Event ? eventUser.Event.title : 'your project';
-      const eventId = eventUser.Event ? eventUser.Event.id : null;
+      const title = EventCollaborator.Event
+        ? EventCollaborator.Event.title
+        : 'your project';
+      const eventId = EventCollaborator.Event
+        ? EventCollaborator.Event.id
+        : null;
 
       sendNotification({
         title: `Your request to join ${title} has been ${
@@ -216,11 +230,11 @@ export const eventUserRouter = createTRPCRouter({
         }`,
         body: null,
         link: `/events/${eventId}`,
-        receiverId: eventUser.User?.id as string,
+        receiverId: EventCollaborator.User?.id as string,
         senderId: ctx.userId as string,
         type: 'join_request',
       });
-      return { message: 'Success', response: eventUser };
+      return { message: 'Success', response: EventCollaborator };
     }),
 
   getMyVolunteer: privateProcedure
@@ -248,16 +262,16 @@ export const eventUserRouter = createTRPCRouter({
         .select(eb => [
           jsonObjectFrom(
             eb
-              .selectFrom('EventUser')
+              .selectFrom('EventCollaborator')
               .selectAll()
-              .whereRef('User.id', '=', 'EventUser.userId')
-          ).as('EventUser'),
+              .whereRef('User.id', '=', 'EventCollaborator.userId')
+          ).as('EventCollaborator'),
         ])
-        .leftJoin('EventUser', join =>
-          join.onRef('User.id', '=', 'EventUser.userId')
+        .leftJoin('EventCollaborator', join =>
+          join.onRef('User.id', '=', 'EventCollaborator.userId')
         )
         .leftJoin('Event', join =>
-          join.onRef('Event.id', '=', 'EventUser.eventId')
+          join.onRef('Event.id', '=', 'EventCollaborator.eventId')
         )
         .where('User.type', '=', 'USER_VOLUNTEER')
         .where('Event.ownerId', '=', input.partnerId)

@@ -18,18 +18,18 @@ export default function Features() {
     limit: 1,
   });
   const HomeRightBorder = banner7
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner7[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner7.banners[0]?.path
+    : '';
   const { data: banner8 } = api.banner.findAll.useQuery({
     positionCode: 'home_event_banner',
     limit: 1,
   });
   const HomeEventBanner = banner8
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8[0]?.path
-    : 'null';
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8.banners[0]?.path
+    : '';
   return (
     <BackgroundImage src={HomeRightBorder}>
-      <Container fluid p={'lg'}>
+      <Container ta={'center'} size={'xl'}>
         <Title ml={20} order={1}>
           <span className="text-primary">Eejii.org</span>-ийн онцлог
         </Title>

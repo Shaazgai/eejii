@@ -1,6 +1,7 @@
 import {
   Button,
   Center,
+  Container,
   Flex,
   Space,
   Stack,
@@ -11,7 +12,7 @@ import {
 
 export default function EmailCta() {
   return (
-    <section className="p-20 w-full bg-[#d8e5e3] text-center">
+    <Container ta={'center'} size={'xl'}>
       <Stack>
         <Title order={1}>Тогтмол мэдээллээ авах</Title>
         <Center>
@@ -42,6 +43,6 @@ export default function EmailCta() {
           </Button>
         </Flex>
       </Center>
-    </section>
+    </Container>
   );
 }

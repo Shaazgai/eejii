@@ -74,7 +74,7 @@ export default function Index() {
   // });
   // const bannerMainImage = bannerEvent
   //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner[0]?.path
-  //   : 'null';
+  //   : '';
   return (
     <BasicBaseLayout>
       <FallbackImage

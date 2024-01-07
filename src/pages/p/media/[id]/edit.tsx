@@ -93,7 +93,7 @@ export default function EditMedia(
           <Group>
             <ActionIcon
               component={Link}
-              href={'/p/manage/project'}
+              href={'/p/media'}
               radius={'xl'}
               size={'lg'}
               variant="light"

@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import type { UserType } from '@/lib/db/enums';
 import { UserStatus } from '@/lib/db/enums';
 import { ServerSettings } from '@/lib/server-settings';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
@@ -42,6 +43,19 @@ export const userRouter = createTRPCRouter({
 
       return volunteer;
     }),
+  findUsersToInvite: publicProcedure // Find all partners for event to invite them
+    .input(z.object({ userType: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const query = await ctx.db
+        .selectFrom('User')
+        .selectAll('User')
+        .where('User.id', '!=', ctx.userId as string)
+        .where('User.type', '=', input.userType as UserType)
+        .execute();
+
+      return query;
+    }),
+
   getMyDonations: privateProcedure
     .input(z.object({ limit: z.number() }))
     .query(async ({ ctx, input }) => {
