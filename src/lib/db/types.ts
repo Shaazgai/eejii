@@ -34,6 +34,8 @@ export type BannerPosition = {
   id: Generated<string>;
   code: string;
   label: string;
+  type: string | null;
+  thumbnail: string | null;
 };
 export type Category = {
   id: Generated<string>;
@@ -59,7 +61,24 @@ export type Certificate = {
   id: Generated<string>;
   name: string;
   description: string;
+  number: string;
+  grade: number;
+  createdAt: Generated<Timestamp>;
+  volunteerName: string;
+  organizationName: string;
   volunteerId: string | null;
+  organizationId: string | null;
+  certificateTemplateId: string | null;
+};
+export type CertificateTemplate = {
+  id: Generated<string>;
+  title: string;
+  description: string;
+  shortDescription: string | null;
+  organizationName: string;
+  logoPath: string | null;
+  stampPath: string;
+  userId: string | null;
 };
 export type Donation = {
   id: Generated<string>;
@@ -81,6 +100,7 @@ export type Event = {
   startTime: Timestamp | null;
   endTime: Timestamp | null;
   contact: unknown | null;
+  featured: boolean;
   roles: unknown | null;
   ownerId: string | null;
 };
@@ -129,6 +149,28 @@ export type Notification = {
   body: string | null;
   type: string;
 };
+export type PartnerBanner = {
+  id: Generated<string>;
+  bannerId: string;
+  userId: string | null;
+  active: boolean;
+  startDate: Timestamp;
+  endDate: Timestamp;
+};
+export type PartnerPermit = {
+  id: Generated<string>;
+  eventPermit: Generated<number>;
+  projectPermit: Generated<number>;
+  bannerPermit: Generated<number>;
+  userId: string | null;
+};
+export type PartnerPlan = {
+  id: Generated<string>;
+  startDate: Timestamp;
+  endDate: Timestamp;
+  active: Generated<boolean>;
+  planId: string;
+};
 export type Payment = {
   id: Generated<string>;
   amount: number;
@@ -136,8 +178,38 @@ export type Payment = {
   status: string;
   createdAt: Generated<Timestamp>;
   updatedAt: Timestamp | null;
-  donationId: string;
   details: unknown | null;
+  userId: string | null;
+  donationId: string | null;
+  planId: string | null;
+  bannerPositionId: string | null;
+  permitId: string | null;
+};
+export type Permit = {
+  id: Generated<string>;
+  name: string;
+  description: string;
+  code: string;
+  price: string;
+  originalPrice: string;
+  eventPermit: Generated<number>;
+  projectPermit: Generated<number>;
+  bannerPermit: Generated<number>;
+};
+export type Plan = {
+  id: Generated<string>;
+  code: string;
+  name: string;
+  description: string;
+  duration: number;
+  price: string;
+  originalPrice: string;
+};
+export type PlanImage = {
+  id: Generated<string>;
+  path: string | null;
+  type: string;
+  ownerId: string;
 };
 export type Project = {
   id: Generated<string>;
@@ -150,6 +222,7 @@ export type Project = {
   enabled: boolean;
   status: ProjectStatus | null;
   createdAt: Generated<Timestamp>;
+  featured: boolean;
   link: string | null;
   goalAmount: number | null;
   currentAmount: number | null;
@@ -194,6 +267,7 @@ export type User = {
   organizationType: string | null;
   introduction: string | null;
   contact: unknown | null;
+  partnerPlanId: string;
 };
 export type UserImage = {
   id: Generated<string>;
@@ -210,6 +284,7 @@ export type DB = {
   CategoryMedia: CategoryMedia;
   CategoryProject: CategoryProject;
   Certificate: Certificate;
+  CertificateTemplate: CertificateTemplate;
   Donation: Donation;
   Event: Event;
   EventCollaborator: EventCollaborator;
@@ -218,7 +293,13 @@ export type DB = {
   Media: Media;
   MediaImage: MediaImage;
   Notification: Notification;
+  PartnerBanner: PartnerBanner;
+  PartnerPermit: PartnerPermit;
+  PartnerPlan: PartnerPlan;
   Payment: Payment;
+  Permit: Permit;
+  Plan: Plan;
+  PlanImage: PlanImage;
   Project: Project;
   ProjectCollaborator: ProjectCollaborator;
   ProjectImage: ProjectImage;

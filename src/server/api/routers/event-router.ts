@@ -223,6 +223,7 @@ export const eventRouter = createTRPCRouter({
       const event = await ctx.db
         .insertInto('Event')
         .values({
+          featured: false,
           type: input.type as EventType,
           title: input.title,
           description: input.description,

@@ -28,48 +28,67 @@ export const volunteerRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { email, password } = input;
 
-      const exists = await ctx.db
-        .selectFrom('User')
-        .where('email', '=', email)
-        .selectAll()
-        .executeTakeFirst();
+      const mutation = await ctx.db.transaction().execute(async trx => {
+        const exists = await trx
+          .selectFrom('User')
+          .where('email', '=', email)
+          .selectAll()
+          .executeTakeFirst();
 
-      if (exists) {
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: 'User already exists.',
-        });
-      }
+        if (exists) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'User already exists.',
+          });
+        }
 
-      const hashedPassword = await hash(password);
+        const hashedPassword = await hash(password);
 
-      const user = await ctx.db
-        .insertInto('User')
-        .values({
-          ...input,
-          password: hashedPassword,
-          role: Role.ROLE_USER,
-          requestStatus: UserStatus.REQUEST_PENDING,
-        })
-        .returning(['email', 'password', 'type', 'id'])
-        .executeTakeFirstOrThrow();
+        const plan = await trx
+          .selectFrom('Plan')
+          .select('id')
+          .where('code', '=', 'free')
+          .executeTakeFirstOrThrow();
+        const partnerPlan = await trx
+          .insertInto('PartnerPlan')
+          .values({
+            planId: plan.id,
+            startDate: new Date(),
+            endDate: new Date(100),
+          })
+          .returning('id')
+          .executeTakeFirstOrThrow();
 
-      ctx.db
-        .insertInto('Notification')
-        .values({
-          title: user.email + ' wants to join Eejii.org',
-          link: '/admin/users',
-          receiverId: user.id,
-          senderId: user.id,
-          status: 'new',
-          type: 'request',
-        })
-        .execute();
+        const user = await trx
+          .insertInto('User')
+          .values({
+            ...input,
+            partnerPlanId: partnerPlan.id,
+            password: hashedPassword,
+            role: Role.ROLE_USER,
+            requestStatus: UserStatus.REQUEST_PENDING,
+          })
+          .returning(['email', 'password', 'type', 'id'])
+          .executeTakeFirstOrThrow();
+
+        trx
+          .insertInto('Notification')
+          .values({
+            title: user.email + ' wants to join Eejii.org',
+            link: '/admin/users',
+            receiverId: user.id,
+            senderId: user.id,
+            status: 'new',
+            type: 'request',
+          })
+          .execute();
+        return user;
+      });
 
       return {
         status: 201,
         message: 'Account created successfully',
-        result: user,
+        result: mutation,
       };
     }),
   findAll: publicProcedure
