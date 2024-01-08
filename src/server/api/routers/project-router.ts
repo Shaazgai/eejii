@@ -251,6 +251,7 @@ export const projectRouter = createTRPCRouter({
         .insertInto('Project')
         .values({
           type: input.type as ProjectType,
+          featured: false,
           title: input.title,
           link: input.link,
           description: input.description,

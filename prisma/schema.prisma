@@ -46,19 +46,28 @@ model User {
   contact          Json?
 
   // Relations
-  Donation    Donation[]
-  Addresses   Address[]
-  Certificate Certificate[]
+  Donations                Donation[]
+  Addresses                Address[]
+  VolunteerCertificates    Certificate[] @relation("VolunteerCertificate")
+  OrganizationCertificates Certificate[] @relation("OrganizationCertificate")
 
   MyEvents              Event[]
   MyProject             Project[]
   CollaboratingEvents   EventCollaborator[]
   CollaboratingProjects ProjectCollaborator[]
-  UserImage             UserImage[]
-  receivedNotification  Notification[]        @relation("receiver")
-  sendNotifications     Notification[]        @relation("sender")
+  UserImages            UserImage[]
+  ReceivedNotifications Notification[]        @relation("Receiver")
+  SendNotifications     Notification[]        @relation("Sender")
   Medias                Media[]
   ParticipatingEvents   EventParticipator[]
+  CertificateTemplates  CertificateTemplate[]
+
+  PartnerPlan   PartnerPlan @relation(fields: [partnerPlanId], references: [id])
+  partnerPlanId String      @unique
+
+  PartnerBanners PartnerBanner[]
+  PartnerPermits PartnerPermit[]
+  Payments       Payment[]
 }
 
 enum Role {
@@ -109,17 +118,18 @@ model Event {
   startTime   DateTime?
   endTime     DateTime?
   contact     Json?
+  featured    Boolean
 
   //Only on Volunteering event
   roles Json?
 
   //Relatoin
-  Owner         User?               @relation(fields: [ownerId], references: [id])
-  ownerId       String?
-  CategoryEvent CategoryEvent[]
-  EventImage    EventImage[]
-  Participators EventParticipator[]
-  Collabrators  EventCollaborator[]
+  Owner          User?               @relation(fields: [ownerId], references: [id])
+  ownerId        String?
+  CategoryEvents CategoryEvent[]
+  EventImages    EventImage[]
+  Participators  EventParticipator[]
+  Collabrators   EventCollaborator[]
 
   @@index([ownerId])
 }
@@ -162,18 +172,19 @@ model Project {
   enabled       Boolean
   status        ProjectStatus?
   createdAt     DateTime       @default(now())
+  featured      Boolean
   //fundraising (Handiv oloh)
   link          String?
   goalAmount    Int?
   currentAmount Int?
 
   //Relation
-  Owner           User?                 @relation(fields: [ownerId], references: [id])
-  ownerId         String?
-  Collaborators   ProjectCollaborator[]
-  Donation        Donation[]
-  CategoryProject CategoryProject[]
-  ProjectImage    ProjectImage[]
+  Owner            User?                 @relation(fields: [ownerId], references: [id])
+  ownerId          String?
+  Collaborators    ProjectCollaborator[]
+  Donations        Donation[]
+  CategoryProjects CategoryProject[]
+  ProjectImages    ProjectImage[]
 
   @@index([ownerId])
 }
@@ -192,13 +203,26 @@ model ProjectCollaborator {
 }
 
 model Certificate {
-  id          String  @id @default(dbgenerated("gen_random_uuid()"))
+  id          String   @id @default(dbgenerated("gen_random_uuid()"))
   name        String
   description String
-  Volunteer   User?   @relation(fields: [volunteerId], references: [id])
+  number      String
+  grade       Int
+  createdAt   DateTime @default(now())
+
+  volunteerName    String
+  organizationName String
+
+  Volunteer   User?   @relation("VolunteerCertificate", fields: [volunteerId], references: [id])
   volunteerId String?
 
-  @@index([volunteerId])
+  Organization   User?   @relation("OrganizationCertificate", fields: [organizationId], references: [id])
+  organizationId String?
+
+  CertificateTemplate   CertificateTemplate? @relation(fields: [certificateTemplateId], references: [id])
+  certificateTemplateId String?
+
+  @@index([volunteerId, organizationId])
 }
 
 model Skill {
@@ -226,7 +250,7 @@ model Donation {
   isPublicName Boolean   @default(false)
   Project      Project?  @relation(fields: [projectId], references: [id])
   projectId    String?
-  Payment      Payment[]
+  Payments     Payment[]
   createdAt    DateTime  @default(now())
 
   @@index([userId])
@@ -234,24 +258,36 @@ model Donation {
 }
 
 model Payment {
-  id         String    @id @default(dbgenerated("gen_random_uuid()"))
-  amount     Int
-  invoiceId  String?
-  status     String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @updatedAt
-  Donation   Donation  @relation(fields: [donationId], references: [id])
-  donationId String
-  details    Json?
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  amount    Int
+  invoiceId String?
+  status    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  details   Json?
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  Donation         Donation?       @relation(fields: [donationId], references: [id])
+  donationId       String?
+  Plan             Plan?           @relation(fields: [planId], references: [id])
+  planId           String?
+  BannerPosition   BannerPosition? @relation(fields: [bannerPositionId], references: [id])
+  bannerPositionId String?
+  Permit           Permit?         @relation(fields: [permitId], references: [id])
+  permitId         String?
+
+  @@index([planId, bannerPositionId, permitId, donationId])
 }
 
 model Category {
-  id              String            @id @default(dbgenerated("gen_random_uuid()"))
-  name            String
-  type            String?
-  CategoryProject CategoryProject[]
-  CategoryEvent   CategoryEvent[]
-  CategoryMedia   CategoryMedia[]
+  id               String            @id @default(dbgenerated("gen_random_uuid()"))
+  name             String
+  type             String?
+  CategoryProjects CategoryProject[]
+  CategoryEvents   CategoryEvent[]
+  CategoryMedias   CategoryMedia[]
 }
 
 model CategoryProject {
@@ -278,33 +314,39 @@ model CategoryEvent {
 
 model EventImage {
   id      String  @id @default(dbgenerated("gen_random_uuid()"))
-  owner   Event   @relation(fields: [ownerId], references: [id])
+  Owner   Event   @relation(fields: [ownerId], references: [id])
   ownerId String
   path    String
   type    String?
+
+  @@index([ownerId])
 }
 
 model ProjectImage {
   id      String  @id @default(dbgenerated("gen_random_uuid()"))
-  owner   Project @relation(fields: [ownerId], references: [id])
+  Owner   Project @relation(fields: [ownerId], references: [id])
   ownerId String
   path    String
   type    String?
+
+  @@index([ownerId])
 }
 
 model UserImage {
   id      String  @id @default(dbgenerated("gen_random_uuid()"))
-  owner   User    @relation(fields: [ownerId], references: [id])
+  Owner   User    @relation(fields: [ownerId], references: [id])
   ownerId String
   path    String
   type    String?
+
+  @@index([ownerId])
 }
 
 model Notification {
   id         String    @id @default(dbgenerated("gen_random_uuid()"))
-  receiver   User      @relation("receiver", fields: [receiverId], references: [id])
+  Receiver   User      @relation("Receiver", fields: [receiverId], references: [id])
   receiverId String
-  sender     User      @relation("sender", fields: [senderId], references: [id])
+  Sender     User      @relation("Sender", fields: [senderId], references: [id])
   senderId   String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
@@ -319,14 +361,16 @@ model Notification {
 }
 
 model Media {
-  id            String          @id @default(dbgenerated("gen_random_uuid()"))
-  title         String
-  body          String          @db.Text
-  owner         User            @relation(fields: [ownerId], references: [id])
-  ownerId       String
-  createdAt     DateTime        @default(now())
-  CategoryMedia CategoryMedia[]
-  MediaImage    MediaImage[]
+  id             String          @id @default(dbgenerated("gen_random_uuid()"))
+  title          String
+  body           String          @db.Text
+  Owner          User            @relation(fields: [ownerId], references: [id])
+  ownerId        String
+  createdAt      DateTime        @default(now())
+  CategoryMedias CategoryMedia[]
+  MediaImages    MediaImage[]
+
+  @@index([ownerId])
 }
 
 model CategoryMedia {
@@ -342,10 +386,12 @@ model CategoryMedia {
 
 model MediaImage {
   id      String  @id @default(dbgenerated("gen_random_uuid()"))
-  owner   Media   @relation(fields: [ownerId], references: [id])
+  Owner   Media   @relation(fields: [ownerId], references: [id])
   ownerId String
   path    String
   type    String?
+
+  @@index([ownerId])
 }
 
 model Banner {
@@ -357,11 +403,102 @@ model Banner {
   link             String?
   BannerPosition   BannerPosition? @relation(fields: [bannerPositionId], references: [id])
   bannerPositionId String?
+  PartnerBanner    PartnerBanner?
+
+  @@index([bannerPositionId])
 }
 
 model BannerPosition {
-  id      String   @id @default(dbgenerated("gen_random_uuid()"))
-  code    String   @unique
-  label   String
-  Banners Banner[]
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  code      String    @unique
+  label     String
+  type      String?
+  thumbnail String?
+  Banners   Banner[]
+  Payments  Payment[]
+}
+
+model Plan {
+  id            String        @id @default(dbgenerated("gen_random_uuid()"))
+  code          String        @unique
+  name          String
+  description   String
+  duration      Int
+  price         BigInt
+  originalPrice BigInt
+  PlanImages    PlanImage[]
+  PartnerPlans  PartnerPlan[]
+  Payments      Payment[]
+}
+
+model PlanImage {
+  id      String  @id @default(dbgenerated("gen_random_uuid()"))
+  path    String?
+  type    String
+  Owner   Plan    @relation(fields: [ownerId], references: [id])
+  ownerId String
+
+  @@index([ownerId])
+}
+
+model PartnerPlan {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  startDate DateTime
+  endDate   DateTime
+  active    Boolean  @default(false)
+  Plan      Plan     @relation(fields: [planId], references: [id])
+  planId    String
+  User      User?
+
+  @@index([planId])
+}
+
+model CertificateTemplate {
+  id               String        @id @default(dbgenerated("gen_random_uuid()"))
+  title            String
+  description      String
+  shortDescription String?
+  organizationName String
+  logoPath         String?
+  stampPath        String
+  Certificates     Certificate[]
+  Owner            User?         @relation(fields: [userId], references: [id])
+  userId           String?
+
+  @@index([userId])
+}
+
+model PartnerBanner {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  Banner    Banner?  @relation(fields: [bannerId], references: [id])
+  bannerId  String   @unique
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  active    Boolean
+  startDate DateTime
+  endDate   DateTime
+
+  @@index([userId])
+}
+
+model Permit {
+  id            String    @id @default(dbgenerated("gen_random_uuid()"))
+  name          String
+  description   String
+  code          String    @unique
+  price         BigInt
+  originalPrice BigInt
+  eventPermit   Int       @default(2)
+  projectPermit Int       @default(2)
+  bannerPermit  Int       @default(2)
+  Payments      Payment[]
+}
+
+model PartnerPermit {
+  id            String  @id @default(dbgenerated("gen_random_uuid()"))
+  Partner       User?   @relation(fields: [userId], references: [id])
+  eventPermit   Int     @default(2)
+  projectPermit Int     @default(2)
+  bannerPermit  Int     @default(2)
+  userId        String?
 }

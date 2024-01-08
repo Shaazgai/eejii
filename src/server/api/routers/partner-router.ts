@@ -93,68 +93,73 @@ export const partnerRouter = createTRPCRouter({
     .input(partnerSchema)
     .mutation(async ({ input, ctx }) => {
       const { email, password } = input;
+      const mutation = await ctx.db.transaction().execute(async trx => {
+        const exists = await trx
+          .selectFrom('User')
+          .where('email', '=', email)
+          .selectAll()
+          .executeTakeFirst();
 
-      const exists = await ctx.db
-        .selectFrom('User')
-        .where('email', '=', email)
-        .selectAll()
-        .executeTakeFirst();
+        if (exists) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'User already exists.',
+          });
+        }
+        const plan = await trx
+          .selectFrom('Plan')
+          .select('id')
+          .where('code', '=', 'free')
+          .executeTakeFirstOrThrow();
+        const partnerPlan = await trx
+          .insertInto('PartnerPlan')
+          .values({
+            planId: plan.id,
+            startDate: new Date(),
+            endDate: new Date(100),
+          })
+          .returning('id')
+          .executeTakeFirstOrThrow();
 
-      if (exists) {
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: 'User already exists.',
-        });
-      }
-      const hashedPassword = await hash(password);
+        const hashedPassword = await hash(password);
+        const partner = await trx
+          .insertInto('User')
+          .values({
+            phoneNumber: input.contact.phoneNumber1,
+            email: input.email,
+            type: 'USER_PARTNER',
+            partnerPlanId: partnerPlan.id,
+            contact: {
+              // twitter: input.contact.twitter,
+              // facebook: input.contact.facebook,
+              // instagram: input.contact.instagram,
+              phone_primary: input.contact.phoneNumber1,
+              phone_secondary: input.contact.phoneNumber2,
+            },
+            password: hashedPassword,
+          })
+          .returning(['id', 'password', 'email', 'type'])
+          .executeTakeFirstOrThrow();
 
-      const partner = await ctx.db
-        .insertInto('User')
-        .values({
-          // ...input,
-          phoneNumber: input.contact.phoneNumber1,
-          email: input.email,
-          type: 'USER_PARTNER',
-          contact: {
-            // twitter: input.contact.twitter,
-            // facebook: input.contact.facebook,
-            // instagram: input.contact.instagram,
-            phone_primary: input.contact.phoneNumber1,
-            phone_secondary: input.contact.phoneNumber2,
-          },
-          password: hashedPassword,
-        })
-        .returning(['id', 'password', 'email', 'type'])
-        .executeTakeFirstOrThrow();
+        trx
+          .insertInto('Notification')
+          .values({
+            title: partner.email + ' wants to join Eejii.org',
+            link: '/admin/users',
+            receiverId: partner.id,
+            senderId: partner.id,
+            status: 'new',
+            type: 'request',
+          })
+          .execute();
 
-      ctx.db
-        .insertInto('Notification')
-        .values({
-          title: partner.email + ' wants to join Eejii.org',
-          link: '/admin/users',
-          receiverId: partner.id,
-          senderId: partner.id,
-          status: 'new',
-          type: 'request',
-        })
-        .execute();
-
-      // await ctx.db
-      //   .insertInto('Address')
-      //   .values({
-      //     id: partner.id,
-      //     country: input.country,
-      //     city: input.city,
-      //     street: input.street,
-      //     provinceName: input.provinceName,
-      //   })
-      //   .returning('id')
-      //   .executeTakeFirstOrThrow();
+        return partner;
+      });
 
       return {
         status: 201,
         message: 'Account created successfully',
-        result: partner,
+        result: mutation,
       };
     }),
   updateBio: privateProcedure
