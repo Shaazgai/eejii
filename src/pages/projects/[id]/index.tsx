@@ -3,7 +3,6 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import superjson from 'superjson';
 
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
-import { Shell } from '@/components/shells/shell';
 import { getServerAuthSession } from '@/lib/auth';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
@@ -25,7 +24,7 @@ export default function ProjectViewPage(
   // }
   return (
     <BasicBaseLayout>
-      <Shell></Shell>
+      <div></div>
     </BasicBaseLayout>
   );
 }

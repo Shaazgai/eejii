@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
 import type { ProjectCollaborator } from '@/lib/types';
 import { api } from '@/utils/api';
+import { Button } from '@mantine/core';
 
 const ProjectOwnerAction = ({
   type,

@@ -3,7 +3,6 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import superjson from 'superjson';
 
 import VolunteerLayout from '@/components/layout/volunteer-layout';
-import { Shell } from '@/components/shells/shell';
 import { getServerAuthSession } from '@/lib/auth';
 import { appRouter } from '@/server/api/root';
 import { db } from '@/server/db';
@@ -25,7 +24,7 @@ export default function ProjectViewPage(
   // }
   return (
     <VolunteerLayout>
-      <Shell></Shell>
+      <div></div>
     </VolunteerLayout>
   );
 }

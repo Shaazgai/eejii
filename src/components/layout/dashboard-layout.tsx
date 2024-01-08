@@ -1,13 +1,16 @@
 import { Container } from '@mantine/core';
 import {
+  IconBell,
   IconCalendarCheck,
   IconCamera,
+  IconChevronRight,
   IconConfetti,
   IconHome,
+  IconLayoutGrid,
   IconTag,
   IconUsers,
 } from '@tabler/icons-react';
-import { Bell, ChevronRight, LayoutGrid } from 'lucide-react';
+
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
@@ -121,7 +124,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
             </div>
             */}
             <div className="text-white hover:text-blue-500 dark:hover:text-[#38BDF8]">
-              <Bell />
+              <IconBell />
             </div>
           </div>
           <div className="group flex items-center space-x-3 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-500 py-1  pl-10 pr-2 text-white dark:from-cyan-500 dark:to-blue-500  ">
@@ -134,7 +137,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
           onClick={toggleSidebar}
           className="absolute -right-6 top-2 flex transform rounded-full border-2 border-white bg-[#1E293B] p-3 text-white transition duration-500 ease-in-out hover:rotate-45 hover:bg-purple-500 dark:border-[#0F172A] dark:hover:bg-blue-500"
         >
-          <LayoutGrid />
+          <IconLayoutGrid />
         </div>
         {/* < />!-- MAX SIDEBAR--> */}
         <div
@@ -148,7 +151,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
               key={i}
               className="flex w-full transform flex-row items-center space-x-3 rounded-full bg-[#1E293B] p-2 pl-8 text-white duration-300 ease-in-out  hover:text-purple-500 dark:hover:text-blue-500"
             >
-              {item.icon ?? <ChevronRight />}
+              {item.icon ?? <IconChevronRight />}
               <div>{item.title}</div>
             </Link>
           ))}
@@ -165,7 +168,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
               key={i}
               className="flex w-full transform justify-end rounded-full bg-[#1E293B] p-3 text-white duration-300 ease-in-out hover:text-purple-500 dark:hover:text-blue-500"
             >
-              {item.icon ?? <ChevronRight />}
+              {item.icon ?? <IconChevronRight />}
             </Link>
           ))}
         </div>

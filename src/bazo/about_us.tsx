@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { api } from '@/utils/api';
 import {
   Grid,
+  Button,
   Image,
   Text,
   BackgroundImage,

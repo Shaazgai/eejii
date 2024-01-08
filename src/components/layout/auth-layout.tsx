@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@mantine/core';
-import { ArrowLeftCircle } from 'lucide-react';
 
 import { useRouter } from 'next/router';
+import { IconArrowLeftCircle } from '@tabler/icons-react';
 const AuthLayout = ({
   children,
   indexPage,
@@ -23,7 +23,7 @@ const AuthLayout = ({
                 onClick={() => router.back()}
                 className=""
               >
-                <ArrowLeftCircle />
+                <IconArrowLeftCircle />
               </Button>
             </div>
             <Image
