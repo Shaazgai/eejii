@@ -1,7 +1,7 @@
 import { Container, SimpleGrid } from '@mantine/core';
-import { Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
 import { api } from '@/utils/api';
+import { IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
 
 export default function PublicFooter() {
   const { data: bannerLogo } = api.banner.findAll.useQuery({
@@ -72,13 +72,13 @@ export default function PublicFooter() {
             href="#"
             className="rounded-full border border-transparent bg-brand400 fill-brand450 p-1.5 text-brand450"
           >
-            <Facebook />
+            <IconBrandFacebook />
           </Link>
           <Link
             href="#"
             className="rounded-full bg-brand400 p-1.5 text-brand450"
           >
-            <Instagram />
+            <IconBrandInstagram />
           </Link>
         </div>
 

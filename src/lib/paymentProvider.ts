@@ -5,7 +5,7 @@ const QPAY_PASSWORD = process.env.QPAY_PASSWORD || '';
 const QPAY_INVOICE_CODE = process.env.QPAY_INVOICE_CODE || '';
 const BASE_URL = process.env.BASE_URL || '';
 import axios from 'axios';
-import moment from 'moment';
+import { format, isAfter } from 'date-fns';
 
 type AuthObjectType = {
   expires_in: Date;
@@ -52,7 +52,8 @@ async function getToken() {
   if (authObj) {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { expires_in, access_token } = authObj;
-    const isValid = moment(expires_in).isAfter(moment());
+    // const isValid = moment(expires_in).isAfter(moment());
+    const isValid = isAfter(expires_in, new Date());
     if (isValid) {
       return access_token;
     }
@@ -73,8 +74,11 @@ async function getAuthHeader() {
 export async function generate(transactionData: TransactionDataType) {
   const { amount, invoiceNo, expireAt } = transactionData;
   console.log(transactionData);
+  // const invoiceDueDate = expireAt
+  //   ? moment(expireAt).zone('Asia/Ulaanbaatar').format('YYYY-MM-DD HH:mm:ss')
+  //   : null;
   const invoiceDueDate = expireAt
-    ? moment(expireAt).zone('Asia/Ulaanbaatar').format('YYYY-MM-DD HH:mm:ss')
+    ? format(expireAt, 'yyyy-MM-dd HH:mm:ss')
     : null;
 
   const URL = `${QPAY_V2_URL}/invoice`;

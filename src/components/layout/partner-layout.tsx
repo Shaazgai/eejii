@@ -1,15 +1,15 @@
-import {
-  CalendarCheck,
-  Heart,
-  LayoutDashboard,
-  Newspaper,
-  Settings,
-  Users,
-} from 'lucide-react';
 import { useState } from 'react';
 
 import HeaderV2 from '../navigation/headerV2';
 import Sidebar from '../navigation/sidebar';
+import {
+  IconCalendarCheck,
+  IconHeart,
+  IconLayoutDashboard,
+  IconPdf,
+  IconSettings,
+  IconUsers,
+} from '@tabler/icons-react';
 
 interface PartnerLayoutProps {
   children: React.ReactNode;
@@ -21,7 +21,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Dashboard',
       href: '/p',
       slug: '',
-      icon: <LayoutDashboard className="ml-1 mr-1 h-7 w-7" />,
+      icon: <IconLayoutDashboard className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
@@ -29,7 +29,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Manage Projects',
       href: '/p/projects',
       slug: 'projects',
-      icon: <CalendarCheck className="ml-1 mr-1 h-7 w-7" />,
+      icon: <IconCalendarCheck className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
@@ -37,7 +37,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Manage Events',
       href: '/p/events',
       slug: 'events',
-      icon: <CalendarCheck className="ml-1 mr-1 h-7 w-7" />,
+      icon: <IconCalendarCheck className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
@@ -45,7 +45,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Volunteers',
       href: '/p/volunteering',
       slug: 'volunteering',
-      icon: <Users className="ml-1 mr-1 h-7 w-7" />,
+      icon: <IconUsers className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
@@ -53,7 +53,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Donations',
       href: '/p/donations',
       slug: 'donations',
-      icon: <Heart className="ml-1 mr-1 h-7 w-7" />,
+      icon: <IconHeart className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
@@ -61,7 +61,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Media',
       href: '/p/media',
       slug: 'media',
-      icon: <Newspaper className="ml-1 mr-1 h-7 w-7" />,
+      icon: <IconPdf className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },
@@ -69,7 +69,7 @@ export default function PartnerLayout({ children }: PartnerLayoutProps) {
       title: 'Settings',
       href: '/p/settings',
       slug: 'settings',
-      icon: <Settings className="ml-1 mr-1 h-7 w-7" />,
+      icon: <IconSettings className="ml-1 mr-1 h-7 w-7" />,
       items: [],
       external: '',
     },

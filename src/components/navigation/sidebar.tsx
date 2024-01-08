@@ -1,4 +1,3 @@
-import { AlignLeft, AlignRight } from 'lucide-react';
 import { useRouter } from 'next/router';
 import {
   useEffect,
@@ -8,9 +7,9 @@ import {
   type SetStateAction,
 } from 'react';
 
-import { NavLink } from '@mantine/core';
+import { Button, NavLink } from '@mantine/core';
 import Link from 'next/link';
-import { Button } from '../ui/button';
+import { IconAlignLeft, IconAlignRight } from '@tabler/icons-react';
 interface SidebarProps {
   title: string;
   href: string;
@@ -66,11 +65,7 @@ export default function Sidebar({
       <div className="flex flex-col space-y-2">
         <div className={`${open ? 'flex justify-end' : 'flex'}`}>
           <Button onClick={() => setOpen(!open)} variant={'ghost'}>
-            {open ? (
-              <AlignRight className="h-7 w-7" />
-            ) : (
-              <AlignLeft className="h-7 w-7" />
-            )}
+            {open ? <IconAlignRight /> : <IconAlignLeft />}
           </Button>
         </div>
         {sidebarNav &&

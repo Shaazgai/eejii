@@ -2,13 +2,13 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
-import { Facebook } from 'lucide-react';
 import { useForm, zodResolver } from '@mantine/form';
 
 import { Button, PasswordInput, TextInput, Flex } from '@mantine/core';
 import { loginSchema } from '@/lib/validation/user-schema';
 import { notifications } from '@mantine/notifications';
 import type { z } from 'zod';
+import { IconBrandFacebook } from '@tabler/icons-react';
 
 // Define the type for the form data
 type FormData = z.infer<typeof loginSchema>;
@@ -59,7 +59,7 @@ export default function LoginForm() {
           <button className="flex h-12 w-[359px] rounded-full  border-2 border-hidden bg-[#F3F9FA]">
             <span className="flex items-center m-auto">
               <Link className="content-center text-3xl text-brand500" href="/">
-                <Facebook />
+                <IconBrandFacebook />
               </Link>
               Sign in with Facebook
             </span>

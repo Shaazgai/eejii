@@ -1,23 +1,9 @@
-'use client';
-
-import { AppWindow, LogOut, Settings, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
 import type { ReactElement } from 'react';
+import { Button } from '@mantine/core';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import { Button } from '../ui/button';
 interface HeaderProps {
   title: string;
   href: string;
@@ -27,7 +13,6 @@ interface HeaderProps {
 }
 
 const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
-  const { data: session } = useSession();
   const pathname = usePathname();
 
   return (
@@ -61,53 +46,7 @@ const HeaderV1 = ({ headerNav }: { headerNav: HeaderProps[] | [] }) => {
             </ul>
           </nav>
           <div>
-            <span>
-              {session ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center gap-2 px-1 focus:outline-none">
-                    {/* <Image
-                    alt="avatar"
-                    src={user.imageUrl}
-                    width={30}
-                    height={30}
-                    className="rounded-full"
-                  /> */}
-                    {session?.user.email}
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <AppWindow className="mr-2 h-4 w-4" />
-                        <Link href={'/v/profile'}>Profile</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Settings className="mr-2 h-4 w-4" />
-                        <Link href={'/v/settings'}>Settings</Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => signOut()}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      SignOut
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button
-                  asChild
-                  variant={'ghost'}
-                  size={'default'}
-                  className="flex gap-2"
-                >
-                  <Link href={'/auth'}>
-                    <User2Icon className="h-5 w-5" />
-                    Login
-                  </Link>
-                </Button>
-              )}
-            </span>
+            <span></span>
           </div>
         </div>
       </div>
