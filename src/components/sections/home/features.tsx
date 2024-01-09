@@ -1,4 +1,3 @@
-import { api } from '@/utils/api';
 import {
   BackgroundImage,
   Button,
@@ -13,23 +12,9 @@ import {
 import { IconArrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
 export default function Features() {
-  const { data: banner7 } = api.banner.findAll.useQuery({
-    positionCode: 'home_right_border',
-    limit: 1,
-  });
-  const HomeRightBorder = banner7
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner7.banners[0]?.path
-    : '';
-  const { data: banner8 } = api.banner.findAll.useQuery({
-    positionCode: 'home_event_banner',
-    limit: 1,
-  });
-  const HomeEventBanner = banner8
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8.banners[0]?.path
-    : '';
   return (
-    <BackgroundImage src={HomeRightBorder}>
-      <Container ta={'center'} size={'xl'}>
+    <BackgroundImage src="/images/homie/right_Border.png">
+      <Container ta={'start'} size={'xl'}>
         <Title ml={20} order={1}>
           <span className="text-primary">Eejii.org</span>-ийн онцлог
         </Title>
@@ -47,7 +32,7 @@ export default function Features() {
               <Image
                 height={'180'}
                 w={{ base: '200', md: '500', lg: '100%' }}
-                src={HomeEventBanner}
+                src="/images/eventss/event_img1.png"
                 alt="projectIMG"
               />
               <Text p={10}>
@@ -84,7 +69,7 @@ export default function Features() {
               <Image
                 height={'180'}
                 w={{ base: '200', md: '500', lg: '100%' }}
-                src={HomeEventBanner}
+                src="/images/eventss/event_img2.png"
                 alt="projectIMG"
               />
               <Text p={10}>
@@ -120,7 +105,7 @@ export default function Features() {
               <Image
                 height={'180'}
                 w={{ base: '200', md: '500', lg: '100%' }}
-                src={HomeEventBanner}
+                src="/images/eventss/event_img3.png"
                 alt="projectIMG"
               />
               <Text p={10}>

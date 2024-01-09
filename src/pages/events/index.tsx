@@ -68,13 +68,13 @@ export default function Index() {
   }, [q]);
 
   const totalPages = events?.pagination.totalPages;
-  //  const { data: bannerEvent } = api.banner.findAll.useQuery({
-  //   positionCode: 'banner_main_logo',
-  //   limit: 1,
-  // });
-  // const bannerMainImage = bannerEvent
-  //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner[0]?.path
-  //   : '';
+  const { data: bannerEvent } = api.banner.findAll.useQuery({
+    positionCode: 'event_index_banner',
+    limit: 1,
+  });
+  const bannerMainImage = bannerEvent
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + bannerEvent.banners[0]?.path
+    : '';
   return (
     <BasicBaseLayout>
       <FallbackImage
@@ -82,7 +82,7 @@ export default function Index() {
         width={1600}
         radius={0}
         height={400}
-        src="/images/eventss/main.png"
+        src={bannerMainImage}
         alt="main"
       />
       <Container size={'xl'}>
