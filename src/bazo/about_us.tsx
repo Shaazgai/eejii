@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { api } from '@/utils/api';
 import {
   Grid,
   Button,
@@ -13,130 +12,6 @@ import {
 } from '@mantine/core';
 
 export const About = () => {
-  const { data: banner } = api.banner.findAll.useQuery({
-    positionCode: 'about_first_left',
-    limit: 1,
-  });
-  // const bannerImage = process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner?.[0].path;
-  const bannerAbout = banner
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner.banners[0]?.path
-    : '';
-
-  const { data: banner1 } = api.banner.findAll.useQuery({
-    positionCode: 'about_first_right',
-    limit: 1,
-  });
-  const bannerAbouts = banner1
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner1.banners[0]?.path
-    : '';
-  const { data: banner2 } = api.banner.findAll.useQuery({
-    positionCode: 'about_second_left',
-    limit: 1,
-  });
-  const bannerAboutus = banner2
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner2.banners[0]?.path
-    : '';
-  const { data: banner3 } = api.banner.findAll.useQuery({
-    positionCode: 'about_second_right',
-    limit: 1,
-  });
-  const bannerThird = banner3
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner3.banners[0]?.path
-    : '';
-  const { data: banner4 } = api.banner.findAll.useQuery({
-    positionCode: 'about_plan_woman',
-    limit: 1,
-  });
-  const bannerFour = banner4
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner4.banners[0]?.path
-    : '';
-
-  const { data: banner5 } = api.banner.findAll.useQuery({
-    positionCode: 'about_fam_first',
-    limit: 1,
-  });
-  const bannerFamFirst = banner5
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner5.banners[0]?.path
-    : '';
-  const { data: banner6 } = api.banner.findAll.useQuery({
-    positionCode: 'about_fam_second',
-    limit: 1,
-  });
-  const bannerFamSecond = banner6
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner6.banners[0]?.path
-    : '';
-  const { data: banner7 } = api.banner.findAll.useQuery({
-    positionCode: 'about_fam_third',
-    limit: 1,
-  });
-  const bannerFamThird = banner7
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner7.banners[0]?.path
-    : '';
-  const { data: banner8 } = api.banner.findAll.useQuery({
-    positionCode: 'about_fam_four',
-    limit: 1,
-  });
-  const bannerFamFour = banner8
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner8.banners[0]?.path
-    : '';
-  const { data: banner9 } = api.banner.findAll.useQuery({
-    positionCode: 'about_foot_first',
-    limit: 1,
-  });
-  const footAbooutFirst = banner9
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner9.banners[0]?.path
-    : '';
-  const { data: banner10 } = api.banner.findAll.useQuery({
-    positionCode: 'about_foot_second',
-    limit: 1,
-  });
-  const footAbooutSecond = banner10
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner10.banners[0]?.path
-    : '';
-  const { data: banner11 } = api.banner.findAll.useQuery({
-    positionCode: 'about_foot_third',
-    limit: 1,
-  });
-  const footAbooutThird = banner11
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner11.banners[0]?.path
-    : '';
-  const { data: banner12 } = api.banner.findAll.useQuery({
-    positionCode: 'about_foot_four',
-    limit: 1,
-  });
-  const footAbooutFour = banner12
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner12.banners[0]?.path
-    : '';
-  const { data: banner13 } = api.banner.findAll.useQuery({
-    positionCode: 'about_woman_bg',
-    limit: 1,
-  });
-  const AboutWomanBG = banner13
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner13.banners[0]?.path
-    : '';
-
-  // const { data: banner14 } = api.banner.findAll.useQuery({
-  //   positionCode: 'about_first_bg',
-  //   limit: 1,
-  // });
-  // const AboutFirstBg = banner14
-  //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner14[0]?.path
-  //   : '';
-  // const { data: banner15 } = api.banner.findAll.useQuery({
-  //   positionCode: 'about_second_bg',
-  //   limit: 1,
-  // });
-  // const AboutSecondBg = banner15
-  //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner15[0]?.path
-  //   : '';
-  // const { data: banner16 } = api.banner.findAll.useQuery({
-  //   positionCode: 'about_third_bg',
-  //   limit: 1,
-  // });
-  // const AboutThirdBg = banner16
-  //   ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner16[0]?.path
-  //   : '';
-
   return (
     <>
       {/* <SimpleGrid cols={{ base: 1, md: 1, lg: 1 }}>
@@ -282,9 +157,13 @@ export const About = () => {
           </p>
         </div>
         <div className="flex justify-center h-[300px]">
-          <img src={bannerAbout} alt="aboutIMG" className="h-[197px] " />
           <img
-            src={bannerAbouts}
+            src="/images/about/aboutIMG3.png"
+            alt="aboutIMG"
+            className="h-[197px] "
+          />
+          <img
+            src="/images/about/aboutIMG4.png"
             alt="aboutIMG"
             className="relative left-14 top-16 h-[240px]"
           />
@@ -296,12 +175,12 @@ export const About = () => {
       >
         <div className="flex justify-center h-[300px]">
           <img
-            src={bannerAboutus}
+            src="/images/about/aboutIMG1.png"
             alt="aboutIMG"
             className="h-[197px] w-[209px]"
           />
           <img
-            src={bannerThird}
+            src="/images/about/aboutIMG2.png"
             alt="aboutIMG"
             className="relative left-14 top-16 h-[240px] w-[238px] "
           />
@@ -479,7 +358,7 @@ export const About = () => {
               cols={{ base: 1, md: 2, lg: 3 }}
               className="flex w-full justify-around pt-10"
             >
-              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 before:rounded-sm pt-5 bg-[url('/images/about/blue.png')]">
+              <div className="m-auto flex h-[278px] w-[359px]  flex-col justify-around rounded-xl bg-brand450 text-center before:relative before:h-[28px]  before:w-[4px] before:bg-brand450 before:rounded-sm pt-5 bg-[url('/images/about/blueBG.png')]">
                 <h2 className="relative flex bottom-12 left-7 text-3xl font-black text-brand450">
                   ₮0
                   <h5 className="pl-2 pt-3 text-sm text-gray-200">1 жил</h5>
@@ -524,7 +403,7 @@ export const About = () => {
                 </span>
                 <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
                   <img
-                    src={bannerFour}
+                    src="/images/about/woman.png"
                     alt="woman"
                     className="h-[100px] w-[116px]"
                   />
@@ -550,15 +429,14 @@ export const About = () => {
                 <span className="relative bottom-16 left-7 text-start text-xl font-extrabold text-brand450">
                   Coming soon...
                 </span>
-                <BackgroundImage src={AboutWomanBG}>
-                  <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
-                    <img
-                      src={bannerFour}
-                      alt="woman"
-                      className="h-[100px] w-[116px]"
-                    />
-                  </ul>
-                </BackgroundImage>
+
+                <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
+                  <img
+                    src="/images/about/woman.png"
+                    alt="woman"
+                    className="h-[100px] w-[116px]"
+                  />
+                </ul>
                 {/* <Link href="#">
                   <Button className="relative right-16 bottom-5 h-[48px] w-[182px] rounded-xl bg-primary font-bold text-lg text-brand450  hover:bg-primarySecond">
                     Гишүүн болох
@@ -574,7 +452,7 @@ export const About = () => {
                 </span>
                 <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
                   <img
-                    src={bannerFour}
+                    src="/images/about/woman.png"
                     alt="woman"
                     className="h-[100px] w-[116px]"
                   />
@@ -594,7 +472,7 @@ export const About = () => {
                 </span>
                 <ul className="relative bottom-12 left-28 flex justify-center w-[139px] height-[101px] bg-[url('/images/about/womanBG.png')] object-cover pr-4 text-start">
                   <img
-                    src={bannerFour}
+                    src="/images/about/woman.png"
                     alt="woman"
                     className="h-[100px] w-[116px]"
                   />
@@ -704,7 +582,11 @@ export const About = () => {
         <Group justify="flex-start" gap="xl">
           <div className="flex justify-end">
             <div>
-              <img src={bannerFamFirst} alt="all in one" className="" />
+              <img
+                src="/images/about/AboutFam1.png"
+                alt="all in one"
+                className=""
+              />
             </div>
             <div className="w-[511px] h-[152px] pl-10 flex flex-col justify-center">
               <h1 className="h-[32px] text-2xl font-bold">
@@ -733,14 +615,22 @@ export const About = () => {
               </p>
             </div>
             <div>
-              <img src={bannerFamSecond} alt="all in one" className="" />
+              <img
+                src="/images/about/AboutFam2.png"
+                alt="all in one"
+                className=""
+              />
             </div>
           </div>
         </Group>
         <Group justify="flex-start" gap="xl">
           <div className="flex justify-end">
             <div>
-              <img src={bannerFamThird} alt="all in one" className="" />
+              <img
+                src="/images/about/AboutFam3.png"
+                alt="all in one"
+                className=""
+              />
             </div>
             <div className="w-[511px] h-[152px] pl-10 flex flex-col justify-center">
               <h1 className="h-[32px] text-2xl font-bold">
@@ -769,7 +659,11 @@ export const About = () => {
               </p>
             </div>
             <div>
-              <img src={bannerFamFour} alt="all in one" className="" />
+              <img
+                src="/images/about/AboutFam4.png"
+                alt="all in one"
+                className=""
+              />
             </div>
           </div>
         </Group>
@@ -856,8 +750,8 @@ export const About = () => {
             >
               <Image
                 radius="md"
-                src={footAbooutFirst}
-                alt="Random unsplash image"
+                src="/images/about/goodHuman.png"
+                alt="good human"
               />
               <Text fw={500} size="lg" mt="md">
                 Be a good human
@@ -878,11 +772,7 @@ export const About = () => {
               }}
               className="bg-white rounded-md p-4"
             >
-              <Image
-                radius="md"
-                src={footAbooutSecond}
-                alt="Random unsplash image"
-              />
+              <Image radius="md" src="/images/about/wizard.png" alt="wizard" />
               <Text fw={500} size="lg" mt="md">
                 12 сарын шидтэн
               </Text>
@@ -902,11 +792,7 @@ export const About = () => {
               }}
               className="bg-white rounded-md p-4"
             >
-              <Image
-                radius="md"
-                src={footAbooutThird}
-                alt="Random unsplash image"
-              />
+              <Image radius="md" src="/images/about/warm.png" alt="warm" />
               <Text fw={500} size="lg" mt="md">
                 Дулаан өвөлжөөрэй
               </Text>
@@ -926,11 +812,7 @@ export const About = () => {
               }}
               className="bg-white rounded-md p-4"
             >
-              <Image
-                radius="md"
-                src={footAbooutFour}
-                alt="Random unsplash image"
-              />
+              <Image radius="md" src="/images/about/dream.png" alt="dream" />
               <Text fw={500} size="lg" mt="md">
                 Надад мөрөөдөл бий
               </Text>

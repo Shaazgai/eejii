@@ -146,6 +146,7 @@ module.exports = {
         donationBG: "url('/images/donation/donationBG.png')",
         specialBG: "url('/images/eventss/speacialBG.png')",
         specialBG: "url('/images/projectss/speacialBG.png')",
+        partnerBG: "url('/images/partner/partnerBG.png')",
       },
     },
   },

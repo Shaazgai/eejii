@@ -12,7 +12,13 @@ import {
 
 export default function EmailCta() {
   return (
-    <Container ta={'center'} size={'xl'}>
+    <Container
+      ta={'center'}
+      size={'2xl'}
+      h={302}
+      pt={30}
+      className="bg-[#d5e4e5]"
+    >
       <Stack>
         <Title order={1}>Тогтмол мэдээллээ авах</Title>
         <Center>
