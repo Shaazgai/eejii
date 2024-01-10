@@ -190,20 +190,11 @@ export type Permit = {
   name: string;
   description: string;
   code: string;
-  price: string;
-  originalPrice: string;
+  price: number;
+  originalPrice: number;
   eventPermit: Generated<number>;
   projectPermit: Generated<number>;
   bannerPermit: Generated<number>;
-};
-export type Plan = {
-  id: Generated<string>;
-  code: string;
-  name: string;
-  description: string;
-  duration: number;
-  price: string;
-  originalPrice: string;
 };
 export type PlanImage = {
   id: Generated<string>;
@@ -275,6 +266,15 @@ export type UserImage = {
   path: string;
   type: string | null;
 };
+export type UserPlan = {
+  id: Generated<string>;
+  code: string;
+  name: string | null;
+  description: string | null;
+  duration: number;
+  price: number;
+  originalPrice: number;
+};
 export type DB = {
   Address: Address;
   Banner: Banner;
@@ -298,7 +298,6 @@ export type DB = {
   PartnerPlan: PartnerPlan;
   Payment: Payment;
   Permit: Permit;
-  Plan: Plan;
   PlanImage: PlanImage;
   Project: Project;
   ProjectCollaborator: ProjectCollaborator;
@@ -306,4 +305,5 @@ export type DB = {
   Skill: Skill;
   User: User;
   UserImage: UserImage;
+  UserPlan: UserPlan;
 };

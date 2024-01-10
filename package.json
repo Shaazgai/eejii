@@ -9,8 +9,12 @@
     "lint": "next lint",
     "start": "next start"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.468.0",
+    "@faker-js/faker": "^8.3.1",
     "@hookform/resolvers": "^3.3.2",
     "@mantine/core": "^7.3.1",
     "@mantine/dates": "^7.3.1",
@@ -33,7 +37,6 @@
     "@trpc/next": "^10.44.1",
     "@trpc/react-query": "^10.44.1",
     "@trpc/server": "^10.44.1",
-    "@types/node": "20.4.0",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "@upstash/ratelimit": "^1.0.0",
@@ -60,16 +63,19 @@
     "tailwind-merge": "^2.1.0",
     "tailwindcss": "3.3.2",
     "tailwindcss-animate": "^1.0.7",
+    "tsc": "^2.0.4",
+    "ws": "^8.16.0",
     "zod": "^3.22.4",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.8",
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.10.8",
     "@types/prettier": "^2.7.3",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
     "autoprefixer": "^10.4.16",
@@ -91,6 +97,7 @@
     "prettier-plugin-tailwindcss": "^0.5.9",
     "prisma": "^5.7.0",
     "tailwindcss": "^3.3.6",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "ct3aMetadata": {

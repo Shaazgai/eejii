@@ -271,7 +271,7 @@ model Payment {
 
   Donation         Donation?       @relation(fields: [donationId], references: [id])
   donationId       String?
-  Plan             Plan?           @relation(fields: [planId], references: [id])
+  Plan             UserPlan?       @relation(fields: [planId], references: [id])
   planId           String?
   BannerPosition   BannerPosition? @relation(fields: [bannerPositionId], references: [id])
   bannerPositionId String?
@@ -418,24 +418,25 @@ model BannerPosition {
   Payments  Payment[]
 }
 
-model Plan {
-  id            String        @id @default(dbgenerated("gen_random_uuid()"))
-  code          String        @unique
-  name          String
-  description   String
+model UserPlan {
+  id            String  @id @default(dbgenerated("gen_random_uuid()"))
+  code          String
+  name          String?
+  description   String?
   duration      Int
-  price         BigInt
-  originalPrice BigInt
-  PlanImages    PlanImage[]
-  PartnerPlans  PartnerPlan[]
-  Payments      Payment[]
+  price         Int
+  originalPrice Int
+
+  PlanImages   PlanImage[]
+  PartnerPlans PartnerPlan[]
+  Payments     Payment[]
 }
 
 model PlanImage {
-  id      String  @id @default(dbgenerated("gen_random_uuid()"))
+  id      String   @id @default(dbgenerated("gen_random_uuid()"))
   path    String?
   type    String
-  Owner   Plan    @relation(fields: [ownerId], references: [id])
+  Owner   UserPlan @relation(fields: [ownerId], references: [id])
   ownerId String
 
   @@index([ownerId])
@@ -446,7 +447,7 @@ model PartnerPlan {
   startDate DateTime
   endDate   DateTime
   active    Boolean  @default(false)
-  Plan      Plan     @relation(fields: [planId], references: [id])
+  Plan      UserPlan @relation(fields: [planId], references: [id])
   planId    String
   User      User?
 
@@ -486,8 +487,8 @@ model Permit {
   name          String
   description   String
   code          String    @unique
-  price         BigInt
-  originalPrice BigInt
+  price         Int
+  originalPrice Int
   eventPermit   Int       @default(2)
   projectPermit Int       @default(2)
   bannerPermit  Int       @default(2)
