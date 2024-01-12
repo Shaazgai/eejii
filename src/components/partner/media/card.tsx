@@ -4,12 +4,10 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 
 export const MediaCard = ({ media }: { media: Media }) => {
-  console.log(media);
   const image =
     process.env.NEXT_PUBLIC_AWS_PATH +
     '/' +
     media.Images.find(i => i.type === 'profile')?.path;
-  console.log(image);
   return (
     <Card
       shadow="sm"

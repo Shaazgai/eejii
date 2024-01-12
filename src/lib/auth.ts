@@ -21,9 +21,7 @@ export const nextAuthOptions: NextAuthOptions = {
       },
       authorize: async credentials => {
         try {
-          console.log('🚀 ~ file: auth.ts:24 ~ credentials:', credentials);
           const { email, password } = await loginSchema.parseAsync(credentials);
-          console.log('🚀 ~ file: auth.ts:24 ~ email:', email);
 
           // const result = await prisma.user.findFirst({
           //   where: { email },
@@ -33,7 +31,6 @@ export const nextAuthOptions: NextAuthOptions = {
             .where('email', '=', email)
             .selectAll()
             .executeTakeFirst();
-          console.log('🚀 ~ file: auth.ts:33 ~ result:', result);
 
           if (!result || !result.password) return null;
 

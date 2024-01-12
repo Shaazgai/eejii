@@ -37,7 +37,6 @@ export const deleteImage = async (key: string) => {
       } as unknown as DeleteObjectRequest,
       function (err, data) {
         if (err) return reject(err);
-        console.log(data);
         resolve(data);
       }
     );

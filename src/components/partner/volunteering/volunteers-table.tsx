@@ -23,7 +23,6 @@ import {
 const VolunteerRow = ({ v }: { v: MyVolunteer }) => {
   const [opened, { open, close }] = useDisclosure(false);
   // TODO skills
-  console.log(v);
   return (
     <Table.Tr>
       <Table.Td>

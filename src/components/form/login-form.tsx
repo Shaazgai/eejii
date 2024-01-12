@@ -44,7 +44,6 @@ export default function LoginForm() {
         });
         setLoading(false);
 
-        console.log(data);
         // router.push(`/${checkUserType()}`);
       }
     );

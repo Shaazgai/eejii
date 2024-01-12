@@ -16,6 +16,7 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
     {
       title: 'Нүүр',
       href: '/v',
+      slug: '',
       icon: <IconLayoutDashboard className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
@@ -23,13 +24,15 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
     {
       title: 'Төсөл хөтөлөр',
       href: '/v/events',
+      slug: 'events',
       icon: <IconCalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
     },
     {
       title: 'Хандив',
-      href: '/v/project',
+      href: '/v/projects',
+      slug: 'projects',
       icon: <IconCalendarCheck className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',
@@ -37,6 +40,7 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
     {
       title: 'Гэр бүл',
       href: '/v/family',
+      slug: 'family',
       icon: <IconUserCog className='"mr-2 w-4" h-4' />,
       items: [],
       external: '',

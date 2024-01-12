@@ -55,9 +55,6 @@ const EditProject = () => {
           url: string;
           fields: S3ParamType;
         };
-        console.log(url);
-        console.log(fields);
-        console.log(res.fileName);
         const file = files.find(f => f.name === res.fileName);
         handleImageUpload(url, fields, file as File);
       },

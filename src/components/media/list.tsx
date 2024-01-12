@@ -39,8 +39,6 @@ export const MediaList = () => {
     page: activePage,
     limit,
   });
-  console.log(medias);
-  console.log(q);
 
   useEffect(() => {
     refetch();

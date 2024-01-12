@@ -26,7 +26,6 @@ export const CollaboratorSelectField = ({
       userType: UserType.USER_VOLUNTEER,
     });
 
-  console.log(collaborators);
   const array =
     collaborators && collaborators?.length > 0
       ? collaborators?.map(c => {
