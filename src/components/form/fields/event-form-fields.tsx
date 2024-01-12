@@ -30,7 +30,7 @@ export const EventFormFields = ({
   const { data: categories, isLoading: isCategoryLoading } =
     api.category.findAll.useQuery({ name: null, type: null });
   const eventCollaborators =
-    data?.Collaborators.map(ec => ec.userId as unknown as string) ?? [];
+    data?.Collaborators.map(ec => ec.User.id as unknown as string) ?? [];
   const eventCategories = data?.Categories.map(c => c.categoryId) ?? [];
 
   const [selectedCollabs, setSelectedCollabs] =

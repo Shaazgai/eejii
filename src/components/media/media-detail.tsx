@@ -24,9 +24,8 @@ export const MediaDetail = ({ media }: { media: Media }) => {
         src={image}
         radius={'lg'}
         width={1200}
-        w={'100%'}
+        fullWidth
         height={400}
-        h={400}
         alt="mediaNext"
       />
       <Center w={'100%'}>

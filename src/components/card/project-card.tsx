@@ -42,8 +42,7 @@ export default function ProjectCardPublic({ fund }: { fund: Project }) {
           width={300}
           height={200}
           radius={0}
-          h={200}
-          w={'100%'}
+          fullWidth
           alt="event-image"
         />
         {(fund.type as unknown as ProjectType) ===

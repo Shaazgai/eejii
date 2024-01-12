@@ -3,8 +3,9 @@ import {
   IconLayoutDashboard,
   IconUserCog,
 } from '@tabler/icons-react';
+import { Space } from '@mantine/core';
 import HeaderV1 from '../navigation/headerV1';
-import Footer from './footer';
+import PublicFooter from './sections/public-footer';
 
 interface VolunteerLayoutProps {
   children: React.ReactNode;
@@ -43,10 +44,11 @@ export default function VolunteerLayout({ children }: VolunteerLayoutProps) {
   ];
 
   return (
-    <div className="">
+    <div className="bg-[#FBFBFB]">
       <HeaderV1 headerNav={volunteerHeaderNav} />
+      <Space h="70" />
       {children}
-      <Footer />
+      <PublicFooter />
     </div>
   );
 }

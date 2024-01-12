@@ -54,21 +54,35 @@ export type Event = EventDB & {
   ];
   Images: EventImage[];
   Collaborators: EventCollaborator[];
-  Participators: EventParticipatorDB[];
+  Participators: EventParticipator[];
 };
 
 export type Project = ProjectDB & {
   Owner: UserDB;
   Images: ProjectImage[];
   Donation: Donation[];
+  Categories: [
+    {
+      id: string;
+      name: string;
+      type: string;
+      eventId: string;
+      categoryId: string;
+    },
+  ];
+  Collaborators: ProjectCollaboratorDB[];
+};
+
+export type EventParticipator = EventParticipatorDB & {
+  User: User;
 };
 
 export type EventCollaborator = EventCollaboratorDB & {
-  Event: EventDB;
+  User: User;
 };
 
 export type ProjectCollaborator = ProjectCollaboratorDB & {
-  Project: ProjectDB;
+  User: User;
 };
 
 export type S3ParamType = {
@@ -135,7 +149,7 @@ export type MyDonation = Donation & {
 };
 
 export type User = UserDB & {
-  Image: UserImage[];
+  Images: UserImage[];
 };
 
 export type Media = MediaDB & {

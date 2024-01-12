@@ -131,16 +131,30 @@ export const eventRouter = createTRPCRouter({
         .selectFrom('Event')
         .selectAll('Event')
         .select(eb1 => [
-          jsonObjectFrom(
-            eb1
-              .selectFrom('User')
-              .selectAll()
-              .whereRef('User.id', '=', 'Event.ownerId')
-          ).as('Owner'),
-        ])
-        .select(eb => [
           jsonArrayFrom(
-            eb
+            eb1
+              .selectFrom('EventCollaborator')
+              .selectAll('EventCollaborator')
+              .select(eb3 => [
+                jsonObjectFrom(
+                  eb3
+                    .selectFrom('User')
+                    .selectAll('User')
+                    .select(eb4 => [
+                      jsonArrayFrom(
+                        eb4
+                          .selectFrom('UserImage')
+                          .whereRef('User.id', '=', 'UserImage.ownerId')
+                      ).as('Images'),
+                    ])
+                    .whereRef('User.id', '=', 'EventCollaborator.userId')
+                ).as('User'),
+              ])
+              .whereRef('EventCollaborator.eventId', '=', 'Event.id')
+              .where('EventCollaborator.status', '=', 'REQUEST_APPROVED')
+          ).as('Collaborators'),
+          jsonArrayFrom(
+            eb1
               .selectFrom('Category')
               .selectAll()
               .leftJoin('CategoryEvent', join =>
@@ -149,23 +163,19 @@ export const eventRouter = createTRPCRouter({
               .whereRef('CategoryEvent.categoryId', '=', 'Category.id')
           ).as('Categories'),
           jsonArrayFrom(
-            eb
+            eb1
               .selectFrom('EventImage')
               .selectAll()
               .whereRef('Event.id', '=', 'EventImage.ownerId')
           ).as('Images'),
-          jsonArrayFrom(
+        ])
+        .select(eb => [
+          jsonObjectFrom(
             eb
-              .selectFrom('EventCollaborator')
+              .selectFrom('User')
               .selectAll()
-              .whereRef('Event.id', '=', 'EventCollaborator.eventId')
-          ).as('Collabrators'),
-          jsonArrayFrom(
-            eb
-              .selectFrom('EventParticipator')
-              .selectAll()
-              .whereRef('Event.id', '=', 'EventParticipator.eventId')
-          ).as('Participators'),
+              .whereRef('User.id', '=', 'Event.ownerId')
+          ).as('Owner'),
         ])
         .where('Event.id', '=', input.id)
         .executeTakeFirstOrThrow();
@@ -280,7 +290,6 @@ export const eventRouter = createTRPCRouter({
           })
           .returning(['id'])
           .executeTakeFirstOrThrow();
-        console.log(input.categories);
         if (input.categories) {
           console.log(input.categories);
           await trx
@@ -402,9 +411,12 @@ export const eventRouter = createTRPCRouter({
         .select(eb => [
           jsonArrayFrom(
             eb
-              .selectFrom('CategoryEvent')
-              .select(['CategoryEvent.id'])
-              .whereRef('CategoryEvent.eventId', '=', 'Event.id')
+              .selectFrom('Category')
+              .selectAll()
+              .leftJoin('CategoryEvent', join =>
+                join.onRef('CategoryEvent.eventId', '=', 'Event.id')
+              )
+              .whereRef('CategoryEvent.categoryId', '=', 'Category.id')
           ).as('Categories'),
         ])
         .where('id', '=', input.excludeId)
@@ -461,7 +473,10 @@ export const eventRouter = createTRPCRouter({
         query = query.limit(input.limit);
       }
 
-      const res = await query.orderBy('Event.createdAt desc').execute();
+      const res = await query
+        .orderBy('Event.createdAt desc')
+        .groupBy('Event.id')
+        .execute();
       return res;
     }),
 });

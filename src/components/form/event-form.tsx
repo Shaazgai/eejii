@@ -43,7 +43,9 @@ const EventForm = ({
   handleSetFiles: (images: FileWithPath[]) => void;
 }) => {
   const eventCategories = data?.Categories.map(c => c.categoryId) ?? [''];
-  const eventCollaborators = data?.Collaborators.map(ec => ec.userId) ?? [''];
+  const eventCollaborators = data?.Collaborators.map(
+    ec => ec.id as unknown as string
+  ) ?? [''];
 
   const form = useForm({
     validateInputOnChange: true,
@@ -118,8 +120,6 @@ const EventForm = ({
                 <FallbackImage
                   height={300}
                   width={400}
-                  h={300}
-                  w={400}
                   fit="cover"
                   src={process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path}
                   onLoad={() =>
@@ -147,8 +147,6 @@ const EventForm = ({
                 return (
                   <Paper key={i} pos={'relative'}>
                     <FallbackImage
-                      w={400}
-                      h={300}
                       width={400}
                       height={300}
                       radius={'md'}

@@ -46,6 +46,7 @@ export default function EventViewPage(
   const { data: relatedEvents, isLoading: isRelatedLoading } =
     api.event.findRelated.useQuery({
       excludeId: event?.id as unknown as string,
+      limit: 6,
     });
   const image =
     process.env.NEXT_PUBLIC_AWS_PATH +
@@ -99,8 +100,7 @@ export default function EventViewPage(
                   src={image}
                   width={1000}
                   height={400}
-                  w={'100%'}
-                  h={400}
+                  fullWidth
                   alt="image"
                   radius={'lg'}
                 />
@@ -181,6 +181,7 @@ export default function EventViewPage(
               </Stack>
             </Grid.Col>
           </Grid>
+          <Space h="lg" />
           <EventList
             events={relatedEvents as unknown as Event[]}
             isLoading={isRelatedLoading}

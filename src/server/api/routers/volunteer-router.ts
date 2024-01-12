@@ -10,6 +10,7 @@ import { getPaginationInfo } from '../helper/paginationInfo';
 
 import { Role, UserStatus } from '@/lib/db/enums';
 import { createTRPCRouter, publicProcedure } from '../trpc';
+import { jsonArrayFrom } from 'kysely/helpers/postgres';
 
 export const volunteerRouter = createTRPCRouter({
   findById: publicProcedure
@@ -18,6 +19,14 @@ export const volunteerRouter = createTRPCRouter({
       const volunteer = await ctx.db
         .selectFrom('User')
         .selectAll()
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('UserImage')
+              .selectAll()
+              .whereRef('User.id', '=', 'UserImage.ownerId')
+          ).as('Images'),
+        ])
         .where('id', '=', input.id)
         .executeTakeFirstOrThrow();
 
@@ -45,7 +54,7 @@ export const volunteerRouter = createTRPCRouter({
         const hashedPassword = await hash(password);
 
         const plan = await trx
-          .selectFrom('Plan')
+          .selectFrom('UserPlan')
           .select('id')
           .where('code', '=', 'free')
           .executeTakeFirstOrThrow();

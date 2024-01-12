@@ -54,8 +54,8 @@ export default function LoginForm() {
 
   return (
     <>
-      <div className="m-auto h-[577px] w-[854px]">
-        <div className="flex w-full flex-col items-center justify-center pt-10 pb-10 border-2 h-85 w-85 rounded-2xl">
+      <div className="m-auto">
+        <div className="flex flex-col items-center justify-center py-10 px-20 border-2 rounded-2xl">
           <button className="flex h-12 w-[359px] rounded-full  border-2 border-hidden bg-[#F3F9FA]">
             <span className="flex items-center m-auto">
               <Link className="content-center text-3xl text-brand500" href="/">
@@ -80,61 +80,42 @@ export default function LoginForm() {
             <h1>or</h1>
           </div>
 
-          <form onSubmit={form.onSubmit(signInHandler)}>
-            <Flex gap="md" direction="column">
+          <form onSubmit={form.onSubmit(signInHandler)} className="w-full">
+            <Flex w="100%" gap="md" direction="column" align={'center'}>
               <TextInput
+                className="border-b"
+                w="100%"
                 placeholder="Email"
                 variant="unstyled"
-                className="border-b"
                 {...form.getInputProps('email')}
               />
               <PasswordInput
+                className="border-b"
+                w="100%"
                 placeholder="Password"
                 variant="unstyled"
-                className="border-b w-[406px]"
                 {...form.getInputProps('password')}
               />
               {error !== '' && <div className="pt-4 text-red-600">{error}</div>}
 
               <Button
                 type="submit"
-                color="white"
-                bg="#8ab8bb"
+                color="primary"
                 radius="xl"
                 size="md"
                 loading={loading}
+                fullWidth
                 loaderProps={{ type: 'dots' }}
               >
                 Log in
               </Button>
               <Link href={'/auth/signup'}>
-                <Button
-                  // className="mt-8 h-[60px] w-72 rounded-full border-2 border-transparent py-0"
-                  variant={'secondary'}
-                  bg="#8ab8bb"
-                  radius="xl"
-                >
+                <Button color="primary" variant={'subtle'} radius="xl">
                   New account
                 </Button>
               </Link>
             </Flex>
           </form>
-          {/* <div className="flex flex-col gap-6 w-72">
-            <div className="relative h-11 w-full min-w-[200px]">
-              <input
-                placeholder="Email"
-                className="border-blue-gray-200 text-blue-gray-700 placeholder-shown:border-blue-gray-200 disabled:bg-blue-gray-50 peer h-full w-full border-b bg-transparent pb-1.5 pt-4 font-sans text-sm font-normal outline outline-0 transition-all focus:border-pink-500 focus:outline-0 disabled:border-0"
-                onChange={e => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="relative h-11 w-full min-w-[200px]">
-              <input
-                className="border-blue-gray-200 text-blue-gray-700 placeholder-shown:border-blue-gray-200 disabled:bg-blue-gray-50 peer h-full w-full border-b bg-transparent pb-1.5 pt-4 font-sans text-sm font-normal outline outline-0 transition-all focus:border-pink-500 focus:outline-0 disabled:border-0"
-                placeholder="Password"
-                onChange={e => setPassword(e.target.value)}
-              />
-            </div>
-          </div> */}
         </div>
       </div>
     </>
