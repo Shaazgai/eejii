@@ -1,5 +1,5 @@
 // import NoImage from '@public/images/placeholder.webp';
-import { Image, Paper } from '@mantine/core';
+import { Box, Image } from '@mantine/core';
 import type { ImageProps } from 'next/image';
 import NextImage from 'next/image';
 import { useEffect, useState } from 'react';
@@ -28,11 +28,10 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
   }, [src]);
 
   return (
-    <Paper
+    <Box
       mah={fullHeight ? '100%' : height}
       maw={fullWidth ? '100%' : width}
-      radius={radius}
-      style={{ overflow: 'hidden' }}
+      style={{ overflow: 'hidden', borderRadius: radius }}
     >
       <Image
         component={NextImage}
@@ -47,6 +46,6 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
         height={height}
         alt="img"
       />
-    </Paper>
+    </Box>
   );
 };
