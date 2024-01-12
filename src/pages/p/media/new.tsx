@@ -65,8 +65,6 @@ export default function NewMedia() {
     create(values);
   }
 
-  console.log(files);
-
   return (
     <PartnerLayout>
       <Container fluid p={'xl'}>

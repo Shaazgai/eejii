@@ -15,7 +15,6 @@ export const RelatedMedias = ({ id }: { id: string }) => {
     limit: 3,
     excludeId: id,
   });
-  console.log(medias);
   if (isLoading) {
     return (
       <SimpleGrid cols={{ base: 1, lg: 3 }}>

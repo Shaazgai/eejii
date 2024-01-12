@@ -92,7 +92,6 @@ export const projectRouter = createTRPCRouter({
           );
         }
         const { count } = await paginationQuery.executeTakeFirstOrThrow();
-        console.log(count);
         return {
           data: queryResult,
           count,
@@ -226,7 +225,6 @@ export const projectRouter = createTRPCRouter({
       .where('User.id', '=', ctx.userId)
       .where('ProjectCollaborator.status', '=', 'approved')
       .execute();
-    console.log(project);
     return project;
   }),
   getMyPending: privateProcedure.query(async ({ ctx }) => {
@@ -242,7 +240,6 @@ export const projectRouter = createTRPCRouter({
       .where('User.id', '=', ctx.userId)
       .where('ProjectCollaborator.status', '=', 'pending')
       .execute();
-    // console.log(project);
     return project;
   }),
   getNotRelated: privateProcedure.query(async ({ ctx }) => {

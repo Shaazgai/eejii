@@ -104,16 +104,16 @@ export default function EventViewPage(
                   alt="image"
                   radius={'lg'}
                 />
+                <Flex justify={'start'} gap={10}>
+                  {event?.Categories &&
+                    event?.Categories.length > 0 &&
+                    event.Categories.map(c => (
+                      <Badge color="gray" key={c.id}>
+                        {c.name}
+                      </Badge>
+                    ))}
+                </Flex>
               </Stack>
-              <Flex justify={'start'} gap={10}>
-                {event?.Categories &&
-                  event?.Categories.length > 0 &&
-                  event.Categories.map(c => (
-                    <Badge color="gray" key={c.id}>
-                      {c.name}
-                    </Badge>
-                  ))}
-              </Flex>
               <Flex justify={'start'}>
                 <Title
                   order={3}
@@ -172,10 +172,19 @@ export default function EventViewPage(
                 <Paper withBorder py={15} px={20} radius={'lg'}>
                   <Stack>
                     <Text>Хамтрагч байгуулага</Text>
-                    <Flex align={'center'}>
-                      <Avatar />
-                      <Text></Text>
-                    </Flex>
+                    {event?.Collaborators.map(collaborator => (
+                      <Flex
+                        align={'center'}
+                        key={collaborator.id as unknown as string}
+                        gap="md"
+                      >
+                        <Avatar />
+                        <Text>
+                          {collaborator.User?.organizationName ??
+                            collaborator.User?.email}
+                        </Text>
+                      </Flex>
+                    ))}
                   </Stack>
                 </Paper>
               </Stack>

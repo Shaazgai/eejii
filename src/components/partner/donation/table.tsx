@@ -10,7 +10,6 @@ export const DonationTable = ({
   donations: MyDonation[] | undefined;
   isLoading: boolean;
 }) => {
-  console.log(donations);
   return (
     <Table>
       <Table.Thead>

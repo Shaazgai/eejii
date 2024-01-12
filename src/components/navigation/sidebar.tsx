@@ -33,8 +33,6 @@ export default function Sidebar({
     const currentPath = router.asPath.split('?')[0]?.split('/')[2];
 
     const activeItem = sidebarNav.find(item => {
-      console.log(item.slug);
-      console.log(currentPath);
       return item.slug === currentPath;
     });
 

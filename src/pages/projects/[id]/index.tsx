@@ -43,7 +43,6 @@ export default function EventViewPage(
   const { data: project, isLoading } = api.project.findById.useQuery({
     id: id as string,
   });
-  console.log(project);
   const { data: relatedProjects, isLoading: isRelatedLoading } =
     api.project.findRelated.useQuery({
       excludeId: project?.id as unknown as string,
@@ -54,7 +53,6 @@ export default function EventViewPage(
     '/' +
     project?.Images.find(i => i.type === 'main')?.path;
 
-  console.log(project);
   // const { mutate } = api.eventUser.sendRequest.useMutation({
   //   onSuccess: newReq => console.log(newReq),
   // });

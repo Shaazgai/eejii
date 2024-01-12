@@ -1,8 +1,8 @@
 import { FallbackImage } from '@/components/common/fallback-image';
 import VolunteerLayout from '@/components/layout/volunteer-layout';
-import { EventList } from '@/components/list/event-list';
-import { EventType, ProjectStatus } from '@/lib/db/enums';
-import type { Event } from '@/lib/types';
+import { ProjectList } from '@/components/list/project-list';
+import { ProjectStatus, ProjectType } from '@/lib/db/enums';
+import type { Project } from '@/lib/types';
 import { api } from '@/utils/api';
 import {
   BackgroundImage,
@@ -28,7 +28,7 @@ export default function Index() {
   const [activePage, setPage] = useState(page ? +page : 1);
   const [search, setSearch] = useState(q);
   const [activeTab, setActiveTab] = useState<string | null>(
-    (type as string) ?? EventType.EVENT
+    (type as string) ?? ProjectType.FUNDRAISING
   );
 
   function handleSetPage(value: number) {
@@ -51,15 +51,15 @@ export default function Index() {
   }
 
   const {
-    data: events,
+    data: projects,
     isLoading,
     refetch,
-  } = api.event.findAll.useQuery({
+  } = api.project.findAll.useQuery({
     page: activePage,
     limit: 10,
     enabled: true,
     status: ProjectStatus.APPROVED,
-    type: type as EventType,
+    type: type as ProjectType,
     title: q as string,
   });
 
@@ -67,21 +67,22 @@ export default function Index() {
     refetch();
   }, [q]);
 
-  const totalPages = events?.pagination.totalPages;
-  const { data: bannerEvent } = api.banner.findAll.useQuery({
-    positionCode: 'event_index_banner',
+  const totalPages = projects?.pagination.totalPages;
+  const { data: banner } = api.banner.findAll.useQuery({
+    positionCode: 'project_index_banner',
     limit: 1,
   });
-  const bannerMainImage = bannerEvent
-    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + bannerEvent.banners[0]?.path
+  const bannerImage = banner
+    ? process.env.NEXT_PUBLIC_AWS_PATH + '/' + banner.banners[0]?.path
     : '';
   return (
     <VolunteerLayout>
       <FallbackImage
+        fullWidth
         width={1600}
         radius={0}
         height={400}
-        src={bannerMainImage}
+        src={bannerImage}
         alt="main"
       />
       <Container size={'xl'}>
@@ -124,7 +125,7 @@ export default function Index() {
             <Paper>
               <BackgroundImage
                 h={360}
-                src="/images/eventss/main.png"
+                src={bannerImage}
                 radius={'lg'}
                 style={{ overflow: 'hidden' }}
               >
@@ -140,7 +141,7 @@ export default function Index() {
                   }}
                 >
                   <h2 className="text-lg font-semibold">
-                    'Mother event Hospice'
+                    'Mother project Hospice'
                   </h2>
                   <h1 className="pb-12 text-3xl font-semibold">
                     "Mother" Hospice and Palliative Care Center
@@ -169,13 +170,16 @@ export default function Index() {
           onChange={handleActiveTab}
         >
           <Tabs.List>
-            <Tabs.Tab value={EventType.EVENT}>Event</Tabs.Tab>
-            <Tabs.Tab value={EventType.VOLUNTEERING}>
-              Volunteering event
+            <Tabs.Tab value={ProjectType.FUNDRAISING}>Project</Tabs.Tab>
+            <Tabs.Tab value={ProjectType.GRANT_FUNDRAISING}>
+              Grant Project
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>
-        <EventList events={events?.items as Event[]} isLoading={isLoading} />
+        <ProjectList
+          projects={projects?.items as Project[]}
+          isLoading={isLoading}
+        />
         <Space h={'lg'} />
         <Center>
           <Pagination

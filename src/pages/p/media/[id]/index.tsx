@@ -28,9 +28,7 @@ export default function MediaDetail(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const { id } = props;
-  console.log(id);
   const { data: media, isLoading } = api.media.findById.useQuery({ id: id });
-  console.log(media);
   const image =
     process.env.NEXT_PUBLIC_AWS_PATH +
     '/' +

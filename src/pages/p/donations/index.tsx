@@ -15,7 +15,6 @@ export default function Donations() {
   const { data: donations, isLoading } = api.user.getMyDonations.useQuery({
     limit: 10,
   });
-  // console.log(donations);
 
   return (
     <PartnerLayout>

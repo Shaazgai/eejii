@@ -106,7 +106,6 @@ const BannerTable = () => {
     search: q as string,
   });
   const totalPages = total ? Math.ceil((total?.total as number) / 20) : 1;
-  console.log(totalPages);
   return (
     <div>
       {banners ? (

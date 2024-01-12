@@ -76,7 +76,6 @@ export const eventRouter = createTRPCRouter({
         if (input.status) {
           query = query.where('status', '=', input.status as ProjectStatus);
         }
-        console.log('hi');
 
         const queryResult = await query
           .limit(input.limit)
@@ -228,7 +227,6 @@ export const eventRouter = createTRPCRouter({
       .where('User.id', '=', ctx.userId)
       .where('EventCollaborator.status', '=', 'pending')
       .execute();
-    // console.log(events);
     return events;
   }),
   getNotRelated: privateProcedure.query(async ({ ctx }) => {
@@ -242,7 +240,6 @@ export const eventRouter = createTRPCRouter({
           `(SELECT u1."id" FROM "User" u1 WHERE u1."id" = '${ctx.userId}')`
         )}
       `.execute(ctx.db);
-    console.log(query.rows);
     return query.rows;
   }),
   create: privateProcedure
@@ -309,7 +306,6 @@ export const eventRouter = createTRPCRouter({
           .returning(['id'])
           .executeTakeFirstOrThrow();
         if (input.categories) {
-          console.log(input.categories);
           await trx
             .deleteFrom('CategoryEvent')
             .where('CategoryEvent.eventId', '=', event.id)

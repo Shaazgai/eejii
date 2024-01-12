@@ -41,8 +41,6 @@ export default function EventViewPage(
     process.env.NEXT_PUBLIC_AWS_PATH +
     '/' +
     data?.Images?.find(f => f.type === 'main')?.path;
-  console.log(data);
-  console.log(mainImage);
 
   return (
     <PartnerLayout>

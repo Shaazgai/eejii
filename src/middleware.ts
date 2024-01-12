@@ -6,6 +6,7 @@ export default withAuth(
   async function middleware(request) {
     const token = request.nextauth.token;
     const userType = token?.userType;
+    const role = token?.role;
     const url = new URL(request.url);
 
     let redirectPath;
@@ -25,6 +26,12 @@ export default withAuth(
     ) {
       redirectPath = '/s';
     }
+
+    if (role !== 'ROLE_ADMIN' && url.pathname.startsWith('/admin')) {
+      const redirectURL = new URL('/', url.origin);
+      return NextResponse.redirect(redirectURL);
+    }
+
     if (redirectPath) {
       const redirectURL = new URL(redirectPath, url.origin);
       return NextResponse.redirect(redirectURL.toString());
