@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Banner" ALTER COLUMN "path" DROP NOT NULL,
-ALTER COLUMN "mobilePath" DROP NOT NULL;

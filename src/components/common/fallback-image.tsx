@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 
 type FallbackImageProps = ImageProps & {
   fallbackSrc?: string;
-  w?: number | string;
-  h?: number | string;
-  width?: number;
-  height?: number;
+  fullWidth?: boolean;
+  fullHeight?: boolean;
+  width: number;
+  height: number;
   radius?: number | string;
   fit?: 'contain' | 'cover';
 };
@@ -17,8 +17,8 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
   src,
   width,
   height,
-  w,
-  h,
+  fullWidth,
+  fullHeight,
   radius,
   fit,
 }) => {
@@ -29,10 +29,8 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
 
   return (
     <Paper
-      w={w}
-      h={h}
-      mah={h}
-      maw={w}
+      mah={fullHeight ? '100%' : height}
+      maw={fullWidth ? '100%' : width}
       radius={radius}
       style={{ overflow: 'hidden' }}
     >
@@ -41,10 +39,11 @@ export const FallbackImage: React.FC<FallbackImageProps> = ({
         src={imgSrc}
         radius={radius}
         fit={fit}
+        objectPosition="center"
         fallbackSrc="/images/placeholder.svg"
         width={width}
-        w={w}
-        h={h}
+        w={fullWidth ? '100%' : width}
+        h={fullHeight ? '100%' : height}
         height={height}
         alt="img"
       />

@@ -20,7 +20,44 @@ interface CustomAppProps extends AppProps {
 }
 
 const theme = createTheme({
-  /** Put your mantine theme override here */
+  colors: {
+    primary: [
+      '#EAFAFC',
+      '#DEF0F1',
+      '#BDDEE0',
+      '#99CDD0',
+      '#7CBEC1',
+      '#68B4B8',
+      '#5CAFB4',
+      '#4A999E',
+      '#3C898D',
+      '#26777B',
+    ],
+    secondary: [
+      '#fff5e3',
+      '#fdebd0',
+      '#f7d5a4',
+      '#f1be73',
+      '#ecaa4a',
+      '#e99e30',
+      '#e89720',
+      '#ce8312',
+      '#b8730a',
+      '#a06300',
+    ],
+    neutral: [
+      '#D1D5DB',
+      '#D1D5DB',
+      '#D1D5DB',
+      '#D1D5DB',
+      '#101827',
+      '#1F2937',
+      '#374151',
+      '#4B5563',
+      '#6B7280',
+      '#9CA3AF',
+    ],
+  },
 });
 
 const CustomApp = ({ Component, pageProps }: CustomAppProps) => {

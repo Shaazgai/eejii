@@ -111,8 +111,6 @@ const ProjectForm = ({
                 <FallbackImage
                   height={300}
                   width={400}
-                  h={300}
-                  w={400}
                   radius={'md'}
                   fit="cover"
                   src={process.env.NEXT_PUBLIC_AWS_PATH + '/' + mainImage.path}
@@ -141,8 +139,6 @@ const ProjectForm = ({
                 return (
                   <Paper w={400} h={300} shadow="sm" key={i} pos={'relative'}>
                     <FallbackImage
-                      w={400}
-                      h={300}
                       width={400}
                       height={300}
                       radius={'md'}

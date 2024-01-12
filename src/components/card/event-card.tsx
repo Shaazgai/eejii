@@ -37,8 +37,6 @@ export default function EventCardPublic({ event }: { event: Event }) {
           width={300}
           height={200}
           radius={0}
-          h={200}
-          w={'100%'}
           alt="event-image"
         />
       </Box>

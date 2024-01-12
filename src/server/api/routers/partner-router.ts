@@ -107,7 +107,7 @@ export const partnerRouter = createTRPCRouter({
           });
         }
         const plan = await trx
-          .selectFrom('Plan')
+          .selectFrom('UserPlan')
           .select('id')
           .where('code', '=', 'free')
           .executeTakeFirstOrThrow();

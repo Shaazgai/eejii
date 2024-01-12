@@ -39,6 +39,7 @@ CREATE TABLE "User" (
     "organizationType" TEXT,
     "introduction" TEXT,
     "contact" JSONB,
+    "partnerPlanId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -50,14 +51,14 @@ CREATE TABLE "Event" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "location" TEXT NOT NULL,
-    "roles" JSONB,
-    "enabled" BOOLEAN NOT NULL,
     "status" "ProjectStatus",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "enabled" BOOLEAN NOT NULL,
     "startTime" TIMESTAMP(3),
     "endTime" TIMESTAMP(3),
-    "requiredTime" TEXT,
     "contact" JSONB,
+    "featured" BOOLEAN NOT NULL,
+    "roles" JSONB,
     "ownerId" TEXT,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
@@ -75,20 +76,32 @@ CREATE TABLE "EventCollaborator" (
 );
 
 -- CreateTable
+CREATE TABLE "EventParticipator" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "userId" TEXT,
+    "eventId" TEXT,
+    "status" TEXT,
+    "type" TEXT,
+
+    CONSTRAINT "EventParticipator_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Project" (
     "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "type" "ProjectType" NOT NULL DEFAULT 'FUNDRAISING',
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "goalAmount" INTEGER NOT NULL,
-    "currentAmount" INTEGER NOT NULL,
     "contact" JSONB,
-    "location" TEXT,
     "startTime" TIMESTAMP(3),
     "endTime" TIMESTAMP(3),
     "enabled" BOOLEAN NOT NULL,
     "status" "ProjectStatus",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "featured" BOOLEAN NOT NULL,
+    "link" TEXT,
+    "goalAmount" INTEGER,
+    "currentAmount" INTEGER,
     "ownerId" TEXT,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
@@ -110,7 +123,14 @@ CREATE TABLE "Certificate" (
     "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "number" TEXT NOT NULL,
+    "grade" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "volunteerName" TEXT NOT NULL,
+    "organizationName" TEXT NOT NULL,
     "volunteerId" TEXT,
+    "organizationId" TEXT,
+    "certificateTemplateId" TEXT,
 
     CONSTRAINT "Certificate_pkey" PRIMARY KEY ("id")
 );
@@ -155,8 +175,12 @@ CREATE TABLE "Payment" (
     "status" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
-    "donationId" TEXT NOT NULL,
     "details" JSONB,
+    "userId" TEXT,
+    "donationId" TEXT,
+    "planId" TEXT,
+    "bannerPositionId" TEXT,
+    "permitId" TEXT,
 
     CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
 );
@@ -267,8 +291,8 @@ CREATE TABLE "MediaImage" (
 -- CreateTable
 CREATE TABLE "Banner" (
     "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
-    "path" TEXT NOT NULL,
-    "mobilePath" TEXT NOT NULL,
+    "path" TEXT,
+    "mobilePath" TEXT,
     "title" TEXT,
     "description" TEXT,
     "link" TEXT,
@@ -282,12 +306,103 @@ CREATE TABLE "BannerPosition" (
     "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "code" TEXT NOT NULL,
     "label" TEXT NOT NULL,
+    "type" TEXT,
+    "thumbnail" TEXT,
 
     CONSTRAINT "BannerPosition_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Plan" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "duration" INTEGER NOT NULL,
+    "price" BIGINT NOT NULL,
+    "originalPrice" BIGINT NOT NULL,
+
+    CONSTRAINT "Plan_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PlanImage" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "path" TEXT,
+    "type" TEXT NOT NULL,
+    "ownerId" TEXT NOT NULL,
+
+    CONSTRAINT "PlanImage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PartnerPlan" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
+    "active" BOOLEAN NOT NULL DEFAULT false,
+    "planId" TEXT NOT NULL,
+
+    CONSTRAINT "PartnerPlan_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CertificateTemplate" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "shortDescription" TEXT,
+    "organizationName" TEXT NOT NULL,
+    "logoPath" TEXT,
+    "stampPath" TEXT NOT NULL,
+    "userId" TEXT,
+
+    CONSTRAINT "CertificateTemplate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PartnerBanner" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "bannerId" TEXT NOT NULL,
+    "userId" TEXT,
+    "active" BOOLEAN NOT NULL,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "PartnerBanner_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Permit" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "price" BIGINT NOT NULL,
+    "originalPrice" BIGINT NOT NULL,
+    "eventPermit" INTEGER NOT NULL DEFAULT 2,
+    "projectPermit" INTEGER NOT NULL DEFAULT 2,
+    "bannerPermit" INTEGER NOT NULL DEFAULT 2,
+
+    CONSTRAINT "Permit_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PartnerPermit" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
+    "eventPermit" INTEGER NOT NULL DEFAULT 2,
+    "projectPermit" INTEGER NOT NULL DEFAULT 2,
+    "bannerPermit" INTEGER NOT NULL DEFAULT 2,
+    "userId" TEXT,
+
+    CONSTRAINT "PartnerPermit_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_partnerPlanId_key" ON "User"("partnerPlanId");
 
 -- CreateIndex
 CREATE INDEX "Event_ownerId_idx" ON "Event"("ownerId");
@@ -299,6 +414,12 @@ CREATE INDEX "EventCollaborator_userId_idx" ON "EventCollaborator"("userId");
 CREATE INDEX "EventCollaborator_eventId_idx" ON "EventCollaborator"("eventId");
 
 -- CreateIndex
+CREATE INDEX "EventParticipator_userId_idx" ON "EventParticipator"("userId");
+
+-- CreateIndex
+CREATE INDEX "EventParticipator_eventId_idx" ON "EventParticipator"("eventId");
+
+-- CreateIndex
 CREATE INDEX "Project_ownerId_idx" ON "Project"("ownerId");
 
 -- CreateIndex
@@ -308,7 +429,7 @@ CREATE INDEX "ProjectCollaborator_userId_idx" ON "ProjectCollaborator"("userId")
 CREATE INDEX "ProjectCollaborator_projectId_idx" ON "ProjectCollaborator"("projectId");
 
 -- CreateIndex
-CREATE INDEX "Certificate_volunteerId_idx" ON "Certificate"("volunteerId");
+CREATE INDEX "Certificate_volunteerId_organizationId_idx" ON "Certificate"("volunteerId", "organizationId");
 
 -- CreateIndex
 CREATE INDEX "Address_userId_idx" ON "Address"("userId");
@@ -318,6 +439,9 @@ CREATE INDEX "Donation_userId_idx" ON "Donation"("userId");
 
 -- CreateIndex
 CREATE INDEX "Donation_projectId_idx" ON "Donation"("projectId");
+
+-- CreateIndex
+CREATE INDEX "Payment_planId_bannerPositionId_permitId_donationId_idx" ON "Payment"("planId", "bannerPositionId", "permitId", "donationId");
 
 -- CreateIndex
 CREATE INDEX "CategoryProject_projectId_idx" ON "CategoryProject"("projectId");
@@ -332,10 +456,22 @@ CREATE INDEX "CategoryEvent_eventId_idx" ON "CategoryEvent"("eventId");
 CREATE INDEX "CategoryEvent_categoryId_idx" ON "CategoryEvent"("categoryId");
 
 -- CreateIndex
+CREATE INDEX "EventImage_ownerId_idx" ON "EventImage"("ownerId");
+
+-- CreateIndex
+CREATE INDEX "ProjectImage_ownerId_idx" ON "ProjectImage"("ownerId");
+
+-- CreateIndex
+CREATE INDEX "UserImage_ownerId_idx" ON "UserImage"("ownerId");
+
+-- CreateIndex
 CREATE INDEX "Notification_receiverId_idx" ON "Notification"("receiverId");
 
 -- CreateIndex
 CREATE INDEX "Notification_senderId_idx" ON "Notification"("senderId");
+
+-- CreateIndex
+CREATE INDEX "Media_ownerId_idx" ON "Media"("ownerId");
 
 -- CreateIndex
 CREATE INDEX "CategoryMedia_mediaId_idx" ON "CategoryMedia"("mediaId");
@@ -344,7 +480,37 @@ CREATE INDEX "CategoryMedia_mediaId_idx" ON "CategoryMedia"("mediaId");
 CREATE INDEX "CategoryMedia_categoryId_idx" ON "CategoryMedia"("categoryId");
 
 -- CreateIndex
+CREATE INDEX "MediaImage_ownerId_idx" ON "MediaImage"("ownerId");
+
+-- CreateIndex
+CREATE INDEX "Banner_bannerPositionId_idx" ON "Banner"("bannerPositionId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "BannerPosition_code_key" ON "BannerPosition"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Plan_code_key" ON "Plan"("code");
+
+-- CreateIndex
+CREATE INDEX "PlanImage_ownerId_idx" ON "PlanImage"("ownerId");
+
+-- CreateIndex
+CREATE INDEX "PartnerPlan_planId_idx" ON "PartnerPlan"("planId");
+
+-- CreateIndex
+CREATE INDEX "CertificateTemplate_userId_idx" ON "CertificateTemplate"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PartnerBanner_bannerId_key" ON "PartnerBanner"("bannerId");
+
+-- CreateIndex
+CREATE INDEX "PartnerBanner_userId_idx" ON "PartnerBanner"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Permit_code_key" ON "Permit"("code");
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_partnerPlanId_fkey" FOREIGN KEY ("partnerPlanId") REFERENCES "PartnerPlan"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD CONSTRAINT "Event_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -354,6 +520,12 @@ ALTER TABLE "EventCollaborator" ADD CONSTRAINT "EventCollaborator_userId_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "EventCollaborator" ADD CONSTRAINT "EventCollaborator_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EventParticipator" ADD CONSTRAINT "EventParticipator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EventParticipator" ADD CONSTRAINT "EventParticipator_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -368,6 +540,12 @@ ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_projectId_
 ALTER TABLE "Certificate" ADD CONSTRAINT "Certificate_volunteerId_fkey" FOREIGN KEY ("volunteerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Certificate" ADD CONSTRAINT "Certificate_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Certificate" ADD CONSTRAINT "Certificate_certificateTemplateId_fkey" FOREIGN KEY ("certificateTemplateId") REFERENCES "CertificateTemplate"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -377,7 +555,19 @@ ALTER TABLE "Donation" ADD CONSTRAINT "Donation_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "Donation" ADD CONSTRAINT "Donation_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Payment" ADD CONSTRAINT "Payment_donationId_fkey" FOREIGN KEY ("donationId") REFERENCES "Donation"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_donationId_fkey" FOREIGN KEY ("donationId") REFERENCES "Donation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_planId_fkey" FOREIGN KEY ("planId") REFERENCES "Plan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_bannerPositionId_fkey" FOREIGN KEY ("bannerPositionId") REFERENCES "BannerPosition"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_permitId_fkey" FOREIGN KEY ("permitId") REFERENCES "Permit"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CategoryProject" ADD CONSTRAINT "CategoryProject_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -420,3 +610,21 @@ ALTER TABLE "MediaImage" ADD CONSTRAINT "MediaImage_ownerId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "Banner" ADD CONSTRAINT "Banner_bannerPositionId_fkey" FOREIGN KEY ("bannerPositionId") REFERENCES "BannerPosition"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PlanImage" ADD CONSTRAINT "PlanImage_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "Plan"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PartnerPlan" ADD CONSTRAINT "PartnerPlan_planId_fkey" FOREIGN KEY ("planId") REFERENCES "Plan"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CertificateTemplate" ADD CONSTRAINT "CertificateTemplate_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PartnerBanner" ADD CONSTRAINT "PartnerBanner_bannerId_fkey" FOREIGN KEY ("bannerId") REFERENCES "Banner"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PartnerBanner" ADD CONSTRAINT "PartnerBanner_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PartnerPermit" ADD CONSTRAINT "PartnerPermit_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

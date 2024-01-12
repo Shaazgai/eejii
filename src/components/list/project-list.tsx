@@ -19,7 +19,7 @@ export const ProjectList = ({
     );
   }
   return (
-    <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }}>
+    <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing={'lg'}>
       {projects?.length > 0 ? (
         projects.map((project, i) => (
           <ProjectCardPublic key={i} fund={project} />

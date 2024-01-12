@@ -167,8 +167,6 @@ export default function New() {
               {bannerDesktop ? (
                 <Paper w={400} h={225} shadow="sm" pos={'relative'}>
                   <FallbackImage
-                    w={400}
-                    h={225}
                     width={400}
                     height={225}
                     radius={'sm'}
@@ -201,8 +199,6 @@ export default function New() {
               {bannerMobile ? (
                 <Paper w={300} h={200} shadow="sm" pos={'relative'}>
                   <FallbackImage
-                    w={300}
-                    h={200}
                     width={300}
                     height={200}
                     radius={'sm'}

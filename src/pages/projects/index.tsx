@@ -78,7 +78,7 @@ export default function Index() {
   return (
     <BasicBaseLayout>
       <FallbackImage
-        w={'100%'}
+        fullWidth
         width={1600}
         radius={0}
         height={400}

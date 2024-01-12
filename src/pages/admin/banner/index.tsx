@@ -47,8 +47,6 @@ const BannerRow = ({ banner }: { banner: Banner }) => {
         <FallbackImage
           src={image}
           alt={'desktop'}
-          h={120}
-          w={200}
           height={120}
           width={200}
           fit="contain"
@@ -57,9 +55,7 @@ const BannerRow = ({ banner }: { banner: Banner }) => {
       <Table.Td>
         <FallbackImage
           src={imageMobile}
-          alt={'desktop'}
-          h={120}
-          w={200}
+          alt="mobile"
           height={120}
           width={200}
           fit="contain"

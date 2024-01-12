@@ -269,7 +269,7 @@ export default function Index() {
         </div>
       </SimpleGrid>
       <div className="pt-20 pb-20 bg-[#fbfbfb]">
-        <Image src={partnersBanner} />
+        <Image src={partnersBanner} alt="" />
       </div>
       <SimpleGrid
         cols={{ base: 1, sm: 2, lg: 3 }}

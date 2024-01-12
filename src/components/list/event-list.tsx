@@ -19,7 +19,7 @@ export const EventList = ({
     );
   }
   return (
-    <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }}>
+    <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing={'lg'}>
       {events?.length > 0 ? (
         events.map((event, i) => <EventCardPublic key={i} event={event} />)
       ) : (

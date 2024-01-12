@@ -33,7 +33,7 @@ export const BioForm = ({ user }: { user: User }) => {
     },
   });
 
-  const profileImage = user?.Image.find(i => i.type === 'profile');
+  const profileImage = user?.Images.find(i => i.type === 'profile');
 
   async function handleSetFiles(images: FileWithPath[]) {
     const resizedFiles = await Promise.all(

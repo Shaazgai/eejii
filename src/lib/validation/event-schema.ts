@@ -40,5 +40,5 @@ export const eventSchema = z.object({
     email: z.string().email(),
   }),
   categories: z.array(z.string().nullable()),
-  collaborators: z.array(z.string().nullable()),
+  collaborators: z.array(z.string().nullable()).nullish(),
 });

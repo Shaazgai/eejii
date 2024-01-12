@@ -162,6 +162,45 @@ export const projectRouter = createTRPCRouter({
       const project = await ctx.db
         .selectFrom('Project')
         .selectAll('Project')
+        .select(eb1 => [
+          jsonArrayFrom(
+            eb1
+              .selectFrom('ProjectCollaborator')
+              .selectAll('ProjectCollaborator')
+              .select(eb3 => [
+                jsonObjectFrom(
+                  eb3
+                    .selectFrom('User')
+                    .selectAll('User')
+                    .select(eb4 => [
+                      jsonArrayFrom(
+                        eb4
+                          .selectFrom('UserImage')
+                          .whereRef('User.id', '=', 'UserImage.ownerId')
+                      ).as('Images'),
+                    ])
+                    .whereRef('User.id', '=', 'ProjectCollaborator.userId')
+                ).as('User'),
+              ])
+              .whereRef('ProjectCollaborator.projectId', '=', 'Project.id')
+              .where('ProjectCollaborator.status', '=', 'REQUEST_APPROVED')
+          ).as('Collaborators'),
+          jsonArrayFrom(
+            eb1
+              .selectFrom('Category')
+              .selectAll()
+              .leftJoin('CategoryProject', join =>
+                join.onRef('CategoryProject.projectId', '=', 'Project.id')
+              )
+              .whereRef('CategoryProject.categoryId', '=', 'Category.id')
+          ).as('Categories'),
+          jsonArrayFrom(
+            eb1
+              .selectFrom('ProjectImage')
+              .selectAll()
+              .whereRef('Project.id', '=', 'ProjectImage.ownerId')
+          ).as('Images'),
+        ])
         .select(eb => [
           jsonObjectFrom(
             eb
@@ -169,12 +208,6 @@ export const projectRouter = createTRPCRouter({
               .selectAll()
               .whereRef('User.id', '=', 'Project.ownerId')
           ).as('Owner'),
-          jsonArrayFrom(
-            eb
-              .selectFrom('ProjectImage')
-              .selectAll()
-              .whereRef('Project.id', '=', 'ProjectImage.ownerId')
-          ).as('Images'),
         ])
         .where('Project.id', '=', input.id)
         .executeTakeFirstOrThrow();
@@ -396,5 +429,84 @@ export const projectRouter = createTRPCRouter({
         .deleteFrom('ProjectImage')
         .where('ProjectImage.id', '=', input.id)
         .execute();
+    }),
+  findRelated: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().nullish(),
+        excludeId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const excludeProject = await ctx.db
+        .selectFrom('Project')
+        .select(['Project.id', 'Project.ownerId'])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('CategoryProject')
+              .select(['CategoryProject.id'])
+              .whereRef('CategoryProject.projectId', '=', 'Project.id')
+          ).as('Categories'),
+        ])
+        .where('id', '=', input.excludeId)
+        .executeTakeFirst();
+      let query = ctx.db
+        .selectFrom('Project')
+        .selectAll('Project')
+        .select(eb1 => [
+          jsonObjectFrom(
+            eb1
+              .selectFrom('User')
+              .selectAll()
+              .whereRef('User.id', '=', 'Project.ownerId')
+          ).as('Owner'),
+        ])
+        .select(eb => [
+          jsonArrayFrom(
+            eb
+              .selectFrom('Category')
+              .selectAll()
+              .leftJoin('CategoryProject', join =>
+                join.onRef('CategoryProject.projectId', '=', 'Project.id')
+              )
+              .whereRef('CategoryProject.categoryId', '=', 'Category.id')
+          ).as('Categories'),
+          jsonArrayFrom(
+            eb
+              .selectFrom('ProjectImage')
+              .selectAll()
+              .whereRef('Project.id', '=', 'ProjectImage.ownerId')
+          ).as('Images'),
+        ])
+        .leftJoin('CategoryProject', join =>
+          join.onRef('CategoryProject.projectId', '=', 'Project.id')
+        )
+        .leftJoin('Category', join =>
+          join.onRef('CategoryProject.categoryId', '=', 'Category.id')
+        )
+        .where('Project.id', '!=', excludeProject?.id as string);
+
+      if (excludeProject && excludeProject?.Categories?.length > 0) {
+        query = query.where(eb =>
+          eb.or(
+            excludeProject?.Categories?.map(c =>
+              eb('CategoryProject.id', '=', c.id)
+            )
+          )
+        );
+        query = query.where(eb =>
+          eb.or([eb('Project.ownerId', '=', excludeProject.ownerId)])
+        );
+      }
+      if (input.limit) {
+        query = query.limit(input.limit);
+      }
+
+      const res = await query
+        .orderBy('Project.createdAt desc')
+        .groupBy('Project.id')
+        .execute();
+      return res;
     }),
 });
