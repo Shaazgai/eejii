@@ -34,19 +34,37 @@ export const eventRouter = createTRPCRouter({
         let query = trx
           .selectFrom('Event')
           .selectAll('Event')
+          .select(eb1 => [
+            jsonArrayFrom(
+              eb1
+                .selectFrom('Category')
+                .selectAll()
+                .leftJoin('CategoryEvent', join =>
+                  join.onRef('CategoryEvent.eventId', '=', 'Event.id')
+                )
+                .whereRef('CategoryEvent.categoryId', '=', 'Category.id')
+            ).as('Categories'),
+            jsonArrayFrom(
+              eb1
+                .selectFrom('EventImage')
+                .selectAll()
+                .whereRef('Event.id', '=', 'EventImage.ownerId')
+            ).as('Images'),
+          ])
           .select(eb => [
             jsonObjectFrom(
               eb
                 .selectFrom('User')
                 .selectAll()
+                .select(eb4 => [
+                  jsonArrayFrom(
+                    eb4
+                      .selectFrom('UserImage')
+                      .whereRef('User.id', '=', 'UserImage.ownerId')
+                  ).as('Images'),
+                ])
                 .whereRef('User.id', '=', 'Event.ownerId')
             ).as('Owner'),
-            jsonArrayFrom(
-              eb
-                .selectFrom('EventImage')
-                .selectAll()
-                .whereRef('Event.id', '=', 'EventImage.ownerId')
-            ).as('Images'),
           ])
           .where('Event.type', '=', input.type as EventType);
         if (input.title) {

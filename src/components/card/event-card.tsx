@@ -1,7 +1,9 @@
 import type { Event, EventRole } from '@/lib/types';
+import classes from '@/styles/EventCard.module.css';
 
 import {
   Avatar,
+  Badge,
   Box,
   Divider,
   Flex,
@@ -25,6 +27,8 @@ export default function EventCardPublic({ event }: { event: Event }) {
       : null;
   return (
     <Paper
+      className={classes.container}
+      pos={'relative'}
       shadow="md"
       radius={'lg'}
       style={{ overflow: 'hidden' }}
@@ -35,12 +39,13 @@ export default function EventCardPublic({ event }: { event: Event }) {
         <FallbackImage
           src={image as string}
           width={300}
+          fullWidth
           height={200}
           radius={0}
           alt="event-image"
         />
       </Box>
-      <Box p={20}>
+      <Box bg={'white'} px={20} className={classes.overlay}>
         <Stack>
           <Flex>
             <Group>
@@ -61,6 +66,13 @@ export default function EventCardPublic({ event }: { event: Event }) {
             <Avatar />
             <Text>{event?.Owner.organizationName ?? event?.Owner.email}</Text>
           </Flex>
+          <div className={classes.show}>
+            <Text lineClamp={3}>{event.description}</Text>
+            <Group gap="10">
+              {event?.Categories?.length > 0 &&
+                event.Categories.map((c, i) => <Badge key={i}>{c.name}</Badge>)}
+            </Group>
+          </div>
         </Stack>
       </Box>
     </Paper>

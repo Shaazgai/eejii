@@ -34,7 +34,7 @@ const AuthLayout = ({
           />
         </div>
         {indexPage && (
-          <div className="w-full font-semibold">
+          <div className="w-full text-center font-semibold">
             <h1 className="pt-6 pb-5 text-2xl text-primary">Хамтдаа</h1>
             <h1 className="text-2xl text-primary">
               Хайр дүүрэн ертөнцийг бүтээе

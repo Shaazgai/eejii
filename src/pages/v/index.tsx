@@ -28,6 +28,7 @@ import { useEffect, useState } from 'react';
 import { IconCamera, IconEdit } from '@tabler/icons-react';
 import { MyEvents } from '@/components/volunteer/home/my-events';
 import { Certificates } from '@/components/volunteer/home/certificates';
+import { Explore } from '@/components/volunteer/home/explore';
 
 export default function Index() {
   const session = useSession();
@@ -213,6 +214,8 @@ export default function Index() {
             <MyEvents volunteerId={volunteer?.id as string} />
           </Grid.Col>
         </Grid>
+        <Space h="80" />
+        <Explore />
       </Container>
     </VolunteerLayout>
   );
