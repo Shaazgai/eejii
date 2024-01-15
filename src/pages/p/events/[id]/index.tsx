@@ -77,11 +77,7 @@ export default function EventViewPage(
           <SimpleGrid cols={{ base: 1, lg: 2 }}>
             <Stack>
               <Paper withBorder radius="lg" style={{ overflow: 'hidden' }}>
-                <Image
-                  alt="image"
-                  src={mainImage}
-                  placeholder="/images/placeholder.svg"
-                />
+                <Image alt="image" src={mainImage} />
                 <Flex p={'lg'} gap={10}>
                   {data.Categories &&
                     data.Categories.map((c, i) => (

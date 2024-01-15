@@ -1,11 +1,11 @@
 import { FallbackImage } from '@/components/common/fallback-image';
 import BasicBaseLayout from '@/components/layout/basic-base-layout';
 import { EventList } from '@/components/list/event-list';
+import { FeaturedEvents } from '@/components/list/featured-event-list';
 import { EventType, ProjectStatus } from '@/lib/db/enums';
 import type { Event } from '@/lib/types';
 import { api } from '@/utils/api';
 import {
-  BackgroundImage,
   Button,
   Center,
   Container,
@@ -121,36 +121,7 @@ export default function Index() {
             <Title order={3} mb={10}>
               Онцгой төсөл
             </Title>
-            <Paper>
-              <BackgroundImage
-                h={360}
-                src="/images/eventss/main.png"
-                radius={'lg'}
-                style={{ overflow: 'hidden' }}
-              >
-                <Flex
-                  direction={'column'}
-                  align={'center'}
-                  c={'white'}
-                  h={'100%'}
-                  justify={'center'}
-                  style={{
-                    backdropFilter: 'blur(10px)',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  }}
-                >
-                  <h2 className="text-lg font-semibold">
-                    'Mother event Hospice'
-                  </h2>
-                  <h1 className="pb-12 text-3xl font-semibold">
-                    "Mother" Hospice and Palliative Care Center
-                  </h1>
-                  <Button className="h-[44px] w-[144px] rounded-none bg-primary">
-                    Хандив өгөх
-                  </Button>
-                </Flex>
-              </BackgroundImage>
-            </Paper>
+            <FeaturedEvents />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 5, lg: 4 }}>
             <Paper

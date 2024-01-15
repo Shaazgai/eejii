@@ -3,7 +3,7 @@ import { sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { z } from 'zod';
 
-import type { Project, User } from '@/lib/db/types';
+import type { Project, User } from '@/lib/types';
 import { projectSchema } from '@/lib/validation/project-schema';
 
 import { ProjectStatus, ProjectType } from '@/lib/db/enums';
@@ -26,6 +26,7 @@ export const projectRouter = createTRPCRouter({
         limit: z.number().default(20),
         title: z.string().nullish(),
         enabled: z.boolean().nullish(),
+        featured: z.boolean().nullish(),
         status: z.string().nullish(),
         type: z.string().nullish().default(ProjectType.FUNDRAISING),
       })
@@ -35,19 +36,59 @@ export const projectRouter = createTRPCRouter({
         let query = trx
           .selectFrom('Project')
           .selectAll('Project')
+          .select(eb1 => [
+            jsonArrayFrom(
+              eb1
+                .selectFrom('ProjectCollaborator')
+                .selectAll('ProjectCollaborator')
+                .select(eb3 => [
+                  jsonObjectFrom(
+                    eb3
+                      .selectFrom('User')
+                      .selectAll('User')
+                      .select(eb4 => [
+                        jsonArrayFrom(
+                          eb4
+                            .selectFrom('UserImage')
+                            .whereRef('User.id', '=', 'UserImage.ownerId')
+                        ).as('Images'),
+                      ])
+                      .whereRef('User.id', '=', 'ProjectCollaborator.userId')
+                  ).as('User'),
+                ])
+                .whereRef('ProjectCollaborator.projectId', '=', 'Project.id')
+                .where('ProjectCollaborator.status', '=', 'REQUEST_APPROVED')
+            ).as('Collaborators'),
+            jsonArrayFrom(
+              eb1
+                .selectFrom('Category')
+                .selectAll()
+                .leftJoin('CategoryProject', join =>
+                  join.onRef('CategoryProject.projectId', '=', 'Project.id')
+                )
+                .whereRef('CategoryProject.categoryId', '=', 'Category.id')
+            ).as('Categories'),
+            jsonArrayFrom(
+              eb1
+                .selectFrom('ProjectImage')
+                .selectAll()
+                .whereRef('Project.id', '=', 'ProjectImage.ownerId')
+            ).as('Images'),
+          ])
           .select(eb => [
             jsonObjectFrom(
               eb
                 .selectFrom('User')
                 .selectAll()
+                .select(eb5 => [
+                  jsonArrayFrom(
+                    eb5
+                      .selectFrom('UserImage')
+                      .whereRef('User.id', '=', 'UserImage.ownerId')
+                  ).as('Images'),
+                ])
                 .whereRef('User.id', '=', 'Project.ownerId')
             ).as('Owner'),
-            jsonArrayFrom(
-              eb
-                .selectFrom('ProjectImage')
-                .selectAll()
-                .whereRef('Project.id', '=', 'ProjectImage.ownerId')
-            ).as('Images'),
           ])
           .where('Project.type', '=', input.type as ProjectType);
         if (input.title) {
@@ -55,6 +96,9 @@ export const projectRouter = createTRPCRouter({
         }
         if (input.enabled) {
           query = query.where('enabled', '=', input.enabled);
+        }
+        if (input.featured) {
+          query = query.where('featured', '=', input.featured);
         }
         if (input.status) {
           query = query.where('status', '=', input.status as ProjectStatus);
