@@ -109,7 +109,6 @@ export const MediaForm = ({
                   width={320}
                   radius={'md'}
                   fit="contain"
-                  placeholder="/placeholder.svg"
                   src={process.env.NEXT_PUBLIC_AWS_PATH + '/' + image.path}
                   onLoad={() =>
                     URL.revokeObjectURL(

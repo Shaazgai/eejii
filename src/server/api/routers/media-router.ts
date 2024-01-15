@@ -10,6 +10,7 @@ export const mediaRouter = createTRPCRouter({
         search: z.string().nullish(),
         ownerId: z.string().nullish(),
         category: z.string().nullish(),
+        projectId: z.string().nullish(),
         limit: z.number().nullish(),
         page: z.number().nullish(),
       })
@@ -61,6 +62,9 @@ export const mediaRouter = createTRPCRouter({
       }
       if (input.ownerId) {
         query = query.where('Media.ownerId', '=', input.ownerId);
+      }
+      if (input.projectId) {
+        query = query.where('Media.projectId', '=', input.projectId);
       }
       if (input.limit) {
         query = query.limit(input.limit);

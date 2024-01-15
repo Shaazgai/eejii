@@ -26,6 +26,7 @@ export const eventRouter = createTRPCRouter({
         title: z.string().nullish(),
         status: z.string().nullish(),
         enabled: z.boolean().nullish(),
+        featured: z.boolean().nullish(),
         type: z.string().nullish().default(EventType.EVENT),
       })
     )
@@ -72,6 +73,9 @@ export const eventRouter = createTRPCRouter({
         }
         if (input.enabled) {
           query = query.where('enabled', '=', input.enabled);
+        }
+        if (input.featured) {
+          query = query.where('featured', '=', input.featured);
         }
         if (input.status) {
           query = query.where('status', '=', input.status as ProjectStatus);
@@ -190,7 +194,14 @@ export const eventRouter = createTRPCRouter({
           jsonObjectFrom(
             eb
               .selectFrom('User')
-              .selectAll()
+              .selectAll('User')
+              .select(eb5 => [
+                jsonArrayFrom(
+                  eb5
+                    .selectFrom('UserImage')
+                    .whereRef('User.id', '=', 'UserImage.ownerId')
+                ).as('Images'),
+              ])
               .whereRef('User.id', '=', 'Event.ownerId')
           ).as('Owner'),
         ])

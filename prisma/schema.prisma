@@ -20,25 +20,28 @@ generator kysely {
 
 model User {
   // General not null fields
-  id               String      @id @default(dbgenerated("gen_random_uuid()"))
-  email            String      @unique
-  phoneNumber      String
-  createdAt        DateTime    @default(now())
-  role             Role        @default(ROLE_USER)
-  type             UserType    @default(USER_VOLUNTEER)
-  requestSend      Boolean     @default(false)
-  password         String?
-  addressShort     String?
+  id            String      @id @default(dbgenerated("gen_random_uuid()"))
+  email         String      @unique
+  phoneNumber   String
+  createdAt     DateTime    @default(now())
+  role          Role        @default(ROLE_USER)
+  type          UserType    @default(USER_VOLUNTEER)
+  requestSend   Boolean     @default(false)
+  password      String?
+  addressShort  String?
   //changed user request status boolean to 3 state
-  requestStatus    UserStatus?
+  requestStatus UserStatus?
   // Volunteer fields
-  firstName        String?
-  lastName         String?
-  gender           String?
-  bio              String?
-  birthDate        DateTime?
-  skills           String?
-  registerCode     String?
+  firstName     String?
+  lastName      String?
+  gender        String?
+  bio           String?
+  birthDate     DateTime?
+  skills        String?
+  registerCode  String?
+  level         Int?
+  xp            Int?
+
   // Partner, Supporter fields + bio
   organizationName String?
   organizationType String?
@@ -369,6 +372,7 @@ model Media {
   createdAt      DateTime        @default(now())
   CategoryMedias CategoryMedia[]
   MediaImages    MediaImage[]
+  projectId      String?
 
   @@index([ownerId])
 }

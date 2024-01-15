@@ -42,7 +42,9 @@ export type VolunteerTableProps = {
 };
 
 export type Event = EventDB & {
-  Owner: UserDB;
+  Owner: UserDB & {
+    Images: UserImage[];
+  };
   Categories: [
     {
       id: string;
@@ -58,7 +60,9 @@ export type Event = EventDB & {
 };
 
 export type Project = ProjectDB & {
-  Owner: UserDB;
+  Owner: UserDB & {
+    Images: UserImage[];
+  };
   Images: ProjectImage[];
   Donation: Donation[];
   Categories: [
@@ -70,7 +74,7 @@ export type Project = ProjectDB & {
       categoryId: string;
     },
   ];
-  Collaborators: ProjectCollaboratorDB[];
+  Collaborators: ProjectCollaborator[];
 };
 
 export type EventParticipator = EventParticipatorDB & {

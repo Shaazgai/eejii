@@ -133,7 +133,6 @@ export const BioForm = ({ user }: { user: User }) => {
                   width={320}
                   radius={'md'}
                   fit="contain"
-                  placeholder="/placeholder.svg"
                   src={
                     process.env.NEXT_PUBLIC_AWS_PATH + '/' + profileImage.path
                   }
