@@ -1,7 +1,7 @@
 .folderWrapper {
   position: relative;
   text-align: center;
-  background-color: var(--mantine-color-teal-4);
+  background-color: var(--mantine-color-primary-4);
   overflow: hidden;
   border: none;
   border-radius: 10px;

@@ -89,6 +89,7 @@ export type Event = {
     location: string;
     status: ProjectStatus | null;
     createdAt: Generated<Timestamp>;
+    updatedAt: Timestamp | null;
     enabled: boolean;
     startTime: Timestamp | null;
     endTime: Timestamp | null;
@@ -207,6 +208,7 @@ export type Project = {
     enabled: boolean;
     status: ProjectStatus | null;
     createdAt: Generated<Timestamp>;
+    updatedAt: Timestamp | null;
     featured: boolean;
     link: string | null;
     goalAmount: number | null;
@@ -235,6 +237,7 @@ export type User = {
     email: string;
     phoneNumber: string;
     createdAt: Generated<Timestamp>;
+    updatedAt: Timestamp | null;
     role: Generated<Role>;
     type: Generated<UserType>;
     requestSend: Generated<boolean>;

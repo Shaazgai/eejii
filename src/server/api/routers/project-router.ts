@@ -243,6 +243,12 @@ export const projectRouter = createTRPCRouter({
               .selectAll()
               .whereRef('Project.id', '=', 'ProjectImage.ownerId')
           ).as('Images'),
+          jsonArrayFrom(
+            eb1
+              .selectFrom('Donation')
+              .selectAll('Donation')
+              .whereRef('Donation.projectId', '=', 'Project.id')
+          ).as('Donations'),
         ])
         .select(eb => [
           jsonObjectFrom(
@@ -549,5 +555,46 @@ export const projectRouter = createTRPCRouter({
         .groupBy('Project.id')
         .execute();
       return res;
+    }),
+  getProjectDonations: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        limit: z.number().default(10),
+        sortBy: z.enum(['amount', 'date']),
+        sort: z.enum(['asc', 'desc']),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      let query = ctx.db
+        .selectFrom('Donation')
+        .selectAll('Donation')
+        .select(eb => [
+          jsonObjectFrom(
+            // TODO fetch only needed fields
+            eb
+              .selectFrom('User')
+              .selectAll('User')
+              .select(eb2 => [
+                jsonArrayFrom(
+                  eb2
+                    .selectFrom('UserImage')
+                    .selectAll()
+                    .whereRef('UserImage.ownerId', '=', 'User.id')
+                ).as('Images'),
+              ])
+              .whereRef('User.id', '=', 'Donation.userId')
+          ).as('User'),
+        ])
+        .where('Donation.projectId', '=', input.id);
+      if (input.sortBy == 'amount') {
+        query = query.orderBy('amount desc');
+      } else {
+        query = query.orderBy('createdAt desc');
+      }
+      query = query.limit(input.limit);
+      const donations = await query.execute();
+
+      return donations;
     }),
 });

@@ -339,6 +339,28 @@ async function createProjects(count: number) {
   console.log('Created ' + count + ' projects');
 }
 
+async function createDonations(count: number) {
+  const project = await db
+    .selectFrom('Project')
+    .select('id')
+    .where('type', '=', 'FUNDRAISING')
+    .execute();
+  const user = await db.selectFrom('User').select('id').execute();
+
+  for (let i = 0; i < count; i++) {
+    await db
+      .insertInto('Donation')
+      .values({
+        amount: faker.number.int({ min: 1000, max: 9999999 }),
+        isPublicName: faker.datatype.boolean(30),
+        projectId: faker.helpers.arrayElement(project.map(p => p.id)),
+        userId: faker.helpers.arrayElement(user.map(u => u.id)),
+      })
+      .execute();
+  }
+  console.log('Created ' + count + ' Donation');
+}
+
 async function main() {
   await clearData();
   await db
@@ -360,6 +382,7 @@ async function main() {
   await createEvents(50);
   await createProjects(50);
   await createMedia(40);
+  await createDonations(300);
 }
 
 main();

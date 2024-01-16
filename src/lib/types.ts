@@ -11,7 +11,7 @@ import type {
   CategoryEvent,
   CategoryMedia,
   CategoryProject,
-  Donation,
+  Donation as DonationDB,
   Event as EventDB,
   EventImage,
   EventParticipator as EventParticipatorDB,
@@ -64,7 +64,7 @@ export type Project = ProjectDB & {
     Images: UserImage[];
   };
   Images: ProjectImage[];
-  Donation: Donation[];
+  Donations: DonationDB[];
   Categories: [
     {
       id: string;
@@ -148,7 +148,7 @@ export type MyVolunteer = {
   EventParticipator: EventParticipatorDB;
 };
 
-export type MyDonation = Donation & {
+export type MyDonation = DonationDB & {
   Project: Project;
 };
 

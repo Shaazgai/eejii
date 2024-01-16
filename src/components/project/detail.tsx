@@ -3,9 +3,7 @@ import { ProjectType } from '@/lib/db/enums';
 import type { Project } from '@/lib/types';
 import {
   ActionIcon,
-  Avatar,
   Badge,
-  Button,
   Container,
   Flex,
   Grid,
@@ -22,6 +20,9 @@ import {
   IconLink,
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
+import { DonationsInfo } from './sidebar/donation';
+import { CollaboratorsInfo } from './sidebar/collaborators-info';
+import { OrganizerInfo } from './sidebar/organizer-info';
 
 export const ProjectDetail = ({
   project,
@@ -34,6 +35,7 @@ export const ProjectDetail = ({
     process.env.NEXT_PUBLIC_AWS_PATH +
     '/' +
     project?.Images?.find(i => i.type === 'main')?.path;
+  console.log(project);
   return (
     <>
       {project && (
@@ -47,20 +49,20 @@ export const ProjectDetail = ({
             >
               <IconArrowLeft />
             </ActionIcon>
-            <Title order={2} pl={10}>
+            <Title order={1} pl={10}>
               {project?.title}
             </Title>
           </Flex>
-          <Grid columns={12}>
+          <Grid columns={12} gutter={'xl'}>
             <Grid.Col span={{ base: 12, md: 6, lg: 8 }}>
               <Flex gap={20}>
-                <Text>
+                <Text c={'dimmed'}>
                   {format(
                     project?.startTime as unknown as Date,
                     'yyyy MMMM do H:mm:ss'
                   )}
                 </Text>
-                <Text>
+                <Text c={'dimmed'}>
                   {format(
                     project?.endTime as unknown as Date,
                     'yyyy MMMM do H:mm:ss'
@@ -79,7 +81,7 @@ export const ProjectDetail = ({
                   {project?.Categories &&
                     project?.Categories?.length > 0 &&
                     project?.Categories?.map(c => (
-                      <Badge color="gray" key={c.id}>
+                      <Badge color="gray.5" key={c.id}>
                         {c.name}
                       </Badge>
                     ))}
@@ -90,7 +92,7 @@ export const ProjectDetail = ({
                   order={3}
                   p={10}
                   style={{
-                    borderBottom: '2px solid var(--mantine-color-teal-8)',
+                    borderBottom: '2px solid var(--mantine-color-primary-8)',
                   }}
                 >
                   Танилцуулага
@@ -122,42 +124,9 @@ export const ProjectDetail = ({
                       : 'Grant Fundraising'}
                   </Text>
                 </Paper>
-                <Paper withBorder py={15} px={20} radius={'lg'}>
-                  <Stack>
-                    <Title order={4} ta={'center'}>
-                      Organizer
-                    </Title>
-                    <Flex gap={10} align={'center'} justify={'center'}>
-                      <Avatar />
-                      <Text ta={'center'} fw={500}>
-                        {project?.Owner?.organizationName
-                          ? project?.Owner?.organizationName
-                          : project?.Owner?.email}
-                      </Text>
-                    </Flex>
-                    <Button fullWidth radius={'xl'}>
-                      Participate
-                    </Button>
-                  </Stack>
-                </Paper>
-                <Paper withBorder py={15} px={20} radius={'lg'}>
-                  <Stack>
-                    <Text>Хамтрагч байгуулага</Text>
-                    {project?.Collaborators?.map(collaborator => (
-                      <Flex
-                        align={'center'}
-                        key={collaborator.id as unknown as string}
-                        gap="md"
-                      >
-                        <Avatar />
-                        <Text>
-                          {collaborator.User?.organizationName ??
-                            collaborator.User?.email}
-                        </Text>
-                      </Flex>
-                    ))}
-                  </Stack>
-                </Paper>
+                <OrganizerInfo project={project} />
+                <CollaboratorsInfo project={project} />
+                <DonationsInfo projectId={project.id as unknown as string} />
               </Stack>
             </Grid.Col>
           </Grid>
