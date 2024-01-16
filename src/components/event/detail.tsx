@@ -2,8 +2,6 @@ import {
   ActionIcon,
   Text,
   Flex,
-  Avatar,
-  Button,
   Grid,
   Paper,
   Stack,
@@ -22,6 +20,8 @@ import { format } from 'date-fns';
 import { FallbackImage } from '../common/fallback-image';
 import type { Event } from '@/lib/types';
 import { EventType } from '@/lib/db/enums';
+import { OrganizerInfo } from './sidebar/organzier-info';
+import { CollaboratorsInfo } from './sidebar/collaborators-info';
 
 export const EventDetail = ({
   event,
@@ -124,42 +124,8 @@ export const EventDetail = ({
                       : 'Event'}
                   </Text>
                 </Paper>
-                <Paper withBorder py={15} px={20} radius={'lg'}>
-                  <Stack>
-                    <Title order={4} ta={'center'}>
-                      Organizer
-                    </Title>
-                    <Flex gap={10} align={'center'} justify={'center'}>
-                      <Avatar />
-                      <Text ta={'center'} fw={500}>
-                        {event?.Owner?.organizationName
-                          ? event?.Owner?.organizationName
-                          : event?.Owner?.email}
-                      </Text>
-                    </Flex>
-                    <Button fullWidth radius={'xl'}>
-                      Participate
-                    </Button>
-                  </Stack>
-                </Paper>
-                <Paper withBorder py={15} px={20} radius={'lg'}>
-                  <Stack>
-                    <Text>Хамтрагч байгуулага</Text>
-                    {event?.Collaborators.map(collaborator => (
-                      <Flex
-                        align={'center'}
-                        key={collaborator.id as unknown as string}
-                        gap="md"
-                      >
-                        <Avatar />
-                        <Text>
-                          {collaborator.User?.organizationName ??
-                            collaborator.User?.email}
-                        </Text>
-                      </Flex>
-                    ))}
-                  </Stack>
-                </Paper>
+                <OrganizerInfo event={event} />
+                <CollaboratorsInfo event={event} />
               </Stack>
             </Grid.Col>
           </Grid>
