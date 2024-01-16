@@ -46,7 +46,7 @@ export default function Banner() {
         <Flex h="100%" direction={{ base: 'column', lg: 'row' }} gap={'md'}>
           <Grid columns={6} gutter={'md'}>
             <Grid.Col span={{ base: 6, lg: 3 }}>
-              <Paper bg={'teal.6'} p={10} radius="lg" ta={'start'}>
+              <Paper bg={'primary.6'} p={10} radius="lg" ta={'start'}>
                 <Text fw={500} fz={30} c={'white'}>
                   55%
                 </Text>
@@ -85,7 +85,7 @@ export default function Banner() {
                 </div>
                 <Paper
                   w="100%"
-                  bg={'teal.6'}
+                  bg={'primary.6'}
                   radius="lg"
                   style={{
                     overflow: 'hidden',
@@ -133,7 +133,7 @@ export default function Banner() {
               <Flex h={'100%'} gap="md" w="100%" justify={'space-between'}>
                 <Paper
                   w="100%"
-                  bg={'teal.6'}
+                  bg={'primary.6'}
                   radius="lg"
                   style={{
                     overflow: 'hidden',
@@ -157,7 +157,7 @@ export default function Banner() {
               </Flex>
             </Grid.Col>
             <Grid.Col span={{ base: 6, lg: 3 }}>
-              <Paper bg={'teal.6'} p={10} radius="lg" ta={'start'}>
+              <Paper bg={'primary.6'} p={10} radius="lg" ta={'start'}>
                 <Text fw={500} fz={30} c={'white'}>
                   55%
                 </Text>

@@ -1,15 +1,20 @@
 import { FallbackImage } from '@/components/common/fallback-image';
 import { ProjectType } from '@/lib/db/enums';
 import type { Project } from '@/lib/types';
+import { priceFormat } from '@/lib/utils/price';
 import {
   ActionIcon,
   Avatar,
   Badge,
+  Box,
   Button,
   Container,
+  Divider,
   Flex,
   Grid,
+  Group,
   Paper,
+  Progress,
   Stack,
   Text,
   Title,
@@ -22,6 +27,7 @@ import {
   IconLink,
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
+import { DonationsInfo } from './sidebar/donation';
 
 export const ProjectDetail = ({
   project,
@@ -34,6 +40,7 @@ export const ProjectDetail = ({
     process.env.NEXT_PUBLIC_AWS_PATH +
     '/' +
     project?.Images?.find(i => i.type === 'main')?.path;
+  console.log(project);
   return (
     <>
       {project && (
@@ -47,20 +54,20 @@ export const ProjectDetail = ({
             >
               <IconArrowLeft />
             </ActionIcon>
-            <Title order={2} pl={10}>
+            <Title order={1} pl={10}>
               {project?.title}
             </Title>
           </Flex>
-          <Grid columns={12}>
+          <Grid columns={12} gutter={'xl'}>
             <Grid.Col span={{ base: 12, md: 6, lg: 8 }}>
               <Flex gap={20}>
-                <Text>
+                <Text c={'dimmed'}>
                   {format(
                     project?.startTime as unknown as Date,
                     'yyyy MMMM do H:mm:ss'
                   )}
                 </Text>
-                <Text>
+                <Text c={'dimmed'}>
                   {format(
                     project?.endTime as unknown as Date,
                     'yyyy MMMM do H:mm:ss'
@@ -79,7 +86,7 @@ export const ProjectDetail = ({
                   {project?.Categories &&
                     project?.Categories?.length > 0 &&
                     project?.Categories?.map(c => (
-                      <Badge color="gray" key={c.id}>
+                      <Badge color="gray.5" key={c.id}>
                         {c.name}
                       </Badge>
                     ))}
@@ -90,7 +97,7 @@ export const ProjectDetail = ({
                   order={3}
                   p={10}
                   style={{
-                    borderBottom: '2px solid var(--mantine-color-teal-8)',
+                    borderBottom: '2px solid var(--mantine-color-primary-8)',
                   }}
                 >
                   Танилцуулага
@@ -156,8 +163,63 @@ export const ProjectDetail = ({
                         </Text>
                       </Flex>
                     ))}
+                    {(project.type as unknown as ProjectType) ===
+                    ProjectType.FUNDRAISING ? (
+                      <Group>
+                        <Divider w={'100%'} />
+                        <Box w={'100%'}>
+                          <Flex w={'100%'} justify={'space-between'}>
+                            <Group gap={2} display={'block'}>
+                              <Text size="xs">Нийт цугласан</Text>
+                              <Text fw={500} size="sm">
+                                {priceFormat(
+                                  project?.currentAmount ?? 0,
+                                  'MNT'
+                                )}
+                              </Text>
+                            </Group>
+                            <Group gap={2} display={'block'}>
+                              <Text size="xs">Зорилго</Text>
+                              <Text fw={500} size="sm">
+                                {priceFormat(project?.goalAmount ?? 0, 'MNT')}
+                              </Text>
+                            </Group>
+                          </Flex>
+                          <Progress
+                            value={Math.ceil(
+                              ((project?.goalAmount ?? 0) * 100) /
+                                (project?.currentAmount ?? 0)
+                            )}
+                            size={'lg'}
+                            color="primary"
+                          />
+                        </Box>
+                        <Divider w={'100%'} />
+                        <Flex
+                          align={'center'}
+                          justify={'space-between'}
+                          w={'100%'}
+                        >
+                          <Flex align={'center'}>
+                            <Badge variant="dot">
+                              {project?.Donations?.length ?? 0} Хандивлагчид
+                            </Badge>
+                          </Flex>
+                          <Text>
+                            {format(
+                              (project?.updatedAt as unknown as Date) ??
+                                project.createdAt,
+                              'MMM do yyyy '
+                            )}
+                          </Text>
+                        </Flex>
+                      </Group>
+                    ) : (
+                      <Text></Text>
+                    )}
                   </Stack>
                 </Paper>
+                <DonationsInfo projectId={project.id as unknown as string} />
               </Stack>
             </Grid.Col>
           </Grid>

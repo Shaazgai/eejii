@@ -52,7 +52,7 @@ export const EventDetail = ({
               {event?.title}
             </Title>
           </Flex>
-          <Grid columns={12}>
+          <Grid columns={12} gutter={'xl'}>
             <Grid.Col span={{ base: 12, md: 6, lg: 8 }}>
               <Flex gap={20}>
                 <Text>
@@ -81,7 +81,7 @@ export const EventDetail = ({
                   {event?.Categories &&
                     event?.Categories.length > 0 &&
                     event.Categories.map(c => (
-                      <Badge color="gray" key={c.id}>
+                      <Badge color="gray.5" key={c.id}>
                         {c.name}
                       </Badge>
                     ))}
@@ -92,13 +92,13 @@ export const EventDetail = ({
                   order={3}
                   p={10}
                   style={{
-                    borderBottom: '2px solid var(--mantine-color-teal-8)',
+                    borderBottom: '2px solid var(--mantine-color-primary-8)',
                   }}
                 >
                   Танилцуулага
                 </Title>
               </Flex>
-              <Text>{event?.description}</Text>
+              <Text mt={20}>{event?.description}</Text>
               <Flex gap={10} mt={20}>
                 <ActionIcon radius={'lg'} variant="outline" size={'lg'} p={5}>
                   <IconBrandFacebook />

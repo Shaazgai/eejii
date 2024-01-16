@@ -66,7 +66,7 @@ export const MediaList = () => {
         <Title
           order={2}
           style={{
-            borderBottom: '2px solid var(--mantine-color-teal-7)',
+            borderBottom: '2px solid var(--mantine-color-primary-7)',
           }}
         >
           {categoryName ?? 'News'}

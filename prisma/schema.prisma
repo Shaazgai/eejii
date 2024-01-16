@@ -24,6 +24,7 @@ model User {
   email         String      @unique
   phoneNumber   String
   createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
   role          Role        @default(ROLE_USER)
   type          UserType    @default(USER_VOLUNTEER)
   requestSend   Boolean     @default(false)
@@ -117,6 +118,7 @@ model Event {
   location    String
   status      ProjectStatus?
   createdAt   DateTime       @default(now())
+  updatedAt   DateTime?      @updatedAt
   enabled     Boolean
   startTime   DateTime?
   endTime     DateTime?
@@ -175,6 +177,7 @@ model Project {
   enabled       Boolean
   status        ProjectStatus?
   createdAt     DateTime       @default(now())
+  updatedAt     DateTime?      @updatedAt
   featured      Boolean
   //fundraising (Handiv oloh)
   link          String?

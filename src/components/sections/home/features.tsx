@@ -46,7 +46,7 @@ export default function Features() {
             <Flex justify={'end'}>
               <Button
                 variant="subtle"
-                color="var(--mantine-color-teal-8)"
+                color="var(--mantine-color-primary-8)"
                 component={Link}
                 href={'/projects'}
                 rightSection={<IconArrowRight />}
@@ -83,7 +83,7 @@ export default function Features() {
             <Flex justify={'end'}>
               <Button
                 variant="subtle"
-                color="var(--mantine-color-teal-8)"
+                color="var(--mantine-color-primary-8)"
                 component={Link}
                 href={'/projects'}
                 rightSection={<IconArrowRight />}
@@ -119,7 +119,7 @@ export default function Features() {
             <Flex justify={'end'}>
               <Button
                 variant="subtle"
-                color="var(--mantine-color-teal-8)"
+                color="var(--mantine-color-primary-8)"
                 component={Link}
                 href={'/projects'}
                 rightSection={<IconArrowRight />}

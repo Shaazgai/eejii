@@ -54,7 +54,7 @@ export default function ProjectCardPublic({ fund }: { fund: Project }) {
             right={0}
             variant="gradient"
             size="lg"
-            gradient={{ from: 'teal.4', to: 'orange.5', deg: 90 }}
+            gradient={{ from: 'primary.4', to: 'orange.5', deg: 90 }}
           >
             Grant
           </Badge>
@@ -79,7 +79,7 @@ export default function ProjectCardPublic({ fund }: { fund: Project }) {
               </Group>
               <Group gap={2}>
                 <Text size="xs">Зорилго:</Text>
-                <Text size="xs" c={'teal.7'} fw={500}>
+                <Text size="xs" c={'primary.7'} fw={500}>
                   {priceFormat(fund?.goalAmount ?? 0, 'MNT')}
                 </Text>
               </Group>

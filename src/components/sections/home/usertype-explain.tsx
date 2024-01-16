@@ -2,7 +2,7 @@ import { Avatar, Box, Container, Paper, SimpleGrid } from '@mantine/core';
 
 export default function UsertypeExplain() {
   return (
-    <Box bg={'var(--mantine-color-teal-0)'}>
+    <Box bg={'var(--mantine-color-primary-0)'}>
       <Container ta={'center'} size={'xl'}>
         <SimpleGrid cols={{ base: 1, lg: 3 }} p={40}>
           <Paper

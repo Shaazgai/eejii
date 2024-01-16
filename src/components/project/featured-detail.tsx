@@ -52,7 +52,6 @@ export const FeaturedProjectDetail = ({
     ((project?.goalAmount ?? 0) * 100) / (project?.currentAmount ?? 0)
   );
 
-  console.log(progressAmount);
   return (
     <div className="relative">
       <FallbackImage
@@ -180,7 +179,7 @@ export const FeaturedProjectDetail = ({
             order={3}
             p={10}
             style={{
-              borderBottom: '2px solid var(--mantine-color-teal-8)',
+              borderBottom: '2px solid var(--mantine-color-primary-8)',
             }}
           >
             Танилцуулага

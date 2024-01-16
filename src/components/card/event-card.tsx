@@ -54,7 +54,7 @@ export default function EventCardPublic({ event }: { event: Event }) {
               </Text>
               <Divider size={'md'} orientation="vertical" />
               <Flex align={'center'} gap={5}>
-                <IconUser color="var(--mantine-color-teal-filled)" size={20} />
+                <IconUser color="var(--mantine-color-primary-filled)" size={20} />
                 <Text c={'dimmed'} fw={500}>
                   {(event.roles as EventRole).number}
                 </Text>
